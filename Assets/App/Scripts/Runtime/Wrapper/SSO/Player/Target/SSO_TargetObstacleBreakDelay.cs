@@ -1,0 +1,4 @@
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "SSO_TargetObstacleBreakDelay", menuName = "Data/SSO/Player/Targeting/SSO_TargetObstacleBreakDelay")]
+public class SSO_TargetObstacleBreakDelay : BT.ScriptablesObject.StaticScriptableObject<float>{}

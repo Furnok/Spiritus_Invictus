@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] LayerMask _obstacleMask;
+    [SerializeField] bool _drawGizmos;
+
+
     [Header("Input")]
     [SerializeField] RSE_OnTargetsInRangeChange _onTargetsInRangeChange;
     [SerializeField] RSE_OnPlayerTargeting _onPlayerTargeting;
@@ -22,9 +27,12 @@ public class S_TargetingManager : MonoBehaviour
     [Header("SSO")]
     [SerializeField] SSO_PlayerMaxDistanceTargeting _playerMaxDistanceTargeting;
     [SerializeField] SSO_PlayerTargetRangeRadius _playerTargetRangeRadius;
+    [SerializeField] SSO_TargetObstacleBreakDelay _targetObstacleBreakDelay;
 
     GameObject _currentTarget;
     HashSet<GameObject> _targetsPosible = new HashSet<GameObject>();
+    float _obstacleTimer = 0f;
+
 
     private void Awake()
     {
@@ -60,14 +68,58 @@ public class S_TargetingManager : MonoBehaviour
         if(_currentTarget != null && _playerIsTargeting.Value == true)
         {
             float distance = Vector3.Distance(_playerPosition.Value, _currentTarget.transform.position);
-            if (distance > _playerMaxDistanceTargeting.Value)
+
+            if (distance > _playerMaxDistanceTargeting.Value && _currentTarget != null)
             {
-                _playerIsTargeting.Value = false;
-                if(_currentTarget != null)
+                CancelTargeting();
+            }
+
+            var playerPos = new Vector3(_playerPosition.Value.x, _playerPosition.Value.y + 1.0f, _playerPosition.Value.z);
+
+            if (_currentTarget == null) return;
+
+            Vector3 dir = (_currentTarget.transform.position - playerPos).normalized;
+            if (Physics.Raycast(playerPos, dir, out RaycastHit hit, distance, _obstacleMask))
+            {
+
+                if (hit.collider.gameObject != _currentTarget)
                 {
-                    _onPlayerCancelTargeting.Call(_currentTarget);
+                    _obstacleTimer += Time.fixedDeltaTime;
+                    if (_obstacleTimer >= _targetObstacleBreakDelay.Value)
+                    {
+                        CancelTargeting();
+                    }
                 }
-                _currentTarget = null;
+                else
+                {
+                    _obstacleTimer = 0f;
+                }
+            }
+            else
+            {
+                _obstacleTimer = 0f;
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_currentTarget != null && _playerIsTargeting != null && _playerIsTargeting.Value && _drawGizmos == true)
+        {
+            var playerPos = new Vector3(_playerPosition.Value.x, _playerPosition.Value.y + 1.0f, _playerPosition.Value.z);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(playerPos, _currentTarget.transform.position);
+
+            Vector3 dir = (_currentTarget.transform.position - playerPos).normalized;
+            float distance = Vector3.Distance(playerPos, _currentTarget.transform.position);
+            if (Physics.Raycast(playerPos, dir, out RaycastHit hit, distance, _obstacleMask))
+            {
+                if (hit.collider.gameObject != _currentTarget)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawLine(playerPos, hit.point);
+                }
             }
         }
     }
@@ -93,15 +145,21 @@ public class S_TargetingManager : MonoBehaviour
 
     void OnPlayerCancelTargetingInput()
     {
+        CancelTargeting();
+    }
+
+    void CancelTargeting()
+    {
         _playerIsTargeting.Value = false;
 
-        if(_currentTarget != null)
+        if (_currentTarget != null)
         {
             _onPlayerCancelTargeting.Call(_currentTarget);
             _targetPosition.Value = Vector3.zero;
         }
 
         _currentTarget = null;
+        _obstacleTimer = 0f;
     }
 
     void OnEnemyTargetDied(GameObject enemy)
