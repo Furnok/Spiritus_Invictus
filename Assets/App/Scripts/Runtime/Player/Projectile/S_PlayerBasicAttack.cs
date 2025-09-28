@@ -3,13 +3,18 @@ using UnityEngine;
 public class S_PlayerBasicAttack : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] float _delayIncantationAttack = 0.5f;
+    [SerializeField] Vector3 _attackOffset;
+    [SerializeField] SSO_BasicAttackDelayIncantation _delayIncantationAttack;
 
     [Header("Input")]
     [SerializeField] RSE_OnPlayerAttack _onPlayerAttack;
 
     [Header("Output")]
+    [SerializeField] RSE_OnSpawnProjectile _onSpawnProjectile;
+
+    [Header("RSO")]
     [SerializeField] RSO_PlayerIsTargeting _playerIsTargeting;
+    
 
     bool _canAttack = true;
 
@@ -25,25 +30,23 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     void OnPlayerAttackInput()
     {
-        if (!_canAttack) return;
+        if (_canAttack == false) return;
 
-
-        if (_playerIsTargeting.Value == true)
+        ProjectileInitializeData attackposition = new ProjectileInitializeData
         {
-            
-        }
-        else
-        {
+            locationSpawn = transform.position + transform.TransformVector(_attackOffset),
+            direction = transform.forward
+        };
 
-        }
+        _onSpawnProjectile.Call(attackposition);
 
-        Debug.Log("Player Basic Attack");
 
         _canAttack = false;
 
-        S_Utils.Delay(_delayIncantationAttack, () => 
+        StartCoroutine(S_Utils.Delay(_delayIncantationAttack.Value, () =>
         {
             _canAttack = true;
-        });
+        }));
     }
 }
+

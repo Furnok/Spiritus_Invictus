@@ -13,9 +13,13 @@ public class S_TargetingManager : MonoBehaviour
     [Header("Output")]
     [SerializeField] RSE_OnNewTargeting _onNewTargeting;
     [SerializeField] RSE_OnPlayerCancelTargeting _onPlayerCancelTargeting;
+
+    [Header("RSO")]
     [SerializeField] RSO_PlayerIsTargeting _playerIsTargeting;
     [SerializeField] RSO_PlayerPosition _playerPosition;
     [SerializeField] RSO_TargetPosition _targetPosition;
+
+    [Header("SSO")]
     [SerializeField] SSO_PlayerMaxDistanceTargeting _playerMaxDistanceTargeting;
     [SerializeField] SSO_PlayerTargetRangeRadius _playerTargetRangeRadius;
 
