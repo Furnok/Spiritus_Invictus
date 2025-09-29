@@ -7,7 +7,7 @@ public class S_EnemyRangeDetection : MonoBehaviour
     [S_TagName] [SerializeField] string playerTag;
 
     [Header("Input")]
-    public UnityEvent<GameObject> onTargetDetected;
+    [HideInInspector] public UnityEvent<GameObject> onTargetDetected;
 
     private GameObject targetDetected;
 

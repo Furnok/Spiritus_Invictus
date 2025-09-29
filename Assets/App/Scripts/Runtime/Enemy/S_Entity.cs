@@ -4,10 +4,43 @@ using UnityEngine.AI;
 
 public class S_Entity : MonoBehaviour
 {
+    [Header("Settings")]
+    [S_AnimationName][SerializeField] string moveParam;
+    [S_AnimationName][SerializeField] string attackParam;
+    [S_AnimationName][SerializeField] string hitParam;
+    [S_AnimationName][SerializeField] string deathParam;
+    [S_AnimationName][SerializeField] string combo1Param;
+    [S_AnimationName][SerializeField] string combo2Param;
+
     [Header("References")]
     [SerializeField] BehaviorGraphAgent agent;
     [SerializeField] NavMeshAgent enemyNavMesh;
     [SerializeField] S_EnemyRangeDetection S_EnemyRangeDetection;
+    [SerializeField] S_EnemyHealth S_EnemyHealth;
+
+    private void OnEnable()
+    {
+        S_EnemyRangeDetection.onTargetDetected.AddListener(SetTarget);
+        S_EnemyHealth.onUpdateEnemyHealth.AddListener(SetHealth);
+    }
+    private void OnDisable()
+    {
+        S_EnemyRangeDetection.onTargetDetected.RemoveListener(SetTarget);
+        S_EnemyHealth.onUpdateEnemyHealth.RemoveListener(SetHealth);
+    }
+    private void Awake()
+    {
+        agent.SetVariableValue<string>("MoveParam", moveParam);
+        agent.SetVariableValue<string>("AttackParam", attackParam);
+        agent.SetVariableValue<string>("HitParam", hitParam);
+        agent.SetVariableValue<string>("DeathParam", deathParam);
+        agent.SetVariableValue<string>("Combo1Param", combo1Param);
+        agent.SetVariableValue<string>("Combo2Param", combo2Param);
+    }
+    private void Update()
+    {
+        agent.SetVariableValue<float>("StopDistance", enemyNavMesh.stoppingDistance);
+    }
 
     void SetTarget(GameObject Target)
     {
@@ -21,19 +54,8 @@ public class S_Entity : MonoBehaviour
             agent.SetVariableValue<S_EnumEnemyState>("EnemyState", S_EnumEnemyState.Patrol);
         }
     }
-
-    private void Update()
+    void SetHealth(float health)
     {
-        agent.SetVariableValue<float>("StopDistance", enemyNavMesh.stoppingDistance);
-    }
-
-    private void OnEnable()
-    {
-        S_EnemyRangeDetection.onTargetDetected.AddListener(SetTarget);
-    }
-
-    private void OnDisable()
-    {
-        S_EnemyRangeDetection.onTargetDetected.RemoveListener(SetTarget);
+        agent.SetVariableValue<float>("Health", health);
     }
 }

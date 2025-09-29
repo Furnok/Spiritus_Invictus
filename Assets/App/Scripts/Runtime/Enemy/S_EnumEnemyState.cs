@@ -6,5 +6,6 @@ public enum S_EnumEnemyState
     Idle,
 	Patrol,
 	Chase,
-	Attack
+	Attack,
+	Hit
 }
