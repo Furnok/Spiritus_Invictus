@@ -28,6 +28,50 @@ MonoBehaviour:
     To: CinemachineCameraPlayer
     Blend:
       Style: 3
+      Time: 0.5
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - From: CinemachineCameraPlayer
+    To: CinemachineCameraC1
+    Blend:
+      Style: 0
+      Time: 0.4
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - From: CinemachineCameraRail
+    To: CinemachineCameraC1
+    Blend:
+      Style: 0
+      Time: 0.4
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - From: CinemachineCameraC1
+    To: CinemachineCameraPlayer
+    Blend:
+      Style: 0
+      Time: 0.4
+      CustomCurve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 0
+        m_PostInfinity: 0
+        m_RotationOrder: 0
+  - From: CinemachineCameraC1
+    To: CinemachineCameraRail
+    Blend:
+      Style: 0
       Time: 0.4
       CustomCurve:
         serializedVersion: 2

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -5,50 +6,100 @@ using UnityEngine.Splines;
 public class S_CameraManager : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float[] fovPerKnot;
-    [SerializeField] private float transitionSpeed;
+    [SerializeField] private int cameraFocusPriority;
+    [SerializeField] private int cameraUnFocusPriority;
+    [SerializeField] private int cameraCinematicPriority;
+
+    //[SerializeField] private float[] fovPerKnot;
+    //[SerializeField] private float transitionSpeed;
 
     [Header("References")]
     [SerializeField] private CinemachineCamera cinemachineCameraRail;
     [SerializeField] private CinemachineCamera cinemachineCameraPlayer;
-    [SerializeField] private CinemachineSplineDolly splineDolly;
+    [SerializeField] private List<CinemachineCamera> cinemachineCameraCinematic;
     [SerializeField] private CinemachineTargetGroup targetGroup;
 
+    //[SerializeField] private CinemachineSplineDolly splineDolly;
+
     [Header("Input")]
+    [SerializeField] private RSE_CameraCinematic rseCameraCinematic;
+    [SerializeField] private RSE_CinematicFinish rseCinematicFinish;
     [SerializeField] private RSO_PlayerIsTargeting rsoplayerIsTargeting;
     [SerializeField] private RSE_CameraShake rseCameraShake;
-    
+    [SerializeField] private RSE_OnPlayerCameraLook rseOnPlayerCameraLook;
+
     private Coroutine shake = null;
-    //private CinemachineCamera[] allVCams = null;
 
     private CinemachineCamera currentCamera = null;
+    private CinemachineCamera oldCamera = null;
 
     private void OnEnable()
     {
+        rseCameraCinematic.action += SwitchCinematicCamera;
         rsoplayerIsTargeting.onValueChanged += SwitchCameraTargeting;
         rseCameraShake.action += CameraShake;
+        rseCinematicFinish.action += FinishCinematic;
+        rseOnPlayerCameraLook.action += PlayerPos;
 
         currentCamera = cinemachineCameraRail;
     }
 
     private void OnDisable()
     {
+        rseCameraCinematic.action -= SwitchCinematicCamera;
         rsoplayerIsTargeting.onValueChanged -= SwitchCameraTargeting;
         rseCameraShake.action -= CameraShake;
+        rseCinematicFinish.action -= FinishCinematic;
+        rseOnPlayerCameraLook.action -= PlayerPos;
+    }
+
+    private void PlayerPos(Transform player)
+    {
+        cinemachineCameraPlayer.Follow = player;
+        targetGroup.Targets[0].Object = player;
+    }
+
+    private void SwitchCinematicCamera(int index)
+    {
+        oldCamera = currentCamera;
+
+        if (index < 0 || index >= cinemachineCameraCinematic.Count)
+        {
+            return;
+        }
+
+        cinemachineCameraRail.Priority = cameraUnFocusPriority;
+        cinemachineCameraPlayer.Priority = cameraUnFocusPriority;
+        cinemachineCameraCinematic[index].Priority = cameraCinematicPriority;
+        currentCamera = cinemachineCameraCinematic[index];
+        currentCamera.GetComponent<Animator>().enabled = true;
+        currentCamera.GetComponent<Animator>().SetTrigger("Play");
+    }
+
+    private void FinishCinematic()
+    {
+        if (oldCamera != null)
+        {
+            oldCamera.Priority = cameraFocusPriority;
+            currentCamera.GetComponent<Animator>().enabled = false;
+            currentCamera.Priority = 0;
+            currentCamera = oldCamera;
+            oldCamera = null;
+        }
     }
 
     private void SwitchCameraTargeting(bool value)
     {
         if (value)
         {
-            cinemachineCameraRail.Priority = 2;
-            cinemachineCameraPlayer.Priority = 3;
+            cinemachineCameraRail.Priority = cameraUnFocusPriority;
+            cinemachineCameraPlayer.Priority = cameraFocusPriority;
             currentCamera = cinemachineCameraPlayer;
         }
         else
         {
-            cinemachineCameraRail.Priority = 3;
-            cinemachineCameraPlayer.Priority = 2;
+            cinemachineCameraRail.Priority = cameraFocusPriority;
+            cinemachineCameraPlayer.Priority = cameraUnFocusPriority;
             currentCamera = cinemachineCameraRail;
         }
     }

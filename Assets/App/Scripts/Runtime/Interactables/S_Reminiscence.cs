@@ -3,10 +3,14 @@ using UnityEngine;
 public class S_Reminiscence : MonoBehaviour
 {
     [Header("Settings")]
+    [SerializeField] private int cameraIndex;
     [S_TagName] [SerializeField] private string tagPlayer;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerInteract rseOnPlayerInteract;
+
+    [Header("Output")]
+    [SerializeField] private RSE_CameraCinematic rseCameraCinematic;
 
     private void OnDisable()
     {
@@ -31,6 +35,6 @@ public class S_Reminiscence : MonoBehaviour
 
     private void Interract()
     {
-        Debug.Log("Interract");
+        rseCameraCinematic.Call(cameraIndex);
     }
 }
