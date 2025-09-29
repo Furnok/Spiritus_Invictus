@@ -177,8 +177,9 @@ public class S_TargetingManager : MonoBehaviour
         }
     }
 
-    void OnSwapTargetInput()
+    void OnSwapTargetInput(float directionSwap)
     {
+        //Debug.Log("Swap Target Input Received: " + directionSwap);
         if (_targetsPosible.Count == 0 || _playerIsTargeting.Value == false) return;
 
         var newTarget = TargetSelection();

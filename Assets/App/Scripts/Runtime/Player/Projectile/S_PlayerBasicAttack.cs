@@ -38,13 +38,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
             direction = transform.forward
         };
 
-        _onSpawnProjectile.Call(attackposition);
-
-
         _canAttack = false;
 
         StartCoroutine(S_Utils.Delay(_delayIncantationAttack.Value, () =>
         {
+            _onSpawnProjectile.Call(attackposition);
+
             _canAttack = true;
         }));
     }

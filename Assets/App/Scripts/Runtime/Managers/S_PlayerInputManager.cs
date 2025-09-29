@@ -109,7 +109,7 @@ public class S_PlayerInputManager : MonoBehaviour
 
     void OnSwapTargetInput(InputAction.CallbackContext ctx)
     {
-        _onPlayerSwapTarget.Call();
+        _onPlayerSwapTarget.Call(ctx.ReadValue<float>());
     }
 
 
