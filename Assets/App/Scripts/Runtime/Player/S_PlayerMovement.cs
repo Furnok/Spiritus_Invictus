@@ -18,6 +18,7 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] RSO_TargetPosition _rsoTargetPosition;
     [SerializeField] SSO_PlayerMovementSpeed _ssoPlayerMovementSpeed;
     [SerializeField] SSO_PlayerTurnSpeed _ssoPlayerTurnSpeed;
+    [SerializeField] SSO_PlayerTurnSpeedTargeting _ssoPlayerTurnSpeedTargeting;
     [SerializeField] SSO_PlayerStrafeSpeed _ssoPlayerStrafeSpeed;
 
     Vector2 _moveInput;
@@ -69,7 +70,7 @@ public class S_PlayerMovement : MonoBehaviour
             if (directionToTarget.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                _rigidbody.MoveRotation(Quaternion.Slerp(_rigidbody.rotation, targetRotation, _ssoPlayerTurnSpeed.Value * Time.fixedDeltaTime));
+                _rigidbody.MoveRotation(Quaternion.Slerp(_rigidbody.rotation, targetRotation, _ssoPlayerTurnSpeedTargeting.Value * Time.fixedDeltaTime));
             }
 
             Vector3 right = Vector3.Cross(Vector3.up, directionToTarget.normalized);

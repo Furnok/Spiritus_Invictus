@@ -112,21 +112,10 @@
                 {
                     "name": "",
                     "id": "e778e769-1f2b-43af-ac3f-0cf9909d7601",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ccf14be5-f179-4c2b-995f-d4d0fded71b6",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
+                    "groups": ";Controller",
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -167,17 +156,6 @@
                 {
                     "name": "",
                     "id": "358e0850-5936-4a03-bdb8-bf3083e592fb",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Parry",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7b646026-8a15-4448-b3e5-1f1ebc589bfe",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
@@ -244,7 +222,7 @@
                 {
                     "name": "",
                     "id": "acd50baa-a5de-4996-a76b-fa00659f0926",
-                    "path": "<Gamepad>/dpad/down",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -266,10 +244,10 @@
                 {
                     "name": "",
                     "id": "df4d09fd-d29d-4f61-bcdf-2c19c43ea00f",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Controller",
                     "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -364,12 +342,12 @@
                 },
                 {
                     "name": "",
-                    "id": "1f0c34a7-20cf-4135-8791-9758f0f457db",
+                    "id": "8d6efa95-b327-4222-80b3-4275b0ceb74a",
                     "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Swap Target",
+                    "action": "Targeting",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -385,6 +363,39 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "1D Axis",
+                    "id": "f8fb8b7c-42df-4ab6-9eb9-5b473076b6af",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Swap Target",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "88e97c63-bebb-43bc-87a6-5e30d71b7757",
+                    "path": "<Gamepad>/rightStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Swap Target",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "95e697f9-2bcf-4b5d-9d9c-6681820cc330",
+                    "path": "<Gamepad>/rightStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Swap Target",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "2883aeaf-e0e9-4ebc-b29a-e0f38dad126b",
                     "path": "<Keyboard>/q",
@@ -398,7 +409,7 @@
                 {
                     "name": "",
                     "id": "48672be3-6e81-4920-89b8-250dda3efa9f",
-                    "path": "<Gamepad>/dpad/up",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
