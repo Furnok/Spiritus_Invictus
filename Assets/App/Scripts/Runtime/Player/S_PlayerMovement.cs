@@ -22,6 +22,8 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] SSO_PlayerStrafeSpeed _ssoPlayerStrafeSpeed;
 
     Vector2 _moveInput;
+    bool _inputCanceledOrNoInput = true;
+    Quaternion _camRotInInputPerformed;
 
     private void Awake()
     {
@@ -53,10 +55,12 @@ public class S_PlayerMovement : MonoBehaviour
         if(_moveInput != Vector2.zero)
         {
             _rseOnAnimationBoolValueChange.Call("isMoving", true);
+            _inputCanceledOrNoInput = false;
         }
         else
         {
             _rseOnAnimationBoolValueChange.Call("isMoving", false);
+            _inputCanceledOrNoInput = true;
         }
     }
 
@@ -99,7 +103,16 @@ public class S_PlayerMovement : MonoBehaviour
     {
         if (!_rsoPlayerIsTargeting.Value)
         {
-            Quaternion camRot = _rsoCameraRotation ? _rsoCameraRotation.Value : Quaternion.identity; //take the rotation of the camera if exist otherwise take the world
+            Quaternion camRot;
+
+            if (_inputCanceledOrNoInput == true)
+            {
+                camRot = _rsoCameraRotation ? _rsoCameraRotation.Value : Quaternion.identity; //take the rotation of the camera if exist otherwise take the world
+            }
+            else
+            {
+                camRot = _camRotInInputPerformed;
+            }
 
             Vector3 camForward = camRot * Vector3.forward;
             camForward.y = 0f; //ignore vertical camera forward
@@ -135,6 +148,12 @@ public class S_PlayerMovement : MonoBehaviour
             _rseOnAnimationFloatValueChange.Call("MoveSpeed", velocity.magnitude);
 
             _rsoPlayerPosition.Value = transform.position;
+
+            if (_inputCanceledOrNoInput == true)
+            {
+                _camRotInInputPerformed = camRot;
+            }
+            
         }
     }
 }
