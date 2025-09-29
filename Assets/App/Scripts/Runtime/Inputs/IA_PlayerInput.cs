@@ -438,17 +438,6 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""50fee1ea-4313-42c5-a4be-de9080f92f2a"",
-                    ""path"": ""<Mouse>/scroll"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Swap Target"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""1D Axis"",
                     ""id"": ""f8fb8b7c-42df-4ab6-9eb9-5b473076b6af"",
                     ""path"": ""1DAxis"",
@@ -474,6 +463,39 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": ""positive"",
                     ""id"": ""95e697f9-2bcf-4b5d-9d9c-6681820cc330"",
                     ""path"": ""<Gamepad>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Target"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""9778a406-25e6-4353-a1af-c8f1cb110b12"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Target"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""dd51c4d3-de73-4305-9fb6-d677ab3dbdfa"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Swap Target"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""a75f2eac-5f90-41f5-87fd-7dc4ae2311b9"",
+                    ""path"": ""<Mouse>/scroll/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
