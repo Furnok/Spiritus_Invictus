@@ -394,6 +394,7 @@ GameObject:
   - component: {fileID: 8920251737658219813}
   - component: {fileID: 7747680472673781584}
   - component: {fileID: 7338079781300086212}
+  - component: {fileID: 3449033692516231678}
   - component: {fileID: 7550308254578628116}
   - component: {fileID: 7430301158384943787}
   m_Layer: 0
@@ -464,6 +465,7 @@ MonoBehaviour:
   enemyNavMesh: {fileID: 7430301158384943787}
   S_EnemyRangeDetection: {fileID: 6231494554979210423}
   S_EnemyHealth: {fileID: 7338079781300086212}
+  S_EnemyAnimation: {fileID: 3449033692516231678}
 --- !u!114 &7338079781300086212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,6 +485,23 @@ MonoBehaviour:
   onInitializeEnemyHealth:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3449033692516231678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8824097446480002073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 969f741b340ea9e4e9147b429dc48061, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 8920251737658219813}
+  UpdateTimerAnimation:
+    m_PersistentCalls:
+      m_Calls: []
+  CallGetTimerAnimByName: {fileID: 11400000, guid: 249ed66332d67ac45a0b8318ba5758c3, type: 2}
 --- !u!114 &7550308254578628116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,6 +523,9 @@ MonoBehaviour:
   - rid: 962615331817521469
   - rid: 962615421407069099
   - rid: 962615421563044123
+  - rid: 962615426376532617
+  - rid: 962615426906325308
+  - rid: 962615426906325309
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -569,6 +591,30 @@ MonoBehaviour:
           m_Value1: 16528573296088847062
         Name: DetectionRangeCollider
         m_Value: {fileID: 2637658419470983010}
+    - rid: 962615426376532617
+      type: {class: 'BlackboardVariable`1[[CallGetTimerAnimByName, AppAssembly]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 16476251651856417275
+          m_Value1: 5144608015849983874
+        Name: CallGetTimerAnimByName
+        m_Value: {fileID: 11400000, guid: 249ed66332d67ac45a0b8318ba5758c3, type: 2}
+    - rid: 962615426906325308
+      type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 16440807913928800917
+          m_Value1: 2015546187863768084
+        Name: Combo1Name
+        m_Value: Combo Attack 1
+    - rid: 962615426906325309
+      type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17910935543629580037
+          m_Value1: 6106515385424345546
+        Name: Combo2Name
+        m_Value: Combo Attack 2
 --- !u!195 &7430301158384943787
 NavMeshAgent:
   m_ObjectHideFlags: 0
