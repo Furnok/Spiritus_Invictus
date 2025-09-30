@@ -7,15 +7,21 @@ public class S_PlayerMovement : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] RSE_OnPlayerMove _rseOnPlayerMove;
+    [SerializeField] RSE_OnNewTargeting _rseOnNewTargeting;
+    [SerializeField] RSE_OnPlayerCancelTargeting _rseOnPlayerCancelTargeting;
 
     [Header("Output")]
     [SerializeField] RSE_OnAnimationBoolValueChange _rseOnAnimationBoolValueChange;
     [SerializeField] RSE_OnAnimationFloatValueChange _rseOnAnimationFloatValueChange;
+
+    [Header("RSO")]
     [SerializeField] RSO_CameraPosition _rsoCameraPosition;
     [SerializeField] RSO_CameraRotation _rsoCameraRotation;
     [SerializeField] RSO_PlayerPosition _rsoPlayerPosition;
     [SerializeField] RSO_PlayerIsTargeting _rsoPlayerIsTargeting;
     [SerializeField] RSO_TargetPosition _rsoTargetPosition;
+
+    [Header("SSO")]
     [SerializeField] SSO_PlayerMovementSpeed _ssoPlayerMovementSpeed;
     [SerializeField] SSO_PlayerTurnSpeed _ssoPlayerTurnSpeed;
     [SerializeField] SSO_PlayerTurnSpeedTargeting _ssoPlayerTurnSpeedTargeting;
@@ -24,6 +30,7 @@ public class S_PlayerMovement : MonoBehaviour
     Vector2 _moveInput;
     bool _inputCanceledOrNoInput = true;
     Quaternion _camRotInInputPerformed;
+    Transform _target;
 
     private void Awake()
     {
@@ -39,13 +46,27 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void OnEnable()
     {
+        _rsoPlayerPosition.Value = transform.position;
         _rseOnPlayerMove.action += Move;
+        _rseOnNewTargeting.action += ChangeNewTargt;
+        _rseOnPlayerCancelTargeting.action += CancelTarget;
     }
 
     private void OnDisable()
     {
         _rseOnPlayerMove.action -= Move;
-        _rsoPlayerPosition.Value = Vector3.zero;
+        _rseOnNewTargeting.action -= ChangeNewTargt;
+        _rseOnPlayerCancelTargeting.action -= CancelTarget;
+    }
+
+    void ChangeNewTargt(GameObject newTarget)
+    {
+        _target = newTarget.transform;
+    }
+
+    void CancelTarget(GameObject oldTarget)
+    {
+        _target = null;
     }
 
     void Move(Vector2 input)
@@ -66,9 +87,9 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (_rsoPlayerIsTargeting.Value && _rsoTargetPosition.Value != null)
+        if (_rsoPlayerIsTargeting.Value && _target != null)
         {
-            Vector3 directionToTarget = _rsoTargetPosition.Value - transform.position;
+            Vector3 directionToTarget = _target.position - transform.position;
             directionToTarget.y = 0f; // Ignore the heigth
 
             if (directionToTarget.sqrMagnitude > 0.001f)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
@@ -6,7 +7,6 @@ public class S_TargetingManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] LayerMask _obstacleMask;
     [SerializeField] bool _drawGizmos;
-
 
     [Header("Input")]
     [SerializeField] RSE_OnTargetsInRangeChange _onTargetsInRangeChange;
@@ -28,6 +28,8 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] SSO_PlayerMaxDistanceTargeting _playerMaxDistanceTargeting;
     [SerializeField] SSO_PlayerTargetRangeRadius _playerTargetRangeRadius;
     [SerializeField] SSO_TargetObstacleBreakDelay _targetObstacleBreakDelay;
+    [SerializeField] SSO_FrontConeAngle _frontConeAngle;
+
 
     GameObject _currentTarget;
     HashSet<GameObject> _targetsPosible = new HashSet<GameObject>();
@@ -122,7 +124,30 @@ public class S_TargetingManager : MonoBehaviour
                 }
             }
         }
+
+        if (_drawGizmos == true)
+        {
+            var playerPos = new Vector3(_playerPosition.Value.x, _playerPosition.Value.y + 1.0f, _playerPosition.Value.z);
+            if (_playerPosition == null || _playerTargetRangeRadius == null) return;
+
+            Vector3 origin = playerPos;
+            float radius = _playerTargetRangeRadius.Value;
+
+            float halfAngle = _frontConeAngle.Value * 0.5f;
+
+            Quaternion leftRot = Quaternion.AngleAxis(-halfAngle, Vector3.up);
+            Quaternion rightRot = Quaternion.AngleAxis(halfAngle, Vector3.up);
+
+            Vector3 leftDir = leftRot * transform.forward;
+            Vector3 rightDir = rightRot * transform.forward;
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(origin, origin + leftDir * radius);
+            Gizmos.DrawLine(origin, origin + rightDir * radius);
+        }
     }
+
+    
 
     void OnChangeTargetsPosible(HashSet<GameObject> targetsList)
     {
@@ -177,42 +202,115 @@ public class S_TargetingManager : MonoBehaviour
         }
     }
 
-    void OnSwapTargetInput(float directionSwap)
+    void OnSwapTargetInput(float axis) // axis = -1 gauche, +1 droite
     {
-        //Debug.Log("Swap Target Input Received: " + directionSwap);
         if (_targetsPosible.Count == 0 || _playerIsTargeting.Value == false) return;
 
-        var newTarget = TargetSelection();
+        List<(GameObject go, float angle)> candidates = new List<(GameObject, float)>();
 
-        if (newTarget != null && newTarget != _currentTarget)
+        foreach (var target in _targetsPosible)
         {
-            _onPlayerCancelTargeting.Call(_currentTarget);
+            if (target == null) continue;
 
-            _currentTarget = newTarget;
+            Vector3 toTarget = (target.transform.position - _playerPosition.Value).normalized;
 
-            _onNewTargeting.Call(newTarget);
+            float signedAngle = Vector3.SignedAngle(transform.forward, toTarget, Vector3.up);
+
+            candidates.Add((target, signedAngle));
+        }
+
+        if (candidates.Count == 0) return;
+
+        float currentAngle = candidates.Find(c => c.go == _currentTarget).angle; // Angle from the current target
+
+        GameObject bestTarget = null;
+        float bestDelta = float.MaxValue;
+
+        foreach (var (go, angle) in candidates)
+        {
+            if (go == _currentTarget) continue;
+
+            float delta = angle - currentAngle;
+
+            // Normalise in [-180, 180]
+            if (delta > 180)
+            {
+                delta -= 360;
+            }
+            if (delta < -180)
+            {
+                delta += 360;
+            }
+
+            // if axis > 0 ? right ? look for the smallest positive delta
+            // if axis < 0 ? left ? look for the largest negative delta (the closest to 0)
+            if (axis > 0 && delta > 0 && delta < bestDelta)
+            {
+                bestDelta = delta;
+                bestTarget = go;
+            }
+            else if (axis < 0 && delta < 0 && Mathf.Abs(delta) < bestDelta)
+            {
+                bestDelta = Mathf.Abs(delta);
+                bestTarget = go;
+            }
+        }
+
+        // if nothing found
+        if (bestTarget == null)
+        {
+            if (axis > 0)
+            {
+                bestTarget = candidates.OrderBy(c => c.angle).First().go; // further left
+            }
+            else
+            {
+                bestTarget = candidates.OrderByDescending(c => c.angle).First().go; // further right
+            }
+        }
+
+        if (bestTarget != null && bestTarget != _currentTarget)
+        {
+                _onPlayerCancelTargeting.Call(_currentTarget);
+                _currentTarget = bestTarget;
+                _targetPosition.Value = _currentTarget.transform.position;
+                _onNewTargeting.Call(bestTarget);
         }
     }
-
+  
     GameObject TargetSelection()
     {
         GameObject selectedTarget = null;
-        float minDistance = _playerTargetRangeRadius.Value + 1.0f;
+
+        float bestScore = float.MaxValue;
+
         foreach (var target in _targetsPosible)
         {
-            float distance = Vector3.Distance(_playerPosition.Value, target.transform.position);
-            if (distance <= minDistance && _currentTarget != target)
+            if (target == null) continue;
+
+            Vector3 toTarget = (target.transform.position - _playerPosition.Value);
+            float distance = toTarget.magnitude;
+            float angle = Vector3.Angle(transform.forward, toTarget);
+
+            bool inFrontCone = angle <= _frontConeAngle.Value * 0.5f;
+
+            //Priority for the taget in the front cone
+            float score = inFrontCone ? distance : distance + 1000f;
+
+            if (score < bestScore && target != _currentTarget)
             {
-                minDistance = distance;
+                bestScore = score;
                 selectedTarget = target;
             }
         }
 
-        if(selectedTarget != null)
+        if (selectedTarget != null)
         {
             _targetPosition.Value = selectedTarget.transform.position;
         }
 
         return selectedTarget;
     }
+
+    
 }
