@@ -7,7 +7,7 @@ public class S_PlayerInputManager : MonoBehaviour
     [Header("References")]
     [SerializeField] PlayerInput _playerInputComponent;
 
-    [Header("Output")]
+    [Header("Input")]
     [SerializeField] RSE_OnPlayerMove _onPlayerMove;
     [SerializeField] RSE_OnPlayerAttack _onPlayerAttack;
     [SerializeField] RSE_OnPlayerDodge _onPlayerDodge;
@@ -20,11 +20,16 @@ public class S_PlayerInputManager : MonoBehaviour
     [SerializeField] RSE_OnPlayerTargetingCancel _onPlayerTargetingCancel;
     [SerializeField] RSE_OnPlayerSwapTarget _onPlayerSwapTarget;
     [SerializeField] RSE_OnPlayerHeal _OnPlayerHeal;
+    [SerializeField] RSE_OnInputDisabled _onInputDisabled;
+    [SerializeField] RSE_OnCinematicInputEnabled _onCinematicInputEnabled;
+    [SerializeField] RSE_OnGameInputEnabled _onGameActionInputEnabled;
+    [SerializeField] RSE_OnUiInputEnabled _onUiActionInputEnabled;
 
     IA_PlayerInput _playerInput;
     bool _initialized;
     string _gameMapName;
     string _uiMapName;
+    string _cinematicMapName;
 
     private void Awake()
     {
@@ -41,7 +46,7 @@ public class S_PlayerInputManager : MonoBehaviour
 
         _gameMapName = _playerInput.Game.Get().name;
         _uiMapName = _playerInput.UI.Get().name;
-
+        _cinematicMapName = _playerInput.Cinematic.Get().name;
     }
 
     private void OnEnable()
@@ -62,6 +67,11 @@ public class S_PlayerInputManager : MonoBehaviour
         game.Targeting.canceled += OnTargetingCancelInput;
         game.SwapTarget.performed += OnSwapTargetInput;
         game.Heal.performed += OnHealInput;
+
+        _onInputDisabled.action += DeactivateInput;
+        _onCinematicInputEnabled.action += ActivateCinematicActionInput;
+        _onGameActionInputEnabled.action += ActivateGameActionInput;
+        _onUiActionInputEnabled.action += ActivateUiActionInput;
 
         _playerInputComponent.actions.Enable();
 
@@ -88,10 +98,15 @@ public class S_PlayerInputManager : MonoBehaviour
         game.SwapTarget.performed -= OnSwapTargetInput;
         game.Heal.performed -= OnHealInput;
 
+        _onInputDisabled.action -= DeactivateInput;
+        _onCinematicInputEnabled.action -= ActivateCinematicActionInput;
+        _onGameActionInputEnabled.action -= ActivateGameActionInput;
+        _onUiActionInputEnabled.action -= ActivateUiActionInput;
+
         _playerInputComponent.actions.Disable();
     }
 
-    #region Input Callback Methods
+    #region Game Input Callback Methods
     void OnMoveChanged(InputAction.CallbackContext ctx)
     {
         _onPlayerMove.Call(ctx.ReadValue<Vector2>());
@@ -162,11 +177,25 @@ public class S_PlayerInputManager : MonoBehaviour
         _playerInputComponent.actions.Disable();
     }
 
-    private void ActivateGameAction()
+    private void ActivateGameActionInput()
     {
         if (!_initialized) return;
         _playerInputComponent.actions.Enable();
         _playerInputComponent.SwitchCurrentActionMap(_gameMapName);
+    }
+
+    private void ActivateUiActionInput()
+    {
+        if (!_initialized) return;
+        _playerInputComponent.actions.Enable();
+        _playerInputComponent.SwitchCurrentActionMap(_uiMapName);
+    }
+
+    private void ActivateCinematicActionInput()
+    {
+        if (!_initialized) return;
+        _playerInputComponent.actions.Enable();
+        _playerInputComponent.SwitchCurrentActionMap(_cinematicMapName);
     }
 
     private void OnGameOver()
