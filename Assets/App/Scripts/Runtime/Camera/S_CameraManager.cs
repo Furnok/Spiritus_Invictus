@@ -9,11 +9,15 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private int cameraFocusPriority;
     [SerializeField] private int cameraUnFocusPriority;
     [SerializeField] private int cameraCinematicPriority;
+    [SerializeField] private float cameraDistanceMin;
+    [SerializeField] private float fadeSpeed;
 
     //[SerializeField] private float[] fovPerKnot;
     //[SerializeField] private float transitionSpeed;
 
     [Header("References")]
+    [SerializeField] private Camera cameraMain;
+    [SerializeField] private Material materialPlayer;
     [SerializeField] private CinemachineCamera cinemachineCameraRail;
     [SerializeField] private CinemachineCamera cinemachineCameraPlayer;
     [SerializeField] private List<CinemachineCamera> cinemachineCameraCinematic;
@@ -32,6 +36,10 @@ public class S_CameraManager : MonoBehaviour
 
     private CinemachineCamera currentCamera = null;
     private CinemachineCamera oldCamera = null;
+
+    private Transform playerPos = null;
+
+    private float currentAlpha = 1f;
 
     private void OnEnable()
     {
@@ -53,8 +61,23 @@ public class S_CameraManager : MonoBehaviour
         rseOnPlayerCameraLook.action -= PlayerPos;
     }
 
+    private void Update()
+    {
+        float distance = Vector3.Distance(cameraMain.transform.position, playerPos.position);
+        bool shouldHide = distance <= cameraDistanceMin;
+
+        float targetAlpha = shouldHide ? 0f : 1f;
+
+        currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, fadeSpeed * Time.deltaTime);
+
+        Color color = materialPlayer.color;
+        color.a = currentAlpha;
+        materialPlayer.color = color;
+    }
+
     private void PlayerPos(Transform player)
     {
+        playerPos = player;
         cinemachineCameraPlayer.Follow = player;
         targetGroup.Targets[0].Object = player;
     }

@@ -277,6 +277,10 @@ MonoBehaviour:
   cameraFocusPriority: 2
   cameraUnFocusPriority: 1
   cameraCinematicPriority: 100
+  cameraDistanceMin: 1
+  fadeSpeed: 5
+  cameraMain: {fileID: 282990160256949780}
+  materialPlayer: {fileID: 2100000, guid: 3ffc7184f3a5f944181f0b785a495c73, type: 2}
   cinemachineCameraRail: {fileID: 6665886335072390688}
   cinemachineCameraPlayer: {fileID: 1672942525794789939}
   cinemachineCameraCinematic:
@@ -940,6 +944,7 @@ GameObject:
   - component: {fileID: 518404607617930128}
   - component: {fileID: 6487255520670683335}
   - component: {fileID: 6203921802013680420}
+  - component: {fileID: 5966131098124554218}
   m_Layer: 0
   m_Name: CinemachineCameraPlayer
   m_TagString: Untagged
@@ -1066,6 +1071,45 @@ MonoBehaviour:
   AmplitudeGain: 0
   FrequencyGain: 0
   m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &5966131098124554218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4738963718896683867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe43d662878a7c43bcd44d43c9e2094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 1
+  IgnoreTag: 
+  TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 3072
+  MinimumDistanceFromTarget: 0.01
+  AvoidObstacles:
+    Enabled: 1
+    DistanceLimit: 0
+    MinimumOcclusionTime: 0
+    CameraRadius: 0.4
+    UseFollowTarget:
+      Enabled: 0
+      YOffset: 0
+    Strategy: 0
+    MaximumEffort: 4
+    SmoothingTime: 0
+    Damping: 0.4
+    DampingWhenOccluded: 0.2
+  ShotQualityEvaluation:
+    Enabled: 0
+    OptimalDistance: 10
+    NearLimit: 5
+    FarLimit: 30
+    MaxQualityBoost: 0.2
 --- !u!1 &4875386850164820738
 GameObject:
   m_ObjectHideFlags: 0
