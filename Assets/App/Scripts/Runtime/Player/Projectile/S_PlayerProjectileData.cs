@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public struct PlayerProjectileData
+public struct S_PlayerProjectileData
 {
     public float speed;
     public float baseDamage;
