@@ -21,12 +21,14 @@ public class S_Entity : MonoBehaviour
     private void OnEnable()
     {
         S_EnemyRangeDetection.onTargetDetected.AddListener(SetTarget);
-        S_EnemyHealth.onUpdateEnemyHealth.AddListener(SetHealth);
+        S_EnemyHealth.onUpdateEnemyHealth.AddListener(UpdateHealth);
+        S_EnemyHealth.onInitializeEnemyHealth.AddListener(SetHealth);
     }
     private void OnDisable()
     {
         S_EnemyRangeDetection.onTargetDetected.RemoveListener(SetTarget);
-        S_EnemyHealth.onUpdateEnemyHealth.RemoveListener(SetHealth);
+        S_EnemyHealth.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
+        S_EnemyHealth.onInitializeEnemyHealth.RemoveListener(SetHealth);
     }
     private void Awake()
     {
@@ -57,5 +59,10 @@ public class S_Entity : MonoBehaviour
     void SetHealth(float health)
     {
         agent.SetVariableValue<float>("Health", health);
+    }
+    void UpdateHealth(float health)
+    {
+        agent.SetVariableValue<float>("Health", health);
+        agent.SetVariableValue<S_EnumEnemyState>("EnemyState", S_EnumEnemyState.Hit);
     }
 }

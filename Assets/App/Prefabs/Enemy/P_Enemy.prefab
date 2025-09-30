@@ -480,6 +480,9 @@ MonoBehaviour:
   onUpdateEnemyHealth:
     m_PersistentCalls:
       m_Calls: []
+  onInitializeEnemyHealth:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7550308254578628116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,6 +502,8 @@ MonoBehaviour:
   - rid: 962615282891227534
   - rid: 962615284563181827
   - rid: 962615331817521469
+  - rid: 962615421407069099
+  - rid: 962615421563044123
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -548,6 +553,22 @@ MonoBehaviour:
           m_Value1: 768523614968297863
         Name: EnemySpeed
         m_Value: 3
+    - rid: 962615421407069099
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Collider, UnityEngine.PhysicsModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 10941573299205334352
+          m_Value1: 4933536514654267535
+        Name: BodyCollider
+        m_Value: {fileID: 4587887852747238718}
+    - rid: 962615421563044123
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Collider, UnityEngine.PhysicsModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 3218919374230402063
+          m_Value1: 16528573296088847062
+        Name: DetectionRangeCollider
+        m_Value: {fileID: 2637658419470983010}
 --- !u!195 &7430301158384943787
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -11,16 +11,25 @@ public class S_EnemyHealth : MonoBehaviour
 
     [Header("Input")]
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth;
+    [HideInInspector] public UnityEvent<float> onInitializeEnemyHealth;
 
     //[Header("Output")]
-    private void Awake()
+    private void Start()
     {
         enemyHealth = enemyHealthMax.Value;
-        onUpdateEnemyHealth.Invoke(enemyHealth);
+        onInitializeEnemyHealth.Invoke(enemyHealth);
     }
     void TakeDamage(float damage)
     {
         enemyHealth -= damage;
         onUpdateEnemyHealth.Invoke(enemyHealth);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            TakeDamage(50);
+        }
     }
 }
