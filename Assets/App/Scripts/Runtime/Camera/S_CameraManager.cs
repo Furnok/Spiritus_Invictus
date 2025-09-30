@@ -11,6 +11,7 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private int cameraCinematicPriority;
     [SerializeField] private float cameraDistanceMin;
     [SerializeField] private float fadeSpeed;
+    [SerializeField] private float rotationDuration;
 
     //[SerializeField] private float[] fovPerKnot;
     //[SerializeField] private float transitionSpeed;
@@ -22,6 +23,7 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private CinemachineCamera cinemachineCameraPlayer;
     [SerializeField] private List<CinemachineCamera> cinemachineCameraCinematic;
     [SerializeField] private CinemachineTargetGroup targetGroup;
+    [SerializeField] private GameObject playerPoint;
 
     //[SerializeField] private CinemachineSplineDolly splineDolly;
 
@@ -31,7 +33,7 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSO_PlayerIsTargeting rsoplayerIsTargeting;
     [SerializeField] private RSE_CameraShake rseCameraShake;
     [SerializeField] private RSE_OnPlayerCameraLook rseOnPlayerCameraLook;
-
+    
     private Coroutine shake = null;
 
     private CinemachineCamera currentCamera = null;
@@ -40,6 +42,10 @@ public class S_CameraManager : MonoBehaviour
     private Transform playerPos = null;
 
     private float currentAlpha = 1f;
+    private Quaternion startRotation;
+    private Quaternion targetRotation;
+    private float rotationTimer = 0f;
+    private bool isRotating = false;
 
     private void OnEnable()
     {
@@ -63,6 +69,38 @@ public class S_CameraManager : MonoBehaviour
 
     private void Update()
     {
+        CamPlayerRotate();
+
+        PlayerHide();
+    }
+
+    private void CamPlayerRotate()
+    {
+        playerPoint.transform.position = playerPos.position;
+
+        if (Quaternion.Angle(playerPoint.transform.rotation, playerPos.rotation) > 1f)
+        {
+            startRotation = playerPoint.transform.rotation;
+            targetRotation = playerPos.rotation;
+            rotationTimer = 0f;
+            isRotating = true;
+        }
+
+        if (isRotating)
+        {
+            rotationTimer += Time.deltaTime;
+            float t = Mathf.Clamp01(rotationTimer / rotationDuration);
+            playerPoint.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+
+            if (t >= 1f)
+            {
+                isRotating = false;
+            }
+        }
+    }
+
+    private void PlayerHide()
+    {
         float distance = Vector3.Distance(cameraMain.transform.position, playerPos.position);
         bool shouldHide = distance <= cameraDistanceMin;
 
@@ -78,7 +116,6 @@ public class S_CameraManager : MonoBehaviour
     private void PlayerPos(Transform player)
     {
         playerPos = player;
-        cinemachineCameraPlayer.Follow = player;
         targetGroup.Targets[0].Object = player;
     }
 

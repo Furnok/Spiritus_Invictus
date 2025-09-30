@@ -279,6 +279,7 @@ MonoBehaviour:
   cameraCinematicPriority: 100
   cameraDistanceMin: 1
   fadeSpeed: 5
+  rotationDuration: 0.2
   cameraMain: {fileID: 282990160256949780}
   materialPlayer: {fileID: 2100000, guid: 3ffc7184f3a5f944181f0b785a495c73, type: 2}
   cinemachineCameraRail: {fileID: 6665886335072390688}
@@ -286,6 +287,7 @@ MonoBehaviour:
   cinemachineCameraCinematic:
   - {fileID: 6660296453998482793}
   targetGroup: {fileID: 7231235895692806913}
+  playerPoint: {fileID: 6795668380218480693}
   rseCameraCinematic: {fileID: 11400000, guid: 5e251c1042b050143a17c9ad024ee11b, type: 2}
   rseCinematicFinish: {fileID: 11400000, guid: baf18bb63137acd4385faa619f20c35b, type: 2}
   rsoplayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
@@ -987,7 +989,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 0}
+    TrackingTarget: {fileID: 9020646640442542350}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -1009,7 +1011,7 @@ MonoBehaviour:
       Curvature: {x: 2, y: 11}
       BarrelClipping: 0.25
       Anamorphism: 0
-  BlendHint: 4
+  BlendHint: 16
 --- !u!114 &518404607617930128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,7 +1024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damping: {x: 0.5, y: 1.5, z: 0}
+  Damping: {x: 0.2, y: 0, z: 0}
   ShoulderOffset: {x: 0.8, y: -0.5, z: 0.5}
   VerticalArmLength: 1.2
   CameraSide: 1
@@ -1358,6 +1360,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rsoCameraPosition: {fileID: 11400000, guid: 99707efacba749443b3ebd78c3911507, type: 2}
   rsoCameraRotation: {fileID: 11400000, guid: 04261daa98f35d44f84baecbdcfa77df, type: 2}
+--- !u!1 &6795668380218480693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9020646640442542350}
+  m_Layer: 0
+  m_Name: PlayerPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9020646640442542350
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6795668380218480693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4227167865080375379}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7333059113758123004
 GameObject:
   m_ObjectHideFlags: 0
@@ -1388,5 +1421,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5132528451644873675}
+  - {fileID: 9020646640442542350}
   m_Father: {fileID: 6057093875904406306}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
