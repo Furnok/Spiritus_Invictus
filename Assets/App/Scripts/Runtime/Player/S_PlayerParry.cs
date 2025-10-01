@@ -3,7 +3,7 @@ using UnityEngine;
 public class S_PlayerParry : MonoBehaviour
 {
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerParry _onPlayerParry;
+    [SerializeField] RSE_OnPlayerParryInput _onPlayerParry;
 
     private void OnEnable()
     {

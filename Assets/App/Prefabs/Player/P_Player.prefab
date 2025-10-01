@@ -183,7 +183,6 @@ GameObject:
   - component: {fileID: 2880647152335346676}
   - component: {fileID: 4399025292008048771}
   - component: {fileID: 5187816229427863471}
-  - component: {fileID: 364495899967749732}
   - component: {fileID: 5728834334075114089}
   m_Layer: 10
   m_Name: P_Player
@@ -275,6 +274,7 @@ MonoBehaviour:
   _rsoPlayerPosition: {fileID: 11400000, guid: a3d33267cdb3a0a43bb8ab4811624f21, type: 2}
   _rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
   _rsoTargetPosition: {fileID: 11400000, guid: 3f7350d94d82e7a4ab2f89bed6a65c11, type: 2}
+  _rsoCurrentInputActionMap: {fileID: 11400000, guid: 3b4289fad93b77545a9c16fd6b2cdf4e, type: 2}
   _ssoPlayerMovementSpeed: {fileID: 11400000, guid: b43e32b83f1e2e4498095e81d876a99a, type: 2}
   _ssoPlayerTurnSpeed: {fileID: 11400000, guid: f54a24fbd6b664141bb3da5077f567bc, type: 2}
   _ssoPlayerTurnSpeedTargeting: {fileID: 11400000, guid: 303efe45eec40684da1d50cf87f52d31, type: 2}
@@ -349,7 +349,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570536de946523940928f6aa7d2859ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   _onPlayerHeal: {fileID: 11400000, guid: 4c1dd4b878a2bbe49bee7a0802da40cf, type: 2}
+  _onPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
+  _onPlayerHealPerformed: {fileID: 11400000, guid: 52dcd0183e044a14e947f155d1c36c90, type: 2}
 --- !u!114 &2880647152335346676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,20 +392,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _onPlayerDodge: {fileID: 11400000, guid: 94854c435a1dfd64483953892ad488de, type: 2}
---- !u!114 &364495899967749732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7856911075351289306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f202662a19c024468cf72e8ffd67652, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _onPlayerMeditation: {fileID: 11400000, guid: aa87952d62bcbfe4aaf4fc954d681148, type: 2}
-  _onPlayerMeditationCancel: {fileID: 11400000, guid: 9f2bc997828386a48a309669dcf584e1, type: 2}
 --- !u!114 &5728834334075114089
 MonoBehaviour:
   m_ObjectHideFlags: 0

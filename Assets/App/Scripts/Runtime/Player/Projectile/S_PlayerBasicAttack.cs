@@ -7,7 +7,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] SSO_BasicAttackDelayIncantation _delayIncantationAttack;
 
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerAttack _onPlayerAttack;
+    [SerializeField] RSE_OnPlayerAttackInput _onPlayerAttack;
 
     [Header("Output")]
     [SerializeField] RSE_OnSpawnProjectile _onSpawnProjectile;

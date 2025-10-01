@@ -13,7 +13,7 @@ public class S_EnemyAnimation : MonoBehaviour
 
     [Header("Input")]
     [HideInInspector] public UnityEvent<float> UpdateTimerAnimation;
-    [SerializeField] CallGetTimerAnimByName CallGetTimerAnimByName;
+    [SerializeField] RSE_CallGetTimerAnimByName CallGetTimerAnimByName;
 
     //[Header("Output")]
     //private void Start()

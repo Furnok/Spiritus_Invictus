@@ -11,7 +11,7 @@ public class S_Extract : MonoBehaviour
     [SerializeField] RSE_ExtractTextInfo RSE_ExtractTextInfo;
 
     [Header("Output")]
-    [SerializeField] RSE_OnPlayerInteract RSE_OnPlayerInteract;
+    [SerializeField] RSE_OnPlayerInteractInput RSE_OnPlayerInteract;
 
     private void OnDisable()
     {

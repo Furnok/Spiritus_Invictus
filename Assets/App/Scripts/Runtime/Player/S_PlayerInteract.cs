@@ -3,7 +3,7 @@ using UnityEngine;
 public class S_PlayerInteract : MonoBehaviour
 {
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerInteract _onPlayerInteract;
+    [SerializeField] RSE_OnPlayerInteractInput _onPlayerInteract;
 
     private void OnEnable()
     {
