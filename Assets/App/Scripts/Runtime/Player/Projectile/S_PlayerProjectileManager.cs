@@ -48,7 +48,6 @@ public class S_PlayerProjectileManager : MonoBehaviour
     {
         _target = newTarget.transform;
     }
-
     void CancelTarget(GameObject oldTarget)
     {
         _target = null;

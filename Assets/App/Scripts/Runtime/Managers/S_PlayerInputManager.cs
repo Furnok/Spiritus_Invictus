@@ -6,20 +6,22 @@ public class S_PlayerInputManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] PlayerInput _playerInputComponent;
+    [SerializeField] RSO_CurrentInputActionMap _currentInputActionMap;
+    [SerializeField] RSO_LastInputActionMap _lastInputActionMap;
 
     [Header("Input")]
     [SerializeField] RSE_OnPlayerMove _onPlayerMove;
-    [SerializeField] RSE_OnPlayerAttack _onPlayerAttack;
-    [SerializeField] RSE_OnPlayerDodge _onPlayerDodge;
-    [SerializeField] RSE_OnPlayerInteract _onPlayerInteract;
+    [SerializeField] RSE_OnPlayerAttackInput _onPlayerAttack;
+    [SerializeField] RSE_OnPlayerDodgeInput _onPlayerDodge;
+    [SerializeField] RSE_OnPlayerInteractInput _onPlayerInteract;
     [SerializeField] RSE_OnPlayerPause _onPlayerPause;
-    [SerializeField] RSE_OnPlayerMeditation _onPlayerMeditation;
-    [SerializeField] RSE_OnPlayerMeditationCancel _onPlayerMeditationCancel;
-    [SerializeField] RSE_OnPlayerParry _onPlayerParry;
+    [SerializeField] RSE_OnPlayerMeditationInput _onPlayerMeditation;
+    [SerializeField] RSE_OnPlayerMeditationCancelInput _onPlayerMeditationCancel;
+    [SerializeField] RSE_OnPlayerParryInput _onPlayerParry;
     [SerializeField] RSE_OnPlayerTargeting _onPlayerTargeting;
     [SerializeField] RSE_OnPlayerTargetingCancel _onPlayerTargetingCancel;
     [SerializeField] RSE_OnPlayerSwapTarget _onPlayerSwapTarget;
-    [SerializeField] RSE_OnPlayerHeal _OnPlayerHeal;
+    [SerializeField] RSE_OnPlayerHealInput _OnPlayerHeal;
     [SerializeField] RSE_OnInputDisabled _onInputDisabled;
     [SerializeField] RSE_OnCinematicInputEnabled _onCinematicInputEnabled;
     [SerializeField] RSE_OnGameInputEnabled _onGameActionInputEnabled;
@@ -47,6 +49,10 @@ public class S_PlayerInputManager : MonoBehaviour
         _gameMapName = _playerInput.Game.Get().name;
         _uiMapName = _playerInput.UI.Get().name;
         _cinematicMapName = _playerInput.Cinematic.Get().name;
+
+        _currentInputActionMap.Value = E_PlayerInputActionMap.None;
+        _lastInputActionMap.Value = E_PlayerInputActionMap.None;
+        ActivateGameActionInput();
     }
 
     private void OnEnable()
@@ -175,6 +181,9 @@ public class S_PlayerInputManager : MonoBehaviour
     {
         if (!_initialized) return;
         _playerInputComponent.actions.Disable();
+
+        _lastInputActionMap.Value = _currentInputActionMap.Value;
+        _currentInputActionMap.Value = E_PlayerInputActionMap.None;
     }
 
     private void ActivateGameActionInput()
@@ -182,6 +191,9 @@ public class S_PlayerInputManager : MonoBehaviour
         if (!_initialized) return;
         _playerInputComponent.actions.Enable();
         _playerInputComponent.SwitchCurrentActionMap(_gameMapName);
+
+        _lastInputActionMap.Value = _currentInputActionMap.Value;
+        _currentInputActionMap.Value = E_PlayerInputActionMap.Game;
     }
 
     private void ActivateUiActionInput()
@@ -189,6 +201,9 @@ public class S_PlayerInputManager : MonoBehaviour
         if (!_initialized) return;
         _playerInputComponent.actions.Enable();
         _playerInputComponent.SwitchCurrentActionMap(_uiMapName);
+
+        _lastInputActionMap.Value = _currentInputActionMap.Value;
+        _currentInputActionMap.Value = E_PlayerInputActionMap.UI;
     }
 
     private void ActivateCinematicActionInput()
@@ -196,6 +211,9 @@ public class S_PlayerInputManager : MonoBehaviour
         if (!_initialized) return;
         _playerInputComponent.actions.Enable();
         _playerInputComponent.SwitchCurrentActionMap(_cinematicMapName);
+
+        _lastInputActionMap.Value = _currentInputActionMap.Value;
+        _currentInputActionMap.Value = E_PlayerInputActionMap.Cinematic;
     }
 
     private void OnGameOver()
@@ -204,4 +222,12 @@ public class S_PlayerInputManager : MonoBehaviour
         _playerInputComponent.actions.Enable();
         _playerInputComponent.SwitchCurrentActionMap(_uiMapName);
     }
+}
+
+public enum E_PlayerInputActionMap
+{
+    Game,
+    UI,
+    Cinematic,
+    None
 }

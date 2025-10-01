@@ -7,7 +7,7 @@ public class S_Reminiscence : MonoBehaviour
     [S_TagName] [SerializeField] private string tagPlayer;
 
     [Header("Input")]
-    [SerializeField] private RSE_OnPlayerInteract rseOnPlayerInteract;
+    [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
 
     [Header("Output")]
     [SerializeField] private RSE_CameraCinematic rseCameraCinematic;

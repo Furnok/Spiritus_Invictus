@@ -20,6 +20,7 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] RSO_PlayerPosition _rsoPlayerPosition;
     [SerializeField] RSO_PlayerIsTargeting _rsoPlayerIsTargeting;
     [SerializeField] RSO_TargetPosition _rsoTargetPosition;
+    [SerializeField] RSO_CurrentInputActionMap _rsoCurrentInputActionMap;
 
     [Header("SSO")]
     [SerializeField] SSO_PlayerMovementSpeed _ssoPlayerMovementSpeed;
@@ -122,7 +123,7 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_rsoPlayerIsTargeting.Value)
+        if (!_rsoPlayerIsTargeting.Value && _rsoCurrentInputActionMap.Value == E_PlayerInputActionMap.Game)
         {
             Quaternion camRot;
 

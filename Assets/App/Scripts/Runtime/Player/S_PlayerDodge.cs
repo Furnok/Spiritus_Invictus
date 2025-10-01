@@ -3,7 +3,7 @@ using UnityEngine;
 public class S_PlayerDodge : MonoBehaviour
 {
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerDodge _onPlayerDodge;
+    [SerializeField] RSE_OnPlayerDodgeInput _onPlayerDodge;
 
     void OnEnable()
     {
