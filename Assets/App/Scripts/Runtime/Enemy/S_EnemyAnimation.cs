@@ -16,11 +16,7 @@ public class S_EnemyAnimation : MonoBehaviour
     [SerializeField] RSE_CallGetTimerAnimByName CallGetTimerAnimByName;
 
     //[Header("Output")]
-    //private void Start()
-    //{
-    //    GetTotalLengthOfSubStateMachine("Combo Attack 1");
-    //    Debug.Log(timer);
-    //}
+
     private void OnEnable()
     {
         CallGetTimerAnimByName.Event += GetTotalLengthOfSubStateMachine;
@@ -33,6 +29,7 @@ public class S_EnemyAnimation : MonoBehaviour
     void GetTotalLengthOfSubStateMachine(string subStateMachineName)
     {
         Animator animator = GetComponent<Animator>();
+
         if (animator == null)
         {
             Debug.LogError("No Animator component found.");
