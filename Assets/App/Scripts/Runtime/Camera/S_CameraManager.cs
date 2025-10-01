@@ -50,6 +50,11 @@ public class S_CameraManager : MonoBehaviour
     private float rotationTimer = 0f;
     private bool isRotating = false;
 
+    public List<CinemachineCamera> GetListCameraCinematic()
+    {
+        return cinemachineCameraCinematic;
+    }
+
     private void OnEnable()
     {
         rseCameraCinematic.action += SwitchCinematicCamera;
