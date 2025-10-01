@@ -33,11 +33,14 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSO_PlayerIsTargeting rsoplayerIsTargeting;
     [SerializeField] private RSE_CameraShake rseCameraShake;
     [SerializeField] private RSE_OnPlayerCameraLook rseOnPlayerCameraLook;
-    
+
+    [Header("Output")]
+    [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+
     private Coroutine shake = null;
 
     private CinemachineCamera currentCamera = null;
-    private CinemachineCamera oldCamera = null;
 
     private Transform playerPos = null;
 
@@ -121,12 +124,12 @@ public class S_CameraManager : MonoBehaviour
 
     private void SwitchCinematicCamera(int index)
     {
-        oldCamera = currentCamera;
-
         if (index < 0 || index >= cinemachineCameraCinematic.Count)
         {
             return;
         }
+
+        rseOnCinematicInputEnabled.Call();
 
         cinemachineCameraRail.Priority = cameraUnFocusPriority;
         cinemachineCameraPlayer.Priority = cameraUnFocusPriority;
@@ -138,14 +141,13 @@ public class S_CameraManager : MonoBehaviour
 
     private void FinishCinematic()
     {
-        if (oldCamera != null)
-        {
-            oldCamera.Priority = cameraFocusPriority;
-            currentCamera.GetComponent<Animator>().enabled = false;
-            currentCamera.Priority = 0;
-            currentCamera = oldCamera;
-            oldCamera = null;
-        }
+        currentCamera.GetComponent<Animator>().enabled = false;
+        currentCamera.Priority = 0;
+
+        cinemachineCameraRail.Priority = cameraFocusPriority;
+        currentCamera = cinemachineCameraRail;
+
+        rseOnGameInputEnabled.Call();
     }
 
     private void SwitchCameraTargeting(bool value)
