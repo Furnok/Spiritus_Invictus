@@ -35,7 +35,7 @@ public class S_Entity : MonoBehaviour
         S_EnemyRangeDetection.onTargetDetected.AddListener(SetTarget);
         S_EnemyHealth.onUpdateEnemyHealth.AddListener(UpdateHealth);
         S_EnemyHealth.onInitializeEnemyHealth.AddListener(SetHealth);
-        S_EnemyAnimation.UpdateTimerAnimation.AddListener(UpdateTimerAnimation);
+        //S_EnemyAnimation.UpdateTimerAnimation.AddListener(UpdateTimerAnimation);
     }
 
     private void OnDisable()
@@ -43,7 +43,7 @@ public class S_Entity : MonoBehaviour
         S_EnemyRangeDetection.onTargetDetected.RemoveListener(SetTarget);
         S_EnemyHealth.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         S_EnemyHealth.onInitializeEnemyHealth.RemoveListener(SetHealth);
-        S_EnemyAnimation.UpdateTimerAnimation.RemoveListener(UpdateTimerAnimation);
+        //S_EnemyAnimation.UpdateTimerAnimation.RemoveListener(UpdateTimerAnimation);
     }
 
     private void Update()

@@ -209,11 +209,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollideAgainst:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 4096
   IgnoreTag: 
   TransparentLayers:
     serializedVersion: 2
-    m_Bits: 3072
+    m_Bits: 0
   MinimumDistanceFromTarget: 0.01
   AvoidObstacles:
     Enabled: 1
@@ -221,7 +221,7 @@ MonoBehaviour:
     MinimumOcclusionTime: 0
     CameraRadius: 0.4
     UseFollowTarget:
-      Enabled: 0
+      Enabled: 1
       YOffset: 0
     Strategy: 0
     MaximumEffort: 4
@@ -1042,7 +1042,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2a5090b37cc49248bb91c2a8950dff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rsoCameraPosition: {fileID: 11400000, guid: 99707efacba749443b3ebd78c3911507, type: 2}
   rsoCameraRotation: {fileID: 11400000, guid: 04261daa98f35d44f84baecbdcfa77df, type: 2}
 --- !u!1 &4040462017158309725
 GameObject:

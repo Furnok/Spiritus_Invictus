@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEditor.Animations;
+﻿//using System.Collections.Generic;
+//using UnityEditor.Animations;
 using UnityEngine;
-using UnityEngine.Events;
+//using UnityEngine.Events;
 
 public class S_EnemyAnimation : MonoBehaviour
 {
-    [Header("References")]
+    /*[Header("References")]
     [SerializeField] private Animator animator;
 
     [Header("Input")]
@@ -125,5 +125,5 @@ public class S_EnemyAnimation : MonoBehaviour
         }
 
         return max;
-    }
+    }*/
 }
