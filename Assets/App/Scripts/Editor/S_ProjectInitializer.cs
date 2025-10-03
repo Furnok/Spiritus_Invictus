@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using System.IO;
 
@@ -27,26 +27,29 @@ public static class S_ProjectInitializer
             $"{rootFolder}/Inputs",
 
             $"{rootFolder}/Prefabs",
-            $"{rootFolder}/Prefabs/UI",
             $"{rootFolder}/Prefabs/Managers",
+            $"{rootFolder}/Prefabs/UI",
 
             $"{rootFolder}/Scenes",
             $"{rootFolder}/Scenes/Tests",
 
             $"{rootFolder}/Scripts",
             $"{rootFolder}/Scripts/Editor",
-            $"{rootFolder}/Scripts/Managers",
-            $"{rootFolder}/Scripts/UI",
-            $"{rootFolder}/Scripts/Utils",
-            $"{rootFolder}/Scripts/Wrapper",
-            $"{rootFolder}/Scripts/Wrapper/RSE",
-            $"{rootFolder}/Scripts/Wrapper/RSO",
-            $"{rootFolder}/Scripts/Wrapper/SSO",
+            $"{rootFolder}/Scripts/Runtime",
+            $"{rootFolder}/Scripts/Runtime/Containers",
+            $"{rootFolder}/Scripts/Runtime/Inputs",
+            $"{rootFolder}/Scripts/Runtime/Managers",
+            $"{rootFolder}/Scripts/Runtime/UI",
+            $"{rootFolder}/Scripts/Runtime/Utils",
+            $"{rootFolder}/Scripts/Runtime/Wrapper",
+            $"{rootFolder}/Scripts/Runtime/Wrapper/RSE",
+            $"{rootFolder}/Scripts/Runtime/Wrapper/RSO",
+            $"{rootFolder}/Scripts/Runtime/Wrapper/SSO",
 
-            $"{rootFolder}/SO",
-            $"{rootFolder}/SO/RSE",
-            $"{rootFolder}/SO/RSO",
-            $"{rootFolder}/SO/SSO",
+            $"{rootFolder}/SOD",
+            $"{rootFolder}/SOD/RSE",
+            $"{rootFolder}/SOD/RSO",
+            $"{rootFolder}/SOD/SSO",
 
             $"Plugins",
 

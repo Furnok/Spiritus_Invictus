@@ -1,28 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerDodge : MonoBehaviour
 {
-    //[Header("Settings")]
-
-    //[Header("References")]
-
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerDodge _onPlayerDodge;
+    [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
 
-    //[Header("Output")]
-
-    void OnEnable()
+    private void OnEnable()
     {
-        _onPlayerDodge.action += Dodge;
+        rseOnPlayerDodge.action += Dodge;
     }
 
     private void OnDisable()
     {
-        _onPlayerDodge.action -= Dodge;
+        rseOnPlayerDodge.action -= Dodge;
     }
 
-    void Dodge()
+    private void Dodge()
     {
-        Debug.Log("Player Dodge");
+
     }
 }

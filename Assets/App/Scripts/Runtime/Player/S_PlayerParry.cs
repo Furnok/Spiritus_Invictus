@@ -1,28 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerParry : MonoBehaviour
 {
-    //[Header("Settings")]
-
-    //[Header("References")]
-
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerParry _onPlayerParry;
-
-    //[Header("Output")]
+    [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
 
     private void OnEnable()
     {
-        _onPlayerParry.action += Parry;
+        rseOnPlayerParry.action += Parry;
     }
 
     private void OnDisable()
     {
-        _onPlayerParry.action -= Parry;
+        rseOnPlayerParry.action -= Parry;
     }
 
-    void Parry()
+    private void Parry()
     {
-        Debug.Log("Player Parry");
+
     }
 }

@@ -1,28 +1,42 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerHeal : MonoBehaviour
 {
-    //[Header("Settings")]
-
-    //[Header("References")]
-
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerHeal _onPlayerHeal;
+    [SerializeField] private RSE_OnPlayerHealInput rseOnPlayerHeal;
+    [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
 
-    //[Header("Output")]
+    [Header("Output")]
+    [SerializeField] private SSO_PlayerStats ssoPlayerStats;
+    [SerializeField] private RSE_OnPlayerHealPerformed rseOnPlayerHealPerformed;
+
+    private Coroutine healCoroutine = null;
 
     private void OnEnable()
     {
-        _onPlayerHeal.action += Heal;
+        rseOnPlayerHeal.action += TryHeal;
+        rseOnPlayerGettingHit.action += CancelHeal;
     }
 
     private void OnDisable()
     {
-        _onPlayerHeal.action -= Heal;
+        rseOnPlayerHeal.action -= TryHeal;
+        rseOnPlayerGettingHit.action -= CancelHeal;
     }
 
-    void Heal()
+    private void TryHeal()
     {
-        Debug.Log("Player Heal");
+        healCoroutine = StartCoroutine(S_Utils.Delay(ssoPlayerStats.Value.delayBeforeHeal, () =>
+        {
+            rseOnPlayerHealPerformed.Call();
+        }));
+    }
+
+    private void CancelHeal()
+    {
+        if (healCoroutine != null)
+        {
+            StopCoroutine(healCoroutine);
+        }
     }
 }

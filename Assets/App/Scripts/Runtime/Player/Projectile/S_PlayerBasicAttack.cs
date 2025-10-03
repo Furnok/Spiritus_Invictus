@@ -1,52 +1,48 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerBasicAttack : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] float _delayIncantationAttack = 0.5f;
-
-    //[Header("References")]
+    [SerializeField] private Vector3 attackOffset;
 
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerAttack _onPlayerAttack;
+    [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
 
-    //[Header("Output")]
+    [Header("Output")]
+    [SerializeField] private SSO_BasicAttackDelayIncantation ssoDelayIncantationAttack;
+    [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
+    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
 
-    [Header("RSO")]
-    [SerializeField] RSO_PlayerIsTargeting _playerIsTargeting;
+    private bool _canAttack = true;
 
-    bool _canAttack = true;
     private void OnEnable()
     {
-        _onPlayerAttack.action += OnPlayerAttackInput;
+        rseOnPlayerAttack.action += OnPlayerAttackInput;
     }
 
     private void OnDisable()
     {
-        _onPlayerAttack.action -= OnPlayerAttackInput;
+        rseOnPlayerAttack.action -= OnPlayerAttackInput;
     }
 
-    void OnPlayerAttackInput()
+    private void OnPlayerAttackInput()
     {
-        if (!_canAttack) return;
+        if (_canAttack == false) return;
 
-
-        if (_playerIsTargeting.Value == true)
+        S_StructProjectileData attackposition = new S_StructProjectileData
         {
-            
-        }
-        else
-        {
-
-        }
-
-        Debug.Log("Player Basic Attack");
+            locationSpawn = transform.position + transform.TransformVector(attackOffset),
+            direction = transform.forward
+        };
 
         _canAttack = false;
 
-        S_Utils.Delay(_delayIncantationAttack, () => 
+        StartCoroutine(S_Utils.Delay(ssoDelayIncantationAttack.Value, () =>
         {
+            rseOnSpawnProjectile.Call(attackposition);
+
             _canAttack = true;
-        });
+        }));
     }
 }
+

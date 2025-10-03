@@ -1,145 +1,187 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerMovement : MonoBehaviour
 {
-    //[Header("Settings")]
+    [Header("Settings")]
+    [SerializeField] [S_AnimationName] private string moveParam;
+    [SerializeField] [S_AnimationName] private string speedParam;
 
     [Header("References")]
-    [SerializeField] Rigidbody _rigidbody;
+    [SerializeField] private Rigidbody rigidbodyPlayer;
 
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerMove _rseOnPlayerMove;
+    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
+    [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
+    [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
+    [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
 
     [Header("Output")]
-    [SerializeField] RSE_OnAnimationBoolValueChange _rseOnAnimationBoolValueChange;
-    [SerializeField] RSE_OnAnimationFloatValueChange _rseOnAnimationFloatValueChange;
+    [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+    [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
+    [SerializeField] private RSO_CameraRotation rsoCameraRotation;
+    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+    [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
+    [SerializeField] private SSO_PlayerMovementSpeed ssoPlayerMovementSpeed;
+    [SerializeField] private SSO_PlayerTurnSpeed ssoPlayerTurnSpeed;
+    [SerializeField] private SSO_PlayerTurnSpeedTargeting ssoPlayerTurnSpeedTargeting;
+    [SerializeField] private SSO_PlayerStrafeSpeed ssoPlayerStrafeSpeed;
 
-    [Header("RSO")]
-    [SerializeField] RSO_CameraPosition _rsoCameraPosition;
-    [SerializeField] RSO_CameraRotation _rsoCameraRotation;
-    [SerializeField] RSO_PlayerPosition _rsoPlayerPosition;
-    [SerializeField] RSO_PlayerIsTargeting _rsoPlayerIsTargeting;
-    [SerializeField] RSO_TargetPosition _rsoTargetPosition;
-
-    [Header("SSO")]
-    [SerializeField] SSO_PlayerMovementSpeed _ssoPlayerMovementSpeed;
-    [SerializeField] SSO_PlayerTurnSpeed _ssoPlayerTurnSpeed;
-    [SerializeField] SSO_PlayerStrafeSpeed _ssoPlayerStrafeSpeed;
-
-    Vector2 _moveInput;
+    private Vector2 moveInput = Vector2.zero;
+    private bool inputCanceledOrNoInput = true;
+    private Quaternion camRotInInputPerformed = Quaternion.identity;
+    private Transform target = null;
 
     private void Awake()
     {
-        _rsoPlayerPosition.Value = transform.position;
+        rsoPlayerPosition.Value = transform.position;
 
-        _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+        rigidbodyPlayer.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     private void OnDestroy()
     {
-        _rsoPlayerPosition.Value = Vector3.zero;
+        rsoPlayerPosition.Value = Vector3.zero;
     }
+
     private void OnEnable()
     {
-        _rseOnPlayerMove.action += Move;
+        rsoPlayerPosition.Value = transform.position;
+        rseOnPlayerMove.action += Move;
+        rseOnNewTargeting.action += ChangeNewTargt;
+        rseOnPlayerCancelTargeting.action += CancelTarget;
     }
 
     private void OnDisable()
     {
-        _rseOnPlayerMove.action -= Move;
-        _rsoPlayerPosition.Value = Vector3.zero;
+        rseOnPlayerMove.action -= Move;
+        rseOnNewTargeting.action -= ChangeNewTargt;
+        rseOnPlayerCancelTargeting.action -= CancelTarget;
     }
 
-    void Move(Vector2 input)
+    private void ChangeNewTargt(GameObject newTarget)
     {
-        _moveInput = input;
+        target = newTarget.transform;
+    }
 
-        if(_moveInput != Vector2.zero)
+    private void CancelTarget(GameObject oldTarget)
+    {
+        target = null;
+    }
+
+    private void Move(Vector2 input)
+    {
+        moveInput = input;
+
+        if(moveInput != Vector2.zero)
         {
-            _rseOnAnimationBoolValueChange.Call("isMoving", true);
+            rseOnAnimationBoolValueChange.Call(moveParam, true);
+            inputCanceledOrNoInput = false;
         }
         else
         {
-            _rseOnAnimationBoolValueChange.Call("isMoving", false);
+            rseOnAnimationBoolValueChange.Call(moveParam, false);
+            inputCanceledOrNoInput = true;
         }
     }
 
-
     private void Update()
     {
-        if (_rsoPlayerIsTargeting.Value && _rsoTargetPosition.Value != null)
+        if (rsoPlayerIsTargeting.Value && target != null)
         {
-            Vector3 directionToTarget = _rsoTargetPosition.Value - transform.position;
+            Vector3 directionToTarget = target.position - transform.position;
             directionToTarget.y = 0f; // Ignore the heigth
 
             if (directionToTarget.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                _rigidbody.MoveRotation(Quaternion.Slerp(_rigidbody.rotation, targetRotation, _ssoPlayerTurnSpeed.Value * Time.fixedDeltaTime));
+                rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, targetRotation, ssoPlayerTurnSpeedTargeting.Value * Time.fixedDeltaTime));
             }
 
             Vector3 right = Vector3.Cross(Vector3.up, directionToTarget.normalized);
             Vector3 forward = directionToTarget.normalized;
 
-            Vector3 desiredDirection = right * _moveInput.x + forward * _moveInput.y;
+            Vector3 desiredDirection = right * moveInput.x + forward * moveInput.y;
             desiredDirection.Normalize();
 
-            float inputMagnitude = Mathf.Clamp01(_moveInput.magnitude);
-            Vector3 desiredVelocity = desiredDirection * _ssoPlayerStrafeSpeed.Value * inputMagnitude;
+            float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
+            Vector3 desiredVelocity = desiredDirection * ssoPlayerStrafeSpeed.Value * inputMagnitude;
 
-            Vector3 velocityTargeting = _rigidbody.linearVelocity;
+            Vector3 velocityTargeting = rigidbodyPlayer.linearVelocity;
             velocityTargeting.x = desiredVelocity.x;
             velocityTargeting.z = desiredVelocity.z;
-            _rigidbody.linearVelocity = velocityTargeting;
+            rigidbodyPlayer.linearVelocity = velocityTargeting;
 
-            _rseOnAnimationFloatValueChange.Call("MoveSpeed", velocityTargeting.magnitude);
+            rseOnAnimationFloatValueChange.Call(speedParam, velocityTargeting.magnitude);
 
 
-            _rsoPlayerPosition.Value = transform.position;
+            rsoPlayerPosition.Value = transform.position;
             return;
         }
     }
 
     private void FixedUpdate()
     {
-        if (!_rsoPlayerIsTargeting.Value)
+        if (rsoCurrentInputActionMap.Value == S_EnumPlayerInputActionMap.Game)
         {
-            Quaternion camRot = _rsoCameraRotation ? _rsoCameraRotation.Value : Quaternion.identity; //take the rotation of the camera if exist otherwise take the world
-
-            Vector3 camForward = camRot * Vector3.forward;
-            camForward.y = 0f; //ignore vertical camera forward
-            camForward.Normalize();
-
-            Vector3 camRight = camRot * Vector3.right;
-            camRight.y = 0f;
-            camRight.Normalize();
-
-            Vector3 desiredDir = camRight * _moveInput.x + camForward * _moveInput.y; //desired direction in world space from the input and the camera orientation
-
-            if (_moveInput != Vector2.zero) //turn character only if there is some input
+            if (!rsoPlayerIsTargeting.Value)
             {
-                desiredDir.Normalize();
-                Quaternion target = Quaternion.LookRotation(desiredDir, Vector3.up);
-                _rigidbody.MoveRotation(Quaternion.Slerp(_rigidbody.rotation, target, _ssoPlayerTurnSpeed.Value * Time.fixedDeltaTime));
+                Quaternion camRot;
+
+                if (inputCanceledOrNoInput == true)
+                {
+                    camRot = rsoCameraRotation ? rsoCameraRotation.Value : Quaternion.identity; //take the rotation of the camera if exist otherwise take the world
+                }
+                else
+                {
+                    camRot = camRotInInputPerformed;
+                }
+
+                Vector3 camForward = camRot * Vector3.forward;
+                camForward.y = 0f; //ignore vertical camera forward
+                camForward.Normalize();
+
+                Vector3 camRight = camRot * Vector3.right;
+                camRight.y = 0f;
+                camRight.Normalize();
+
+                Vector3 desiredDir = camRight * moveInput.x + camForward * moveInput.y; //desired direction in world space from the input and the camera orientation
+
+                if (moveInput != Vector2.zero) //turn character only if there is some input
+                {
+                    desiredDir.Normalize();
+                    Quaternion target = Quaternion.LookRotation(desiredDir, Vector3.up);
+                    rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, target, ssoPlayerTurnSpeed.Value * Time.fixedDeltaTime));
+                }
+                else
+                {
+                    rigidbodyPlayer.angularVelocity = Vector3.zero;
+                    desiredDir = Vector3.zero;
+                }
+
+                float inputMag = Mathf.Clamp01(moveInput.magnitude);
+                Vector3 desiredVel = desiredDir * ssoPlayerMovementSpeed.Value * inputMag;
+
+
+                Vector3 velocity = rigidbodyPlayer.linearVelocity;
+                velocity.x = desiredVel.x;
+                velocity.z = desiredVel.z;
+                rigidbodyPlayer.linearVelocity = velocity;
+
+                rseOnAnimationFloatValueChange.Call(speedParam, velocity.magnitude);
+
+                rsoPlayerPosition.Value = transform.position;
+
+                if (inputCanceledOrNoInput == true)
+                {
+                    camRotInInputPerformed = camRot;
+                }
             }
-            else
-            {
-                _rigidbody.angularVelocity = Vector3.zero;
-                desiredDir = Vector3.zero;
-            }
+        }
+        else
+        {
+            rigidbodyPlayer.linearVelocity = Vector3.zero;
 
-            float inputMag = Mathf.Clamp01(_moveInput.magnitude);
-            Vector3 desiredVel = desiredDir * _ssoPlayerMovementSpeed.Value * inputMag;
-
-
-            Vector3 velocity = _rigidbody.linearVelocity;
-            velocity.x = desiredVel.x;
-            velocity.z = desiredVel.z;
-            _rigidbody.linearVelocity = velocity;
-
-            _rseOnAnimationFloatValueChange.Call("MoveSpeed", velocity.magnitude);
-
-            _rsoPlayerPosition.Value = transform.position;
+            rseOnAnimationFloatValueChange.Call(speedParam, 0);
         }
     }
 }

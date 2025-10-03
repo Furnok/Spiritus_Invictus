@@ -1,27 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerPause : MonoBehaviour
 {
-    //[Header("Settings")]
-
-    //[Header("References")]
-
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerPause _onPlayerPause;
-
-    //[Header("Output")]
+    [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
 
     private void OnEnable()
     {
-        _onPlayerPause.action += Pause;
+        rseOnPlayerPause.action += Pause;
     }
 
     private void OnDisable()
     {
-        _onPlayerPause.action -= Pause;
+        rseOnPlayerPause.action -= Pause;
     }
-    void Pause()
+
+    private void Pause()
     {
-        Debug.Log("Player Pause");
+        
     }
 }
