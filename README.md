@@ -8,8 +8,8 @@ PREREQUISITES:
 - Hard disk: 1 GB of Available Space.
 - Can be Played with a Mouse and Keyboard, but a Controller is Recommended.
  
-TERMS OF USE:
+TERMS OF USE:  
 PEGI 16 Warning, this game contains profanity.
 
-LICENSE :
+LICENSE:  
 Distributed under the MIT License.
