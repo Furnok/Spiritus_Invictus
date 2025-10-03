@@ -62,7 +62,6 @@ public class S_Entity : MonoBehaviour
 
     private void SetTarget(GameObject Target)
     {
-        Debug.Log(Target);
         agent.SetVariableValue<GameObject>("Player", Target);
 
         if(Target != null)
