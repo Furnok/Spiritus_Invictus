@@ -1,6 +1,6 @@
 # The_Indomitable_Human_Spirit
 
-PREREQUISITES: 
+PREREQUISITES:
 - Operating System: Windows 10 or Later.
 - Processor: 2 GHz.
 - Memory: 1 GB RAM.
@@ -8,21 +8,8 @@ PREREQUISITES:
 - Hard disk: 1 GB of Available Space.
 - Can be Played with a Mouse and Keyboard, but a Controller is Recommended.
  
-TERMS OF USE: 
+TERMS OF USE:
 PEGI 16 Warning, this game contains profanity.
 
-LICENSE :  
+LICENSE :
 Distributed under the MIT License.
- 
-CONTACTS : 
-Timothée BOITON Project Manager
-Professional Mail - t_boiton@stu-bellecour.fr 
-
-Killian FURNO Lead Programmer
-Professional Mail - k_furno@stu-bellecour.fr 
-
-Florian MARTINS Programmer
-Professional Mail - f_martins@stu-bellecour.fr 
-
-Mathias MANENQ Programmer
-Professional Mail - m_manenq@stu-bellecour.fr 
