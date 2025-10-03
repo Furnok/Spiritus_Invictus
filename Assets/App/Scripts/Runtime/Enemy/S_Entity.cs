@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Unity.Behavior;
 using UnityEngine.AI;
-using System.Collections.Generic;
 
 public class S_Entity : MonoBehaviour
 {
@@ -63,15 +62,16 @@ public class S_Entity : MonoBehaviour
 
     private void SetTarget(GameObject Target)
     {
+        Debug.Log(Target);
         agent.SetVariableValue<GameObject>("Player", Target);
 
         if(Target != null)
         {
-            agent.SetVariableValue<S_EnumEnemyState>("EnemyState", S_EnumEnemyState.Chase);
+            agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Chase);
         }
         else
         {
-            agent.SetVariableValue<S_EnumEnemyState>("EnemyState", S_EnumEnemyState.Patrol);
+            agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Patrol);
         }
     }
 
@@ -83,7 +83,7 @@ public class S_Entity : MonoBehaviour
     private void UpdateHealth(float health)
     {
         agent.SetVariableValue<float>("Health", health);
-        agent.SetVariableValue<S_EnumEnemyState>("EnemyState", S_EnumEnemyState.Hit);
+        agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Hit);
     }
 
     private void UpdateTimerAnimation(float timer)
