@@ -7,8 +7,8 @@ public class SSO_PlayerStateTransitions : ScriptableObject
     [System.Serializable]
     public struct TransitionRule
     {
-        public PlayerState from;
-        public PlayerState to;
+        public PlayerState forbiddenFrom;
+        public PlayerState forbiddenTo;
     }
 
     [SerializeField] private List<TransitionRule> _forbiddenTransitions = new();
@@ -17,7 +17,7 @@ public class SSO_PlayerStateTransitions : ScriptableObject
     {
         foreach (var rule in _forbiddenTransitions)
         {
-            if (rule.from == from && rule.to == to)
+            if (rule.forbiddenFrom == from && rule.forbiddenTo == to)
                 return false;
         }
         return true;
@@ -26,5 +26,12 @@ public class SSO_PlayerStateTransitions : ScriptableObject
 
 public enum PlayerState
 {
-    Idle,
+    None = 0,
+    Idle = 1,
+    Moving = 1 << 1,
+    Attacking = 1 << 2,
+    Dodging = 1 << 3,
+    Parrying = 1 << 4,
+    Healing = 1 << 5,
+    //Targeting = 1 << 6,
 }
