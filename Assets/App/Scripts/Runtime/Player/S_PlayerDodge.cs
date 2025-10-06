@@ -7,15 +7,15 @@ public class S_PlayerDodge : MonoBehaviour
 
     private void OnEnable()
     {
-        rseOnPlayerDodge.action += Dodge;
+        rseOnPlayerDodge.action += TryDodge;
     }
 
     private void OnDisable()
     {
-        rseOnPlayerDodge.action -= Dodge;
+        rseOnPlayerDodge.action -= TryDodge;
     }
 
-    private void Dodge()
+    private void TryDodge()
     {
 
     }

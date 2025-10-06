@@ -1,4 +1,4 @@
-﻿public enum S_EnumPlayerInputActionMap
+﻿public enum EnumPlayerInputActionMap
 {
     Game,
     UI,

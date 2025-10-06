@@ -121,7 +121,7 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rsoCurrentInputActionMap.Value == S_EnumPlayerInputActionMap.Game)
+        if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
             if (!rsoPlayerIsTargeting.Value)
             {
