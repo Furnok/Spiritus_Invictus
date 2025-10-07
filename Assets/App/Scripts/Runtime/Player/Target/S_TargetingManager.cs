@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
@@ -14,6 +15,7 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
     [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
+    [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
 
     [Header("Output")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
@@ -29,6 +31,7 @@ public class S_TargetingManager : MonoBehaviour
     private GameObject currentTarget = null;
     private HashSet<GameObject> targetsPossible = new();
     private float obstacleTimer = 0f;
+    private Transform _playerCenterTransform;
 
     private void Awake()
     {
@@ -45,6 +48,8 @@ public class S_TargetingManager : MonoBehaviour
         rseOnPlayerSwapTarget.action += OnSwapTargetInput;
 
         rseOnEnemyTargetDied.action += OnEnemyTargetDied;
+
+        _rseOnPlayerCenter.action += GetPlayerCenterTransform;
     }
 
     private void OnDisable()
@@ -56,7 +61,14 @@ public class S_TargetingManager : MonoBehaviour
 
         rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
 
+        _rseOnPlayerCenter.action -= GetPlayerCenterTransform;
+
         rsoPlayerIsTargeting.Value = false;
+    }
+
+    void GetPlayerCenterTransform(Transform playerCenter)
+    {
+        _playerCenterTransform = playerCenter;
     }
 
     private void FixedUpdate()
@@ -163,7 +175,17 @@ public class S_TargetingManager : MonoBehaviour
 
             Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value).normalized;
 
-            float signedAngle = Vector3.SignedAngle(transform.forward, toTarget, Vector3.up);
+            if (_playerCenterTransform == null) return;
+            float signedAngle = Vector3.SignedAngle(_playerCenterTransform.forward, toTarget, Vector3.up);
+
+
+            float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
+
+            Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
+            if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+            {
+                continue;
+            }
 
             candidates.Add((target, signedAngle));
         }
@@ -239,7 +261,9 @@ public class S_TargetingManager : MonoBehaviour
 
             Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value);
             float distance = toTarget.magnitude;
-            float angle = Vector3.Angle(transform.forward, toTarget);
+
+            if(_playerCenterTransform == null) return null;
+            float angle = Vector3.Angle(_playerCenterTransform.forward, toTarget);
 
             bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
 
@@ -248,15 +272,29 @@ public class S_TargetingManager : MonoBehaviour
 
             if (score < bestScore && target != currentTarget)
             {
-                bestScore = score;
-                selectedTarget = target;
+                float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
+
+                Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
+                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+                {
+                    continue;
+                }
+                else
+                {
+                    bestScore = score;
+                    selectedTarget = target;
+                }
             }
         }
 
         if (selectedTarget != null)
         {
             rsoTargetPosition.Value = selectedTarget.transform.position;
+
+
         }
+
+        
 
         return selectedTarget;
     }
@@ -295,8 +333,9 @@ public class S_TargetingManager : MonoBehaviour
             Quaternion leftRot = Quaternion.AngleAxis(-halfAngle, Vector3.up);
             Quaternion rightRot = Quaternion.AngleAxis(halfAngle, Vector3.up);
 
-            Vector3 leftDir = leftRot * transform.forward;
-            Vector3 rightDir = rightRot * transform.forward;
+            if (_playerCenterTransform == null) return;
+            Vector3 leftDir = leftRot * _playerCenterTransform.forward;
+            Vector3 rightDir = rightRot * _playerCenterTransform.forward;
 
             Gizmos.color = Color.red;
             Gizmos.DrawLine(origin, origin + leftDir * radius);

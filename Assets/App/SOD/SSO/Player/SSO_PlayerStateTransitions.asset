@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f8c2a603e486a846a8a588ee418e2a9, type: 3}
   m_Name: SSO_PlayerStateTransitions
   m_EditorClassIdentifier: 
-  _forbiddenTransitions: []
+  _forbiddenTransitions:
+  - forbiddenFrom: 64
+    forbiddenTo: 2
+  - forbiddenFrom: 64
+    forbiddenTo: 0

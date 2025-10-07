@@ -33,5 +33,6 @@ public enum PlayerState
     Dodging = 1 << 3,
     Parrying = 1 << 4,
     Healing = 1 << 5,
-    //Targeting = 1 << 6,
+    Dying = 1 << 6,
+    //Targeting = 1 << 7,
 }
