@@ -15,6 +15,7 @@ public class S_UIContent : MonoBehaviour
         if (Gamepad.current != null)
         {
             defaultSelectable?.Select();
+            defaultSelectable?.GetComponent<S_UISelectable>()?.Selected(defaultSelectable);
         }
 
         rsoDefaultSelectable.Value = defaultSelectable;
