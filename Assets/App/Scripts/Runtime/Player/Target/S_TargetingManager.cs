@@ -124,9 +124,8 @@ public class S_TargetingManager : MonoBehaviour
         if (currentTarget != null)
         {
             rseOnNewTargeting.Call(currentTarget);
+            rsoPlayerIsTargeting.Value = true;
         }
-
-        rsoPlayerIsTargeting.Value = true;
     }
 
     private void OnPlayerCancelTargetingInput()
