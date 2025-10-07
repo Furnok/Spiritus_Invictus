@@ -1,7 +1,7 @@
 ﻿using System;
 
 [Serializable]
-public struct S_StructPlayerProjectileData
+public struct StructPlayerProjectileData
 {
     public float speed;
     public float baseDamage;
