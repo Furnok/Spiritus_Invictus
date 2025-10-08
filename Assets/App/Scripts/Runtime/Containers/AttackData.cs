@@ -7,10 +7,7 @@ public struct AttackData
     public EnemyAttackType attackType;
     public float damage;
     public float knockbackForce;
-    public float convictionDamage;
-    public bool canBeParried;
-    public bool canBeDodged;
-    public bool unblockable;
+    public float convictionReduction;
 }
 
 public enum EnemyAttackType

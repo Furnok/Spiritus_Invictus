@@ -11,7 +11,7 @@ public struct PlayerStatsData
     public float delayBeforeHeal;
 
     [Header("Movement values")]
-
+    [Header("Dodge values")]
 
     [Header("Parry values")]
     public float parryToleranceBeforeHit;

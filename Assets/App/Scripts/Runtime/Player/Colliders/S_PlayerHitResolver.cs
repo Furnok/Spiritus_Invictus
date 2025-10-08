@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class S_PlayerHitResolver : MonoBehaviour
 {
-    //[Header("Settings")]
+    [Header("Settings")]
+    [SerializeField, S_AnimationName] string _hitParam;
+
 
     [Header("References")]
     [SerializeField] RSO_CanParry _canParry;
@@ -16,6 +18,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     [Header("Output")]
     [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
     [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
+    [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
 
     private void OnEnable()
     {
@@ -40,7 +43,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                 else
                 {
                     Debug.Log("Hit!");
-
+                    //rseOnAnimationBoolValueChange.Call("isHit", true);
                 }
             }));
         }

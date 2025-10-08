@@ -6,19 +6,29 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] private float _dodgeForce = 12f;
     [SerializeField] private float _dodgeDuration = 0.5f;
     [SerializeField] private AnimationCurve _speedCurve;
+    [SerializeField, S_AnimationName] string _dodgeParam;
+    [SerializeField, S_AnimationName] string _dodgeDirXParam;
+    [SerializeField, S_AnimationName] string _dodgeDirYParam;
+
 
     [Header("References")]
     [SerializeField] private SSO_PlayerStateTransitions _ssoPlayerStateTransitions;
     [SerializeField] private Rigidbody _rb;
     [SerializeField] RSO_PlayerIsDodging _playerIsDodging;
     [SerializeField] RSO_PlayerIsTargeting _playerIsTargeting;
-
+    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
+    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
     [SerializeField] private RSE_OnPlayerMove _rseOnPlayerMove;
     [SerializeField] private RSE_OnNewTargeting _rseOnNewTargeting;
     [SerializeField] private RSE_OnPlayerCancelTargeting _rseOnPlayerCancelTargeting;
+
+    [Header("Output")]
+    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
+    [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+    [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
 
     Vector2 _moveInput;
     Transform _target = null;
@@ -57,37 +67,38 @@ public class S_PlayerDodge : MonoBehaviour
     }
     private void TryDodge()
     {
-        // Check if can dodge
-        if (_playerIsDodging.Value) return;
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false) return;
+        _onPlayerAddState.Call(PlayerState.Dodging);
+        
+        Vector3 dodgeDirection = Vector3.zero;
 
-        if (true)
+        if (_playerIsTargeting.Value == false)
         {
-            Vector3 dodgeDirection = Vector3.zero;
-
-            if (_playerIsTargeting.Value == false)
-            {
-                dodgeDirection = transform.forward;
-
-            }
-            else
-            {
-                dodgeDirection = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-
-            }
-
-            if (dodgeDirection == Vector3.zero)
-            {
-
-                dodgeDirection = -transform.forward;
-            }
-
-            dodgeDirection.Normalize();
-
-            _playerIsDodging.Value = true;
-
-            StartCoroutine(PerformDodge(dodgeDirection));
+            dodgeDirection = transform.forward;
 
         }
+        else
+        {
+            dodgeDirection = transform.forward * _moveInput.y + transform.right * _moveInput.x;
+
+        }
+
+        if (dodgeDirection == Vector3.zero)
+        {
+
+            dodgeDirection = -transform.forward;
+        }
+
+        dodgeDirection.Normalize();
+
+        rseOnAnimationFloatValueChange.Call(_dodgeDirXParam, dodgeDirection.x);
+        rseOnAnimationFloatValueChange.Call(_dodgeDirYParam, dodgeDirection.z);
+
+        rseOnAnimationBoolValueChange.Call(_dodgeParam, true);
+
+        _playerIsDodging.Value = true;
+
+        StartCoroutine(PerformDodge(dodgeDirection));
     }
 
     System.Collections.IEnumerator PerformDodge(Vector3 dodgeDirection)
@@ -113,12 +124,15 @@ public class S_PlayerDodge : MonoBehaviour
 
         _playerIsDodging.Value = false;
 
+        _onPlayerAddState.Call(PlayerState.None);
+        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
+
         //_rseOnDodgeEnd.RaiseEvent();
     }
 
     private void Move(Vector2 input)
     {
-        if(_playerIsDodging.Value) return;
+        //if(_playerIsDodging.Value) return;
 
         _moveInput = input;
     }

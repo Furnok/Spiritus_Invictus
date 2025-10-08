@@ -8,6 +8,7 @@ public class S_TargetingManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private bool drawGizmos;
+    [SerializeField, S_AnimationName] string _targetParam;
 
     [Header("Input")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
@@ -27,6 +28,8 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private SSO_PlayerTargetRangeRadius ssoPlayerTargetRangeRadius;
     [SerializeField] private SSO_TargetObstacleBreakDelay ssoPargetObstacleBreakDelay;
     [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
+    [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+
 
     private GameObject currentTarget = null;
     private HashSet<GameObject> targetsPossible = new();
@@ -141,6 +144,7 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnPlayerCancelTargeting.Call(currentTarget);
             rsoTargetPosition.Value = Vector3.zero;
+            rseOnAnimationBoolValueChange.Call("TargetLock", false);
         }
 
         currentTarget = null;
@@ -290,10 +294,10 @@ public class S_TargetingManager : MonoBehaviour
         {
             rsoTargetPosition.Value = selectedTarget.transform.position;
 
-
+            rseOnAnimationBoolValueChange.Call("TargetLock", true);
         }
 
-        
+
 
         return selectedTarget;
     }
