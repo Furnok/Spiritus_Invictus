@@ -2087,10 +2087,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7828547044340219604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 600, y: -230}
-  m_SizeDelta: {x: 1160, y: 140}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &55664783349806839
 CanvasRenderer:
@@ -2227,10 +2227,10 @@ RectTransform:
   - {fileID: 1424200799569390809}
   m_Father: {fileID: 972939131527614561}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 0, y: 70}
+  m_SizeDelta: {x: 500, y: 70}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &26131947521787010
 CanvasRenderer:
@@ -2283,7 +2283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -3411,10 +3411,10 @@ RectTransform:
   - {fileID: 4414754026461227559}
   m_Father: {fileID: 2903927461032347645}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 0, y: 70}
+  m_SizeDelta: {x: 500, y: 70}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3765088189403974023
 CanvasRenderer:
@@ -3467,7 +3467,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -4118,10 +4118,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7828547044340219604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 600, y: -510}
-  m_SizeDelta: {x: 1160, y: 140}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2708601665914169735
 CanvasRenderer:
@@ -4810,6 +4810,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 11400000, guid: 0526673c0b0752b418ffdef1cdaaf184, type: 2}
+        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent, Assembly-CSharp
+        m_MethodName: Call
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2713430356177401149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5485,10 +5497,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7828547044340219604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 600, y: -90}
-  m_SizeDelta: {x: 1160, y: 140}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5712638621310294487
 CanvasRenderer:
@@ -5621,10 +5633,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7828547044340219604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 600, y: -370}
-  m_SizeDelta: {x: 1160, y: 140}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3773406443887645390
 CanvasRenderer:
@@ -5790,10 +5802,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914f6612808d74d4e88246af9860cc79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   buttonStart: {fileID: 5599488742029719898}
   buttonContinue: {fileID: 6769405791822966820}
   buttonSettings: {fileID: 8847822647306883821}
-  isActive: 0
+  rseOnUIInputEnabled: {fileID: 11400000, guid: 24433aa59215e0d49a3c0da4426f2945, type: 2}
 --- !u!1 &7201042659565471638
 GameObject:
   m_ObjectHideFlags: 0
