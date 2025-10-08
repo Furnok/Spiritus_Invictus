@@ -8,6 +8,8 @@ public class S_PlayerMovement : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Rigidbody rigidbodyPlayer;
+    [SerializeField] RSO_PlayerIsDodging _playerIsDodging;
+
 
     [Header("Input")]
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
@@ -47,18 +49,18 @@ public class S_PlayerMovement : MonoBehaviour
     {
         rsoPlayerPosition.Value = transform.position;
         rseOnPlayerMove.action += Move;
-        rseOnNewTargeting.action += ChangeNewTargt;
+        rseOnNewTargeting.action += ChangeNewTarget;
         rseOnPlayerCancelTargeting.action += CancelTarget;
     }
 
     private void OnDisable()
     {
         rseOnPlayerMove.action -= Move;
-        rseOnNewTargeting.action -= ChangeNewTargt;
+        rseOnNewTargeting.action -= ChangeNewTarget;
         rseOnPlayerCancelTargeting.action -= CancelTarget;
     }
 
-    private void ChangeNewTargt(GameObject newTarget)
+    private void ChangeNewTarget(GameObject newTarget)
     {
         target = newTarget.transform;
     }
@@ -86,6 +88,8 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (_playerIsDodging.Value == true) return;
+
         if (rsoPlayerIsTargeting.Value && target != null)
         {
             Vector3 directionToTarget = target.position - transform.position;
@@ -121,6 +125,8 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(_playerIsDodging.Value == true) return;
+
         if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
             if (!rsoPlayerIsTargeting.Value)
