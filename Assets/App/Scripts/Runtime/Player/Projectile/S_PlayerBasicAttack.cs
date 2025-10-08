@@ -4,6 +4,9 @@ public class S_PlayerBasicAttack : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private Vector3 attackOffset;
+    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
+    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField, S_AnimationName] string _attackParam;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
@@ -12,8 +15,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] private SSO_BasicAttackDelayIncantation ssoDelayIncantationAttack;
     [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
-
-    private bool _canAttack = true;
+    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
+    [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
 
     private void OnEnable()
     {
@@ -27,7 +30,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     private void OnPlayerAttackInput()
     {
-        if (_canAttack == false) return;
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Attacking) == false) return;
+        _onPlayerAddState.Call(PlayerState.Attacking);
 
         S_StructProjectileData attackposition = new S_StructProjectileData
         {
@@ -35,13 +39,15 @@ public class S_PlayerBasicAttack : MonoBehaviour
             direction = transform.forward
         };
 
-        _canAttack = false;
+        rseOnAnimationBoolValueChange.Call(_attackParam, true);
 
         StartCoroutine(S_Utils.Delay(ssoDelayIncantationAttack.Value, () =>
         {
             rseOnSpawnProjectile.Call(attackposition);
 
-            _canAttack = true;
+            rseOnAnimationBoolValueChange.Call(_attackParam, false);
+
+            _onPlayerAddState.Call(PlayerState.None);
         }));
     }
 }

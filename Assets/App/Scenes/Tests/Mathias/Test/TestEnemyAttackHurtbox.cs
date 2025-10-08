@@ -12,16 +12,17 @@ public class TestEnemyAttackHurtbox : MonoBehaviour, IAttackProvider
 
     //[Header("Output")]
 
-    private SSO_AttackData _ssoAttackData;
+    AttackData _attackData => _testAttackData.Value;
 
     void Awake()
     {
-
+        //AttackData test = _testAttackData.Value;
+        //Debug.Log($"{test.damage} && {test.attackType}");
     }
 
     public AttackData GetAttackData()
     {
-        return _testAttackData.Value;
+        return _attackData;
     }
 
 }

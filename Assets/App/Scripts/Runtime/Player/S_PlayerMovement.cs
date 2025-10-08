@@ -5,11 +5,14 @@ public class S_PlayerMovement : MonoBehaviour
     [Header("Settings")]
     [SerializeField] [S_AnimationName] private string moveParam;
     [SerializeField] [S_AnimationName] private string speedParam;
+    [SerializeField, S_AnimationName] string _strafXParam;
+    [SerializeField, S_AnimationName] string _strafYParam;
 
     [Header("References")]
     [SerializeField] private Rigidbody rigidbodyPlayer;
     [SerializeField] RSO_PlayerIsDodging _playerIsDodging;
-
+    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
+    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
 
     [Header("Input")]
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
@@ -27,6 +30,7 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private SSO_PlayerTurnSpeed ssoPlayerTurnSpeed;
     [SerializeField] private SSO_PlayerTurnSpeedTargeting ssoPlayerTurnSpeedTargeting;
     [SerializeField] private SSO_PlayerStrafeSpeed ssoPlayerStrafeSpeed;
+    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
 
     private Vector2 moveInput = Vector2.zero;
     private bool inputCanceledOrNoInput = true;
@@ -88,10 +92,11 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (_playerIsDodging.Value == true) return;
-
         if (rsoPlayerIsTargeting.Value && target != null)
         {
+            if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false) return;
+            _onPlayerAddState.Call(PlayerState.Moving);
+
             Vector3 directionToTarget = target.position - transform.position;
             directionToTarget.y = 0f; // Ignore the heigth
 
@@ -116,7 +121,8 @@ public class S_PlayerMovement : MonoBehaviour
             rigidbodyPlayer.linearVelocity = velocityTargeting;
 
             rseOnAnimationFloatValueChange.Call(speedParam, velocityTargeting.magnitude);
-
+            rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
+            rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
 
             rsoPlayerPosition.Value = transform.position;
             return;
@@ -125,12 +131,28 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(_playerIsDodging.Value == true) return;
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false)
+        {
+            rseOnAnimationFloatValueChange.Call(speedParam, 0);
+            rseOnAnimationBoolValueChange.Call(moveParam, false);
+
+            return;
+        }
+        else if (moveInput.sqrMagnitude > 0.001f)
+        {
+            rseOnAnimationBoolValueChange.Call(moveParam, true);
+        }
+        else
+        {
+            rseOnAnimationBoolValueChange.Call(moveParam, false);
+        }
 
         if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
             if (!rsoPlayerIsTargeting.Value)
             {
+                _onPlayerAddState.Call(PlayerState.Moving);
+
                 Quaternion camRot;
 
                 if (inputCanceledOrNoInput == true)
