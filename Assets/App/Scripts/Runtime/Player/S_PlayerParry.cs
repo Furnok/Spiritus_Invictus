@@ -16,6 +16,7 @@ public class S_PlayerParry : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
+    [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
 
     [Header("Output")]
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
@@ -23,7 +24,7 @@ public class S_PlayerParry : MonoBehaviour
 
     float _parryDuration => _playerStats.Value.parryDuration;
 
-
+    Coroutine _parryCoroutine;
 
     private void Awake()
     {
@@ -33,11 +34,13 @@ public class S_PlayerParry : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerParry.action += TryParry;
+        _rseOnPlayerGettingHit.action += CancelParry;
     }
 
     private void OnDisable()
     {
         rseOnPlayerParry.action -= TryParry;
+        _rseOnPlayerGettingHit.action -= CancelParry;
     }
 
     private void TryParry()
@@ -49,12 +52,24 @@ public class S_PlayerParry : MonoBehaviour
         _canParry.Value = true;
         rseOnAnimationBoolValueChange.Call(_parryParam, true);
 
-        StartCoroutine(S_Utils.Delay(_parryDuration, () =>
+        _parryCoroutine = StartCoroutine(S_Utils.Delay(_parryDuration, () =>
         {
-            _onPlayerAddState.Call(PlayerState.None);
-
-            _canParry.Value = false;
-            rseOnAnimationBoolValueChange.Call(_parryParam, false);
+            ResetValue();
         }));
+    }
+
+    void CancelParry()
+    {
+        if (_parryCoroutine != null) return;
+        StopCoroutine(_parryCoroutine);
+
+        ResetValue();
+    }
+
+    private void ResetValue()
+    {
+        _onPlayerAddState.Call(PlayerState.None);
+        _canParry.Value = false;
+        rseOnAnimationBoolValueChange.Call(_parryParam, false);
     }
 }

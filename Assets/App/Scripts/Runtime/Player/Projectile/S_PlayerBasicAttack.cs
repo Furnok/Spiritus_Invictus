@@ -10,6 +10,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
+    [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
 
     [Header("Output")]
     [SerializeField] private SSO_BasicAttackDelayIncantation ssoDelayIncantationAttack;
@@ -18,14 +19,18 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
 
+    Coroutine _attackCoroutine;
+
     private void OnEnable()
     {
         rseOnPlayerAttack.action += OnPlayerAttackInput;
+        _rseOnPlayerGettingHit.action += CancelAttack;
     }
 
     private void OnDisable()
     {
         rseOnPlayerAttack.action -= OnPlayerAttackInput;
+        _rseOnPlayerGettingHit.action -= CancelAttack;
     }
 
     private void OnPlayerAttackInput()
@@ -41,7 +46,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         rseOnAnimationBoolValueChange.Call(_attackParam, true);
 
-        StartCoroutine(S_Utils.Delay(ssoDelayIncantationAttack.Value, () =>
+        _attackCoroutine = StartCoroutine(S_Utils.Delay(ssoDelayIncantationAttack.Value, () =>
         {
             rseOnSpawnProjectile.Call(attackposition);
 
@@ -49,6 +54,16 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
             _onPlayerAddState.Call(PlayerState.None);
         }));
+    }
+
+    void CancelAttack()
+    {
+        if ( _attackCoroutine != null ) return;
+        StopCoroutine(_attackCoroutine);
+
+        rseOnAnimationBoolValueChange.Call(_attackParam, false);
+
+        _onPlayerAddState.Call(PlayerState.None);
     }
 }
 

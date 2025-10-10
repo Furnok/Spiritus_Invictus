@@ -24,6 +24,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] private RSE_OnPlayerMove _rseOnPlayerMove;
     [SerializeField] private RSE_OnNewTargeting _rseOnNewTargeting;
     [SerializeField] private RSE_OnPlayerCancelTargeting _rseOnPlayerCancelTargeting;
+    [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
 
     [Header("Output")]
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
@@ -32,6 +33,7 @@ public class S_PlayerDodge : MonoBehaviour
 
     Vector2 _moveInput;
     Transform _target = null;
+    Coroutine _dodgeCoroutine;
 
     private void OnEnable()
     {
@@ -39,6 +41,7 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnPlayerMove.action += Move;
         _rseOnNewTargeting.action += ChangeNewTarget;
         _rseOnPlayerCancelTargeting.action += CancelTarget;
+        _rseOnPlayerGettingHit.action += CancelDodge;
 
         _playerIsDodging.Value = false;
     }
@@ -49,6 +52,8 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnPlayerMove.action -= Move;
         _rseOnNewTargeting.action -= ChangeNewTarget;
         _rseOnPlayerCancelTargeting.action -= CancelTarget;
+        _rseOnPlayerGettingHit.action -= CancelDodge;
+
     }
 
     private void Awake()
@@ -98,7 +103,7 @@ public class S_PlayerDodge : MonoBehaviour
 
         _playerIsDodging.Value = true;
 
-        StartCoroutine(PerformDodge(dodgeDirection));
+        _dodgeCoroutine = StartCoroutine(PerformDodge(dodgeDirection));
     }
 
     System.Collections.IEnumerator PerformDodge(Vector3 dodgeDirection)
@@ -122,18 +127,25 @@ public class S_PlayerDodge : MonoBehaviour
         _rb.linearVelocity = Vector3.zero;
         _rb.linearDamping = 5;
 
-        _playerIsDodging.Value = false;
-
-        _onPlayerAddState.Call(PlayerState.None);
-        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
-
-        //_rseOnDodgeEnd.RaiseEvent();
+        ResetValue();
     }
 
     private void Move(Vector2 input)
     {
-        //if(_playerIsDodging.Value) return;
-
         _moveInput = input;
+    }
+
+    void CancelDodge()
+    {
+        if (_dodgeCoroutine != null) return;
+        StopCoroutine(_dodgeCoroutine);
+        ResetValue();
+    }
+
+    private void ResetValue()
+    {
+        _playerIsDodging.Value = false;
+        _onPlayerAddState.Call(PlayerState.None);
+        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
     }
 }

@@ -13,7 +13,7 @@ public class S_PlayerHeal : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerHealInput rseOnPlayerHeal;
-    [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
+    [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
 
     [Header("Output")]
     [SerializeField] private RSE_OnPlayerHealPerformed rseOnPlayerHealPerformed;
@@ -25,13 +25,13 @@ public class S_PlayerHeal : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerHeal.action += TryHeal;
-        rseOnPlayerGettingHit.action += CancelHeal;
+        _rseOnPlayerGettingHit.action += CancelHeal;
     }
 
     private void OnDisable()
     {
         rseOnPlayerHeal.action -= TryHeal;
-        rseOnPlayerGettingHit.action -= CancelHeal;
+        _rseOnPlayerGettingHit.action -= CancelHeal;
     }
 
     private void TryHeal()
@@ -55,6 +55,8 @@ public class S_PlayerHeal : MonoBehaviour
         if (healCoroutine != null)
         {
             StopCoroutine(healCoroutine);
+            _onPlayerAddState.Call(PlayerState.None);
+            rseOnAnimationBoolValueChange.Call(_healParam, false);
         }
     }
 }
