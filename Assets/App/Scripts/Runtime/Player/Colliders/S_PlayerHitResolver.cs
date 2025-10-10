@@ -18,7 +18,8 @@ public class S_PlayerHitResolver : MonoBehaviour
     [Header("Output")]
     [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
     [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
-    [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+    [SerializeField] RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
+
 
     private void OnEnable()
     {
@@ -44,7 +45,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                 {
                     Debug.Log("Hit!");
                     _rseOnPlayerHit.Call(attackData);
-                    //rseOnAnimationBoolValueChange.Call("isHit", true);
+                    rseOnAnimationTriggerValueChange.Call("isHit");
                 }
             }));
         }
