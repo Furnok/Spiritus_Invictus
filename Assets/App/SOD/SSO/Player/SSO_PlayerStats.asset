@@ -17,3 +17,36 @@ MonoBehaviour:
     maxConviction: 100
     healAmount: 20
     delayBeforeHeal: 1
+    moveSpeed: 5
+    strafeSpeed: 4
+    turnSpeed: 12
+    turnSpeedTargeting: 10
+    dodgeForce: 12
+    dodgeDuration: 0.5
+    _speedDodgeCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    parryToleranceBeforeHit: 0.1
+    parryToleranceAfterHit: 0.1
+    parryDuration: 0.2

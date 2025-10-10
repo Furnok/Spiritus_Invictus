@@ -9,7 +9,7 @@ PREREQUISITES:
 - Can be Played with a Mouse and Keyboard, but a Controller is Recommended.
  
 TERMS OF USE:  
-PEGI 16 Warning, this game contains profanity.
+PEGI 16 Warning, this Game Contains Violence and Profanity.
 
 LICENSE:  
 Distributed under the MIT License.

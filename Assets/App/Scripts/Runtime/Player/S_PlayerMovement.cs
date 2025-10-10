@@ -5,9 +5,15 @@ public class S_PlayerMovement : MonoBehaviour
     [Header("Settings")]
     [SerializeField] [S_AnimationName] private string moveParam;
     [SerializeField] [S_AnimationName] private string speedParam;
+    [SerializeField, S_AnimationName] string _strafXParam;
+    [SerializeField, S_AnimationName] string _strafYParam;
 
     [Header("References")]
     [SerializeField] private Rigidbody rigidbodyPlayer;
+    [SerializeField] RSO_PlayerIsDodging _playerIsDodging;
+    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
+    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField] SSO_PlayerStats _playerStats;
 
     [Header("Input")]
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
@@ -21,10 +27,7 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
-    [SerializeField] private SSO_PlayerMovementSpeed ssoPlayerMovementSpeed;
-    [SerializeField] private SSO_PlayerTurnSpeed ssoPlayerTurnSpeed;
-    [SerializeField] private SSO_PlayerTurnSpeedTargeting ssoPlayerTurnSpeedTargeting;
-    [SerializeField] private SSO_PlayerStrafeSpeed ssoPlayerStrafeSpeed;
+    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
 
     private Vector2 moveInput = Vector2.zero;
     private bool inputCanceledOrNoInput = true;
@@ -47,18 +50,18 @@ public class S_PlayerMovement : MonoBehaviour
     {
         rsoPlayerPosition.Value = transform.position;
         rseOnPlayerMove.action += Move;
-        rseOnNewTargeting.action += ChangeNewTargt;
+        rseOnNewTargeting.action += ChangeNewTarget;
         rseOnPlayerCancelTargeting.action += CancelTarget;
     }
 
     private void OnDisable()
     {
         rseOnPlayerMove.action -= Move;
-        rseOnNewTargeting.action -= ChangeNewTargt;
+        rseOnNewTargeting.action -= ChangeNewTarget;
         rseOnPlayerCancelTargeting.action -= CancelTarget;
     }
 
-    private void ChangeNewTargt(GameObject newTarget)
+    private void ChangeNewTarget(GameObject newTarget)
     {
         target = newTarget.transform;
     }
@@ -88,13 +91,23 @@ public class S_PlayerMovement : MonoBehaviour
     {
         if (rsoPlayerIsTargeting.Value && target != null)
         {
+            if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false) return;
+            if(moveInput.sqrMagnitude > 0.0001f)
+            {
+                _onPlayerAddState.Call(PlayerState.Moving);
+            }
+            else
+            {
+                _onPlayerAddState.Call(PlayerState.None);
+            }
+
             Vector3 directionToTarget = target.position - transform.position;
             directionToTarget.y = 0f; // Ignore the heigth
 
             if (directionToTarget.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, targetRotation, ssoPlayerTurnSpeedTargeting.Value * Time.fixedDeltaTime));
+                rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, targetRotation, _playerStats.Value.turnSpeedTargeting * Time.fixedDeltaTime));
             }
 
             Vector3 right = Vector3.Cross(Vector3.up, directionToTarget.normalized);
@@ -104,16 +117,27 @@ public class S_PlayerMovement : MonoBehaviour
             desiredDirection.Normalize();
 
             float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
-            Vector3 desiredVelocity = desiredDirection * ssoPlayerStrafeSpeed.Value * inputMagnitude;
+            Vector3 desiredVelocity = desiredDirection * _playerStats.Value.strafeSpeed * inputMagnitude;
 
             Vector3 velocityTargeting = rigidbodyPlayer.linearVelocity;
             velocityTargeting.x = desiredVelocity.x;
             velocityTargeting.z = desiredVelocity.z;
             rigidbodyPlayer.linearVelocity = velocityTargeting;
 
-            rseOnAnimationFloatValueChange.Call(speedParam, velocityTargeting.magnitude);
-
-
+            if (moveInput.sqrMagnitude > 0.0001f)
+            {
+                rseOnAnimationBoolValueChange.Call(moveParam, true);
+                rseOnAnimationFloatValueChange.Call(speedParam, velocityTargeting.magnitude);
+                rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
+                rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
+            }
+            else
+            {
+                rseOnAnimationFloatValueChange.Call(speedParam, 0);
+                rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
+                rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
+                rseOnAnimationBoolValueChange.Call(moveParam, false);
+            }
             rsoPlayerPosition.Value = transform.position;
             return;
         }
@@ -121,10 +145,29 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rsoCurrentInputActionMap.Value == S_EnumPlayerInputActionMap.Game)
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false)
+        {
+            rseOnAnimationFloatValueChange.Call(speedParam, 0);
+            rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
+            rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
+            rseOnAnimationBoolValueChange.Call(moveParam, false);
+            return;
+        }
+        
+
+        if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
             if (!rsoPlayerIsTargeting.Value)
             {
+                if (moveInput.sqrMagnitude > 0.0001f)
+                {
+                    _onPlayerAddState.Call(PlayerState.Moving);
+                }
+                else
+                {
+                    _onPlayerAddState.Call(PlayerState.None);
+                }
+
                 Quaternion camRot;
 
                 if (inputCanceledOrNoInput == true)
@@ -150,7 +193,7 @@ public class S_PlayerMovement : MonoBehaviour
                 {
                     desiredDir.Normalize();
                     Quaternion target = Quaternion.LookRotation(desiredDir, Vector3.up);
-                    rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, target, ssoPlayerTurnSpeed.Value * Time.fixedDeltaTime));
+                    rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, target, _playerStats.Value.turnSpeed * Time.fixedDeltaTime));
                 }
                 else
                 {
@@ -159,7 +202,7 @@ public class S_PlayerMovement : MonoBehaviour
                 }
 
                 float inputMag = Mathf.Clamp01(moveInput.magnitude);
-                Vector3 desiredVel = desiredDir * ssoPlayerMovementSpeed.Value * inputMag;
+                Vector3 desiredVel = desiredDir * _playerStats.Value.moveSpeed * inputMag;
 
 
                 Vector3 velocity = rigidbodyPlayer.linearVelocity;

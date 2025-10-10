@@ -17,7 +17,6 @@ public class S_Entity : MonoBehaviour
     [SerializeField] private NavMeshAgent enemyNavMesh;
     [SerializeField] private S_EnemyRangeDetection S_EnemyRangeDetection;
     [SerializeField] private S_EnemyHealth S_EnemyHealth;
-    [SerializeField] private S_EnemyAnimation S_EnemyAnimation;
     [SerializeField] private Animator animator;
 
     private void Awake()
@@ -35,7 +34,6 @@ public class S_Entity : MonoBehaviour
         S_EnemyRangeDetection.onTargetDetected.AddListener(SetTarget);
         S_EnemyHealth.onUpdateEnemyHealth.AddListener(UpdateHealth);
         S_EnemyHealth.onInitializeEnemyHealth.AddListener(SetHealth);
-        //S_EnemyAnimation.UpdateTimerAnimation.AddListener(UpdateTimerAnimation);
     }
 
     private void OnDisable()
@@ -43,7 +41,6 @@ public class S_Entity : MonoBehaviour
         S_EnemyRangeDetection.onTargetDetected.RemoveListener(SetTarget);
         S_EnemyHealth.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         S_EnemyHealth.onInitializeEnemyHealth.RemoveListener(SetHealth);
-        //S_EnemyAnimation.UpdateTimerAnimation.RemoveListener(UpdateTimerAnimation);
     }
 
     private void Update()
@@ -62,7 +59,6 @@ public class S_Entity : MonoBehaviour
 
     private void SetTarget(GameObject Target)
     {
-        Debug.Log(Target);
         agent.SetVariableValue<GameObject>("Player", Target);
 
         if(Target != null)
@@ -84,10 +80,5 @@ public class S_Entity : MonoBehaviour
     {
         agent.SetVariableValue<float>("Health", health);
         agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Hit);
-    }
-
-    private void UpdateTimerAnimation(float timer)
-    {
-        agent.SetVariableValue<float>("AnimationTimer", timer);
     }
 }

@@ -6,10 +6,10 @@ public class S_PlayerInputsManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerInput playerInput;
-
-    [Header("Output")]
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
     [SerializeField] private RSO_LastInputActionMap rsoLastInputActionMap;
+
+    [Header("Output")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
@@ -50,8 +50,8 @@ public class S_PlayerInputsManager : MonoBehaviour
         uiMapName = iaPlayerInput.UI.Get().name;
         cinematicMapName = iaPlayerInput.Cinematic.Get().name;
 
-        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
-        rsoLastInputActionMap.Value = S_EnumPlayerInputActionMap.None;
+        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.None;
+        rsoLastInputActionMap.Value = EnumPlayerInputActionMap.None;
         ActivateGameActionInput();
     }
 
@@ -180,7 +180,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.actions.Disable();
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
+        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.None;
     }
 
     private void ActivateGameActionInput()
@@ -190,7 +190,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.SwitchCurrentActionMap(gameMapName);
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Game;
+        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.Game;
     }
 
     private void ActivateUiActionInput()
@@ -200,7 +200,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.SwitchCurrentActionMap(uiMapName);
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.UI;
+        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.UI;
     }
 
     private void ActivateCinematicActionInput()
@@ -210,7 +210,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.SwitchCurrentActionMap(cinematicMapName);
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Cinematic;
+        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.Cinematic;
     }
 
     private void OnGameOver()
