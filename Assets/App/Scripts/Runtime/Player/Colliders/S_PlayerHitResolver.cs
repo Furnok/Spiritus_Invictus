@@ -43,6 +43,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                 else
                 {
                     Debug.Log("Hit!");
+                    _rseOnPlayerHit.Call(attackData);
                     //rseOnAnimationBoolValueChange.Call("isHit", true);
                 }
             }));

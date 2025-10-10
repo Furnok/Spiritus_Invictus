@@ -41,7 +41,7 @@ public class S_PlayerHealthManager : MonoBehaviour
     {
         var newHealth= rsoPlayerCurrentHealth.Value - damage;
         rsoPlayerCurrentHealth.Value = Mathf.Clamp(newHealth, 0, maxHealth);
-        Debug.Log($"Player Health: {rsoPlayerCurrentHealth.Value}");
+        Debug.Log($"Player heal reduced, Player Health: {rsoPlayerCurrentHealth.Value}");
 
         if (rsoPlayerCurrentHealth.Value <= 0)
         {
