@@ -10,8 +10,16 @@ public struct PlayerStatsData
     public float healAmount;
     public float delayBeforeHeal;
 
-    [Header("Movement values")]
+    [Header("Movement player values")]
+    public float moveSpeed;
+    public float strafeSpeed;
+    public float turnSpeed;
+    public float turnSpeedTargeting;
+
     [Header("Dodge values")]
+    public float dodgeForce;
+    public float dodgeDuration;
+    public AnimationCurve _speedDodgeCurve;
 
     [Header("Parry values")]
     public float parryToleranceBeforeHit;

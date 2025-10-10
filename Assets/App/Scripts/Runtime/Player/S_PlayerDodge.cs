@@ -3,9 +3,6 @@
 public class S_PlayerDodge : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float _dodgeForce = 12f;
-    [SerializeField] private float _dodgeDuration = 0.5f;
-    [SerializeField] private AnimationCurve _speedCurve;
     [SerializeField, S_AnimationName] string _dodgeParam;
     [SerializeField, S_AnimationName] string _dodgeDirXParam;
     [SerializeField, S_AnimationName] string _dodgeDirYParam;
@@ -18,6 +15,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] RSO_PlayerIsTargeting _playerIsTargeting;
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField] SSO_PlayerStats _playerStats;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
@@ -113,12 +111,12 @@ public class S_PlayerDodge : MonoBehaviour
         _rb.linearDamping = 0;
         _rb.angularVelocity = Vector3.zero;
 
-        while (elapsed < _dodgeDuration)
+        while (elapsed < _playerStats.Value.dodgeDuration)
         {
-            float t = elapsed / _dodgeDuration;
-            float speed = _speedCurve != null ? _speedCurve.Evaluate(t) : 1f;
+            float t = elapsed / _playerStats.Value.dodgeDuration;
+            float speed = _playerStats.Value._speedDodgeCurve != null ? _playerStats.Value._speedDodgeCurve.Evaluate(t) : 1f;
 
-            _rb.linearVelocity = dodgeDirection * _dodgeForce * speed;
+            _rb.linearVelocity = dodgeDirection * _playerStats.Value.dodgeForce * speed;
 
             elapsed += Time.deltaTime;
             yield return null;

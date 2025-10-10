@@ -13,6 +13,7 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] RSO_PlayerIsDodging _playerIsDodging;
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField] SSO_PlayerStats _playerStats;
 
     [Header("Input")]
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
@@ -26,10 +27,6 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
-    [SerializeField] private SSO_PlayerMovementSpeed ssoPlayerMovementSpeed;
-    [SerializeField] private SSO_PlayerTurnSpeed ssoPlayerTurnSpeed;
-    [SerializeField] private SSO_PlayerTurnSpeedTargeting ssoPlayerTurnSpeedTargeting;
-    [SerializeField] private SSO_PlayerStrafeSpeed ssoPlayerStrafeSpeed;
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
 
     private Vector2 moveInput = Vector2.zero;
@@ -110,7 +107,7 @@ public class S_PlayerMovement : MonoBehaviour
             if (directionToTarget.sqrMagnitude > 0.001f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, targetRotation, ssoPlayerTurnSpeedTargeting.Value * Time.fixedDeltaTime));
+                rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, targetRotation, _playerStats.Value.turnSpeedTargeting * Time.fixedDeltaTime));
             }
 
             Vector3 right = Vector3.Cross(Vector3.up, directionToTarget.normalized);
@@ -120,7 +117,7 @@ public class S_PlayerMovement : MonoBehaviour
             desiredDirection.Normalize();
 
             float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
-            Vector3 desiredVelocity = desiredDirection * ssoPlayerStrafeSpeed.Value * inputMagnitude;
+            Vector3 desiredVelocity = desiredDirection * _playerStats.Value.strafeSpeed * inputMagnitude;
 
             Vector3 velocityTargeting = rigidbodyPlayer.linearVelocity;
             velocityTargeting.x = desiredVelocity.x;
@@ -196,7 +193,7 @@ public class S_PlayerMovement : MonoBehaviour
                 {
                     desiredDir.Normalize();
                     Quaternion target = Quaternion.LookRotation(desiredDir, Vector3.up);
-                    rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, target, ssoPlayerTurnSpeed.Value * Time.fixedDeltaTime));
+                    rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, target, _playerStats.Value.turnSpeed * Time.fixedDeltaTime));
                 }
                 else
                 {
@@ -205,7 +202,7 @@ public class S_PlayerMovement : MonoBehaviour
                 }
 
                 float inputMag = Mathf.Clamp01(moveInput.magnitude);
-                Vector3 desiredVel = desiredDir * ssoPlayerMovementSpeed.Value * inputMag;
+                Vector3 desiredVel = desiredDir * _playerStats.Value.moveSpeed * inputMag;
 
 
                 Vector3 velocity = rigidbodyPlayer.linearVelocity;
