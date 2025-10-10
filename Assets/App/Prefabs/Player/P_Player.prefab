@@ -303,6 +303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7546165385591486761}
   - component: {fileID: 6993792690231021979}
+  - component: {fileID: 594229652376039088}
   m_Layer: 10
   m_Name: DodgeableArea
   m_TagString: Untagged
@@ -348,6 +349,18 @@ CapsuleCollider:
   m_Height: 2.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &594229652376039088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4895232474986518408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f1f1b507adcec24b9ca26cb167bba89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8174768722539903590
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,9 +590,10 @@ MonoBehaviour:
   _healParam: Heal
   _playerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
   _playerCurrentState: {fileID: 11400000, guid: 16388ffed06f1314f8caba9f9a324afe, type: 2}
+  ssoPlayerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
+  _playerCurrentHealth: {fileID: 11400000, guid: deb512c1ca8eaec4286f764395e6d686, type: 2}
   rseOnPlayerHeal: {fileID: 11400000, guid: 4c1dd4b878a2bbe49bee7a0802da40cf, type: 2}
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
-  ssoPlayerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   rseOnPlayerHealPerformed: {fileID: 11400000, guid: 52dcd0183e044a14e947f155d1c36c90, type: 2}
   _onPlayerAddState: {fileID: 11400000, guid: 38569afc7ffff0c4eb66c76bc8a6146e, type: 2}
   rseOnAnimationBoolValueChange: {fileID: 11400000, guid: f3b68030aacb033438a094c87c0e44ca, type: 2}

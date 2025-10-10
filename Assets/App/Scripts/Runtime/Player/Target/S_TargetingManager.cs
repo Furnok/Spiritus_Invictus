@@ -297,8 +297,6 @@ public class S_TargetingManager : MonoBehaviour
             rseOnAnimationBoolValueChange.Call("TargetLock", true);
         }
 
-
-
         return selectedTarget;
     }
 

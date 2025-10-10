@@ -95,7 +95,14 @@ public class S_PlayerMovement : MonoBehaviour
         if (rsoPlayerIsTargeting.Value && target != null)
         {
             if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false) return;
-            _onPlayerAddState.Call(PlayerState.Moving);
+            if(moveInput.sqrMagnitude > 0.0001f)
+            {
+                _onPlayerAddState.Call(PlayerState.Moving);
+            }
+            else
+            {
+                _onPlayerAddState.Call(PlayerState.None);
+            }
 
             Vector3 directionToTarget = target.position - transform.position;
             directionToTarget.y = 0f; // Ignore the heigth
@@ -120,10 +127,20 @@ public class S_PlayerMovement : MonoBehaviour
             velocityTargeting.z = desiredVelocity.z;
             rigidbodyPlayer.linearVelocity = velocityTargeting;
 
-            rseOnAnimationFloatValueChange.Call(speedParam, velocityTargeting.magnitude);
-            rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
-            rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
-
+            if (moveInput.sqrMagnitude > 0.0001f)
+            {
+                rseOnAnimationBoolValueChange.Call(moveParam, true);
+                rseOnAnimationFloatValueChange.Call(speedParam, velocityTargeting.magnitude);
+                rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
+                rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
+            }
+            else
+            {
+                rseOnAnimationFloatValueChange.Call(speedParam, 0);
+                rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
+                rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
+                rseOnAnimationBoolValueChange.Call(moveParam, false);
+            }
             rsoPlayerPosition.Value = transform.position;
             return;
         }
@@ -134,24 +151,25 @@ public class S_PlayerMovement : MonoBehaviour
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false)
         {
             rseOnAnimationFloatValueChange.Call(speedParam, 0);
+            rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
+            rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
             rseOnAnimationBoolValueChange.Call(moveParam, false);
-
             return;
         }
-        else if (moveInput.sqrMagnitude > 0.001f)
-        {
-            rseOnAnimationBoolValueChange.Call(moveParam, true);
-        }
-        else
-        {
-            rseOnAnimationBoolValueChange.Call(moveParam, false);
-        }
+        
 
         if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
             if (!rsoPlayerIsTargeting.Value)
             {
-                _onPlayerAddState.Call(PlayerState.Moving);
+                if (moveInput.sqrMagnitude > 0.0001f)
+                {
+                    _onPlayerAddState.Call(PlayerState.Moving);
+                }
+                else
+                {
+                    _onPlayerAddState.Call(PlayerState.None);
+                }
 
                 Quaternion camRot;
 

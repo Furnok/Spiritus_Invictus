@@ -8,13 +8,14 @@ public class S_PlayerHeal : MonoBehaviour
     [Header("References")]
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField] private SSO_PlayerStats ssoPlayerStats;
+    [SerializeField] RSO_PlayerCurrentHealth _playerCurrentHealth;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerHealInput rseOnPlayerHeal;
     [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
 
     [Header("Output")]
-    [SerializeField] private SSO_PlayerStats ssoPlayerStats;
     [SerializeField] private RSE_OnPlayerHealPerformed rseOnPlayerHealPerformed;
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
@@ -36,6 +37,8 @@ public class S_PlayerHeal : MonoBehaviour
     private void TryHeal()
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Healing) == false) return;
+        if (_playerCurrentHealth.Value >= ssoPlayerStats.Value.maxHealth) return;
+
         _onPlayerAddState.Call(PlayerState.Healing);
         rseOnAnimationBoolValueChange.Call(_healParam, true); 
 
