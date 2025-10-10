@@ -44,8 +44,6 @@ public class S_UISettings : MonoBehaviour
 
             buttonReturn.navigation = nav2;
         }
-
-        dropDownResolutions.GetComponent<TMP_Dropdown>().value = GetResolutions(0);
     }
 
     private void OnDisable()
@@ -55,42 +53,6 @@ public class S_UISettings : MonoBehaviour
             currentPanelSet.SetActive(false);
             currentPanelSet = null;
         }
-    }
-
-    private int GetResolutions(int index)
-    {
-        List<Resolution> resolutionsPC = new(Screen.resolutions);
-        resolutionsPC.Reverse();
-
-        int currentResolutionIndex = 0;
-
-        dropDownResolutions.GetComponent<TMP_Dropdown>().ClearOptions();
-
-        List<string> options = new();
-
-        for (int i = 0; i < resolutionsPC.Count; i++)
-        {
-            Resolution res = resolutionsPC[i];
-
-            if (res.width < 1280 || res.height < 720)
-            {
-                continue;
-            }
-
-            string option = $"{res.width}x{res.height} {res.refreshRateRatio}Hz";
-
-            options.Add(option);
-
-            if (i == index)
-            {
-                currentResolutionIndex = options.Count - 1;
-            }
-        }
-
-        dropDownResolutions.GetComponent<TMP_Dropdown>().AddOptions(options);
-        dropDownResolutions.GetComponent<TMP_Dropdown>().RefreshShownValue();
-
-        return currentResolutionIndex;
     }
 
     private void ClosePanel()

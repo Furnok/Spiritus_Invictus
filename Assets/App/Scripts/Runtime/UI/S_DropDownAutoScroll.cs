@@ -1,5 +1,7 @@
 using DG.Tweening;
+using System;
 using TMPro;
+using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -14,6 +16,10 @@ public class S_DropDownAutoScroll : MonoBehaviour
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private Transform content;
 
+    [Header("Output")]
+    [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
+
+    private bool init = false;
     private int number = 0;
     private Tween moveTween = null;
     private S_SerializableDictionary<Selectable, int> selectables = new();
@@ -41,7 +47,25 @@ public class S_DropDownAutoScroll : MonoBehaviour
 
     private void OnDisable()
     {
+        init = false;
+
         moveTween?.Kill();
+    }
+
+    private void Update()
+    {
+        if (dropDown.IsExpanded && !init)
+        {
+            ScrollOpen();
+        }
+    }
+
+    private void ScrollOpen()
+    {
+        init = true;
+
+        float targetPos = 1f - ((float)rsoSettingsSaved.Value.resolutionIndex / number);
+        moveTween = scrollRect.DOVerticalNormalizedPos(targetPos, 0).SetEase(Ease.Linear);
     }
 
     public void ScrollToIndex(Selectable item)

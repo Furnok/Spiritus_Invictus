@@ -1,24 +1,23 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
 
 public class S_Settings : MonoBehaviour
 {
-    //[Header("Settings")]
-    //[SerializeField, S_SaveName] private string saveSettingsName;
+    [Header("Settings")]
+    [SerializeField, S_SaveName] private string saveSettingsName;
 
     [Header("References")]
     [SerializeField] private AudioMixer audioMixer;
 
-    //[Header("Input")]
-    //[SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
+    [Header("Input")]
+    [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
-    //[Header("Output")]
-    //[SerializeField] private RSE_SaveData rseSaveData;
+    [Header("Output")]
+    [SerializeField] private RSE_OnSaveData rseSaveData;
 
     private bool isLoaded = false;
     private List<TextMeshProUGUI> listTextAudios = new();
@@ -37,19 +36,19 @@ public class S_Settings : MonoBehaviour
 
     public void UpdateLanguages(int index)
     {
-        /*if (isLoaded && rsoSettingsSaved.Value.languageIndex != index)
+        if (isLoaded && rsoSettingsSaved.Value.languageIndex != index)
         {
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
 
             rsoSettingsSaved.Value.languageIndex = index;
 
             Save();
-        }*/
+        }
     }
 
     public void UpdateFullscreen(bool value)
     {
-        /*if (isLoaded && rsoSettingsSaved.Value.fullScreen != value)
+        if (isLoaded && rsoSettingsSaved.Value.fullScreen != value)
         {
             if (value)
             {
@@ -65,24 +64,24 @@ public class S_Settings : MonoBehaviour
             rsoSettingsSaved.Value.fullScreen = value;
 
             Save();
-        }*/
+        }
     }
 
     private Resolution GetResolutions(int index)
     {
         List<Resolution> resolutionsPC = new(Screen.resolutions);
-        resolutionsPC.Reverse();
+
+        resolutionsPC = resolutionsPC
+            .Where(r => r.width >= 1280 && r.height >= 720)
+            .OrderByDescending(r => r.width * r.height)
+            .ThenByDescending(r => r.refreshRateRatio.value)
+            .ToList();
 
         Resolution resolution = resolutionsPC[0];
 
         for (int i = 0; i < resolutionsPC.Count; i++)
         {
             Resolution res = resolutionsPC[i];
-
-            if (res.width < 1280 || res.height < 720)
-            {
-                continue;
-            }
 
             if (i == index)
             {
@@ -95,7 +94,7 @@ public class S_Settings : MonoBehaviour
 
     public void UpdateResolutions(int index)
     {
-        /*if (isLoaded && rsoSettingsSaved.Value.resolutionIndex != index)
+        if (isLoaded && rsoSettingsSaved.Value.resolutionIndex != index)
         {
             Resolution resolution = GetResolutions(index);
 
@@ -104,54 +103,54 @@ public class S_Settings : MonoBehaviour
             rsoSettingsSaved.Value.resolutionIndex = index;
 
             Save();
-        }*/
+        }
     }
 
     public void UpdateMainVolume(float value)
     {
-        /*if (isLoaded && rsoSettingsSaved.Value.listVolumes[0].volume != value)
+        if (isLoaded && rsoSettingsSaved.Value.listVolumes[0].volume != value)
         {
             UpdateVolumes(value, 0);
-        }*/
+        }
     }
 
     public void UpdateMusicVolume(float value)
     {
-        /*if (isLoaded && rsoSettingsSaved.Value.listVolumes[1].volume != value)
+        if (isLoaded && rsoSettingsSaved.Value.listVolumes[1].volume != value)
         {
             UpdateVolumes(value, 1);
-        }*/
+        }
     }
 
     public void UpdateSoundsVolume(float value)
     {
-        /*if (isLoaded && rsoSettingsSaved.Value.listVolumes[2].volume != value)
+        if (isLoaded && rsoSettingsSaved.Value.listVolumes[2].volume != value)
         {
             UpdateVolumes(value, 2);
-        }*/
+        }
     }
 
     public void UpdateUIVolume(float value)
     {
-        /*if (isLoaded && rsoSettingsSaved.Value.listVolumes[3].volume != value)
+        if (isLoaded && rsoSettingsSaved.Value.listVolumes[3].volume != value)
         {
             UpdateVolumes(value, 3);
-        }*/
+        }
     }
 
     private void UpdateVolumes(float value, int index)
     {
-        /*audioMixer.SetFloat(rsoSettingsSaved.Value.listVolumes[index].name, 40 * Mathf.Log10(Mathf.Max(value, 1) / 100));
+        audioMixer.SetFloat(rsoSettingsSaved.Value.listVolumes[index].name, 40 * Mathf.Log10(Mathf.Max(value, 1) / 100));
 
         rsoSettingsSaved.Value.listVolumes[index].volume = value;
 
         listTextAudios[index].text = $"{value}%";
 
-        Save();*/
+        Save();
     }
 
     private void Save()
     {
-        //rseSaveData.Call(saveSettingsName, true, false);
+        rseSaveData.Call(saveSettingsName, true, false);
     }
 }

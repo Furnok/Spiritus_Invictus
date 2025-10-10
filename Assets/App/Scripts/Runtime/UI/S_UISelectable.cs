@@ -13,21 +13,35 @@ public class S_UISelectable : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Image image;
+    [SerializeField] private Image image2;
 
     private Color32 colorBase = new();
+    private Color32 colorBase2 = new();
     private bool mouseOver = false;
     private bool isPressed = false;
     private Tween colorTween = null;
+    private Tween colorTween2 = null;
 
     private void OnEnable()
     {
         colorBase = image.color;
+
+        if (image2 != null)
+        {
+            colorBase2 = image2.color;
+        }
     }
 
     private void OnDisable()
     {
         colorTween?.Kill();
+        colorTween2?.Kill();
         image.color = colorBase;
+
+        if (image2 != null)
+        {
+            image2.color = colorBase2;
+        }
     }
 
     public void MouseEnter(Selectable uiElement)
@@ -36,7 +50,7 @@ public class S_UISelectable : MonoBehaviour
         {
             if (!isPressed)
             {
-                PlayColorTransition(colorMouseEnter);
+                PlayColorTransition(colorMouseEnter, colorMouseEnter);
             }
 
             mouseOver = true;
@@ -49,7 +63,7 @@ public class S_UISelectable : MonoBehaviour
         {
             if (!isPressed)
             {
-                PlayColorTransition(colorBase);
+                PlayColorTransition(colorBase, colorBase2);
             }
 
             mouseOver = false;
@@ -61,7 +75,7 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable)
         {
-            PlayColorTransition(colorMouseDown);
+            PlayColorTransition(colorMouseDown, colorMouseDown);
 
             isPressed = true;
         }
@@ -73,11 +87,11 @@ public class S_UISelectable : MonoBehaviour
         {
             if (mouseOver)
             {
-                PlayColorTransition(colorMouseEnter);
+                PlayColorTransition(colorMouseEnter, colorMouseEnter);
             }  
             else
             {
-                PlayColorTransition(colorBase);
+                PlayColorTransition(colorBase, colorBase2);
             }
 
             isPressed = false;
@@ -88,7 +102,7 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable && Gamepad.current != null)
         {
-            PlayColorTransition(colorMouseEnter);
+            PlayColorTransition(colorMouseEnter, colorMouseEnter);
         }
     }
 
@@ -96,7 +110,7 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable && Gamepad.current != null)
         {
-            PlayColorTransition(colorBase);
+            PlayColorTransition(colorBase, colorBase2);
         }
     }
 
@@ -105,10 +119,16 @@ public class S_UISelectable : MonoBehaviour
 
     }
 
-    private void PlayColorTransition(Color32 targetColor)
+    private void PlayColorTransition(Color32 targetColor, Color32 targetColor2)
     {
         colorTween?.Kill();
+        colorTween2?.Kill();
 
         colorTween = image.DOColor(targetColor, transition).SetEase(Ease.Linear);
+
+        if (image2 != null)
+        {
+            colorTween2 = image2.DOColor(targetColor2, transition).SetEase(Ease.Linear);
+        }
     }
 }

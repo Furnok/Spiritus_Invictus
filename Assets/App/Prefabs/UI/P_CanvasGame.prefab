@@ -211,7 +211,7 @@ MonoBehaviour:
   m_ScrollWheelAction: {fileID: 6843416407407456490, guid: 2993d1cf4eb94a74c9e90e7bae7148a2, type: 3}
   m_TrackedDevicePositionAction: {fileID: 2338910622613031994, guid: 2993d1cf4eb94a74c9e90e7bae7148a2, type: 3}
   m_TrackedDeviceOrientationAction: {fileID: 8340508246071816350, guid: 2993d1cf4eb94a74c9e90e7bae7148a2, type: 3}
-  m_DeselectOnBackgroundClick: 1
+  m_DeselectOnBackgroundClick: 0
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
@@ -526,7 +526,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 525, y: -30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8413913126154482142
 MonoBehaviour:
@@ -578,7 +578,19 @@ MonoBehaviour:
   m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3677968079688610705}
+        m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
+        m_MethodName: UpdateMusicVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6651800282060633478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,11 +741,12 @@ MonoBehaviour:
   transition: 0.2
   colorMouseEnter:
     serializedVersion: 2
-    rgba: 4291348680
+    rgba: 4288059030
   colorMouseDown:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 888124767579011007}
+  image2: {fileID: 2001190029325686242}
 --- !u!1 &476497980749326440
 GameObject:
   m_ObjectHideFlags: 0
@@ -1299,6 +1312,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 660865831065342216}
+  image2: {fileID: 0}
 --- !u!1 &1019367734985817635
 GameObject:
   m_ObjectHideFlags: 0
@@ -1524,6 +1538,8 @@ GameObject:
   - component: {fileID: 2903927461032347645}
   - component: {fileID: 2809964269625346456}
   - component: {fileID: 7933088321982871583}
+  - component: {fileID: 3868484168872521359}
+  - component: {fileID: 3677968079688610705}
   m_Layer: 5
   m_Name: ContentSettings
   m_TagString: Untagged
@@ -1590,6 +1606,49 @@ MonoBehaviour:
   toggleFullscreen: {fileID: 432927416295327136}
   sliderMainVolume: {fileID: 6043570550392987664}
   sliderUIVolume: {fileID: 6335642166347103854}
+--- !u!114 &3868484168872521359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055139870482316824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6221eb411957e724aa96e8ba76e37509, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 3677968079688610705}
+  dropDownLanguages: {fileID: 3643773589439469079}
+  dropDownResolutions: {fileID: 8159717645729807765}
+  toggleFullscreen: {fileID: 432927416295327136}
+  listSliderVolume:
+  - {fileID: 6043570550392987664}
+  - {fileID: 8413913126154482142}
+  - {fileID: 1141263507511781116}
+  - {fileID: 6335642166347103854}
+  listTextVolume:
+  - {fileID: 6612311580861791665}
+  - {fileID: 8525274817005985577}
+  - {fileID: 5286483689633408776}
+  - {fileID: 3213034332951763176}
+  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
+--- !u!114 &3677968079688610705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055139870482316824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd45e736249638e4da0a9ffee525e633, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveSettingsName: Settings
+  audioMixer: {fileID: 24100000, guid: 3132e0a5dcbf0804b84f2080e4b0c72c, type: 2}
+  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
+  rseSaveData: {fileID: 11400000, guid: 62ad449420324a04987c8abb7406b044, type: 2}
 --- !u!1 &1137259262900128421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1934,6 +1993,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 6709931373696564746}
+  image2: {fileID: 0}
 --- !u!1 &1209730560109822237
 GameObject:
   m_ObjectHideFlags: 0
@@ -2818,7 +2878,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 525, y: -30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6335642166347103854
 MonoBehaviour:
@@ -2870,7 +2930,19 @@ MonoBehaviour:
   m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3677968079688610705}
+        m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
+        m_MethodName: UpdateUIVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4319668011278241144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3021,11 +3093,12 @@ MonoBehaviour:
   transition: 0.2
   colorMouseEnter:
     serializedVersion: 2
-    rgba: 4291348680
+    rgba: 4288059030
   colorMouseDown:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 1975414808949531672}
+  image2: {fileID: 7333441797887718309}
 --- !u!1 &1807164942319602720
 GameObject:
   m_ObjectHideFlags: 0
@@ -3663,6 +3736,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 2203211481851389783}
+  image2: {fileID: 0}
 --- !u!1 &1979307469800630859
 GameObject:
   m_ObjectHideFlags: 0
@@ -3788,6 +3862,7 @@ MonoBehaviour:
   dropDown: {fileID: 3643773589439469079}
   scrollRect: {fileID: 8853496216900671084}
   content: {fileID: 1116273862302130758}
+  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
 --- !u!1 &2099287307334675551
 GameObject:
   m_ObjectHideFlags: 0
@@ -4040,7 +4115,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 525, y: -30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1046940424381237074
 CanvasRenderer:
@@ -4148,7 +4223,19 @@ MonoBehaviour:
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3677968079688610705}
+        m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
+        m_MethodName: UpdateResolutions
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &4256832084728887178
 MonoBehaviour:
@@ -4305,6 +4392,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 4584435268124745954}
+  image2: {fileID: 0}
 --- !u!1 &2400556174094216419
 GameObject:
   m_ObjectHideFlags: 0
@@ -4608,6 +4696,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 4727215765314455697}
+  image2: {fileID: 0}
 --- !u!1 &2486755852303783819
 GameObject:
   m_ObjectHideFlags: 0
@@ -4911,6 +5000,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 4682516617025427476}
+  image2: {fileID: 0}
 --- !u!1 &2578585340436519993
 GameObject:
   m_ObjectHideFlags: 0
@@ -5084,7 +5174,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 525, y: -30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &432927416295327136
 MonoBehaviour:
@@ -5132,7 +5222,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3677968079688610705}
+        m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
+        m_MethodName: UpdateFullscreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!114 &7325109455802146282
 MonoBehaviour:
@@ -5289,6 +5391,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 8685594084712335532}
+  image2: {fileID: 0}
 --- !u!1 &2628184257960459047
 GameObject:
   m_ObjectHideFlags: 0
@@ -5555,6 +5658,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 2694662588475934154}
+  image2: {fileID: 0}
 --- !u!1 &2818927001054340303
 GameObject:
   m_ObjectHideFlags: 0
@@ -5821,6 +5925,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 3263522757909643620}
+  image2: {fileID: 0}
 --- !u!1 &2850234113880000607
 GameObject:
   m_ObjectHideFlags: 0
@@ -6093,7 +6198,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &7518773961790752119
 MonoBehaviour:
@@ -6656,10 +6761,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 5912592733868744208}
+    m_SelectOnDown: {fileID: 5912592733868744208}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -6872,6 +6977,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 8667539758915092667}
+  image2: {fileID: 0}
 --- !u!1 &3767888738261478662
 GameObject:
   m_ObjectHideFlags: 0
@@ -7099,10 +7205,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnUp: {fileID: 6659875914944821893}
+    m_SelectOnDown: {fileID: 6659875914944821893}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -7315,6 +7421,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 3476301166014664228}
+  image2: {fileID: 0}
 --- !u!1 &3866422581908589347
 GameObject:
   m_ObjectHideFlags: 0
@@ -7618,6 +7725,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 5078283513604907845}
+  image2: {fileID: 0}
 --- !u!1 &3883856457817057357
 GameObject:
   m_ObjectHideFlags: 0
@@ -7921,6 +8029,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 1427025538009170800}
+  image2: {fileID: 0}
 --- !u!1 &4047530593126019592
 GameObject:
   m_ObjectHideFlags: 0
@@ -8098,7 +8207,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 525, y: -30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6125440866405422845
 CanvasRenderer:
@@ -8192,12 +8301,21 @@ MonoBehaviour:
     - m_Text: English
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: French
-      m_Image: {fileID: 0}
-      m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3677968079688610705}
+        m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
+        m_MethodName: UpdateLanguages
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &1689192650356896629
 MonoBehaviour:
@@ -8354,6 +8472,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 6735069401940900900}
+  image2: {fileID: 0}
 --- !u!1 &4282331244062172009
 GameObject:
   m_ObjectHideFlags: 0
@@ -9188,6 +9307,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 3464887076459630793}
+  image2: {fileID: 0}
 --- !u!1 &4504873306768195076
 GameObject:
   m_ObjectHideFlags: 0
@@ -9855,7 +9975,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 525, y: -30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1141263507511781116
 MonoBehaviour:
@@ -9907,7 +10027,19 @@ MonoBehaviour:
   m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3677968079688610705}
+        m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
+        m_MethodName: UpdateSoundsVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4514492475911915698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10058,11 +10190,12 @@ MonoBehaviour:
   transition: 0.2
   colorMouseEnter:
     serializedVersion: 2
-    rgba: 4291348680
+    rgba: 4288059030
   colorMouseDown:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 3364461379233870507}
+  image2: {fileID: 5038342956576412686}
 --- !u!1 &5023855451116158792
 GameObject:
   m_ObjectHideFlags: 0
@@ -10377,6 +10510,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 5413569894864333333}
+  image2: {fileID: 0}
 --- !u!1 &5060373235315165901
 GameObject:
   m_ObjectHideFlags: 0
@@ -10561,7 +10695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.11764706, g: 0.11764706, b: 1, a: 1}
+  m_Color: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11481,7 +11615,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 525, y: -30}
-  m_SizeDelta: {x: 300, y: 60}
+  m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6043570550392987664
 MonoBehaviour:
@@ -11533,7 +11667,19 @@ MonoBehaviour:
   m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3677968079688610705}
+        m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
+        m_MethodName: UpdateMainVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2821578589191604155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11684,11 +11830,12 @@ MonoBehaviour:
   transition: 0.2
   colorMouseEnter:
     serializedVersion: 2
-    rgba: 4291348680
+    rgba: 4288059030
   colorMouseDown:
     serializedVersion: 2
     rgba: 4288059030
   image: {fileID: 4370262826059482749}
+  image2: {fileID: 6162836612981965054}
 --- !u!1 &6169754131475673654
 GameObject:
   m_ObjectHideFlags: 0
@@ -11747,7 +11894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.11764706, g: 0.11764706, b: 1, a: 1}
+  m_Color: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11858,7 +12005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.11764706, g: 0.11764706, b: 1, a: 1}
+  m_Color: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -13661,6 +13808,7 @@ MonoBehaviour:
   dropDown: {fileID: 8159717645729807765}
   scrollRect: {fileID: 3289063997415480276}
   content: {fileID: 4090712775933267828}
+  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
 --- !u!1 &8353797932590071601
 GameObject:
   m_ObjectHideFlags: 0
@@ -14087,6 +14235,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 3372220415
   image: {fileID: 6867590230112859424}
+  image2: {fileID: 0}
 --- !u!1 &8581800493623683120
 GameObject:
   m_ObjectHideFlags: 0
@@ -14420,7 +14569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.11764706, g: 0.11764706, b: 1, a: 1}
+  m_Color: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

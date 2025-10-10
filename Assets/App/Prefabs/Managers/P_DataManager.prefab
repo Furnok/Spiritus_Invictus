@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7416935499467732771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1846124316362233137}
+  - component: {fileID: 4683235825307319864}
+  m_Layer: 0
+  m_Name: P_DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1846124316362233137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7416935499467732771}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4683235825307319864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7416935499467732771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23333830ee90f984780ae87f62a538ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveSettingsName: Settings
+  saveNames:
+  - Save_1
+  audioMixer: {fileID: 24100000, guid: 3132e0a5dcbf0804b84f2080e4b0c72c, type: 2}
+  rseLoadData: {fileID: 11400000, guid: ac17d71addb17344ebe2b57c468f33a5, type: 2}
+  rseSaveData: {fileID: 11400000, guid: 62ad449420324a04987c8abb7406b044, type: 2}
+  rseDeleteData: {fileID: 11400000, guid: 412b88d79b454c548a90cdeaae82db06, type: 2}
+  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
+  rsoContentSaved: {fileID: 11400000, guid: 3d71c06497ef2e94caea07705be193b1, type: 2}

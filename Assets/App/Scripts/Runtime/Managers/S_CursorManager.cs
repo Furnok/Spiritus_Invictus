@@ -133,5 +133,6 @@ public class S_CursorManager : MonoBehaviour
     private void ResetFocus()
     {
         EventSystem.current.SetSelectedGameObject(null);
+        rsoDefaultSelectable.Value?.GetComponent<S_UISelectable>()?.Unselected(rsoDefaultSelectable.Value);
     }
 }
