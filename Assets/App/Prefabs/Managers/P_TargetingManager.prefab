@@ -61,16 +61,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74df846ae39265c429806def2a117faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmoColor: {r: 1, g: 0.6862745, b: 0, a: 1}
+  gizmoColor: {r: 1, g: 0.9167996, b: 0, a: 1}
   gizmoTargetColor: {r: 1, g: 0, b: 0, a: 1}
+  gizmoPreTargetColor: {r: 1, g: 0.5949937, b: 0, a: 1}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4096
   gizmoRadius: 0.1
   gizmoTargetRadius: 0.3
+  gizmoPreTargetRadius: 0.2
   gizmoHeightOffset: 1.5
   drawGizmos: 1
+  rsoPlayerPosition: {fileID: 11400000, guid: a3d33267cdb3a0a43bb8ab4811624f21, type: 2}
+  ssoFrontConeAngle: {fileID: 11400000, guid: 1a334ea9ff9f95d45bd16bd34d05d126, type: 2}
   rseOnEnemyEnterTargetingRange: {fileID: 11400000, guid: 857c3a1874fe4f34b9a4e7de1355f9c0, type: 2}
   rseOnEnemyExitTargetingRange: {fileID: 11400000, guid: 9464073673f74034da5e08cf174a885c, type: 2}
   rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
   rseOnPlayerCancelTargeting: {fileID: 11400000, guid: d8d0a24f7352ea84ba1f5614f16bb752, type: 2}
+  _rseOnPlayerCenter: {fileID: 11400000, guid: 0a40b7ab63540b84891bec3b379c9b89, type: 2}
   rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
 --- !u!114 &9042962056823339771
 MonoBehaviour:
