@@ -58,9 +58,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     void CancelAttack()
     {
-        if ( _attackCoroutine != null ) return;
+        if ( _attackCoroutine == null ) return;
         StopCoroutine(_attackCoroutine);
-
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         _onPlayerAddState.Call(PlayerState.None);

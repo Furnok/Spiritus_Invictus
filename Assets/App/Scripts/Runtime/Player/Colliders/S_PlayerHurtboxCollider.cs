@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
 
 public class S_PlayerHurtboxCollider : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
     [SerializeField] RSO_CanParry _canParry;
     [SerializeField] RSO_ParryStartTime _parryStartTime;
     [SerializeField] SSO_PlayerStats _playerStats;
+    [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
 
 
     //[Header("Input")]
@@ -27,7 +27,13 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
     {
         if (other.CompareTag("Hitbox") && other.TryGetComponent(out IAttackProvider attack))
         {
-            _onAttackCollide.Call(attack.GetAttackData());
+            var attackData = attack.GetAttackData();
+            _onAttackCollide.Call(attackData);
+            var goId = other.gameObject.GetInstanceID();
+
+            //if (_attackDataInDodgeableArea.Value.ContainsKey(goId) == false) return;
+            //Debug.Log("remove");
+            //_attackDataInDodgeableArea.Value.Remove(goId);
         }
     }
 

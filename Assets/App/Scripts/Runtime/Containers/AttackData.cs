@@ -4,7 +4,8 @@ using System;
 [Serializable]
 public struct AttackData
 {
-    public int sourceId;
+    public int attackId;
+    public int goSourceId;
     public EnemyAttackType attackType;
     public float damage;
     public float knockbackForce;

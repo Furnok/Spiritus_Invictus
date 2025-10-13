@@ -6,9 +6,10 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] private RSE_OnPlayerTakeDamage rseOnPlayerTakeDamage;
     [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
 
-
     [Header("Output")]
     [SerializeField] private RSE_OnPlayerHealthReduced rseOnPlayerHealthReduced;
+    [SerializeField] RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
+    [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
 
     private void OnEnable()
     {
@@ -25,13 +26,18 @@ public class S_PlayerDamageSystem : MonoBehaviour
 
     private void TakeDamage(float damage)
     {
+        rseOnAnimationTriggerValueChange.Call("isHit");
         rseOnPlayerHealthReduced.Call(damage);
-        Debug.Log($"Player Took Damage: {damage}");
+        _rseOnPlayerGettingHit.Call();
+        Debug.Log("Getting Hit");
     }
 
 
     private void TakeDamage(AttackData attackData)
     {
+        rseOnAnimationTriggerValueChange.Call("isHit");
         rseOnPlayerHealthReduced.Call(attackData.damage);
+        _rseOnPlayerGettingHit.Call();
+
     }
 }

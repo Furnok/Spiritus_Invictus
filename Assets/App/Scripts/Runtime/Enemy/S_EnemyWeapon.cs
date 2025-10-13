@@ -19,9 +19,9 @@ public class S_EnemyWeapon : MonoBehaviour, IAttackProvider
     {
         S_EnemyAttackData.onChangeAttackData.RemoveListener(ChangeAttackData);
     }
-    public AttackData GetAttackData()
+    public ref AttackData GetAttackData()
     {
-        return AttackData;
+        return ref AttackData;
     }
 
     private void ChangeAttackData(SSO_AttackData SSO_attackData)

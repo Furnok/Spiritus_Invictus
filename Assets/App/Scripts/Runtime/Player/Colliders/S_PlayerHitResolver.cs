@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System.Collections;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class S_PlayerHitResolver : MonoBehaviour
     [SerializeField] RSO_CanParry _canParry;
     [SerializeField] RSO_ParryStartTime _parryStartTime;
     [SerializeField] SSO_PlayerStats _playerStats;
+    [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
+    [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
 
     [Header("Input")]
     [SerializeField] RSE_OnAttackCollide _onAttackCollide;
@@ -18,7 +21,6 @@ public class S_PlayerHitResolver : MonoBehaviour
     [Header("Output")]
     [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
     [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
-    [SerializeField] RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
 
 
     private void OnEnable()
@@ -43,21 +45,28 @@ public class S_PlayerHitResolver : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Hit!");
                     _rseOnPlayerHit.Call(attackData);
-                    rseOnAnimationTriggerValueChange.Call("isHit");
                 }
             }));
         }
         else if (attackData.attackType == EnemyAttackType.Parryable)
         {
             _rseOnPlayerHit.Call(attackData);
-            Debug.Log("Player Hit P");
         }
         else if (attackData.attackType == EnemyAttackType.Dodgeable)
         {
-            _rseOnPlayerHit.Call(attackData);
-            Debug.Log("Player Hit d");
+            var canHit = _attackCanHitPlayer.Value.ContainsKey(attackData.goSourceId);
+
+            if (canHit == true)
+            {
+                _rseOnPlayerHit.Call(attackData);
+            }
+            else
+            {
+                Debug.Log("Dont hit cause dodge perfect");
+            }
+
+
         }
        
     }

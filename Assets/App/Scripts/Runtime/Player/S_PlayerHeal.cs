@@ -52,11 +52,10 @@ public class S_PlayerHeal : MonoBehaviour
 
     private void CancelHeal()
     {
-        if (healCoroutine != null)
-        {
-            StopCoroutine(healCoroutine);
-            _onPlayerAddState.Call(PlayerState.None);
-            rseOnAnimationBoolValueChange.Call(_healParam, false);
-        }
+        if (healCoroutine == null) return;
+
+        StopCoroutine(healCoroutine);
+        _onPlayerAddState.Call(PlayerState.None);
+        rseOnAnimationBoolValueChange.Call(_healParam, false);
     }
 }

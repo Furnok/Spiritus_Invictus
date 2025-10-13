@@ -16,6 +16,9 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
     [SerializeField] SSO_PlayerStats _playerStats;
+    [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
+    [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
+
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
@@ -72,7 +75,18 @@ public class S_PlayerDodge : MonoBehaviour
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false) return;
         _onPlayerAddState.Call(PlayerState.Dodging);
-        
+
+        //Test triggerDodgePerfect
+        var isDodgePrefect = _attackDataInDodgeableArea.Value.Count > 0;
+        if (isDodgePrefect)
+        { 
+            Debug.Log("Dodge perfect");
+            foreach (var attackData in _attackDataInDodgeableArea.Value)
+            {
+                _attackCanHitPlayer.Value.Remove(attackData.Key);
+            }
+        }
+
         Vector3 dodgeDirection = Vector3.zero;
 
         if (_playerIsTargeting.Value == false)
@@ -135,7 +149,7 @@ public class S_PlayerDodge : MonoBehaviour
 
     void CancelDodge()
     {
-        if (_dodgeCoroutine != null) return;
+        if (_dodgeCoroutine == null) return;
         StopCoroutine(_dodgeCoroutine);
         ResetValue();
     }

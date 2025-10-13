@@ -1,5 +1,4 @@
-﻿using DG.Tweening.Core.Easing;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerParry : MonoBehaviour
 {
@@ -60,7 +59,7 @@ public class S_PlayerParry : MonoBehaviour
 
     void CancelParry()
     {
-        if (_parryCoroutine != null) return;
+        if (_parryCoroutine == null) return;
         StopCoroutine(_parryCoroutine);
 
         ResetValue();
