@@ -95,6 +95,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 7780257008098858267}
     m_Modifications:
     - target: {fileID: 881773383, guid: 2d1b288c4815e28498d754a794475903, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 881773383, guid: 2d1b288c4815e28498d754a794475903, type: 3}
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
@@ -158,6 +162,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4964924593762660870}
   m_SourcePrefab: {fileID: 100100000, guid: 2d1b288c4815e28498d754a794475903, type: 3}
+--- !u!64 &3126047360894961468 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 881773383, guid: 2d1b288c4815e28498d754a794475903, type: 3}
+  m_PrefabInstance: {fileID: 3126047360702991483}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4922222550529036106 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8011566013882336049, guid: 2d1b288c4815e28498d754a794475903, type: 3}
@@ -447,6 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8c5f9195c9f834191542017619bd51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponCollider: {fileID: 3126047360894961468}
   onChangeAttackData:
     m_PersistentCalls:
       m_Calls: []

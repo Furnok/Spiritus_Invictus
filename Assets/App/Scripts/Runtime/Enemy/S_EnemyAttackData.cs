@@ -5,7 +5,8 @@ public class S_EnemyAttackData : MonoBehaviour
 {
     //[Header("Settings")]
 
-    //[Header("References")]
+    [Header("References")]
+    [SerializeField] Collider weaponCollider;
 
     //[Header("Input")]
 
@@ -17,5 +18,15 @@ public class S_EnemyAttackData : MonoBehaviour
     {
         onChangeAttackData.Invoke(SSO_AttackData);
         Debug.Log("GetData");
+    }
+
+    public void EnableWeaponCollider()
+    {
+        weaponCollider.enabled = true;
+    }
+
+    public void DisableWeaponCollider()
+    {
+        weaponCollider.enabled = false;
     }
 }
