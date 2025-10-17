@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -61,11 +61,11 @@ public class S_DataManagement : MonoBehaviour
         {
             if (FileAlreadyExist(saveSettingsName))
             {
-                LoadFromJson(saveSettingsName, true, false);
+                LoadFromJson(saveSettingsName, true);
             }
             else
             {
-                SaveToJson(saveSettingsName, true, false);
+                SaveToJson(saveSettingsName, true);
             }
         }
     }
@@ -88,17 +88,24 @@ public class S_DataManagement : MonoBehaviour
 
     private static string Decrypt(string cipherText)
     {
-        byte[] buffer = Convert.FromBase64String(cipherText);
+        try
+        {
+            byte[] buffer = Convert.FromBase64String(cipherText);
 
-        using Aes aes = Aes.Create();
-        aes.Key = Encoding.UTF8.GetBytes(EncryptionKey);
-        aes.IV = buffer[..(aes.BlockSize / 8)];
+            using Aes aes = Aes.Create();
+            aes.Key = Encoding.UTF8.GetBytes(EncryptionKey);
+            aes.IV = buffer[..(aes.BlockSize / 8)];
 
-        using MemoryStream memoryStream = new(buffer[(aes.BlockSize / 8)..]);
-        using CryptoStream cryptoStream = new(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
-        using StreamReader reader = new(cryptoStream);
+            using MemoryStream memoryStream = new(buffer[(aes.BlockSize / 8)..]);
+            using CryptoStream cryptoStream = new(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
+            using StreamReader reader = new(cryptoStream);
 
-        return reader.ReadToEnd();
+            return reader.ReadToEnd();
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     private string GetFilePath(string name)
@@ -111,7 +118,7 @@ public class S_DataManagement : MonoBehaviour
         return File.Exists(GetFilePath(name));
     }
 
-    private void SaveToJson(string name, bool isSetting, bool isAchievement)
+    private void SaveToJson(string name, bool isSetting)
     {
         if (name == null) return;
 
@@ -131,50 +138,62 @@ public class S_DataManagement : MonoBehaviour
         File.WriteAllText(filePath, fileCrypted ? Encrypt(dataToSave) : dataToSave);
     }
 
-    private void LoadFromJson(string name, bool isSettings, bool isAchievement)
+    private void LoadFromJson(string name, bool isSettings)
     {
         if (!FileAlreadyExist(name)) return;
 
         string filePath = GetFilePath(name);
-        string encryptedJson = File.ReadAllText(filePath);
+        string jsonContent;
 
-        if (fileCrypted)
+        try
         {
-            encryptedJson = Decrypt(encryptedJson);
+            jsonContent = File.ReadAllText(filePath);
+
+            if (fileCrypted)
+            {
+                jsonContent = Decrypt(jsonContent);
+            }
+
+            if (string.IsNullOrWhiteSpace(jsonContent))
+            {
+                throw new Exception();
+            }    
         }
-
-        if (string.IsNullOrWhiteSpace(encryptedJson))
+        catch
         {
+            SaveToJson(name, isSettings);
             return;
         }
 
-        if (isSettings)
+        try
         {
-            rsoSettingsSaved.Value = JsonUtility.FromJson<S_SettingsSaved>(encryptedJson);
+            if (isSettings)
+            {
+                rsoSettingsSaved.Value = JsonUtility.FromJson<S_SettingsSaved>(jsonContent);
 
-            StartCoroutine(S_Utils.DelayFrame(() => LoadSettings()));
+                if (rsoSettingsSaved.Value == null)
+                {
+                    throw new Exception();
+                }
+
+                StartCoroutine(S_Utils.DelayFrame(() => LoadSettings()));
+            }
+            else
+            {
+                rsoContentSaved.Value = JsonUtility.FromJson<S_ContentSaved>(jsonContent);
+
+                if (rsoContentSaved.Value == null)
+                {
+                    throw new Exception();
+                }
+            }
         }
-        else
+        catch
         {
-            rsoContentSaved.Value = JsonUtility.FromJson<S_ContentSaved>(encryptedJson);
-        }
-    }
-
-    private void LoadTempFromJson(string name, int index)
-    {
-        if (!FileAlreadyExist(name)) return;
-
-        string filePath = GetFilePath(name);
-        string encryptedJson = File.ReadAllText(filePath);
-
-        if (fileCrypted)
-        {
-            encryptedJson = Decrypt(encryptedJson);
-        }
-
-        if (string.IsNullOrWhiteSpace(encryptedJson))
-        {
-            return;
+            if (isSettings)
+            {
+                SaveToJson(name, isSettings);
+            }
         }
     }
 
@@ -184,12 +203,20 @@ public class S_DataManagement : MonoBehaviour
         resolutionsPC.Reverse();
 
         Resolution resolution = resolutionsPC[0];
+        Resolution recommended = Screen.currentResolution;
 
         for (int i = 0; i < resolutionsPC.Count; i++)
         {
             Resolution res = resolutionsPC[i];
 
-            if (i == index)
+            if (index < 0)
+            {
+                if (res.width == recommended.width && res.height == recommended.height && Mathf.Approximately((float)res.refreshRateRatio.value, (float)recommended.refreshRateRatio.value))
+                {
+                    resolution = res;
+                }
+            }
+            else if (i == index)
             {
                 resolution = res;
             }

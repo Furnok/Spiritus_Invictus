@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class S_WindowManager : MonoBehaviour
@@ -10,6 +10,10 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private RSE_OnOpenWindow rseOpenWindow;
     [SerializeField] private RSE_OnCloseWindow rseCloseWindow;
     [SerializeField] private RSE_OnCloseAllWindows rseCloseAllWindows;
+    [SerializeField] private RSE_OnPlayerPause rsePlayerPause;
+
+    [Header("Output")]
+    [SerializeField] private RSE_OnQuitGame rseQuitGame;
 
     private List<GameObject> currentWindows = new();
 
@@ -18,6 +22,7 @@ public class S_WindowManager : MonoBehaviour
         rseOpenWindow.action += AlreadyOpen;
         rseCloseWindow.action += CloseWindow;
         rseCloseAllWindows.action += CloseAllWindows;
+        rsePlayerPause.action += QuitGame;
     }
 
     private void OnDisable()
@@ -25,6 +30,7 @@ public class S_WindowManager : MonoBehaviour
         rseOpenWindow.action -= AlreadyOpen;
         rseCloseWindow.action -= CloseWindow;
         rseCloseAllWindows.action -= CloseAllWindows;
+        rsePlayerPause.action -= QuitGame;
     }
 
     private void Start()
@@ -33,6 +39,11 @@ public class S_WindowManager : MonoBehaviour
         {
             OpenWindow(mainWindow);
         }
+    }
+
+    private void QuitGame()
+    {
+        rseQuitGame.Call();
     }
 
     private void AlreadyOpen(GameObject window)

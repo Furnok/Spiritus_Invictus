@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "RSE_OnSaveData", menuName = "Data/RSE/Saves/OnSaveData")]
-public class RSE_OnSaveData : BT.ScriptablesObject.RuntimeScriptableEvent<string, bool, bool>{}
+public class RSE_OnSaveData : BT.ScriptablesObject.RuntimeScriptableEvent<string, bool>{}

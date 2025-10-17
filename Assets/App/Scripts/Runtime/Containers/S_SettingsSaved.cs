@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 [Serializable]
@@ -6,7 +6,7 @@ public class S_SettingsSaved
 {
     public int languageIndex = 0;
     public bool fullScreen = true;
-    public int resolutionIndex = 0;
+    public int resolutionIndex = -1;
 
     public List<S_ClassVolume> listVolumes = new()
     {

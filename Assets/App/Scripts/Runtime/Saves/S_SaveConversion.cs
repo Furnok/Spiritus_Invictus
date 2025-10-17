@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_SaveConversion : MonoBehaviour
 {
@@ -19,12 +19,12 @@ public class S_SaveConversion : MonoBehaviour
 
     public void ButtonPressSaveData()
     {
-        rseSaveData.Call(saveName, false, false);
+        rseSaveData.Call(saveName, false);
     }
 
     public void ButtonPressLoadData()
     {
-        rseLoadData.Call(saveName, false, false);
+        rseLoadData.Call(saveName, false);
     }
 
     public void ButtonPressDeleteData()

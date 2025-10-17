@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -56,6 +56,7 @@ public class S_LoadUISettings : MonoBehaviour
             .ToList();
 
         int currentResolutionIndex = 0;
+        Resolution recommended = Screen.currentResolution;
 
         dropDownResolutions.GetComponent<TMP_Dropdown>().ClearOptions();
 
@@ -69,9 +70,16 @@ public class S_LoadUISettings : MonoBehaviour
 
             options.Add(option);
 
-            if (i == index)
+            if (index < 0)
             {
-                currentResolutionIndex = options.Count - 1;
+                if (res.width == recommended.width && res.height == recommended.height && Mathf.Approximately((float)res.refreshRateRatio.value, (float)recommended.refreshRateRatio.value))
+                {
+                    currentResolutionIndex = i;
+                }
+            }
+            else if (i == index)
+            {
+                currentResolutionIndex = i;
             }
         }
 
