@@ -22,6 +22,7 @@ public class S_PlayerHeal : MonoBehaviour
     [SerializeField] private RSE_OnPlayerHealPerformed rseOnPlayerHealPerformed;
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+    [SerializeField] RSE_OnHealStart _onHealStart;
 
     private Coroutine healCoroutine = null;
 
@@ -43,7 +44,8 @@ public class S_PlayerHeal : MonoBehaviour
         if (_playerCurrentHealth.Value >= ssoPlayerStats.Value.maxHealth || _playerCurrentConviction.Value < _playerConvictionData.Value.healCost) return;
 
         _onPlayerAddState.Call(PlayerState.Healing);
-        rseOnAnimationBoolValueChange.Call(_healParam, true); 
+        rseOnAnimationBoolValueChange.Call(_healParam, true);
+        _onHealStart.Call();
 
         healCoroutine = StartCoroutine(S_Utils.Delay(ssoPlayerStats.Value.delayBeforeHeal, () =>
         {

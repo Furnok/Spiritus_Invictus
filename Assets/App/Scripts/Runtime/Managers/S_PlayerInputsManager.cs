@@ -12,6 +12,7 @@ public class S_PlayerInputsManager : MonoBehaviour
     [Header("Output")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
+    [SerializeField] RSE_OnPlayerAttackInputCancel _onPlayerAttackInputCancel;
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
@@ -63,6 +64,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         game.Move.performed += OnMoveChanged;
         game.Move.canceled += OnMoveChanged;
         game.Attack.performed += OnAttackInput;
+        game.Attack.canceled += OnAttackInputCancel;
         game.Dodge.performed += OnDodgeInput;
         game.Interact.performed += OnInteractInput;
         game.Meditation.performed += OnMeditationInput;
@@ -93,6 +95,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         game.Move.performed -= OnMoveChanged;
         game.Move.canceled -= OnMoveChanged;
         game.Attack.performed -= OnAttackInput;
+        game.Attack.canceled -= OnAttackInputCancel;
         game.Dodge.performed -= OnDodgeInput;
         game.Interact.performed -= OnInteractInput;
         game.Meditation.performed -= OnMeditationInput;
@@ -136,6 +139,11 @@ public class S_PlayerInputsManager : MonoBehaviour
     private void OnAttackInput(InputAction.CallbackContext ctx)
     {
         rseOnPlayerAttack.Call();
+    }
+
+    private void OnAttackInputCancel(InputAction.CallbackContext ctx)
+    {
+        _onPlayerAttackInputCancel.Call();
     }
 
     private void OnDodgeInput(InputAction.CallbackContext ctx)

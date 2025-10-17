@@ -11,20 +11,23 @@ public class S_ConvictionManager : MonoBehaviour
     [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
 
     [Header("Input")]
-    [SerializeField] RSE_OnPlayerHealPerformed _onPlayerHealPerformed;
+    [SerializeField] RSE_OnHealStart _onHealStart;
     [SerializeField] RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
     [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
 
     //[Header("Output")]
 
+    Coroutine _convictionConsumptionCoroutine;
+
     private void Awake()
     {
         _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
+        StartConvitionConsumption(); //change it when the player are playing and not pause the game
     }
 
     private void OnEnable()
     {
-        _onPlayerHealPerformed.action += ReduceConvictionOnHealPerformed;
+        _onHealStart.action += ReduceConvictionOnHealPerformed;
         _onPlayerAttackCancel.action += ReduceConvictionOnAttackCancel;
         _onPlayerGainConviction.action += OnPlayerGainConviction;
 
@@ -32,15 +35,17 @@ public class S_ConvictionManager : MonoBehaviour
 
     private void OnDisable()
     {
-        _onPlayerHealPerformed.action -= ReduceConvictionOnHealPerformed;
+        _onHealStart.action -= ReduceConvictionOnHealPerformed;
         _onPlayerAttackCancel.action -= ReduceConvictionOnAttackCancel;
         _onPlayerGainConviction.action -= OnPlayerGainConviction;
     }
 
     void ReduceConvictionOnHealPerformed()
     {
-        var ammount = Mathf.Clamp(_playerCurrentConviction.Value - _playerConvictionData.Value.healCost, 0, _playerConvictionData.Value.maxConviction);
-        _playerCurrentConviction.Value = ammount;
+        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - _playerConvictionData.Value.healCost, 0, _playerConvictionData.Value.maxConviction);
+        _playerCurrentConviction.Value = newAmmount;
+
+        DelayWhenConvictionLoss();
     }
 
     void ReduceConvictionOnAttackCancel(int stepCancel)
@@ -73,5 +78,56 @@ public class S_ConvictionManager : MonoBehaviour
     {
         var ammount = Mathf.Clamp(ammountGain + _playerCurrentConviction.Value, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = ammount;
+
+        DelayWhenConvictionGain();
+    }
+
+    void StartConvitionConsumption()
+    {
+        StopComsuptioncoroutine();
+
+        _convictionConsumptionCoroutine = StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.tickIntervalSec, () =>
+        {
+            ReductionConviction(_playerConvictionData.Value.ammountLostOverTick);
+        }));
+    }
+
+    void ReductionConviction(float ammount)
+    {
+        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
+        _playerCurrentConviction.Value = newAmmount;
+
+        StartConvitionConsumption();
+    }
+
+    void DelayWhenConvictionLoss()
+    {
+        StopComsuptioncoroutine();
+
+        StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterLoss, () =>
+        {
+            if (_playerCurrentConviction.Value > 0)
+            {
+                StartConvitionConsumption();
+            }
+        }));
+    }
+
+    void DelayWhenConvictionGain()
+    {
+        StopComsuptioncoroutine();
+
+        StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterGained, () =>
+        {
+            StartConvitionConsumption();
+        }));
+    }
+
+    void StopComsuptioncoroutine()
+    {
+        if (_convictionConsumptionCoroutine != null)
+        {
+            StopCoroutine(_convictionConsumptionCoroutine);
+        }
     }
 }
