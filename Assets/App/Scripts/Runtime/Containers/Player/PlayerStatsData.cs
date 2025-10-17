@@ -6,7 +6,6 @@ public struct PlayerStatsData
 {
     [Header("Player values")]
     public float maxHealth;
-    public float maxConviction;
     public float healAmount;
     public float delayBeforeHeal;
 
@@ -25,4 +24,8 @@ public struct PlayerStatsData
     public float parryToleranceBeforeHit;
     public float parryToleranceAfterHit;
     public float parryDuration;
+
+    [Header("Attack values")]
+    public float baseDamage;
+
 }

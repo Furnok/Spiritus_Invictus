@@ -32,7 +32,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         _onAttackCollide.action -= ResolveHit;
     }
-    void ResolveHit(AttackData attackData)
+    void ResolveHit(EnemyAttackData attackData)
     {
         if (attackData.attackType == EnemyAttackType.Parryable)
         {

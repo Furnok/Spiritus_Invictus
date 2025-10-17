@@ -6,13 +6,13 @@ public class TestEnemyAttackHurtbox : MonoBehaviour, IAttackProvider
     //[SerializeField] EnemyAttackType _attackType;
 
     [Header("References")]
-    [SerializeField] SSO_AttackData _testAttackData;
+    [SerializeField] SSO_EnemyAttackData _testAttackData;
 
     //[Header("Input")]
 
     //[Header("Output")]
 
-    AttackData _attackData /*=> _testAttackData.Value*/;
+    EnemyAttackData _attackData /*=> _testAttackData.Value*/;
 
     void Awake()
     {
@@ -25,7 +25,7 @@ public class TestEnemyAttackHurtbox : MonoBehaviour, IAttackProvider
         //Debug.Log($"{test.damage} && {test.attackType}");
     }
 
-    public ref AttackData GetAttackData()
+    public ref EnemyAttackData GetAttackData()
     {
         return ref _attackData;
     }

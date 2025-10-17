@@ -11,10 +11,10 @@ public class S_EnemyAttackData : MonoBehaviour
     //[Header("Input")]
 
     //[Header("Output")]
-    [HideInInspector] public UnityEvent<SSO_AttackData> onChangeAttackData;
+    [HideInInspector] public UnityEvent<SSO_EnemyAttackData> onChangeAttackData;
 
 
-    public void SetAttackMode(SSO_AttackData SSO_AttackData)
+    public void SetAttackMode(SSO_EnemyAttackData SSO_AttackData)
     {
         onChangeAttackData.Invoke(SSO_AttackData);
         Debug.Log("GetData");

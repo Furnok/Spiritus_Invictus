@@ -11,6 +11,10 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
+    [SerializeField] SSO_PlayerAttackSteps _playerAttackStep;
+    [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
+    [SerializeField] SSO_PlayerStats _playerStats;
+    [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
 
     [Header("Output")]
     [SerializeField] private SSO_BasicAttackDelayIncantation ssoDelayIncantationAttack;
@@ -18,6 +22,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+    [SerializeField] RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
 
     Coroutine _attackCoroutine;
 
@@ -61,6 +66,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         if ( _attackCoroutine == null ) return;
         StopCoroutine(_attackCoroutine);
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
+
+        _onPlayerAttackCancel.Call(0); //Add the step of the attack
 
         _onPlayerAddState.Call(PlayerState.None);
     }

@@ -14,10 +14,10 @@ public class S_DodgeableAreaDetector : MonoBehaviour
 
     private void Awake()
     {
-        _attackDataInDodgeableArea.Value = new System.Collections.Generic.Dictionary<int, AttackData>();
+        _attackDataInDodgeableArea.Value = new System.Collections.Generic.Dictionary<int, EnemyAttackData>();
         _attackDataInDodgeableArea.Value.Clear();
 
-        _attackCanHitPlayer.Value = new System.Collections.Generic.Dictionary<int, AttackData>();
+        _attackCanHitPlayer.Value = new System.Collections.Generic.Dictionary<int, EnemyAttackData>();
         _attackCanHitPlayer.Value.Clear();
     }
 

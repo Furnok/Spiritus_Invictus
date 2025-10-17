@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 320034d07e1362c41a4526ae18162696, type: 3}
+  m_Name: SSO_PlayerAttackSteps
+  m_EditorClassIdentifier: 
+  _value:
+  - step: 0
+    multipliers: 1
+    ammountConvitionNeeded: 0
+    timeHoldingInput: 0
+  - step: 1
+    multipliers: 2
+    ammountConvitionNeeded: 100
+    timeHoldingInput: 0.6
+  - step: 2
+    multipliers: 4
+    ammountConvitionNeeded: 300
+    timeHoldingInput: 0.9
+  - step: 3
+    multipliers: 8
+    ammountConvitionNeeded: 500
+    timeHoldingInput: 1.2
+  - step: 4
+    multipliers: 10
+    ammountConvitionNeeded: 700
+    timeHoldingInput: 1.5
+  - step: 5
+    multipliers: 12
+    ammountConvitionNeeded: 1000
+    timeHoldingInput: 1.8

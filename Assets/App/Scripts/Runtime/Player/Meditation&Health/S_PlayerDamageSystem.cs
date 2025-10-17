@@ -33,7 +33,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     }
 
 
-    private void TakeDamage(AttackData attackData)
+    private void TakeDamage(EnemyAttackData attackData)
     {
         rseOnAnimationTriggerValueChange.Call("isHit");
         rseOnPlayerHealthReduced.Call(attackData.damage);

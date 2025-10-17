@@ -10,7 +10,7 @@ public class S_EnemyWeapon : MonoBehaviour, IAttackProvider
 
     //[Header("Output")]
 
-    private AttackData AttackData;
+    private EnemyAttackData AttackData;
     private void OnEnable()
     {
         S_EnemyAttackData.onChangeAttackData.AddListener(ChangeAttackData);
@@ -19,12 +19,12 @@ public class S_EnemyWeapon : MonoBehaviour, IAttackProvider
     {
         S_EnemyAttackData.onChangeAttackData.RemoveListener(ChangeAttackData);
     }
-    public ref AttackData GetAttackData()
+    public ref EnemyAttackData GetAttackData()
     {
         return ref AttackData;
     }
 
-    private void ChangeAttackData(SSO_AttackData SSO_attackData)
+    private void ChangeAttackData(SSO_EnemyAttackData SSO_attackData)
     {
         AttackData = SSO_attackData.Value;
         Debug.Log("SetData");

@@ -2,10 +2,10 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public struct AttackData
+public struct EnemyAttackData
 {
     public int attackId;
-    public int goSourceId;
+    [HideInInspector]public int goSourceId;
     public EnemyAttackType attackType;
     public float damage;
     public float knockbackForce;
