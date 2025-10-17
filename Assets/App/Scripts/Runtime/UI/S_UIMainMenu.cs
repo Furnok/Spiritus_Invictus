@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UIMainMenu : MonoBehaviour
@@ -16,7 +16,7 @@ public class S_UIMainMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        rseOnUIInputEnabled.Call();
+        StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
 
         if (isActive)
         {

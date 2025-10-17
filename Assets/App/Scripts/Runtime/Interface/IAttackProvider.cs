@@ -1,5 +1,5 @@
 
-public interface IAttackProvider
+public interface  IAttackProvider
 {
-    AttackData GetAttackData();
+    ref EnemyAttackData GetAttackData();
 }

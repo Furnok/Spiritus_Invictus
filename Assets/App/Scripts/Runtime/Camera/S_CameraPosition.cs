@@ -5,6 +5,11 @@ public class S_CameraPosition : MonoBehaviour
     [Header("Output")]
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
 
+    private void OnDisable()
+    {
+        rsoCameraRotation.Value = new Quaternion();
+    }
+
     private void Update()
     {
         CameraRotation();

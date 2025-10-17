@@ -10,6 +10,9 @@ public class S_PlayerHeal : MonoBehaviour
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
     [SerializeField] RSO_PlayerCurrentHealth _playerCurrentHealth;
+    [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
+    [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
+
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerHealInput rseOnPlayerHeal;
@@ -19,6 +22,7 @@ public class S_PlayerHeal : MonoBehaviour
     [SerializeField] private RSE_OnPlayerHealPerformed rseOnPlayerHealPerformed;
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+    [SerializeField] RSE_OnHealStart _onHealStart;
 
     private Coroutine healCoroutine = null;
 
@@ -37,10 +41,11 @@ public class S_PlayerHeal : MonoBehaviour
     private void TryHeal()
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Healing) == false) return;
-        if (_playerCurrentHealth.Value >= ssoPlayerStats.Value.maxHealth) return;
+        if (_playerCurrentHealth.Value >= ssoPlayerStats.Value.maxHealth || _playerCurrentConviction.Value < _playerConvictionData.Value.healCost) return;
 
         _onPlayerAddState.Call(PlayerState.Healing);
-        rseOnAnimationBoolValueChange.Call(_healParam, true); 
+        rseOnAnimationBoolValueChange.Call(_healParam, true);
+        _onHealStart.Call();
 
         healCoroutine = StartCoroutine(S_Utils.Delay(ssoPlayerStats.Value.delayBeforeHeal, () =>
         {
@@ -52,11 +57,10 @@ public class S_PlayerHeal : MonoBehaviour
 
     private void CancelHeal()
     {
-        if (healCoroutine != null)
-        {
-            StopCoroutine(healCoroutine);
-            _onPlayerAddState.Call(PlayerState.None);
-            rseOnAnimationBoolValueChange.Call(_healParam, false);
-        }
+        if (healCoroutine == null) return;
+
+        StopCoroutine(healCoroutine);
+        _onPlayerAddState.Call(PlayerState.None);
+        rseOnAnimationBoolValueChange.Call(_healParam, false);
     }
 }

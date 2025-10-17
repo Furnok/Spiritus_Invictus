@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -151,6 +151,6 @@ public class S_Settings : MonoBehaviour
 
     private void Save()
     {
-        rseSaveData.Call(saveSettingsName, true, false);
+        rseSaveData.Call(saveSettingsName, true);
     }
 }
