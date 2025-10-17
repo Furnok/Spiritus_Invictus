@@ -10,6 +10,6 @@ public struct ConvictionData
     public float tickIntervalSec;
     public float pauseIntervalAfterGained;
     public float pauseIntervalAfterLoss;
-    public float dodgeSuccessfullGain;
-    public float parrySuccesfullGain;
+    public float dodgeSuccessGain;
+    public float parrySuccesGain;
 }

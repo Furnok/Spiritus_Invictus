@@ -160,9 +160,11 @@ MonoBehaviour:
   _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}
   _attackCanHitPlayer: {fileID: 11400000, guid: a2911e0025cdad94891abd994425effc, type: 2}
+  _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
   _onAttackCollide: {fileID: 11400000, guid: 01e50bd3bc6fbd64699dca52d9398f0a, type: 2}
   _rseOnParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
   _rseOnPlayerHit: {fileID: 11400000, guid: 577377e3b86e97b4eb3c9400800347ce, type: 2}
+  _onPlayerGainConviction: {fileID: 11400000, guid: c3ba1e97cce4a3d4e929f7197f47a3c1, type: 2}
 --- !u!1 &3630292079689624107
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,6 +662,7 @@ MonoBehaviour:
   _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}
   _attackCanHitPlayer: {fileID: 11400000, guid: a2911e0025cdad94891abd994425effc, type: 2}
+  _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
   rseOnPlayerDodge: {fileID: 11400000, guid: 94854c435a1dfd64483953892ad488de, type: 2}
   _rseOnPlayerMove: {fileID: 11400000, guid: 881d0608fef60064c9e33701b880054c, type: 2}
   _rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
@@ -668,6 +671,7 @@ MonoBehaviour:
   _onPlayerAddState: {fileID: 11400000, guid: 38569afc7ffff0c4eb66c76bc8a6146e, type: 2}
   rseOnAnimationBoolValueChange: {fileID: 11400000, guid: f3b68030aacb033438a094c87c0e44ca, type: 2}
   rseOnAnimationFloatValueChange: {fileID: 11400000, guid: 647c462e77eded84f8317681638362bb, type: 2}
+  _onPlayerGainConviction: {fileID: 11400000, guid: c3ba1e97cce4a3d4e929f7197f47a3c1, type: 2}
 --- !u!114 &3585106378241585558
 MonoBehaviour:
   m_ObjectHideFlags: 0

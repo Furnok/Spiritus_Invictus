@@ -14,6 +14,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
     [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
+    [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
 
     [Header("Input")]
     [SerializeField] RSE_OnAttackCollide _onAttackCollide;
@@ -21,6 +22,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     [Header("Output")]
     [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
     [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
+    [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
 
 
     private void OnEnable()
@@ -41,6 +43,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                 if (canParry == true)
                 {
                     _rseOnParrySuccess.Call(attackData);
+                    _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
                     Debug.Log("Parried!");
                 }
                 else
