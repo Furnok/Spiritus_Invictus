@@ -403,6 +403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4564167872214963300}
   - component: {fileID: 284833711899450863}
+  - component: {fileID: 8680441737532489853}
   m_Layer: 5
   m_Name: Slider_Conviction
   m_TagString: Untagged
@@ -482,6 +483,21 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8680441737532489853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7417848607192703097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756d400b9be0061478a695edac11eedc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
+  _playerCurrentConviction: {fileID: 11400000, guid: e9e6e673e8d688d4b96f8309938dbfdc, type: 2}
+  _sliderConviction: {fileID: 284833711899450863}
 --- !u!1 &7851759477158731719
 GameObject:
   m_ObjectHideFlags: 0
