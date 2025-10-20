@@ -12,7 +12,7 @@ public class S_PlayerInputsManager : MonoBehaviour
     [Header("Output")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
-    [SerializeField] private RSE_OnPlayerAttackInputCancel _onPlayerAttackInputCancel;
+    [SerializeField] private RSE_OnPlayerAttackInputCancel rseOnPlayerAttackInputCancel;
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
@@ -38,7 +38,6 @@ public class S_PlayerInputsManager : MonoBehaviour
     {
         if (playerInput == null)
         {
-            Debug.LogError("PlayerInput component missing");
             enabled = false;
             return;
         }
@@ -112,7 +111,7 @@ public class S_PlayerInputsManager : MonoBehaviour
 
     private void OnAttackInputCancel(InputAction.CallbackContext ctx)
     {
-        _onPlayerAttackInputCancel.Call();
+        rseOnPlayerAttackInputCancel.Call();
     }
 
     private void OnDodgeInput(InputAction.CallbackContext ctx)
