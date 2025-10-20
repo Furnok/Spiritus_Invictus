@@ -56,8 +56,12 @@ public class S_PlayerProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        if (other.tag == "Enemy" && other.TryGetComponent(out IDamageable damageable))
         {
+            if (damageable != null)
+            {
+                damageable.TakeDamage(baseDamage);
+            }
             Debug.Log($"Hit enemy for {baseDamage} damage.");
         }
 
