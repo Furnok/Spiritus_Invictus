@@ -27,6 +27,7 @@ public struct PlayerStatsData
 
     [Header("Attack values")]
     public float baseDamage;
+    public float projectileLifeTime;
 
     [Header("Getting hit values")]
     public float hitStunDuration;

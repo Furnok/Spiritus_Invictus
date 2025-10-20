@@ -8,4 +8,6 @@ public struct PlayerAttackStep
     public int multipliers;
     public float ammountConvitionNeeded;
     public float timeHoldingInput;
+    public float speed;
+    public Color color;
 }

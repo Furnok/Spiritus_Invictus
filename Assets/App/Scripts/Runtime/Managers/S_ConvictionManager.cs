@@ -85,9 +85,17 @@ public class S_ConvictionManager : MonoBehaviour
         var step = _playerAttackSteps.Value.Find(x => x.step == attaqueStep);
 
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - step.ammountConvitionNeeded, 0, _playerConvictionData.Value.maxConviction);
-        _playerCurrentConviction.Value = newAmmount;
 
-        DelayWhenConvictionLoss();
+        if (step.ammountConvitionNeeded != 0)
+        {
+            _playerCurrentConviction.Value = newAmmount;
+
+            DelayWhenConvictionLoss();
+        }
+        else
+        {
+            StartConvitionConsumption();
+        }
     }
 
     void OnPlayerGainConviction(float ammountGain)

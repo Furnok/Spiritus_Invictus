@@ -134,21 +134,25 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         var inputHoldDuration = Time.time - _timeInputPressed;
 
-        if (inputHoldDuration > 0)
-        {
-            //var currentConviction = _playerCurrentConviction.Value;
-            //var stepsUpperCurrentConviction = _playerAttackSteps.Value.FindAll(x => x.timeHoldingInput <= inputHoldDuration);
-            //var currentStep = stepsUpperCurrentConviction.OrderByDescending(x => x.timeHoldingInput).First().step;
+        //if (inputHoldDuration > 0)
+        //{
+        //    //var currentConviction = _playerCurrentConviction.Value;
+        //    //var stepsUpperCurrentConviction = _playerAttackSteps.Value.FindAll(x => x.timeHoldingInput <= inputHoldDuration);
+        //    //var currentStep = stepsUpperCurrentConviction.OrderByDescending(x => x.timeHoldingInput).First().step;
 
-            rseOnSpawnProjectile.Call(_currenStepAttack);
 
-            rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
-            _onPlayerAddState.Call(PlayerState.None);
-        }
+        //}
+
+        rseOnSpawnProjectile.Call(_currenStepAttack);
+        _onPlayerAddState.Call(PlayerState.None);
+        rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         _timeInputPressed = 0;
         _currenStepAttack = 0;
+
+        if (_attackCoroutine == null) return;
+        StopCoroutine(_attackCoroutine);
 
     }
 

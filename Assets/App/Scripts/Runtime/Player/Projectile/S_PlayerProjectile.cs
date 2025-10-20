@@ -4,15 +4,17 @@ public class S_PlayerProjectile : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
-    
+    [SerializeField] private SSO_PlayerProjectileData ssoPlayerProjectileData;
+    [SerializeField] SSO_PlayerStats _playerStats;
+    //[SerializeField]  ;
+
     [Header("Output")]
     [SerializeField] private RSE_OnDespawnProjectile rseOnDespawnProjectile;
-    [SerializeField] private SSO_PlayerProjectileData ssoPlayerProjectileData;
 
     private Transform target = null;
     private float timeAlive = 0f;
-    private float speed => ssoPlayerProjectileData.Value.speed;
-    private float lifeTime => ssoPlayerProjectileData.Value.lifeTime;
+    private float speed;
+    private float lifeTime => _playerStats.Value.projectileLifeTime;
     private float baseDamage => ssoPlayerProjectileData.Value.baseDamage;
     private Vector3 direction = Vector3.zero;
     private bool isInitialized = false;
@@ -24,7 +26,9 @@ public class S_PlayerProjectile : MonoBehaviour
         this.target = target;
         this.direction = transform.forward;
         _attackStep = attackStep;
+        speed = _playerAttackSteps.Value.Find(x => x.step == attackStep).speed;
         isInitialized = true;
+
     }
 
     private void OnDisable()
@@ -66,6 +70,7 @@ public class S_PlayerProjectile : MonoBehaviour
         {
             if (damageable != null)
             {
+
                 var damage = baseDamage * _playerAttackSteps.Value.Find(x => x.step == _attackStep).multipliers;
                 damageable.TakeDamage(damage);
                 rseOnDespawnProjectile.Call(this);
@@ -77,7 +82,6 @@ public class S_PlayerProjectile : MonoBehaviour
         else
         {
             rseOnDespawnProjectile.Call(this);
-
         }
 
     }
