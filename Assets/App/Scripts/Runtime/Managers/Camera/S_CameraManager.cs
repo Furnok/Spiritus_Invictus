@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -15,6 +16,9 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private CinemachineCamera cinemachineCameraPlayer;
+
+    [TabGroup("References")]
+    [SerializeField] private CinemachineThirdPersonFollow cinemachineThirdPersonFollow;
 
     [TabGroup("References")]
     [SerializeField] private List<CinemachineCamera> cinemachineCameraCinematic;
@@ -45,6 +49,9 @@ public class S_CameraManager : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCenter rseOnPlayerCenter;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
+
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
 
@@ -65,6 +72,8 @@ public class S_CameraManager : MonoBehaviour
     private int focus = 2;
     private int focusCinematic = 100;
     private int unFocus = 1;
+    private Tween shoulderOffsetTween;
+    private float lastDirection = 0f;
 
     public List<CinemachineCamera> GetListCameraCinematic()
     {
@@ -78,6 +87,7 @@ public class S_CameraManager : MonoBehaviour
         rseOnCameraShake.action += CameraShake;
         rseOnCinematicFinish.action += FinishCinematic;
         rseOnPlayerCenter.action += PlayerPos;
+        rseOnPlayerMove.action += InputsMove;
 
         currentCamera = cinemachineCameraRail;
     }
@@ -89,6 +99,12 @@ public class S_CameraManager : MonoBehaviour
         rseOnCameraShake.action -= CameraShake;
         rseOnCinematicFinish.action -= FinishCinematic;
         rseOnPlayerCenter.action -= PlayerPos;
+        rseOnPlayerMove.action -= InputsMove;
+    }
+
+    private void Awake()
+    {
+        cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
     }
 
     private void Update()
@@ -96,6 +112,38 @@ public class S_CameraManager : MonoBehaviour
         CamPlayerRotate();
 
         PlayerHide();
+    }
+
+    private void InputsMove(Vector2 move)
+    {
+        if (rsoPlayerIsTargeting.Value)
+        {
+            if (move.x > 0 && lastDirection <= 0)
+            {
+                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetNegative);
+                lastDirection = move.x;
+            }
+            else if (move.x < 0 && lastDirection >= 0)
+            {
+                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetPositive);
+                lastDirection = move.x;
+            }
+        }
+    }
+
+    private void ChangeShoulderOffset(Vector3 targetOffset)
+    {
+        if (cinemachineThirdPersonFollow == null)
+            return;
+
+        shoulderOffsetTween?.Kill();
+
+        shoulderOffsetTween = DOTween.To(
+            () => cinemachineThirdPersonFollow.ShoulderOffset,
+            x => cinemachineThirdPersonFollow.ShoulderOffset = x,
+            targetOffset,
+            ssoCameraData.Value.switchTimeCamera
+        ).SetEase(Ease.Linear);
     }
 
     private void CamPlayerRotate()

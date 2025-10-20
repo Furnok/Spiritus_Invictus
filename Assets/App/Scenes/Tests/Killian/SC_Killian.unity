@@ -1447,6 +1447,17 @@ Light:
   m_LightUnit: 2
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &401482003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7083778036187498232, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+  m_PrefabInstance: {fileID: 86451883539409684}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &411237701
 GameObject:
   m_ObjectHideFlags: 0
@@ -3739,6 +3750,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: speed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: rseOnPlayerMove
+      value: 
+      objectReference: {fileID: 11400000, guid: 881d0608fef60064c9e33701b880054c, type: 2}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: cinemachineThirdPersonFollow
+      value: 
+      objectReference: {fileID: 401482003}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: targetShoulderOffsetNegative.x
+      value: -0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: targetShoulderOffsetNegative.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: targetShoulderOffsetNegative.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: targetShoulderOffsetPositive.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: targetShoulderOffsetPositive.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1452933843658936180, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: targetShoulderOffsetPositive.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3056695303604649081, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5203948
@@ -3831,6 +3878,10 @@ PrefabInstance:
       propertyPath: Targets.Array.data[0].Object
       value: 
       objectReference: {fileID: 1769610121}
+    - target: {fileID: 6849483350985389919, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
+      propertyPath: Priority.m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8440287525551454723, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.19060004
@@ -4012,6 +4063,10 @@ PrefabInstance:
     - target: {fileID: 3172068207793189745, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
       propertyPath: m_Name
       value: P_CanvasGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3172068207793189745, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
