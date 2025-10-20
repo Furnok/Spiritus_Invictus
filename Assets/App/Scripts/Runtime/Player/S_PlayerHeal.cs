@@ -60,7 +60,6 @@ public class S_PlayerHeal : MonoBehaviour
         if (healCoroutine == null) return;
 
         StopCoroutine(healCoroutine);
-        _onPlayerAddState.Call(PlayerState.None);
         rseOnAnimationBoolValueChange.Call(_healParam, false);
     }
 }

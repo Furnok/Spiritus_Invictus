@@ -81,7 +81,13 @@ public class S_PlayerMovement : MonoBehaviour
     {
         moveInput = input;
 
-        if(moveInput != Vector2.zero)
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false)
+        {
+            //inputCanceledOrNoInput = true;
+            return;
+        }
+
+        if (moveInput != Vector2.zero)
         {
             rseOnAnimationBoolValueChange.Call(moveParam, true);
             inputCanceledOrNoInput = false;
@@ -91,22 +97,21 @@ public class S_PlayerMovement : MonoBehaviour
             rseOnAnimationBoolValueChange.Call(moveParam, false);
             inputCanceledOrNoInput = true;
         }
+
+        if (moveInput.sqrMagnitude > 0.0001f)
+        {
+            _onPlayerAddState.Call(PlayerState.Moving);
+        }
+        else
+        {
+            _onPlayerAddState.Call(PlayerState.None);
+        }
     }
 
     private void Update()
     {
-        if (rsoPlayerIsTargeting.Value && target != null)
+        if (rsoPlayerIsTargeting.Value && target != null && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == true)
         {
-            if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false) return;
-            if(moveInput.sqrMagnitude > 0.0001f)
-            {
-                _onPlayerAddState.Call(PlayerState.Moving);
-            }
-            else
-            {
-                _onPlayerAddState.Call(PlayerState.None);
-            }
-
             Vector3 directionToTarget = target.position - transform.position;
             directionToTarget.y = 0f; // Ignore the heigth
 
@@ -125,10 +130,15 @@ public class S_PlayerMovement : MonoBehaviour
             float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
             Vector3 desiredVelocity = desiredDirection * _playerStats.Value.strafeSpeed * inputMagnitude;
 
+
+            
             Vector3 velocityTargeting = rigidbodyPlayer.linearVelocity;
             velocityTargeting.x = desiredVelocity.x;
             velocityTargeting.z = desiredVelocity.z;
             rigidbodyPlayer.linearVelocity = velocityTargeting;
+
+            rsoPlayerPosition.Value = transform.position;
+            rsoPlayerRotation.Value = transform.rotation;
 
             if (moveInput.sqrMagnitude > 0.0001f)
             {
@@ -144,8 +154,7 @@ public class S_PlayerMovement : MonoBehaviour
                 rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
                 rseOnAnimationBoolValueChange.Call(moveParam, false);
             }
-            rsoPlayerPosition.Value = transform.position;
-            rsoPlayerRotation.Value = transform.rotation;
+           
 
             return;
         }
@@ -159,23 +168,15 @@ public class S_PlayerMovement : MonoBehaviour
             rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
             rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
             rseOnAnimationBoolValueChange.Call(moveParam, false);
-            return;
+            //return;
         }
         
 
         if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
-            if (!rsoPlayerIsTargeting.Value)
+            if (!rsoPlayerIsTargeting.Value && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == true)
             {
-                if (moveInput.sqrMagnitude > 0.0001f)
-                {
-                    _onPlayerAddState.Call(PlayerState.Moving);
-                }
-                else
-                {
-                    _onPlayerAddState.Call(PlayerState.None);
-                }
-
+               
                 Quaternion camRot;
 
                 if (inputCanceledOrNoInput == true)
@@ -216,13 +217,14 @@ public class S_PlayerMovement : MonoBehaviour
                 Vector3 velocity = rigidbodyPlayer.linearVelocity;
                 velocity.x = desiredVel.x;
                 velocity.z = desiredVel.z;
+
+                
                 rigidbodyPlayer.linearVelocity = velocity;
 
                 rseOnAnimationFloatValueChange.Call(speedParam, velocity.magnitude);
 
                 rsoPlayerPosition.Value = transform.position;
                 rsoPlayerRotation.Value = transform.rotation;
-
 
                 if (inputCanceledOrNoInput == true)
                 {

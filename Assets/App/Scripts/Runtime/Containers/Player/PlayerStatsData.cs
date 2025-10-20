@@ -28,4 +28,6 @@ public struct PlayerStatsData
     [Header("Attack values")]
     public float baseDamage;
 
+    [Header("Getting hit values")]
+    public float hitStunDuration;
 }

@@ -91,13 +91,6 @@ public class S_PlayerBasicAttack : MonoBehaviour
         {
             StartStepDuration();
         }
-        //_attackCoroutine = StartCoroutine(S_Utils.Delay(ssoDelayIncantationAttack.Value, () =>
-        //{
-
-        //    rseOnAnimationBoolValueChange.Call(_attackParam, false);
-
-        //    _onPlayerAddState.Call(PlayerState.None);
-        //}));
     }
 
     private void StartStepDuration()
@@ -137,6 +130,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     void OnPlayerAttackInputCancel()
     {
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Attacking) == false) return;
+
         var inputHoldDuration = Time.time - _timeInputPressed;
 
         if (inputHoldDuration > 0)
@@ -162,16 +157,19 @@ public class S_PlayerBasicAttack : MonoBehaviour
         if ( _attackCoroutine == null ) return;
         StopCoroutine(_attackCoroutine);
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
-        _timeInputPressed = 0;
-        _currenStepAttack = 0;
+       
 
         var currentConviction = _playerCurrentConviction.Value;
         var stepsUpperCurrentConviction = _playerAttackSteps.Value.FindAll(x => x.ammountConvitionNeeded <= currentConviction);
         var currentStep = stepsUpperCurrentConviction.OrderByDescending(x => x.ammountConvitionNeeded).First().step;
 
-        _onPlayerAttackCancel.Call(currentStep);
+        if(_timeInputPressed > 0)
+        {
+            _onPlayerAttackCancel.Call(currentStep);
+        }
 
-        _onPlayerAddState.Call(PlayerState.None);
+        _timeInputPressed = 0;
+        _currenStepAttack = 0;
     }
 }
 

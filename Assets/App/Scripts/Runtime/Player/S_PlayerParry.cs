@@ -54,6 +54,8 @@ public class S_PlayerParry : MonoBehaviour
         _parryCoroutine = StartCoroutine(S_Utils.Delay(_parryDuration, () =>
         {
             ResetValue();
+            _onPlayerAddState.Call(PlayerState.None);
+
         }));
     }
 
@@ -67,7 +69,6 @@ public class S_PlayerParry : MonoBehaviour
 
     private void ResetValue()
     {
-        _onPlayerAddState.Call(PlayerState.None);
         _canParry.Value = false;
         rseOnAnimationBoolValueChange.Call(_parryParam, false);
     }

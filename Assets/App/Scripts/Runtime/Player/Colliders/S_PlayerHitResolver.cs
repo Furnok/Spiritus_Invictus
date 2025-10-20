@@ -52,10 +52,6 @@ public class S_PlayerHitResolver : MonoBehaviour
                 }
             }));
         }
-        else if (attackData.attackType == EnemyAttackType.Parryable)
-        {
-            _rseOnPlayerHit.Call(attackData);
-        }
         else if (attackData.attackType == EnemyAttackType.Dodgeable)
         {
             var canHit = _attackCanHitPlayer.Value.ContainsKey(attackData.goSourceId);

@@ -2,6 +2,10 @@
 
 public class S_PlayerDamageSystem : MonoBehaviour
 {
+    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
+    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField] SSO_PlayerStats _playerStats;
+
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerTakeDamage rseOnPlayerTakeDamage;
     [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
@@ -10,6 +14,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] private RSE_OnPlayerHealthReduced rseOnPlayerHealthReduced;
     [SerializeField] RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
+    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
 
     private void OnEnable()
     {
@@ -29,15 +34,22 @@ public class S_PlayerDamageSystem : MonoBehaviour
         rseOnAnimationTriggerValueChange.Call("isHit");
         rseOnPlayerHealthReduced.Call(damage);
         _rseOnPlayerGettingHit.Call();
-        Debug.Log("Getting Hit");
     }
 
 
     private void TakeDamage(EnemyAttackData attackData)
     {
-        rseOnAnimationTriggerValueChange.Call("isHit");
+        if(_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true)
+        {
+            rseOnAnimationTriggerValueChange.Call("isHit");
+            _onPlayerAddState.Call(PlayerState.HitReact);
+
+            StartCoroutine(S_Utils.Delay(_playerStats.Value.hitStunDuration, () =>
+            {
+                _onPlayerAddState.Call(PlayerState.None);
+            }));
+        }
         rseOnPlayerHealthReduced.Call(attackData.damage);
         _rseOnPlayerGettingHit.Call();
-
     }
 }

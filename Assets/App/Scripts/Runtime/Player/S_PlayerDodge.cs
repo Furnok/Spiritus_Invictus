@@ -144,6 +144,8 @@ public class S_PlayerDodge : MonoBehaviour
         _rb.linearDamping = 5;
 
         ResetValue();
+        _onPlayerAddState.Call(PlayerState.None);
+
     }
 
     private void Move(Vector2 input)
@@ -161,7 +163,6 @@ public class S_PlayerDodge : MonoBehaviour
     private void ResetValue()
     {
         _playerIsDodging.Value = false;
-        _onPlayerAddState.Call(PlayerState.None);
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
     }
 }

@@ -59,9 +59,9 @@ public class S_ConvictionManager : MonoBehaviour
 
         var currentStep = _playerAttackSteps.Value.Find(x => x.step == stepCancel);
 
-        if (currentStep.step == stepCancel)
+        if (currentStep.step != stepCancel)
         {
-            Debug.LogError("Didn't find the step");
+            Debug.LogError($"Didn't find the step {currentStep.step} & {stepCancel}");
             return;
         }
 
