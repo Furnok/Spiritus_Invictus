@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class S_EnemyHealth : MonoBehaviour
+public class S_EnemyHealth : MonoBehaviour, IDamageable
 {
     [Header("References")]
     [SerializeField] private SSO_EnemyHealth ssoEnemyHealthMax;
@@ -18,15 +18,7 @@ public class S_EnemyHealth : MonoBehaviour
         onInitializeEnemyHealth.Invoke(enemyHealth);
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            TakeDamage(50);
-        }
-    }
-
-    private void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         enemyHealth -= damage;
         onUpdateEnemyHealth.Invoke(enemyHealth);
