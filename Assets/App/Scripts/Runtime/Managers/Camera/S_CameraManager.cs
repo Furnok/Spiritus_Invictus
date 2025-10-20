@@ -153,6 +153,13 @@ public class S_CameraManager : MonoBehaviour
     {
         playerPoint.transform.position = playerPos.position;
 
+        if (rsoPlayerIsDodging.Value)
+        {
+            playerPoint.transform.rotation = playerPos.rotation;
+            isRotating = false;
+            return;
+        }
+
         if (Quaternion.Angle(playerPoint.transform.rotation, playerPos.rotation) > 1f)
         {
             startRotation = playerPoint.transform.rotation;
@@ -163,20 +170,13 @@ public class S_CameraManager : MonoBehaviour
 
         if (isRotating)
         {
-            if (!rsoPlayerIsDodging.Value)
-            {
-                rotationTimer += Time.deltaTime;
-                float t = Mathf.Clamp01(rotationTimer / ssoCameraData.Value.rotationCameraPlayerDuration);
-                playerPoint.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            rotationTimer += Time.deltaTime;
+            float duration = ssoCameraData.Value.rotationCameraPlayerDuration;
+            float t = Mathf.Clamp01(rotationTimer / duration);
+            playerPoint.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
 
-                if (t >= 1f)
-                {
-                    isRotating = false;
-                }
-            }
-            else
+            if (t >= 1f)
             {
-                playerPoint.transform.rotation = targetRotation;
                 isRotating = false;
             }
         }
