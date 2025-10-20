@@ -162,7 +162,7 @@ public class S_PlayerDodge : MonoBehaviour
 
     private void ResetValue()
     {
-        _playerIsDodging.Value = false;
+        StartCoroutine(S_Utils.Delay(0.1f, () => _playerIsDodging.Value = false));
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
     }
 }

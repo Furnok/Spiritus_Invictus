@@ -1,5 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
 
 [Serializable]
