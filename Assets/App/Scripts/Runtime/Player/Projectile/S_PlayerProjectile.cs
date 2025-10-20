@@ -56,7 +56,7 @@ public class S_PlayerProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy" && other.TryGetComponent(out IDamageable damageable))
+        if (other.tag == "Hurtbox" && other.TryGetComponent(out IDamageable damageable))
         {
             if (damageable != null)
             {
