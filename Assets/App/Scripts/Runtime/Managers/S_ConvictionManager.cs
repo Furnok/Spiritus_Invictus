@@ -14,6 +14,8 @@ public class S_ConvictionManager : MonoBehaviour
     [SerializeField] RSE_OnHealStart _onHealStart;
     [SerializeField] RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
     [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
+    [SerializeField] RSE_OnSpawnProjectile _onSpawnProjectile;
+    [SerializeField] RSE_OnAttackStartPerformed _onAttackStartPerformed;
 
     //[Header("Output")]
 
@@ -30,7 +32,8 @@ public class S_ConvictionManager : MonoBehaviour
         _onHealStart.action += ReduceConvictionOnHealPerformed;
         _onPlayerAttackCancel.action += ReduceConvictionOnAttackCancel;
         _onPlayerGainConviction.action += OnPlayerGainConviction;
-
+        _onSpawnProjectile.action += ReduceConvitionOnAttackPerform;
+        _onAttackStartPerformed.action += StopComsuptioncoroutine;
     }
 
     private void OnDisable()
@@ -38,6 +41,8 @@ public class S_ConvictionManager : MonoBehaviour
         _onHealStart.action -= ReduceConvictionOnHealPerformed;
         _onPlayerAttackCancel.action -= ReduceConvictionOnAttackCancel;
         _onPlayerGainConviction.action -= OnPlayerGainConviction;
+        _onSpawnProjectile.action -= ReduceConvitionOnAttackPerform;
+        _onAttackStartPerformed.action -= StopComsuptioncoroutine;
     }
 
     void ReduceConvictionOnHealPerformed()
@@ -72,6 +77,17 @@ public class S_ConvictionManager : MonoBehaviour
 
         _playerCurrentConviction.Value = newConvictionValue;
 
+        DelayWhenConvictionLoss();
+    }
+
+    void ReduceConvitionOnAttackPerform(int attaqueStep)
+    {
+        var step = _playerAttackSteps.Value.Find(x => x.step == attaqueStep);
+
+        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - step.ammountConvitionNeeded, 0, _playerConvictionData.Value.maxConviction);
+        _playerCurrentConviction.Value = newAmmount;
+
+        DelayWhenConvictionLoss();
     }
 
     void OnPlayerGainConviction(float ammountGain)

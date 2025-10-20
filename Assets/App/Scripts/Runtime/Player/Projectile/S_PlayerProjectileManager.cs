@@ -8,6 +8,8 @@ public class S_PlayerProjectileManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform spawnProjectileParent;
     [SerializeField] private S_PlayerProjectile projectilePrefab;
+    [SerializeField] RSO_PlayerPosition _playerPosition;
+    [SerializeField] RSO_PlayerRotation _playerRotation;
 
     [Header("Input")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
@@ -49,11 +51,12 @@ public class S_PlayerProjectileManager : MonoBehaviour
         target = null;
     }
 
-    private void GetProjectileFromPool(S_StructProjectileData projectileInitializeData)
+    private void GetProjectileFromPool(int attackStep)
     {
         var projectile = projectilePool.Get();
-        projectile.transform.position = projectileInitializeData.locationSpawn;
-        projectile.Initialize(target, projectileInitializeData.direction);
+        projectile.transform.position = _playerPosition.Value + _playerRotation.Value * new Vector3(0,1.5f,0.5f);
+        projectile.transform.rotation = _playerRotation.Value;
+        projectile.Initialize(target, attackStep);
     }
 
     private void ReturnProjectileToPool(S_PlayerProjectile projectile)

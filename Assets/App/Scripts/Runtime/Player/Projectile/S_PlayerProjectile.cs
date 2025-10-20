@@ -2,6 +2,9 @@
 
 public class S_PlayerProjectile : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
+    
     [Header("Output")]
     [SerializeField] private RSE_OnDespawnProjectile rseOnDespawnProjectile;
     [SerializeField] private SSO_PlayerProjectileData ssoPlayerProjectileData;
@@ -14,10 +17,13 @@ public class S_PlayerProjectile : MonoBehaviour
     private Vector3 direction = Vector3.zero;
     private bool isInitialized = false;
 
-    public void Initialize(Transform target, Vector3 direction)
+    int _attackStep = 0;
+
+    public void Initialize(Transform target = null, int attackStep = 0)
     {
         this.target = target;
-        this.direction = direction.normalized;
+        this.direction = transform.forward;
+        _attackStep = attackStep;
         isInitialized = true;
     }
 
@@ -60,11 +66,11 @@ public class S_PlayerProjectile : MonoBehaviour
         {
             if (damageable != null)
             {
-
-                damageable.TakeDamage(baseDamage);
+                var damage = baseDamage * _playerAttackSteps.Value.Find(x => x.step == _attackStep).multipliers;
+                damageable.TakeDamage(damage);
                 rseOnDespawnProjectile.Call(this);
 
-                Debug.Log($"Hit enemy for {baseDamage} damage.");
+                Debug.Log($"Hit enemy for {damage} damage.");
 
             }
         }

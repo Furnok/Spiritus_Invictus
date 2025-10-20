@@ -17,6 +17,7 @@ public class S_PlayerMovement : MonoBehaviour
 
     [Header("Input")]
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
+    [SerializeField] RSO_PlayerRotation rsoPlayerRotation;
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
@@ -37,6 +38,7 @@ public class S_PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rsoPlayerPosition.Value = transform.position;
+        rsoPlayerRotation.Value = transform.rotation;
 
         rigidbodyPlayer.interpolation = RigidbodyInterpolation.Interpolate;
     }
@@ -44,11 +46,15 @@ public class S_PlayerMovement : MonoBehaviour
     private void OnDestroy()
     {
         rsoPlayerPosition.Value = Vector3.zero;
+        rsoPlayerRotation.Value = Quaternion.identity;
+
     }
 
     private void OnEnable()
     {
         rsoPlayerPosition.Value = transform.position;
+        rsoPlayerRotation.Value = transform.rotation;
+
         rseOnPlayerMove.action += Move;
         rseOnNewTargeting.action += ChangeNewTarget;
         rseOnPlayerCancelTargeting.action += CancelTarget;
@@ -139,6 +145,8 @@ public class S_PlayerMovement : MonoBehaviour
                 rseOnAnimationBoolValueChange.Call(moveParam, false);
             }
             rsoPlayerPosition.Value = transform.position;
+            rsoPlayerRotation.Value = transform.rotation;
+
             return;
         }
     }
@@ -213,6 +221,8 @@ public class S_PlayerMovement : MonoBehaviour
                 rseOnAnimationFloatValueChange.Call(speedParam, velocity.magnitude);
 
                 rsoPlayerPosition.Value = transform.position;
+                rsoPlayerRotation.Value = transform.rotation;
+
 
                 if (inputCanceledOrNoInput == true)
                 {

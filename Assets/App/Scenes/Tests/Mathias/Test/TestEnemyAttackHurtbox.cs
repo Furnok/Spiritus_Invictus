@@ -29,7 +29,6 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
     public void TakeDamage(float ammount)
     {
         _currentHealth -= ammount;
-        Debug.Log("hit");
         if(_currentHealth <= 0)
         {
             Die();
