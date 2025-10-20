@@ -127,15 +127,18 @@ public class S_PlayerMovement : MonoBehaviour
             Vector3 desiredDirection = right * moveInput.x + forward * moveInput.y;
             desiredDirection.Normalize();
 
-            float inputMagnitude = Mathf.Clamp01(moveInput.magnitude);
-            Vector3 desiredVelocity = desiredDirection * _playerStats.Value.strafeSpeed * inputMagnitude;
+            float inputMag = Mathf.Clamp01(moveInput.magnitude);
+            Vector3 desiredHorizontalVel = desiredDirection * _playerStats.Value.moveSpeed * inputMag;
 
+            // Get current velocity
+            Vector3 vel = rigidbodyPlayer.linearVelocity;
 
-            
-            Vector3 velocityTargeting = rigidbodyPlayer.linearVelocity;
-            velocityTargeting.x = desiredVelocity.x;
-            velocityTargeting.z = desiredVelocity.z;
-            rigidbodyPlayer.linearVelocity = velocityTargeting;
+            // Replace only XZ components
+            vel.x = desiredHorizontalVel.x;
+            vel.z = desiredHorizontalVel.z;
+
+            // Reassign velocity once
+            rigidbodyPlayer.linearVelocity = vel;
 
             rsoPlayerPosition.Value = transform.position;
             rsoPlayerRotation.Value = transform.rotation;
@@ -143,7 +146,7 @@ public class S_PlayerMovement : MonoBehaviour
             if (moveInput.sqrMagnitude > 0.0001f)
             {
                 rseOnAnimationBoolValueChange.Call(moveParam, true);
-                rseOnAnimationFloatValueChange.Call(speedParam, velocityTargeting.magnitude);
+                rseOnAnimationFloatValueChange.Call(speedParam, vel.magnitude);
                 rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
                 rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
             }
@@ -211,17 +214,19 @@ public class S_PlayerMovement : MonoBehaviour
                 }
 
                 float inputMag = Mathf.Clamp01(moveInput.magnitude);
-                Vector3 desiredVel = desiredDir * _playerStats.Value.moveSpeed * inputMag;
+                Vector3 desiredHorizontalVel = desiredDir * _playerStats.Value.moveSpeed * inputMag;
 
+                // Get current velocity
+                Vector3 vel = rigidbodyPlayer.linearVelocity;
 
-                Vector3 velocity = rigidbodyPlayer.linearVelocity;
-                velocity.x = desiredVel.x;
-                velocity.z = desiredVel.z;
+                // Replace only XZ components
+                vel.x = desiredHorizontalVel.x;
+                vel.z = desiredHorizontalVel.z;
 
-                
-                rigidbodyPlayer.linearVelocity = velocity;
+                // Reassign velocity once
+                rigidbodyPlayer.linearVelocity = vel;
 
-                rseOnAnimationFloatValueChange.Call(speedParam, velocity.magnitude);
+                rseOnAnimationFloatValueChange.Call(speedParam, vel.magnitude);
 
                 rsoPlayerPosition.Value = transform.position;
                 rsoPlayerRotation.Value = transform.rotation;
