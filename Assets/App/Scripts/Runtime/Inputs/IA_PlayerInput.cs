@@ -274,17 +274,6 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""562a78e5-0776-42f5-aa6b-937745ddcffe"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ac7296fd-9265-487f-aa26-495449198d2d"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
