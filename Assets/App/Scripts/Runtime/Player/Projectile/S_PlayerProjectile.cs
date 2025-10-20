@@ -60,12 +60,19 @@ public class S_PlayerProjectile : MonoBehaviour
         {
             if (damageable != null)
             {
+
                 damageable.TakeDamage(baseDamage);
+                rseOnDespawnProjectile.Call(this);
+
                 Debug.Log($"Hit enemy for {baseDamage} damage.");
 
             }
         }
+        else
+        {
+            rseOnDespawnProjectile.Call(this);
 
-        rseOnDespawnProjectile.Call(this);
+        }
+
     }
 }

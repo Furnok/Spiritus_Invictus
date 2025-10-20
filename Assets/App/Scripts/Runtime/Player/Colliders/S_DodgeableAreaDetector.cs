@@ -36,6 +36,7 @@ public class S_DodgeableAreaDetector : MonoBehaviour
             if (_attackCanHitPlayer.Value == null || _attackCanHitPlayer.Value.ContainsKey(goId) || attackData.attackType != EnemyAttackType.Dodgeable) return;
 
             _attackCanHitPlayer.Value.Add(goId, attack.GetAttackData());
+
         }
     }
 
