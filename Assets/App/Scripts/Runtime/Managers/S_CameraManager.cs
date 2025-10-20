@@ -6,11 +6,11 @@ public class S_CameraManager : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Camera cameraMain;
-    [SerializeField] private Material materialPlayer;
     [SerializeField] private CinemachineCamera cinemachineCameraRail;
     [SerializeField] private CinemachineCamera cinemachineCameraPlayer;
     [SerializeField] private CinemachineTargetGroup targetGroup;
     [SerializeField] private GameObject playerPoint;
+    [SerializeField] private Material materialPlayer;
     [SerializeField] private List<CinemachineCamera> cinemachineCameraCinematic;
 
     [Header("Input")]
@@ -33,6 +33,9 @@ public class S_CameraManager : MonoBehaviour
     private Quaternion targetRotation = Quaternion.identity;
     private float rotationTimer = 0f;
     private bool isRotating = false;
+    private int focus = 2;
+    private int focusCinematic = 100;
+    private int unFocus = 1;
 
     public List<CinemachineCamera> GetListCameraCinematic()
     {
@@ -81,7 +84,7 @@ public class S_CameraManager : MonoBehaviour
         if (isRotating)
         {
             rotationTimer += Time.deltaTime;
-            float t = Mathf.Clamp01(rotationTimer / ssoCameraData.Value.rotationCameraDuration);
+            float t = Mathf.Clamp01(rotationTimer / ssoCameraData.Value.rotationCameraPlayerDuration);
             playerPoint.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
 
             if (t >= 1f)
@@ -120,9 +123,9 @@ public class S_CameraManager : MonoBehaviour
 
         rseOnCinematicInputEnabled.Call();
 
-        cinemachineCameraRail.Priority = ssoCameraData.Value.cameraUnFocusPriority;
-        cinemachineCameraPlayer.Priority = ssoCameraData.Value.cameraUnFocusPriority;
-        cinemachineCameraCinematic[index].Priority = ssoCameraData.Value.cameraCinematicPriority;
+        cinemachineCameraRail.Priority = unFocus;
+        cinemachineCameraPlayer.Priority = unFocus;
+        cinemachineCameraCinematic[index].Priority = focusCinematic;
         currentCamera = cinemachineCameraCinematic[index];
         currentCamera.GetComponent<Animator>().enabled = true;
         currentCamera.GetComponent<Animator>().SetTrigger("Play");
@@ -131,9 +134,9 @@ public class S_CameraManager : MonoBehaviour
     private void FinishCinematic()
     {
         currentCamera.GetComponent<Animator>().enabled = false;
-        currentCamera.Priority = 0;
+        currentCamera.Priority = unFocus;
 
-        cinemachineCameraRail.Priority = ssoCameraData.Value.cameraFocusPriority;
+        cinemachineCameraRail.Priority = focus;
         currentCamera = cinemachineCameraRail;
 
         rseOnGameInputEnabled.Call();
@@ -143,14 +146,14 @@ public class S_CameraManager : MonoBehaviour
     {
         if (value)
         {
-            cinemachineCameraRail.Priority = ssoCameraData.Value.cameraUnFocusPriority;
-            cinemachineCameraPlayer.Priority = ssoCameraData.Value.cameraFocusPriority;
+            cinemachineCameraRail.Priority = unFocus;
+            cinemachineCameraPlayer.Priority = focus;
             currentCamera = cinemachineCameraPlayer;
         }
         else
         {
-            cinemachineCameraRail.Priority = ssoCameraData.Value.cameraFocusPriority;
-            cinemachineCameraPlayer.Priority = ssoCameraData.Value.cameraUnFocusPriority;
+            cinemachineCameraRail.Priority = focus;
+            cinemachineCameraPlayer.Priority = unFocus;
             currentCamera = cinemachineCameraRail;
         }
     }
