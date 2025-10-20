@@ -1,15 +1,20 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_Reminiscence : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] [S_TagName] private string tagPlayer;
+    [TabGroup("Settings")]
+    [Title("Filter")]
+    [SerializeField] [S_TagName] private string tagName;
+
+    [TabGroup("Settings")]
+    [Title("Camera Cinematic")]
     [SerializeField] private int cameraIndex;
 
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCameraCinematic rseOnCameraCinematic;
 
     private void OnDisable()
@@ -19,7 +24,7 @@ public class S_Reminiscence : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(tagPlayer))
+        if (other.CompareTag(tagName))
         {
             rseOnPlayerInteract.action += Interract;
         }
@@ -27,7 +32,7 @@ public class S_Reminiscence : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(tagPlayer))
+        if (other.CompareTag(tagName))
         {
             rseOnPlayerInteract.action -= Interract;
         }

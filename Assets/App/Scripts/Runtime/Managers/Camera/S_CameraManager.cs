@@ -1,28 +1,57 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public class S_CameraManager : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Camera Main")]
     [SerializeField] private Camera cameraMain;
+
+    [TabGroup("References")]
+    [Title("Cinemachine")]
     [SerializeField] private CinemachineCamera cinemachineCameraRail;
+
+    [TabGroup("References")]
     [SerializeField] private CinemachineCamera cinemachineCameraPlayer;
-    [SerializeField] private CinemachineTargetGroup targetGroup;
-    [SerializeField] private GameObject playerPoint;
-    [SerializeField] private Material materialPlayer;
+
+    [TabGroup("References")]
     [SerializeField] private List<CinemachineCamera> cinemachineCameraCinematic;
 
-    [Header("Input")]
+    [TabGroup("References")]
+    [Title("Target")]
+    [SerializeField] private CinemachineTargetGroup targetGroup;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject playerPoint;
+
+    [TabGroup("References")]
+    [Title("Player")]
+    [SerializeField] private Material materialPlayer;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCameraCinematic rseOnCameraCinematic;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCinematicFinish rseOnCinematicFinish;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCameraShake rseOnCameraShake;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCenter rseOnPlayerCenter;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
     private Coroutine shake = null;
