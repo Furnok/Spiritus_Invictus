@@ -61,6 +61,9 @@ public class S_CameraManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
+
     private Coroutine shake = null;
     private CinemachineCamera currentCamera = null;
     private Transform playerPos = null;
@@ -160,12 +163,20 @@ public class S_CameraManager : MonoBehaviour
 
         if (isRotating)
         {
-            rotationTimer += Time.deltaTime;
-            float t = Mathf.Clamp01(rotationTimer / ssoCameraData.Value.rotationCameraPlayerDuration);
-            playerPoint.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
-
-            if (t >= 1f)
+            if (!rsoPlayerIsDodging.Value)
             {
+                rotationTimer += Time.deltaTime;
+                float t = Mathf.Clamp01(rotationTimer / ssoCameraData.Value.rotationCameraPlayerDuration);
+                playerPoint.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+
+                if (t >= 1f)
+                {
+                    isRotating = false;
+                }
+            }
+            else
+            {
+                playerPoint.transform.rotation = targetRotation;
                 isRotating = false;
             }
         }

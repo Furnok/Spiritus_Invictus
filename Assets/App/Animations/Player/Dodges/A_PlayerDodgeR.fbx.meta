@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8acb4fb79f635164dabd694981c4a537
+guid: 22e3119897f36e14eb5946c12e572b7f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -15,13 +15,9 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
-    motionNodeName: 
+    motionNodeName: Root
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'A_DodgeRoll_R_Sword' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'Ball_R' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n\t'Ball_L' is inbetween
-      humanoid transforms and has rotation animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -36,10 +32,10 @@ ModelImporter:
     clipAnimations:
     - serializedVersion: 16
       name: A_PlayerDodgeR
-      takeName: A_DodgeRoll_R_Sword
-      internalID: 1785380911206079018
+      takeName: A_Dodge_R_Sword_RootMotion
+      internalID: 9010436952603545713
       firstFrame: 1
-      lastFrame: 36
+      lastFrame: 18
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -48,12 +44,12 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 1
-      loopBlendPositionY: 1
-      loopBlendPositionXZ: 1
-      keepOriginalOrientation: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 1
+      keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
