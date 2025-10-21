@@ -35,5 +35,6 @@ public enum PlayerState
     Healing = 1 << 5,
     Dying = 1 << 6,
     HitReact = 1 << 7,
-    //Targeting = 1 << 8,
+    Running = 1 << 8,
+    //Targeting = 1 << 9,
 }

@@ -20,6 +20,8 @@ MonoBehaviour:
     strafeSpeed: 5
     turnSpeed: 12
     turnSpeedTargeting: 10
+    runSpeed: 7
+    delayBeforeRunningAfterDodge: 0.5
     dodgeForce: 8
     dodgeDuration: 0.3
     _speedDodgeCurve:
@@ -55,9 +57,13 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    dodgeDistance: 5
+    maxSlopeAngle: 45
     parryToleranceBeforeHit: 0.1
     parryToleranceAfterHit: 0.1
     parryDuration: 0.1
     baseDamage: 5
     projectileLifeTime: 3
+    delayBeforeCastAttack: 0.2
+    timeWaitBetweenSteps: 0.3
     hitStunDuration: 0.5

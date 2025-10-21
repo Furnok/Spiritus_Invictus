@@ -88,7 +88,7 @@ CapsuleCollider:
   m_Radius: 0.2
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 1.4, z: 0}
 --- !u!114 &2402318043027937270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,7 +132,7 @@ Transform:
   m_GameObject: {fileID: 2791005402213774945}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -264,7 +264,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 10
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1.4, z: 0}
 --- !u!114 &8480268941253436221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,7 +352,7 @@ CapsuleCollider:
   m_Radius: 1
   m_Height: 2.5
   m_Direction: 1
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 1.4, z: 0}
 --- !u!114 &594229652376039088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,7 +421,7 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 1.4, z: 0}
 --- !u!1 &8313228278302547986
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +657,14 @@ MonoBehaviour:
   _dodgeParam: isDodging
   _dodgeDirXParam: DodgeDirectionX
   _dodgeDirYParam: DodgeDirectionY
+  _capsule: {fileID: 0}
+  _collisionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _isCrouching: 0
   _ssoPlayerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
   _rb: {fileID: 4310562184785814063}
   _playerIsDodging: {fileID: 11400000, guid: f932dda1749effc4aac91cb2aeeff6d5, type: 2}

@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 169462339}
   - component: {fileID: 169462338}
   - component: {fileID: 169462337}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -911,6 +911,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7456726237346523989, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+      propertyPath: _capsule
+      value: 
+      objectReference: {fileID: 1339945678}
+    - target: {fileID: 7456726237346523989, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+      propertyPath: _isCrouching
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456726237346523989, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+      propertyPath: _groundMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456726237346523989, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+      propertyPath: _collisionMask.m_Bits
+      value: 4096
+      objectReference: {fileID: 0}
     - target: {fileID: 8313228278302547986, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
       propertyPath: m_Name
       value: P_Player
@@ -968,7 +984,7 @@ GameObject:
   - component: {fileID: 466102145}
   - component: {fileID: 466102144}
   - component: {fileID: 466102143}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slope_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1388,7 +1404,7 @@ GameObject:
   - component: {fileID: 810359943}
   - component: {fileID: 810359942}
   - component: {fileID: 810359941}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slope_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2556,6 +2572,11 @@ Light:
   m_LightUnit: 2
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!136 &1339945678 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 8798378845392338462, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+  m_PrefabInstance: {fileID: 255517538}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1481434674
 GameObject:
   m_ObjectHideFlags: 0
