@@ -128,7 +128,7 @@ public class S_PlayerMovement : MonoBehaviour
             desiredDirection.Normalize();
 
             float inputMag = Mathf.Clamp01(moveInput.magnitude);
-            Vector3 desiredHorizontalVel = desiredDirection * _playerStats.Value.moveSpeed * inputMag;
+            Vector3 desiredHorizontalVel = desiredDirection * _playerStats.Value.strafeSpeed * inputMag;
 
             // Get current velocity
             Vector3 vel = rigidbodyPlayer.linearVelocity;

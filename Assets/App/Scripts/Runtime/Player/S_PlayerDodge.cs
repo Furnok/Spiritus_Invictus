@@ -19,7 +19,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
     [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-
+    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
@@ -37,7 +37,7 @@ public class S_PlayerDodge : MonoBehaviour
     Vector2 _moveInput;
     Transform _target = null;
     Coroutine _dodgeCoroutine;
-
+    float _linearDamping;
     private void OnEnable()
     {
         rseOnPlayerDodge.action += TryDodge;
@@ -62,6 +62,7 @@ public class S_PlayerDodge : MonoBehaviour
     private void Awake()
     {
         _playerIsDodging.Value = false;
+        _linearDamping = _rb.linearDamping;
     }
 
     private void ChangeNewTarget(GameObject newTarget)
@@ -141,7 +142,7 @@ public class S_PlayerDodge : MonoBehaviour
         }
 
         _rb.linearVelocity = Vector3.zero;
-        _rb.linearDamping = 5;
+        _rb.linearDamping = _linearDamping;
 
         ResetValue();
         _onPlayerAddState.Call(PlayerState.None);

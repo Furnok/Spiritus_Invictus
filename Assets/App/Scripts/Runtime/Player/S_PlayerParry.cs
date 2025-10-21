@@ -12,6 +12,7 @@ public class S_PlayerParry : MonoBehaviour
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
@@ -47,15 +48,24 @@ public class S_PlayerParry : MonoBehaviour
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false) return;
         _onPlayerAddState.Call(PlayerState.Parrying);
         
-        _parryStartTime.Value = Time.time;
-        _canParry.Value = true;
         rseOnAnimationBoolValueChange.Call(_parryParam, true);
 
-        _parryCoroutine = StartCoroutine(S_Utils.Delay(_parryDuration, () =>
+        _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryStartupDelay, () =>
         {
-            ResetValue();
-            _onPlayerAddState.Call(PlayerState.None);
+            _parryStartTime.Value = Time.time;
+            _canParry.Value = true;
 
+            _parryCoroutine = StartCoroutine(S_Utils.Delay(_parryDuration, () =>
+            {
+                _canParry.Value = false;
+
+                _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryRecoveryDelay, () =>
+                {
+                    _onPlayerAddState.Call(PlayerState.None);
+                    rseOnAnimationBoolValueChange.Call(_parryParam, false);
+
+                }));
+            }));
         }));
     }
 

@@ -15,6 +15,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
     [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
+    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
