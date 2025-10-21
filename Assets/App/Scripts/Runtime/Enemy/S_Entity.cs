@@ -11,6 +11,7 @@ public class S_Entity : MonoBehaviour
     [SerializeField] [S_AnimationName] private string deathParam;
     [SerializeField] [S_AnimationName] private string combo1Param;
     [SerializeField] [S_AnimationName] private string combo2Param;
+    [SerializeField] LayerMask obstacleMask;
 
     [Header("References")]
     [SerializeField] private BehaviorGraphAgent agent;
@@ -63,7 +64,24 @@ public class S_Entity : MonoBehaviour
 
         if(Target != null)
         {
-            agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Chase);
+            float distance = Vector3.Distance(transform.position, Target.transform.position);
+            Vector3 dir = (Target.transform.position - transform.position).normalized;
+            if (Physics.Raycast(transform.position, dir, out RaycastHit hit, distance, obstacleMask))
+            {
+                Debug.DrawLine(transform.position, Target.transform.position, Color.yellow);
+                if (hit.collider.gameObject != Target)
+                {
+                    agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Patrol);
+                }
+                else
+                {
+                    agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Chase);
+                }
+            }
+            else
+            {
+                agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Chase);
+            }
         }
         else
         {
