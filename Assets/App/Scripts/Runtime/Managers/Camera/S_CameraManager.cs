@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.AppUI.UI;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -66,7 +68,6 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
-
 
     private Coroutine shake = null;
     private CinemachineCamera currentCamera = null;
@@ -135,20 +136,22 @@ public class S_CameraManager : MonoBehaviour
         {
             currentTargetPos = null;
 
-            cinemachineCameraRail.Priority = focus;
             cinemachineCameraPlayer.Priority = unFocus;
-            currentCamera = cinemachineCameraRail;
+            cinemachineCameraRail.Priority = focus;
 
+            currentCamera = cinemachineCameraRail;
             currentMode = ModeCamera.Rail;
         }
         else
         {
             currentTargetPos = target.transform;
+            cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
+            lastDirection = 0;
 
             cinemachineCameraRail.Priority = unFocus;
             cinemachineCameraPlayer.Priority = focus;
-            currentCamera = cinemachineCameraPlayer;
 
+            currentCamera = cinemachineCameraPlayer;
             currentMode = ModeCamera.Player;
         }
     }
@@ -228,6 +231,10 @@ public class S_CameraManager : MonoBehaviour
                 lastDirection = move.x;
             }
         }
+        else
+        {
+            shoulderOffsetTween?.Kill();
+        }
     }
 
     private void ChangeShoulderOffset(Vector3 targetOffset)
@@ -241,14 +248,18 @@ public class S_CameraManager : MonoBehaviour
             () => cinemachineThirdPersonFollow.ShoulderOffset,
             x => cinemachineThirdPersonFollow.ShoulderOffset = x,
             targetOffset,
-            ssoCameraData.Value.switchTimeCamera
+            ssoCameraData.Value.switchDurationCamera
         ).SetEase(Ease.Linear);
     }
 
     private void CamPlayerRotate()
     {
         if (currentMode != ModeCamera.Player)
+        {
+            playerPoint.transform.rotation = playerPos.rotation;
+            playerRotationTween?.Kill();
             return;
+        }
 
         playerRotationTween?.Kill();
 
@@ -268,18 +279,15 @@ public class S_CameraManager : MonoBehaviour
 
     private void PlayerHide()
     {
-        if (currentMode == ModeCamera.Player)
-        {
-            float distance = Vector3.Distance(cameraMain.transform.position, playerPos.position);
-            bool shouldHide = distance <= ssoCameraData.Value.cameraDistanceMinPlayer;
+        float distance = Vector3.Distance(cameraMain.transform.position, playerPos.position);
+        bool shouldHide = distance <= ssoCameraData.Value.cameraDistanceMinPlayer;
 
-            float targetAlpha = shouldHide ? 0f : 1f;
+        float targetAlpha = shouldHide ? 0f : 1f;
 
-            currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, ssoCameraData.Value.fadeSpeedPlayer * Time.deltaTime);
+        currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, ssoCameraData.Value.fadeSpeedPlayer * Time.deltaTime);
 
-            Color color = materialPlayer.color;
-            color.a = currentAlpha;
-            materialPlayer.color = color;
-        }
+        Color color = materialPlayer.color;
+        color.a = currentAlpha;
+        materialPlayer.color = color;
     }
 }
