@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -6,31 +6,36 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(S_SaveNameAttribute))]
 public class S_SaveNameAttributeEditor : PropertyDrawer
 {
-    private readonly bool HaveSettings = true;
-    private readonly bool HaveSaves = true;
-    private readonly int SaveMax = 1;
+    private static List<string> cachedSaveNames = new();
+    private static string[] cachedSaveNamesArray;
 
-    private List<string> SaveNames
+    private static readonly bool haveSettings = true;
+    private static readonly bool haveSaves = true;
+    private static readonly int saveMax = 1;
+
+    private static void CacheSaveNames()
     {
-        get
+        cachedSaveNames.Clear();
+
+        if (haveSettings)
         {
-            List<string> saveNames = new();
-
-            if (HaveSettings)
-            {
-                saveNames.Add($"Settings");
-            }
-
-            if (HaveSaves && SaveMax > 0)
-            {
-                for (int i = 0; i < SaveMax; i++)
-                {
-                    saveNames.Add($"Save_{i + 1}");
-                }
-            }
-
-            return saveNames;
+            cachedSaveNames.Add("Settings");
         }
+            
+        if (haveSaves)
+        {
+            if (saveMax == 1)
+            {
+                cachedSaveNames.Add("Save");
+            }
+            else
+            {
+                for (int i = 0; i < saveMax; i++)
+                    cachedSaveNames.Add($"Save_{i + 1}");
+            }
+        }
+
+        cachedSaveNamesArray = cachedSaveNames.ToArray();
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -44,16 +49,28 @@ public class S_SaveNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        if (SaveNames.Count < 1)
+        CacheSaveNames();
+
+        if (cachedSaveNamesArray.Length < 1)
         {
-            EditorGUI.LabelField(position, label.text, "Saves Desactivated");
+            EditorGUI.LabelField(position, label.text, "Saves Disabled");
             EditorGUI.EndProperty();
             return;
         }
 
-        var saveNamesArray = SaveNames.ToArray();
-        int selectedIndex = Mathf.Max(0, Array.IndexOf(saveNamesArray, property.stringValue));
-        property.stringValue = saveNamesArray[EditorGUI.Popup(position, label.text, selectedIndex, saveNamesArray)];
+        int selectedIndex = Array.IndexOf(cachedSaveNamesArray, property.stringValue);
+
+        if (selectedIndex < 0)
+        {
+            selectedIndex = 0;
+        }
+
+        EditorGUI.BeginChangeCheck();
+        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, cachedSaveNamesArray);
+        if (EditorGUI.EndChangeCheck())
+        {
+            property.stringValue = cachedSaveNamesArray[newIndex];
+        }
 
         EditorGUI.EndProperty();
     }

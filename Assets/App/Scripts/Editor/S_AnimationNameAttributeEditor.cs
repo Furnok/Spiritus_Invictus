@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using System;
@@ -17,16 +17,15 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        // Get the target object (MonoBehaviour) where this property is used
-        UnityEngine.Object target = property.serializedObject.targetObject;
-        Animator animator = null;
-
-        // Try to find Animator in the same GameObject
-        if (target is MonoBehaviour mb)
+        // Get the target MonoBehaviour
+        if (!(property.serializedObject.targetObject is MonoBehaviour mb))
         {
-            animator = mb.GetComponent<Animator>();
+            EditorGUI.LabelField(position, label.text, "Target is not a MonoBehaviour.");
+            EditorGUI.EndProperty();
+            return;
         }
 
+        Animator animator = mb.GetComponent<Animator>();
         if (animator == null)
         {
             EditorGUI.LabelField(position, label.text, "No Animator found on this GameObject.");
@@ -34,8 +33,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        AnimatorController controller = animator.runtimeAnimatorController as AnimatorController;
-
+        var controller = animator.runtimeAnimatorController as AnimatorController;
         if (controller == null)
         {
             EditorGUI.LabelField(position, label.text, "No AnimatorController assigned.");
@@ -43,17 +41,25 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        // Get all parameter names
-        string[] parameterNames = Array.ConvertAll(controller.parameters, p => p.name);
+        var parameters = controller.parameters;
 
-        // Find the index of the current value
-        int selectedIndex = Mathf.Max(0, Array.IndexOf(parameterNames, property.stringValue));
+        if (parameters.Length == 0)
+        {
+            EditorGUI.LabelField(position, label.text, "No parameters in AnimatorController.");
+            EditorGUI.EndProperty();
+            return;
+        }
 
-        // Draw the popup
-        selectedIndex = EditorGUI.Popup(position, label.text, selectedIndex, parameterNames);
+        string[] parameterNames = Array.ConvertAll(parameters, p => p.name);
+        int selectedIndex = Array.IndexOf(parameterNames, property.stringValue);
 
-        // Update the selected value
-        property.stringValue = parameterNames[selectedIndex];
+        if (selectedIndex < 0)
+        {
+            selectedIndex = 0;
+        }
+
+        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, parameterNames);
+        property.stringValue = parameterNames[newIndex];
 
         EditorGUI.EndProperty();
     }

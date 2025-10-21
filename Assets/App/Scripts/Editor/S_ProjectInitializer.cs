@@ -2,37 +2,29 @@
 using UnityEngine;
 using System.IO;
 
-//[InitializeOnLoad]
 public static class S_ProjectInitializer
 {
-    static S_ProjectInitializer()
+    [MenuItem("Tools/Initialize Project Folders")]
+    public static void CreateProjectFolders()
     {
-        string rootFolder = $"App";
+        string rootFolder = "App";
 
-        // List of Subfolders to Create
-        string[] folders = new string[]
+        string[] folders = new[]
         {
             rootFolder,
-
             $"{rootFolder}/Animations",
-
             $"{rootFolder}/Arts",
             $"{rootFolder}/Arts/Sprites",
-            
             $"{rootFolder}/Audio",
             $"{rootFolder}/Audio/Musics",
             $"{rootFolder}/Audio/SFX",
             $"{rootFolder}/Audio/UI",
-
             $"{rootFolder}/Inputs",
-
             $"{rootFolder}/Prefabs",
             $"{rootFolder}/Prefabs/Managers",
             $"{rootFolder}/Prefabs/UI",
-
             $"{rootFolder}/Scenes",
             $"{rootFolder}/Scenes/Tests",
-
             $"{rootFolder}/Scripts",
             $"{rootFolder}/Scripts/Editor",
             $"{rootFolder}/Scripts/Runtime",
@@ -45,40 +37,23 @@ public static class S_ProjectInitializer
             $"{rootFolder}/Scripts/Runtime/Wrapper/RSE",
             $"{rootFolder}/Scripts/Runtime/Wrapper/RSO",
             $"{rootFolder}/Scripts/Runtime/Wrapper/SSO",
-
             $"{rootFolder}/SOD",
             $"{rootFolder}/SOD/RSE",
             $"{rootFolder}/SOD/RSO",
             $"{rootFolder}/SOD/SSO",
-
-            $"Plugins",
-
-            $"Resources",
-
-            $"ScriptTemplates",
-
-            $"Settings",
+            "Plugins",
+            "Resources",
+            "ScriptTemplates",
+            "Settings"
         };
 
-		// Check if the Root Folder Already Exists; if not, Create All the Subfolders
-		string rootPath = Path.Combine(Application.dataPath, rootFolder);
-
-        if (!Directory.Exists(rootPath))
+        foreach (string folder in folders)
         {
-			Directory.CreateDirectory(rootPath);
+            string path = Path.Combine(Application.dataPath, folder);
+            Directory.CreateDirectory(path); // safe even if folder exists
+        }
 
-			foreach (var folder in folders)
-			{
-				string folderPath = Path.Combine(Application.dataPath, folder);
-
-				if (!Directory.Exists(folderPath))
-				{
-					Directory.CreateDirectory(folderPath);
-				}
-			}
-
-			// Refresh Unity AssetDatabase 
-			AssetDatabase.Refresh();
-		}
+        AssetDatabase.Refresh();
+        Debug.Log("Project folder structure initialized.");
     }
 }
