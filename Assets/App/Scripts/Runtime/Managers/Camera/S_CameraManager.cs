@@ -252,15 +252,17 @@ public class S_CameraManager : MonoBehaviour
 
         playerRotationTween?.Kill();
 
-        float angle = Quaternion.Angle(playerPoint.transform.rotation, playerPos.rotation);
+        Vector3 directionToTarget = (currentTargetPos.position - playerPos.position).normalized;
+
+        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget, Vector3.up);
+
+        float angle = Quaternion.Angle(playerPoint.transform.rotation, targetRotation);
 
         if (angle > 1f)
         {
             float duration = rsoPlayerIsDodging.Value ? 0.01f : ssoCameraData.Value.rotationCameraPlayerDuration;
 
-            playerRotationTween = playerPoint.transform
-                .DORotateQuaternion(playerPos.rotation, duration)
-                .SetEase(Ease.Linear);
+            playerRotationTween = playerPoint.transform.DORotateQuaternion(targetRotation, duration).SetEase(Ease.Linear);
         }
     }
 
