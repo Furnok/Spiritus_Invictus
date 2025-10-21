@@ -12,7 +12,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
 
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [S_AnimatorParameter] on a string.");
+            EditorGUI.LabelField(position, label.text, "Use [S_AnimatorParameter] on a String.");
             EditorGUI.EndProperty();
             return;
         }
@@ -28,15 +28,26 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
         Animator animator = mb.GetComponent<Animator>();
         if (animator == null)
         {
-            EditorGUI.LabelField(position, label.text, "No Animator found on this GameObject.");
+            EditorGUI.LabelField(position, label.text, "No Animator Found on this GameObject.");
             EditorGUI.EndProperty();
             return;
         }
 
-        var controller = animator.runtimeAnimatorController as AnimatorController;
+        RuntimeAnimatorController rac = animator.runtimeAnimatorController;
+        AnimatorController controller = null;
+
+        if (rac is AnimatorOverrideController overrideController)
+        {
+            controller = overrideController.runtimeAnimatorController as AnimatorController;
+        }
+        else
+        {
+            controller = rac as AnimatorController;
+        }
+
         if (controller == null)
         {
-            EditorGUI.LabelField(position, label.text, "No AnimatorController assigned.");
+            EditorGUI.LabelField(position, label.text, "No Valid AnimatorController Assigned.");
             EditorGUI.EndProperty();
             return;
         }
@@ -45,7 +56,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
 
         if (parameters.Length == 0)
         {
-            EditorGUI.LabelField(position, label.text, "No parameters in AnimatorController.");
+            EditorGUI.LabelField(position, label.text, "No Parameters in AnimatorController.");
             EditorGUI.EndProperty();
             return;
         }
