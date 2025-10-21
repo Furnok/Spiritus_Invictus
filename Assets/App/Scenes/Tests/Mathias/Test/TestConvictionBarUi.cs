@@ -11,6 +11,7 @@ public class TestConvictionBarUi : MonoBehaviour
     [SerializeField] private RSO_PlayerCurrentConviction _playerCurrentConviction;
     [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
     [SerializeField] Slider _sliderConviction;
+    [SerializeField] Slider _sliderAttackStepProgression;
     [SerializeField] RectTransform _sliderFillAreaRectTransform;
     [SerializeField] private RectTransform _ticksParent;
     [SerializeField] private GameObject _tickPrefab;
@@ -24,20 +25,22 @@ public class TestConvictionBarUi : MonoBehaviour
         _sliderConviction.maxValue = _playerConvictionData.Value.maxConviction;
         _sliderConviction.value = _sliderConviction.maxValue;
 
+        _sliderAttackStepProgression.maxValue = _playerConvictionData.Value.maxConviction;
+
         StartCoroutine(BuildTicksNextFrame());
     }
 
     private void OnEnable()
     {
-        _playerCurrentConviction.onValueChanged += SetHealthSliderValue;
+        _playerCurrentConviction.onValueChanged += SetConvictionSliderValue;
     }
 
     private void OnDisable()
     {
-        _playerCurrentConviction.onValueChanged -= SetHealthSliderValue;
+        _playerCurrentConviction.onValueChanged -= SetConvictionSliderValue;
     }
 
-    void SetHealthSliderValue(float health)
+    void SetConvictionSliderValue(float health)
     {
         _sliderConviction.value = health;
     }
@@ -69,7 +72,7 @@ public class TestConvictionBarUi : MonoBehaviour
 
         foreach (var step in _playerAttackSteps.Value)
         {
-            //if (step.ammountConvitionNeeded <= 0f || step.ammountConvitionNeeded > maxConv)
+            //if (step.ammountConvitionNeeded <= 0f || step.ammountConvitionNeeded > maxConv) //Eventually unallow 0 and max conviction steps
             //    continue;
 
             float normalized = Mathf.Clamp01(step.ammountConvitionNeeded / maxConv);
