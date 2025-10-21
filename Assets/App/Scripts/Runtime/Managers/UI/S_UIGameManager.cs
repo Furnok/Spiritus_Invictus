@@ -1,14 +1,16 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_UIGameManager : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Extract")]
     [SerializeField] private GameObject extractCanvas;
 
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     private void OnEnable()

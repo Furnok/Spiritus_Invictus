@@ -1,13 +1,15 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIContent : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Default")]
     [SerializeField] private Selectable defaultSelectable;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_DefaultSelectable rsoDefaultSelectable;
 
     private void OnEnable()

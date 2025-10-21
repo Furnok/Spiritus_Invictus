@@ -1,23 +1,40 @@
-using System.Collections.Generic;
-using TMPro;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UISettings : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Default")]
     [SerializeField] private GameObject defaultPanelSet;
+
+    [TabGroup("References")]
+    [Title("Buttons")]
     [SerializeField] private Button buttonGameplay;
+
+    [TabGroup("References")]
     [SerializeField] private Button buttonGraphics;
+
+    [TabGroup("References")]
     [SerializeField] private Button buttonAudio;
+
+    [TabGroup("References")]
     [SerializeField] private Button buttonReturn;
 
+    [TabGroup("References")]
+    [Title("Selectables")]
     [SerializeField] private Selectable dropDownLanguages;
 
+    [TabGroup("References")]
     [SerializeField] private Selectable dropDownResolutions;
+
+    [TabGroup("References")]
     [SerializeField] private Selectable toggleFullscreen;
 
+    [TabGroup("References")]
     [SerializeField] private Selectable sliderMainVolume;
+
+    [TabGroup("References")]
     [SerializeField] private Selectable sliderUIVolume;
 
     private GameObject currentPanelSet;

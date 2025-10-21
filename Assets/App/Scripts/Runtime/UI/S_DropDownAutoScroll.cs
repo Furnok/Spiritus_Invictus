@@ -1,22 +1,30 @@
 using DG.Tweening;
-using System;
+using Sirenix.OdinInspector;
 using TMPro;
-using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_DropDownAutoScroll : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Transitions")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float transition;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("DropDown")]
     [SerializeField] private TMP_Dropdown dropDown;
+
+    [TabGroup("References")]
+    [Title("ScrollRect")]
     [SerializeField] private ScrollRect scrollRect;
+
+    [TabGroup("References")]
+    [Title("Content")]
     [SerializeField] private Transform content;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     private bool init = false;

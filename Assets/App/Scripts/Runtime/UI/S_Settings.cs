@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -7,17 +8,19 @@ using UnityEngine.Localization.Settings;
 
 public class S_Settings : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Save")]
     [SerializeField, S_SaveName] private string saveSettingsName;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Mixer")]
     [SerializeField] private AudioMixer audioMixer;
 
-    [Header("Input")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
-    [Header("Output")]
-    [SerializeField] private RSE_OnSaveData rseSaveData;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSaveData rseOnSaveData;
 
     private bool isLoaded = false;
     private List<TextMeshProUGUI> listTextAudios = new();
@@ -151,6 +154,6 @@ public class S_Settings : MonoBehaviour
 
     private void Save()
     {
-        rseSaveData.Call(saveSettingsName, true);
+        rseOnSaveData.Call(saveSettingsName, true);
     }
 }

@@ -1,18 +1,28 @@
 using DG.Tweening;
-using TMPro;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UISelectable : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Transitions")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float transition = 0.2f;
+
+    [TabGroup("Settings")]
+    [Title("Colors")]
     [SerializeField] private Color32 colorMouseEnter = new(200, 200, 200, 255);
+
+    [TabGroup("Settings")]
     [SerializeField] private Color32 colorMouseDown = new(150, 150, 150, 255);
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Images")]
     [SerializeField] private Image image;
+
+    [TabGroup("References")]
     [SerializeField] private Image image2;
 
     private Color32 colorBase = new();

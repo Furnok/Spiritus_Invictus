@@ -1,16 +1,20 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class S_SceneManagement : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("Settings")]
+    [Title("Levels")]
     [SerializeField] private S_SceneReference[] levelsName;
 
-    [Header("Inputs")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnLoadScene rseOnLoadScene;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentLevel rsoCurrentLevel;
 
     private bool isLoading = false;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -6,15 +7,28 @@ using UnityEngine.UI;
 
 public class S_LoadUISettings : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Settings Script")]
     [SerializeField] private S_Settings settings;
-    [SerializeField] private TMP_Dropdown dropDownLanguages;
-    [SerializeField] private TMP_Dropdown dropDownResolutions;
-    [SerializeField] private Toggle toggleFullscreen;
-    [SerializeField] private List<Slider> listSliderVolume;
-    [SerializeField] private List<TextMeshProUGUI> listTextVolume;
 
-    [Header("Output")]
+    [TabGroup("References")]
+    [Title("Selectables")]
+    [SerializeField] private TMP_Dropdown dropDownLanguages;
+
+    [TabGroup("References")]
+    [SerializeField] private TMP_Dropdown dropDownResolutions;
+
+    [TabGroup("References")]
+    [SerializeField] private Toggle toggleFullscreen;
+
+    [TabGroup("References")]
+    [SerializeField] private List<Slider> listSliderVolume;
+
+    [TabGroup("References")]
+    [Title("Texts")]
+    [SerializeField] private List<TextMeshProUGUI> listTextsVolume;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     private void OnEnable()
@@ -32,7 +46,7 @@ public class S_LoadUISettings : MonoBehaviour
 
         LoadVolumes();
 
-        StartCoroutine(S_Utils.DelayFrame(() => settings.Setup(listTextVolume)));
+        StartCoroutine(S_Utils.DelayFrame(() => settings.Setup(listTextsVolume)));
     }
 
     private void LoadLanguages()
@@ -99,7 +113,7 @@ public class S_LoadUISettings : MonoBehaviour
         for (int i = 0; i < rsoSettingsSaved.Value.listVolumes.Count; i++)
         {
             listSliderVolume[i].value = rsoSettingsSaved.Value.listVolumes[i].volume;
-            listTextVolume[i].text = $"{rsoSettingsSaved.Value.listVolumes[i].volume}%";
+            listTextsVolume[i].text = $"{rsoSettingsSaved.Value.listVolumes[i].volume}%";
         }
     }
 }

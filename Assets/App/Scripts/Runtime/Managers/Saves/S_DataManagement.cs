@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -10,20 +11,30 @@ using UnityEngine.Localization.Settings;
 
 public class S_DataManagement : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Saves")]
     [SerializeField, S_SaveName] private string saveSettingsName;
+
+    [TabGroup("Settings")]
     [SerializeField, S_SaveName] private List<string> saveNames;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Mixer")]
     [SerializeField] private AudioMixer audioMixer;
 
-    [Header("Input")]
-    [SerializeField] private RSE_OnLoadData rseLoadData;
-    [SerializeField] private RSE_OnSaveData rseSaveData;
-    [SerializeField] private RSE_OnDeleteData rseDeleteData;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnLoadData rseOnLoadData;
 
-    [Header("Output")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnSaveData rseOnSaveData;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDeleteData rseOnDeleteData;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_ContentSaved rsoContentSaved;
 
     private static readonly string EncryptionKey = "ajekoBnPxI9jGbnYCOyvE9alNy9mM/Kw";
@@ -38,16 +49,16 @@ public class S_DataManagement : MonoBehaviour
 
     private void OnEnable()
     {
-        rseSaveData.action += SaveToJson;
-        rseLoadData.action += LoadFromJson;
-        rseDeleteData.action += DeleteData;
+        rseOnSaveData.action += SaveToJson;
+        rseOnLoadData.action += LoadFromJson;
+        rseOnDeleteData.action += DeleteData;
     }
 
     private void OnDisable()
     {
-        rseSaveData.action -= SaveToJson;
-        rseLoadData.action -= LoadFromJson;
-        rseDeleteData.action -= DeleteData;
+        rseOnSaveData.action -= SaveToJson;
+        rseOnLoadData.action -= LoadFromJson;
+        rseOnDeleteData.action -= DeleteData;
 
         rsoSettingsSaved.Value = null;
         rsoContentSaved.Value = null;

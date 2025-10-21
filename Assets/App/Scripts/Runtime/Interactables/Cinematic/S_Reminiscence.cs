@@ -17,6 +17,14 @@ public class S_Reminiscence : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCameraCinematic rseOnCameraCinematic;
 
+    private void OnValidate()
+    {
+        if (cameraIndex < 0)
+        {
+            cameraIndex = 0;
+        }
+    }
+
     private void OnDisable()
     {
         rseOnPlayerInteract.action -= Interract;

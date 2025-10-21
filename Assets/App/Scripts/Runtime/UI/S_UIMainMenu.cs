@@ -1,17 +1,24 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UIMainMenu : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("TEMP ENABLE CONTINUE")]
     [SerializeField] private bool isActive;
-    
-    [Header("References")]
+
+    [TabGroup("References")]
+    [Title("Buttons")]
     [SerializeField] private Button buttonStart;
+
+    [TabGroup("References")]
     [SerializeField] private Button buttonContinue;
+
+    [TabGroup("References")]
     [SerializeField] private Button buttonSettings;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     private void OnEnable()

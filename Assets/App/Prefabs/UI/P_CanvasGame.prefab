@@ -1627,7 +1627,7 @@ MonoBehaviour:
   - {fileID: 8413913126154482142}
   - {fileID: 1141263507511781116}
   - {fileID: 6335642166347103854}
-  listTextVolume:
+  listTextsVolume:
   - {fileID: 6612311580861791665}
   - {fileID: 8525274817005985577}
   - {fileID: 5286483689633408776}
@@ -1648,7 +1648,7 @@ MonoBehaviour:
   saveSettingsName: Settings
   audioMixer: {fileID: 24100000, guid: 3132e0a5dcbf0804b84f2080e4b0c72c, type: 2}
   rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
-  rseSaveData: {fileID: 11400000, guid: 62ad449420324a04987c8abb7406b044, type: 2}
+  rseOnSaveData: {fileID: 11400000, guid: 62ad449420324a04987c8abb7406b044, type: 2}
 --- !u!1 &1137259262900128421
 GameObject:
   m_ObjectHideFlags: 0
@@ -6141,16 +6141,16 @@ GameObject:
   - component: {fileID: 7465413719612064896}
   - component: {fileID: 7518773961790752119}
   - component: {fileID: 3891528595715228903}
-  - component: {fileID: 6197051584241607373}
   - component: {fileID: 5732924335234377155}
   - component: {fileID: 8056213273916310995}
+  - component: {fileID: 6197051584241607373}
   m_Layer: 5
   m_Name: P_CanvasGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &113279173493086640
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6240,6 +6240,45 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 7991
+--- !u!114 &5732924335234377155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172068207793189745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3388d8a2570cd6446897733719b3e911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handCursor: {fileID: 2800000, guid: 3e29908b462578640ab389bf9d553d8e, type: 3}
+  rseOnShowMouseCursor: {fileID: 11400000, guid: 677eb2460a6811943b20cd8bbfcb572b, type: 2}
+  rseOnHideMouseCursor: {fileID: 11400000, guid: cbddb45ab2313e443bf895053f04fe1e, type: 2}
+  rseOnSetFocus: {fileID: 11400000, guid: 7e70b76f869714e4ea3369cdd69eb241, type: 2}
+  rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
+  rseOnResetFocus: {fileID: 11400000, guid: 49e933a059aabdf4ab8547deb65c6764, type: 2}
+  rseOnMouseEnterUI: {fileID: 11400000, guid: 678a7331661ca6c428ce7cc4b6ad2f63, type: 2}
+  rseOnMouseLeaveUI: {fileID: 11400000, guid: 81128650bd5cba244bda3e2e091d137e, type: 2}
+  rsoDefaultSelectable: {fileID: 11400000, guid: fa46cdeebceb05e4690fb4418fc38c7d, type: 2}
+--- !u!114 &8056213273916310995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172068207793189745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b4aed73e3c6210499c8eab87ea9a1a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultWindow: {fileID: 7090280352426310551}
+  rseOnOpenWindow: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
+  rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
+  rseOnCloseAllWindows: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
+  rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
+  rseOnQuitGame: {fileID: 11400000, guid: 20d7180e7bae6694fb8ddf9ff9a7a20d, type: 2}
 --- !u!114 &6197051584241607373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6255,45 +6294,6 @@ MonoBehaviour:
   extractCanvas: {fileID: 5104464313179670033}
   rseOnOpenExtractWindow: {fileID: 11400000, guid: 35cf34216d315aa4c862e26e5a6884c7, type: 2}
   rseOnUIInputEnabled: {fileID: 11400000, guid: 24433aa59215e0d49a3c0da4426f2945, type: 2}
---- !u!114 &5732924335234377155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3172068207793189745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3388d8a2570cd6446897733719b3e911, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  handCursor: {fileID: 2800000, guid: 3e29908b462578640ab389bf9d553d8e, type: 3}
-  rseShowMouseCursor: {fileID: 11400000, guid: 677eb2460a6811943b20cd8bbfcb572b, type: 2}
-  rseHideMouseCursor: {fileID: 11400000, guid: cbddb45ab2313e443bf895053f04fe1e, type: 2}
-  rseSetFocus: {fileID: 11400000, guid: 7e70b76f869714e4ea3369cdd69eb241, type: 2}
-  rseResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
-  rseResetFocus: {fileID: 11400000, guid: 49e933a059aabdf4ab8547deb65c6764, type: 2}
-  rseMouseEnterUI: {fileID: 11400000, guid: 678a7331661ca6c428ce7cc4b6ad2f63, type: 2}
-  rseMouseLeaveUI: {fileID: 11400000, guid: 81128650bd5cba244bda3e2e091d137e, type: 2}
-  rsoDefaultSelectable: {fileID: 11400000, guid: fa46cdeebceb05e4690fb4418fc38c7d, type: 2}
---- !u!114 &8056213273916310995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3172068207793189745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b4aed73e3c6210499c8eab87ea9a1a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainWindow: {fileID: 7090280352426310551}
-  rseOpenWindow: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
-  rseCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
-  rseCloseAllWindows: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
-  rsePlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
-  rseQuitGame: {fileID: 11400000, guid: 20d7180e7bae6694fb8ddf9ff9a7a20d, type: 2}
 --- !u!1 &3209366103763089290
 GameObject:
   m_ObjectHideFlags: 0
