@@ -260,7 +260,7 @@ public class S_CameraManager : MonoBehaviour
 
         if (angle > 1f)
         {
-            float duration = rsoPlayerIsDodging.Value ? 0.01f : ssoCameraData.Value.rotationCameraPlayerDuration;
+            float duration = rsoPlayerIsDodging.Value ? 0.1f : ssoCameraData.Value.rotationCameraPlayerDuration;
 
             playerRotationTween = playerPoint.transform.DORotateQuaternion(targetRotation, duration).SetEase(Ease.Linear);
         }
