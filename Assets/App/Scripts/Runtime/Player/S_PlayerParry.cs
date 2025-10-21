@@ -33,6 +33,9 @@ public class S_PlayerParry : MonoBehaviour
     }
     private void OnEnable()
     {
+        _canParry.Value = false;
+        _parryStartTime.Value = 0f;
+
         rseOnPlayerParry.action += TryParry;
         _rseOnPlayerGettingHit.action += CancelParry;
     }
@@ -47,7 +50,12 @@ public class S_PlayerParry : MonoBehaviour
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false) return;
         _onPlayerAddState.Call(PlayerState.Parrying);
-        
+
+        if (_parryCoroutine != null)
+        {
+            StopCoroutine(_parryCoroutine);
+        }
+
         rseOnAnimationBoolValueChange.Call(_parryParam, true);
 
         _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryStartupDelay, () =>
@@ -61,9 +69,11 @@ public class S_PlayerParry : MonoBehaviour
 
                 _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryRecoveryDelay, () =>
                 {
-                    _onPlayerAddState.Call(PlayerState.None);
                     rseOnAnimationBoolValueChange.Call(_parryParam, false);
+                    _onPlayerAddState.Call(PlayerState.None);
 
+                    if (_parryCoroutine == null) return;
+                    StopCoroutine(_parryCoroutine);
                 }));
             }));
         }));

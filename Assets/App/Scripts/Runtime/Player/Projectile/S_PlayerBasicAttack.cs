@@ -88,10 +88,13 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         _timeInputPressed = Time.time;
 
-        if(CanGoUpperState() == true)
+        //_attackCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.attackStartupDelay, () =>
+        //{
+        if (CanGoUpperState() == true)
         {
             StartStepDuration();
         }
+        //}));
     }
 
     private void StartStepDuration()
@@ -146,8 +149,6 @@ public class S_PlayerBasicAttack : MonoBehaviour
         //}
 
         rseOnSpawnProjectile.Call(_currenStepAttack);
-        _onPlayerAddState.Call(PlayerState.None);
-        rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         _timeInputPressed = 0;
         _currenStepAttack = 0;
@@ -155,6 +156,14 @@ public class S_PlayerBasicAttack : MonoBehaviour
         if (_attackCoroutine == null) return;
         StopCoroutine(_attackCoroutine);
 
+        _attackCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.attackRecoveryDelay, () =>
+        {
+            _onPlayerAddState.Call(PlayerState.None);
+            rseOnAnimationBoolValueChange.Call(_attackParam, false);
+
+            if (_attackCoroutine == null) return;
+            StopCoroutine(_attackCoroutine);
+        }));
     }
 
     void CancelAttack()

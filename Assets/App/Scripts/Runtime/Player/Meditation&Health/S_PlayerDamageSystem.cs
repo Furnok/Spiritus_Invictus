@@ -16,6 +16,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
 
+    Coroutine _hitReactCoroutine;
     private void OnEnable()
     {
         rseOnPlayerTakeDamage.action += TakeDamage;
@@ -39,12 +40,18 @@ public class S_PlayerDamageSystem : MonoBehaviour
 
     private void TakeDamage(EnemyAttackData attackData)
     {
-        if(_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true)
+
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true)
         {
+            if (_hitReactCoroutine != null)
+            {
+                StopCoroutine(_hitReactCoroutine);
+            }
+
             rseOnAnimationTriggerValueChange.Call("isHit");
             _onPlayerAddState.Call(PlayerState.HitReact);
 
-            StartCoroutine(S_Utils.Delay(_playerStats.Value.hitStunDuration, () =>
+            _hitReactCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.hitStunDuration, () =>
             {
                 _onPlayerAddState.Call(PlayerState.None);
             }));

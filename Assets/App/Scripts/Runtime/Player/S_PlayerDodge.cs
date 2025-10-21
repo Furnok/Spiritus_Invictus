@@ -120,7 +120,11 @@ public class S_PlayerDodge : MonoBehaviour
 
         _playerIsDodging.Value = true;
 
-        _dodgeCoroutine = StartCoroutine(PerformDodge(dodgeDirection));
+
+        _dodgeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.dodgeStartupDelay, () =>
+        {
+            _dodgeCoroutine = StartCoroutine(PerformDodge(dodgeDirection));
+        }));
     }
 
     System.Collections.IEnumerator PerformDodge(Vector3 dodgeDirection)
@@ -143,10 +147,16 @@ public class S_PlayerDodge : MonoBehaviour
 
         _rb.linearVelocity = Vector3.zero;
         _rb.linearDamping = _linearDamping;
+        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
+        _playerIsDodging.Value = false;
 
-        ResetValue();
-        _onPlayerAddState.Call(PlayerState.None);
+        _dodgeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.dodgeRecoveryDelay, () =>
+        {
+            _onPlayerAddState.Call(PlayerState.None);
 
+            if (_dodgeCoroutine == null) return;
+            StopCoroutine(_dodgeCoroutine);
+        }));
     }
 
     private void Move(Vector2 input)
@@ -163,7 +173,7 @@ public class S_PlayerDodge : MonoBehaviour
 
     private void ResetValue()
     {
-        StartCoroutine(S_Utils.Delay(0.1f, () => _playerIsDodging.Value = false));
+        _playerIsDodging.Value = false;
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
     }
 }

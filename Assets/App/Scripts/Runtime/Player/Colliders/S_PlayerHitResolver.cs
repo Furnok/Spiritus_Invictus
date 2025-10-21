@@ -38,6 +38,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         if (attackData.attackType == EnemyAttackType.Parryable)
         {
+
             StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>
             {
                 if (canParry == true)

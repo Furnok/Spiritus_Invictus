@@ -157,7 +157,6 @@ public class S_PlayerMovement : MonoBehaviour
                 rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
                 rseOnAnimationBoolValueChange.Call(moveParam, false);
             }
-           
 
             return;
         }
@@ -171,9 +170,16 @@ public class S_PlayerMovement : MonoBehaviour
             rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
             rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
             rseOnAnimationBoolValueChange.Call(moveParam, false);
+
+            if (_playerCurrentState.Value != PlayerState.Dodging) // Allow movement after dodging
+            { 
+                rigidbodyPlayer.linearVelocity = Vector3.zero;
+            }
+
             //return;
         }
-        
+
+
 
         if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
