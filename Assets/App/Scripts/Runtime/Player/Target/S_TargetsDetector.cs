@@ -28,7 +28,6 @@ public class S_TargetDetector : MonoBehaviour
             if (rseOnEnemyEnterTargetingRange != null)
             {
                 rseOnEnemyEnterTargetingRange.Call(other.gameObject);
-                Debug.Log("Enemy entered targeting range: " + other.gameObject.name);
             }
         }
     }
@@ -40,7 +39,6 @@ public class S_TargetDetector : MonoBehaviour
             if (rseOnEnemyExitTargetingRange != null)
             {
                 rseOnEnemyExitTargetingRange.Call(other.gameObject);
-                Debug.Log("Enemy exit targeting range: " + other.gameObject.name);
             }
         }
     }
@@ -60,7 +58,6 @@ public class S_TargetDetector : MonoBehaviour
         if(enemyObject != null)
         {
             rseOnEnemyExitTargetingRange.Call(enemyObject);
-            Debug.Log("Enemy target died and exited targeting range: " + enemyObject.name);
         }
     }
 }

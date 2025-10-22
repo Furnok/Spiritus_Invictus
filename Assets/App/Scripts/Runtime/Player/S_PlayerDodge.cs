@@ -27,6 +27,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] private RSE_OnNewTargeting _rseOnNewTargeting;
     [SerializeField] private RSE_OnPlayerCancelTargeting _rseOnPlayerCancelTargeting;
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
+    [SerializeField] private RSE_OnPlayerDodgeInputCancel _onPlayerDodgeInputCancel;
 
     [Header("Output")]
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
@@ -37,7 +38,10 @@ public class S_PlayerDodge : MonoBehaviour
     Vector2 _moveInput;
     Transform _target = null;
     Coroutine _dodgeCoroutine;
+    Coroutine _prepareRunCoroutine;
     float _linearDamping;
+    bool _canRunAfterDodge = false;
+
     private void OnEnable()
     {
         rseOnPlayerDodge.action += TryDodge;
@@ -45,8 +49,11 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnNewTargeting.action += ChangeNewTarget;
         _rseOnPlayerCancelTargeting.action += CancelTarget;
         _rseOnPlayerGettingHit.action += CancelDodge;
+        _onPlayerDodgeInputCancel.action += CancelInputdodge;
 
         _playerIsDodging.Value = false;
+        _canRunAfterDodge = false;
+
     }
 
     private void OnDisable()
@@ -56,6 +63,7 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnNewTargeting.action -= ChangeNewTarget;
         _rseOnPlayerCancelTargeting.action -= CancelTarget;
         _rseOnPlayerGettingHit.action -= CancelDodge;
+        _onPlayerDodgeInputCancel.action -= CancelInputdodge;
 
     }
 
@@ -156,6 +164,19 @@ public class S_PlayerDodge : MonoBehaviour
 
             if (_dodgeCoroutine == null) return;
             StopCoroutine(_dodgeCoroutine);
+            //if (_prepareRunCoroutine == null) return;
+            //StopCoroutine(_prepareRunCoroutine);
+
+            _canRunAfterDodge = true;
+
+            _prepareRunCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeRunningAfterDodge, () =>
+            {
+                if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == false && _canRunAfterDodge == false) return;
+
+                _onPlayerAddState.Call(PlayerState.Running);
+                if (_prepareRunCoroutine == null) return;
+                StopCoroutine(_prepareRunCoroutine);
+            }));
         }));
     }
 
@@ -166,9 +187,22 @@ public class S_PlayerDodge : MonoBehaviour
 
     void CancelDodge()
     {
+        _canRunAfterDodge = false;
+
         if (_dodgeCoroutine == null) return;
         StopCoroutine(_dodgeCoroutine);
+
+        if (_prepareRunCoroutine == null) return;
+        StopCoroutine(_prepareRunCoroutine);
+
         ResetValue();
+    }
+
+    void CancelInputdodge()
+    {
+        _canRunAfterDodge = false;
+        if (_prepareRunCoroutine == null) return;
+        StopCoroutine(_prepareRunCoroutine);
     }
 
     private void ResetValue()

@@ -11,6 +11,7 @@ public class S_PlayerInputsManager : MonoBehaviour
 
     [Header("Output")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
+    [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
     [SerializeField] private RSE_OnPlayerAttackInputCancel rseOnPlayerAttackInputCancel;
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
@@ -27,6 +28,7 @@ public class S_PlayerInputsManager : MonoBehaviour
     [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameActionInputEnabled;
     [SerializeField] private RSE_OnUIInputEnabled rseOnUiActionInputEnabled;
+    [SerializeField] private RSE_OnPlayerDodgeInputCancel rseOnPlayerDodgeInputCancel;
 
     private IA_PlayerInput iaPlayerInput = null;
     private bool initialized = false;
@@ -89,6 +91,11 @@ public class S_PlayerInputsManager : MonoBehaviour
         rseOnPlayerMove.Call(ctx.ReadValue<Vector2>());
     }
 
+    private void OnMoveInputCancel(InputAction.CallbackContext ctx)
+    {
+        _onPlayerMoveInputCancel.Call();
+    }
+
     private void OnTargetingInput(InputAction.CallbackContext ctx)
     {
         rseOnPlayerTargeting.Call();
@@ -117,6 +124,11 @@ public class S_PlayerInputsManager : MonoBehaviour
     private void OnDodgeInput(InputAction.CallbackContext ctx)
     {
         rseOnPlayerDodge.Call();
+    }
+
+    private void OnDodgeInputCancel(InputAction.CallbackContext ctx)
+    {
+        rseOnPlayerDodgeInputCancel.Call();
     }
 
     private void OnInteractInput(InputAction.CallbackContext ctx)
@@ -163,9 +175,11 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         game.Move.performed += OnMoveChanged;
         game.Move.canceled += OnMoveChanged;
+        game.Move.canceled += OnMoveInputCancel;
         game.Attack.performed += OnAttackInput;
         game.Attack.canceled += OnAttackInputCancel;
         game.Dodge.performed += OnDodgeInput;
+        game.Dodge.canceled += OnDodgeInputCancel;
         game.Interact.performed += OnInteractInput;
         game.Meditation.performed += OnMeditationInput;
         game.Meditation.canceled += OnMeditationCancelInput;
@@ -183,9 +197,11 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         game.Move.performed -= OnMoveChanged;
         game.Move.canceled -= OnMoveChanged;
+        game.Move.canceled -= OnMoveInputCancel;
         game.Attack.performed -= OnAttackInput;
         game.Attack.canceled -= OnAttackInputCancel;
         game.Dodge.performed -= OnDodgeInput;
+        game.Dodge.canceled -= OnDodgeInputCancel;
         game.Interact.performed -= OnInteractInput;
         game.Meditation.performed -= OnMeditationInput;
         game.Meditation.canceled -= OnMeditationCancelInput;
