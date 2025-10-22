@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AppUI.UI;
 using Unity.Cinemachine;
+using UnityEditor;
 using UnityEngine;
 
 public class S_CameraManager : MonoBehaviour
@@ -288,5 +289,32 @@ public class S_CameraManager : MonoBehaviour
         Color color = materialPlayer.color;
         color.a = currentAlpha;
         materialPlayer.color = color;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (cinemachineCameraRail == null || cinemachineCameraPlayer == null) return;
+
+        // Draw line between cameras
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(cinemachineCameraRail.transform.position, cinemachineCameraPlayer.transform.position);
+
+        // Draw bridge position
+        Vector3 bridgePos = Vector3.Lerp(cinemachineCameraRail.transform.position, cinemachineCameraPlayer.transform.position, 0.5f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(bridgePos, 0.2f);
+
+        // Draw arrow toward target if assigned
+        if (currentTargetPos != null)
+        {
+            Handles.color = Color.green;
+            Handles.ArrowHandleCap(
+                0,
+                bridgePos,
+                Quaternion.LookRotation(currentTargetPos.position - bridgePos),
+                1f,
+                EventType.Repaint
+            );
+        }
     }
 }
