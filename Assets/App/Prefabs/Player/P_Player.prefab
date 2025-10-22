@@ -279,6 +279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tagEnemy: Enemy
   sphereCollider: {fileID: 7231497692482896322}
+  rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
   rseOnEnemyEnterTargetingRange: {fileID: 11400000, guid: 857c3a1874fe4f34b9a4e7de1355f9c0, type: 2}
   rseOnEnemyExitTargetingRange: {fileID: 11400000, guid: 9464073673f74034da5e08cf174a885c, type: 2}
   ssoPlayerTargetRangeRadius: {fileID: 11400000, guid: 5be727c44da2ea945accbd91b94caaf1, type: 2}
@@ -657,14 +658,6 @@ MonoBehaviour:
   _dodgeParam: isDodging
   _dodgeDirXParam: DodgeDirectionX
   _dodgeDirYParam: DodgeDirectionY
-  _capsule: {fileID: 0}
-  _collisionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _isCrouching: 0
   _ssoPlayerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
   _rb: {fileID: 4310562184785814063}
   _playerIsDodging: {fileID: 11400000, guid: f932dda1749effc4aac91cb2aeeff6d5, type: 2}

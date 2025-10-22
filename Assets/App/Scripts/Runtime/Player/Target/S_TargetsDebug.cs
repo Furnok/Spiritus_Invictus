@@ -75,8 +75,9 @@ public class S_TargetsDebug : MonoBehaviour
 
         foreach (var target in targets)
         {
-            if (rsoPlayerIsTargeting.Value == true && canDrawTarget == true && target == this.target) continue;
+            if (rsoPlayerIsTargeting.Value == true && canDrawTarget == true && target == this.target || target == null) continue;
 
+            
             Gizmos.color = gizmoColor;
             Vector3 pos = new Vector3(target.position.x, target.position.y + gizmoHeightOffset, target.position.z);
             Gizmos.DrawSphere(pos, gizmoRadius);
@@ -85,6 +86,7 @@ public class S_TargetsDebug : MonoBehaviour
 
     private void DrawTarget()
     {
+        if (target == null) return;
         Gizmos.color = gizmoTargetColor;
         Vector3 pos = new Vector3(target.position.x, target.position.y + gizmoHeightOffset, target.position.z);
         Gizmos.DrawSphere(pos, gizmoTargetRadius);

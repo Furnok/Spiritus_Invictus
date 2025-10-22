@@ -16,10 +16,12 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
     [SerializeField] CapsuleCollider _hitbox;
     [SerializeField] CapsuleCollider _hurtbox;
     [SerializeField] CapsuleCollider _enemyColisionBox;
+    [SerializeField] GameObject _enemyMotor;
 
     //[Header("Input")]
 
-    //[Header("Output")]
+    [Header("Output")]
+    [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
     void Awake()
     {
@@ -39,6 +41,7 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
     {
         //_visuals.SetActive(false);
         //_colliders.SetActive(false);
+        rseOnEnemyTargetDied.Call(_enemyMotor);
         _hurtbox.enabled = false;
         _enemyColisionBox.enabled = false;
         if (_hitbox != null)

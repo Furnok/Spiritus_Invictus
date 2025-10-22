@@ -6,6 +6,11 @@ public class S_PlayerProjectile : MonoBehaviour
     [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
     [SerializeField] private SSO_PlayerProjectileData ssoPlayerProjectileData;
     [SerializeField] SSO_PlayerStats _playerStats;
+
+    [Header("Input")]
+
+    [SerializeField] private RSE_OnEnemyTargetDied _onEnemyTargetDied;
+
     //[SerializeField]  ;
 
     [Header("Output")]
@@ -31,14 +36,29 @@ public class S_PlayerProjectile : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        _onEnemyTargetDied.action += OnTargetDie;
+    }
+
     private void OnDisable()
     {
         isInitialized = false;
         timeAlive = 0f;
         target = null;
         direction = Vector3.zero;
+
+        _onEnemyTargetDied.action -= OnTargetDie;
+
     }
 
+    void OnTargetDie(GameObject enemyDie)
+    {
+        if (target != null && enemyDie == target.gameObject && enemyDie != null)
+        {
+            target = null;
+        }
+    }
     private void Update()
     {
         if (!isInitialized) return;

@@ -168,10 +168,15 @@ public class S_TargetingManager : MonoBehaviour
             if (currentTarget != null)
             {
                 rseOnPlayerCancelTargeting.Call(currentTarget);
-                rsoTargetPosition.Value = Vector3.zero;
-            }
 
-            currentTarget = null;
+                currentTarget = TargetSelection();
+
+                if (currentTarget != null)
+                {
+                    rseOnNewTargeting.Call(currentTarget);
+                    rsoPlayerIsTargeting.Value = true;
+                }
+            }
         }
     }
 
