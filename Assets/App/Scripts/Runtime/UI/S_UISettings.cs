@@ -6,6 +6,7 @@ public class S_UISettings : MonoBehaviour
 {
     [TabGroup("References")]
     [Title("Default")]
+    [SerializeField] private GameObject defaultWindow;
     [SerializeField] private GameObject defaultPanelSet;
 
     [TabGroup("References")]
@@ -37,7 +38,13 @@ public class S_UISettings : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private Selectable sliderUIVolume;
 
-    private GameObject currentPanelSet;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnCloseWindow rseOnCloseWindow;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
+
+    private GameObject currentPanelSet = null;
 
     private void OnEnable()
     {
@@ -69,6 +76,22 @@ public class S_UISettings : MonoBehaviour
         {
             currentPanelSet.SetActive(false);
             currentPanelSet = null;
+        }
+    }
+
+    public void Close()
+    {
+        rseOnCloseWindow.Call(gameObject);
+
+        if (rsoNavigation.Value.selectablePressOldWindow == null)
+        {
+            rsoNavigation.Value.selectableFocus = null;
+            defaultWindow.SetActive(true);
+        }
+        else
+        {
+            rsoNavigation.Value.selectablePressOldWindow?.Select();
+            rsoNavigation.Value.selectablePressOldWindow = null;
         }
     }
 

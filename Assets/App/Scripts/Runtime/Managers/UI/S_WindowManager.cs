@@ -1,12 +1,16 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
     [TabGroup("References")]
-    [Title("Default Window")]
-    [SerializeField] private GameObject defaultWindow;
+    [Title("Windows")]
+    [SerializeField] private GameObject mainMenuWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject menuWindow;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
@@ -21,7 +25,10 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
+    [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
     private List<GameObject> currentWindows = new();
 
@@ -41,17 +48,24 @@ public class S_WindowManager : MonoBehaviour
         rseOnPlayerPause.action -= PauseGame;
     }
 
-    private void Start()
-    {
-        if (defaultWindow != null)
-        {
-            OpenWindow(defaultWindow);
-        }
-    }
-
     private void PauseGame()
     {
-        rseOnQuitGame.Call();
+        if (currentWindows.Count > 0)
+        {
+
+        }
+
+
+        if (!menuWindow.activeInHierarchy)
+        {
+            //rseOnUIInputEnabled.Call();
+            //OpenWindow(menuWindow);
+        }
+        else
+        {
+            //rseOnGameInputEnabled.Call();
+            //CloseWindow(menuWindow);
+        }
     }
 
     private void AlreadyOpen(GameObject window)

@@ -1,4 +1,5 @@
 ﻿using Sirenix.OdinInspector;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,8 +19,29 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private Button buttonSettings;
 
+    [TabGroup("References")]
+    [SerializeField] private GameObject settingsWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject creditsWindow;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnCloseAllWindows rseOnCloseAllWindows;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     private void OnEnable()
     {
@@ -43,5 +65,39 @@ public class S_UIMainMenu : MonoBehaviour
 
             buttonSettings.navigation = nav2;
         }
+    }
+
+    public void StartGame()
+    {
+        rseOnCloseAllWindows.Call();
+        gameObject.SetActive(false);
+        rsoNavigation.Value.selectableFocus = null;
+        rseOnGameInputEnabled.Call();
+    }
+
+    public void ContinueGame()
+    {
+        rseOnCloseAllWindows.Call();
+        rsoNavigation.Value.selectableFocus = null;
+    }
+
+    public void Settings()
+    {
+        rseOnCloseAllWindows.Call();
+        rsoNavigation.Value.selectableFocus = null;
+        rseOnOpenWindow.Call(settingsWindow);
+    }
+
+    public void Credits()
+    {
+        rseOnCloseAllWindows.Call();
+        rsoNavigation.Value.selectableFocus = null;
+        rseOnOpenWindow.Call(creditsWindow);
+    }
+
+    public void QuitGame()
+    {
+        rseOnQuitGame.Call();
+        rsoNavigation.Value.selectableFocus = null;
     }
 }

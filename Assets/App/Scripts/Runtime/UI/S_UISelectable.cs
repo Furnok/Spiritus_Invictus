@@ -25,6 +25,9 @@ public class S_UISelectable : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private Image image2;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
+
     private Color32 colorBase = new();
     private Color32 colorBase2 = new();
     private bool mouseOver = false;
@@ -113,6 +116,7 @@ public class S_UISelectable : MonoBehaviour
         if (uiElement.interactable && Gamepad.current != null)
         {
             PlayColorTransition(colorMouseEnter, colorMouseEnter);
+            rsoNavigation.Value.selectableFocus = uiElement;
         }
     }
 
@@ -124,9 +128,18 @@ public class S_UISelectable : MonoBehaviour
         }
     }
 
-    public void Clicked()
+    public void Clicked(Selectable uiElement)
     {
+        if (uiElement.interactable && Gamepad.current != null)
+        {
+            rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectablePress;
+            rsoNavigation.Value.selectablePress = uiElement;
+        }
+    }
 
+    public void ClickedWindow(Selectable uiElement)
+    {
+        rsoNavigation.Value.selectablePressOldWindow = uiElement;
     }
 
     private void PlayColorTransition(Color32 targetColor, Color32 targetColor2)

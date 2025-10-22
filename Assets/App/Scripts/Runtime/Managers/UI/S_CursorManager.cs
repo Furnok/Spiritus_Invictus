@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -32,11 +33,11 @@ public class S_CursorManager : MonoBehaviour
     [SerializeField] private RSE_OnMouseLeaveUI rseOnMouseLeaveUI;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_DefaultSelectable rsoDefaultSelectable;
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     private void Awake()
     {
-        rsoDefaultSelectable.Value = null;
+        rsoNavigation.Value = new();
     }
 
     private void OnEnable()
@@ -83,9 +84,9 @@ public class S_CursorManager : MonoBehaviour
             {
                 HideMouseCursor();
 
-                if (rsoDefaultSelectable.Value != null)
+                if (rsoNavigation.Value.selectableDefault != null)
                 {
-                    SetFocus(rsoDefaultSelectable.Value);
+                    SetFocus(rsoNavigation.Value.selectableDefault);
                 }
             }
             else if (change == InputDeviceChange.Removed)
@@ -147,6 +148,5 @@ public class S_CursorManager : MonoBehaviour
     private void ResetFocus()
     {
         EventSystem.current.SetSelectedGameObject(null);
-        rsoDefaultSelectable.Value?.GetComponent<S_UISelectable>()?.Unselected(rsoDefaultSelectable.Value);
     }
 }

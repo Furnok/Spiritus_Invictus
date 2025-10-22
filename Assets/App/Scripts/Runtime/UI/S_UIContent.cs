@@ -7,20 +7,19 @@ public class S_UIContent : MonoBehaviour
 {
     [TabGroup("References")]
     [Title("Default")]
-    [SerializeField] private Selectable defaultSelectable;
+    [SerializeField] private Selectable defaultFocusSelectable;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_DefaultSelectable rsoDefaultSelectable;
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     private void OnEnable()
     {
-        if (Gamepad.current != null)
-        {
-            defaultSelectable?.Select();
-            defaultSelectable?.GetComponent<S_UISelectable>()?.Selected(defaultSelectable);
-        }
+        StartCoroutine(S_Utils.DelayFrame(() => rsoNavigation.Value.selectableDefault = defaultFocusSelectable));
 
-        rsoDefaultSelectable.Value = defaultSelectable;
+        if (Gamepad.current != null && rsoNavigation.Value.selectableFocus == null)
+        {
+            StartCoroutine(S_Utils.DelayFrame(() => defaultFocusSelectable?.Select()));
+        }
     }
 
     private void OnDisable()
