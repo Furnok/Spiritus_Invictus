@@ -632,12 +632,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ssoEnemyHealthMax: {fileID: 11400000, guid: 35bf27f6c15a7ec4b9064587285d438b, type: 2}
+  enemyBody: {fileID: 470882556454963626}
   onUpdateEnemyHealth:
     m_PersistentCalls:
       m_Calls: []
   onInitializeEnemyHealth:
     m_PersistentCalls:
       m_Calls: []
+  RSE_OnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
 --- !u!1 &1581461010356481325
 GameObject:
   m_ObjectHideFlags: 0
@@ -2438,7 +2440,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5749621880643955078
 MonoBehaviour:
@@ -2453,6 +2455,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  detectionRange: 5
+  aggroRange: 50
+  detectionCollider: {fileID: 3080725466769851809}
+  S_Entity: {fileID: 2460148847118453107}
   onTargetDetected:
     m_PersistentCalls:
       m_Calls: []
@@ -2543,6 +2552,9 @@ MonoBehaviour:
   S_EnemyRangeDetection: {fileID: 5749621880643955078}
   S_EnemyHealth: {fileID: 7543558334818570422}
   animator: {fileID: 920333007787805252}
+  onGetHit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3359385370764017871
 MonoBehaviour:
   m_ObjectHideFlags: 0

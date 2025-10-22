@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Unity.Behavior;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class S_Entity : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class S_Entity : MonoBehaviour
     [SerializeField] private S_EnemyRangeDetection S_EnemyRangeDetection;
     [SerializeField] private S_EnemyHealth S_EnemyHealth;
     [SerializeField] private Animator animator;
+
+    [HideInInspector] public UnityEvent onGetHit;
 
     private void Awake()
     {
@@ -97,6 +100,7 @@ public class S_Entity : MonoBehaviour
     private void UpdateHealth(float health)
     {
         agent.SetVariableValue<float>("Health", health);
+        onGetHit.Invoke();
         agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Hit);
     }
 }
