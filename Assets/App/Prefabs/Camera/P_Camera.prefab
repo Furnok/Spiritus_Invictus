@@ -511,8 +511,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2575732486268715434}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2748357, y: -0.07528469, z: 0.021591365, w: 0.9582961}
-  m_LocalPosition: {x: 0.6246327, y: 4, z: -3.9509282}
+  m_LocalRotation: {x: 0.27487236, y: -0.07528511, z: 0.021594603, w: 0.9582855}
+  m_LocalPosition: {x: 0.6245365, y: 4, z: -3.9502532}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -575,9 +575,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SplineSettings:
     Spline: {fileID: 4482881187451468580}
-    Position: 0
+    Position: 0.00006777805
     Units: 2
-  SplineOffset: {x: 0, y: 2, z: -4}
+  SplineOffset: {x: 0, y: 1, z: -4}
   CameraRotation: 3
   Damping:
     Enabled: 1
@@ -664,7 +664,7 @@ MonoBehaviour:
   SizeAdjustment: 1
   LateralAdjustment: 0
   FovRange: {x: 1, y: 100}
-  DollyRange: {x: -10, y: 10}
+  DollyRange: {x: -10, y: 0}
   OrthoSizeRange: {x: 1, y: 1000}
 --- !u!1 &3641470845849660972
 GameObject:
@@ -794,8 +794,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3839073689257792411}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2748357, y: -0.07528469, z: 0.021591365, w: 0.9582961}
-  m_LocalPosition: {x: 1.1468015, y: 6.089904, z: -7.253751}
+  m_LocalRotation: {x: 0.27487236, y: -0.07528511, z: 0.021594603, w: 0.9582855}
+  m_LocalPosition: {x: 1.1467671, y: 6.090472, z: -7.2534113}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1107,25 +1107,25 @@ MonoBehaviour:
     m_Knots:
     - Position:
         x: 0
-        y: 2
+        y: 3
         z: 0
       TangentIn:
         x: 0
         y: 0
-        z: -2.6830406
+        z: -3.1830406
       TangentOut:
         x: 0
         y: 0
-        z: 2.6830406
+        z: 3.1830406
       Rotation:
         value:
-          x: 0
-          y: -0.07831967
-          z: -0
+          x: -8.167385e-10
+          y: -0.07831966
+          z: 0.000000010396237
           w: 0.9969283
     - Position:
         x: 0
-        y: 2
+        y: 3
         z: 10
       TangentIn:
         x: 0
@@ -1137,13 +1137,13 @@ MonoBehaviour:
         z: 3.5114896
       Rotation:
         value:
-          x: -0.011056509
-          y: 0.15103415
-          z: -0.07216805
-          w: 0.9858287
+          x: -0.011108668
+          y: 0.15103032
+          z: -0.072508395
+          w: 0.98580366
     - Position:
         x: 5
-        y: 2
+        y: 3
         z: 20
       TangentIn:
         x: 0
@@ -1155,13 +1155,13 @@ MonoBehaviour:
         z: 3.5298135
       Rotation:
         value:
-          x: -0.0014085178
-          y: 0.19053707
-          z: -0.0072565465
-          w: 0.98165214
+          x: -0.0014164761
+          y: 0.190537
+          z: -0.007297721
+          w: 0.9816519
     - Position:
         x: 5
-        y: 2
+        y: 3
         z: 30
       TangentIn:
         x: 0
@@ -1173,13 +1173,13 @@ MonoBehaviour:
         z: 3.7973366
       Rotation:
         value:
-          x: 0
+          x: -0.00000000146958
           y: -0.17842467
-          z: -0
+          z: 0.00000000810425
           w: 0.9839536
     - Position:
         x: 0
-        y: 2
+        y: 3
         z: 40
       TangentIn:
         x: 0
@@ -1191,13 +1191,13 @@ MonoBehaviour:
         z: 2.6918216
       Rotation:
         value:
-          x: 0
+          x: 0.00000004037823
           y: -0.18664636
-          z: -0
+          z: 0.000000024736954
           w: 0.9824271
     - Position:
         x: 0
-        y: 2
+        y: 3
         z: 50
       TangentIn:
         x: 0
@@ -1209,13 +1209,13 @@ MonoBehaviour:
         z: 6.4335384
       Rotation:
         value:
-          x: 0
+          x: 1.2766097e-12
           y: 0.021925652
-          z: 0
+          z: 5.8210485e-11
           w: 0.99975955
     - Position:
         x: 0
-        y: 2
+        y: 3
         z: 80
       TangentIn:
         x: 0
@@ -1227,10 +1227,10 @@ MonoBehaviour:
         z: 0
       Rotation:
         value:
-          x: -0.012497072
+          x: -0.018740118
           y: 0
           z: -0
-          w: 0.9999219
+          w: 0.99982435
     m_MetaData:
     - Mode: 2
       Tension: 0.5

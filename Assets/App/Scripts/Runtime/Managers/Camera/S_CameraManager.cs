@@ -256,7 +256,6 @@ public class S_CameraManager : MonoBehaviour
     {
         if (currentMode != ModeCamera.Player)
         {
-            playerPoint.transform.rotation = playerPos.rotation;
             playerRotationTween?.Kill();
             return;
         }
