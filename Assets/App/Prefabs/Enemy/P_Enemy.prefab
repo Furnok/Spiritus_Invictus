@@ -2544,9 +2544,11 @@ MonoBehaviour:
   deathParam: isDead
   combo1Param: Combo1
   combo2Param: Combo2
+  crouchParam: T-Bag
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4096
+  chanceForEasterEgg: 100
   agent: {fileID: 3359385370764017871}
   enemyNavMesh: {fileID: 3102293041041659286}
   S_EnemyRangeDetection: {fileID: 5749621880643955078}
@@ -2555,6 +2557,7 @@ MonoBehaviour:
   onGetHit:
     m_PersistentCalls:
       m_Calls: []
+  RSE_OnPLayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
 --- !u!114 &3359385370764017871
 MonoBehaviour:
   m_ObjectHideFlags: 0

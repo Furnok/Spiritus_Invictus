@@ -6,13 +6,15 @@ using UnityEngine.Events;
 public class S_Entity : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] [S_AnimationName] private string moveParam;
-    [SerializeField] [S_AnimationName] private string attackParam;
-    [SerializeField] [S_AnimationName] private string hitParam;
-    [SerializeField] [S_AnimationName] private string deathParam;
-    [SerializeField] [S_AnimationName] private string combo1Param;
-    [SerializeField] [S_AnimationName] private string combo2Param;
+    [SerializeField, S_AnimationName] private string moveParam;
+    [SerializeField, S_AnimationName] private string attackParam;
+    [SerializeField, S_AnimationName] private string hitParam;
+    [SerializeField, S_AnimationName] private string deathParam;
+    [SerializeField, S_AnimationName] private string combo1Param;
+    [SerializeField, S_AnimationName] private string combo2Param;
+    [SerializeField, S_AnimationName] private string crouchParam;
     [SerializeField] LayerMask obstacleMask;
+    [SerializeField] float chanceForEasterEgg;
 
     [Header("References")]
     [SerializeField] private BehaviorGraphAgent agent;
@@ -23,6 +25,8 @@ public class S_Entity : MonoBehaviour
 
     [HideInInspector] public UnityEvent onGetHit;
 
+    [Header("InpUt")]
+    [SerializeField] RSE_OnPlayerDeath RSE_OnPLayerDeath;
     private void Awake()
     {
         agent.SetVariableValue<string>("MoveParam", moveParam);
@@ -38,6 +42,7 @@ public class S_Entity : MonoBehaviour
         S_EnemyRangeDetection.onTargetDetected.AddListener(SetTarget);
         S_EnemyHealth.onUpdateEnemyHealth.AddListener(UpdateHealth);
         S_EnemyHealth.onInitializeEnemyHealth.AddListener(SetHealth);
+        RSE_OnPLayerDeath.action += PlayAnimationEasterEgg;
     }
 
     private void OnDisable()
@@ -45,6 +50,7 @@ public class S_Entity : MonoBehaviour
         S_EnemyRangeDetection.onTargetDetected.RemoveListener(SetTarget);
         S_EnemyHealth.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         S_EnemyHealth.onInitializeEnemyHealth.RemoveListener(SetHealth);
+        RSE_OnPLayerDeath.action -= PlayAnimationEasterEgg;
     }
 
     private void Update()
@@ -102,5 +108,18 @@ public class S_Entity : MonoBehaviour
         agent.SetVariableValue<float>("Health", health);
         onGetHit.Invoke();
         agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Hit);
+    }
+
+    private void PlayAnimationEasterEgg()
+    {
+        float rnd = Random.Range(0, chanceForEasterEgg);
+        if(rnd == 1)
+        {
+            animator.SetTrigger(crouchParam);
+        }
+        else
+        {
+            agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.Idle);
+        }
     }
 }
