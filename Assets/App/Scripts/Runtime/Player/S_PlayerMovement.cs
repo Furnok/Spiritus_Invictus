@@ -140,12 +140,12 @@ public class S_PlayerMovement : MonoBehaviour
             {
                 rseOnAnimationBoolValueChange.Call(moveParam, true);
                 rseOnAnimationFloatValueChange.Call(speedParam, vel.magnitude);
-                
+                rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
+                rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
+
                 if (_playerCurrentState.Value != PlayerState.Running)
                 {
                     _onPlayerAddState.Call(PlayerState.Moving);
-                    rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
-                    rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
                 }
 
             }
