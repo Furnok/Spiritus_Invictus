@@ -18,13 +18,13 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnLoadScene rseOnLoadScene;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InGame rsoInGame;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnLoadScene rseOnLoadScene;
 
     public void ResumeGame()
     {

@@ -7,6 +7,8 @@ public class S_UISettings : MonoBehaviour
     [TabGroup("References")]
     [Title("Default")]
     [SerializeField] private GameObject defaultWindow;
+
+    [TabGroup("References")]
     [SerializeField] private GameObject defaultPanelSet;
 
     [TabGroup("References")]

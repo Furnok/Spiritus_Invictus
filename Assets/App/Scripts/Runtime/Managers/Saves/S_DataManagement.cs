@@ -16,7 +16,7 @@ public class S_DataManagement : MonoBehaviour
     [SerializeField, S_SaveName] private string saveSettingsName;
 
     [TabGroup("Settings")]
-    [SerializeField, S_SaveName] private List<string> saveNames;
+    [SerializeField, S_SaveName] private string saveNames;
 
     [TabGroup("References")]
     [Title("Mixer")]
@@ -32,10 +32,16 @@ public class S_DataManagement : MonoBehaviour
     [SerializeField] private RSE_OnDeleteData rseOnDeleteData;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDataTemp rseOnDataTemp;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_ContentSaved rsoContentSaved;
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataTempSaved rsoDataTempSaved;
 
     private static readonly string EncryptionKey = "ajekoBnPxI9jGbnYCOyvE9alNy9mM/Kw";
     private static readonly string SaveDirectory = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Saves");
@@ -44,7 +50,8 @@ public class S_DataManagement : MonoBehaviour
     private void Awake()
     {
         rsoSettingsSaved.Value = new();
-        rsoContentSaved.Value = new();
+        rsoDataSaved.Value = new();
+        rsoDataTempSaved.Value = new();
     }
 
     private void OnEnable()
@@ -61,7 +68,8 @@ public class S_DataManagement : MonoBehaviour
         rseOnDeleteData.action -= DeleteData;
 
         rsoSettingsSaved.Value = null;
-        rsoContentSaved.Value = null;
+        rsoDataSaved.Value = null;
+        rsoDataTempSaved.Value = null;
     }
 
     private void Start()
@@ -78,6 +86,16 @@ public class S_DataManagement : MonoBehaviour
             {
                 SaveToJson(saveSettingsName, true);
             }
+        }
+
+        LoadDataTemp();
+    }
+
+    private void LoadDataTemp()
+    {
+        if (FileAlreadyExist(saveNames))
+        {
+            LoadTempFromJson(saveNames);
         }
     }
 
@@ -143,7 +161,7 @@ public class S_DataManagement : MonoBehaviour
         }
         else
         {
-            dataToSave = JsonUtility.ToJson(rsoContentSaved.Value);
+            dataToSave = JsonUtility.ToJson(rsoDataSaved.Value);
         }
 
         File.WriteAllText(filePath, fileCrypted ? Encrypt(dataToSave) : dataToSave);
@@ -180,7 +198,7 @@ public class S_DataManagement : MonoBehaviour
         {
             if (isSettings)
             {
-                rsoSettingsSaved.Value = JsonUtility.FromJson<S_SettingsSaved>(jsonContent);
+                rsoSettingsSaved.Value = JsonUtility.FromJson<S_ClassSettingsSaved>(jsonContent);
 
                 if (rsoSettingsSaved.Value == null)
                 {
@@ -191,9 +209,9 @@ public class S_DataManagement : MonoBehaviour
             }
             else
             {
-                rsoContentSaved.Value = JsonUtility.FromJson<S_ContentSaved>(jsonContent);
+                rsoDataSaved.Value = JsonUtility.FromJson<S_ClassDataSaved>(jsonContent);
 
-                if (rsoContentSaved.Value == null)
+                if (rsoDataSaved.Value == null)
                 {
                     throw new Exception();
                 }
@@ -205,6 +223,51 @@ public class S_DataManagement : MonoBehaviour
             {
                 SaveToJson(name, isSettings);
             }
+        }
+    }
+
+    private void LoadTempFromJson(string name)
+    {
+        if (!FileAlreadyExist(name)) return;
+
+        string filePath = GetFilePath(name);
+        string jsonContent;
+
+        try
+        {
+            jsonContent = File.ReadAllText(filePath);
+
+            if (fileCrypted)
+            {
+                jsonContent = Decrypt(jsonContent);
+            }
+
+            if (string.IsNullOrWhiteSpace(jsonContent))
+            {
+                throw new Exception();
+            }
+        }
+        catch
+        {
+            return;
+        }
+
+        try
+        {
+            if (JsonUtility.FromJson<S_ClassDataSaved>(jsonContent) == null)
+            {
+                throw new Exception();
+            }
+            else
+            {
+                rsoDataTempSaved.Value.haveSave = true;
+
+                rseOnDataTemp.Call();
+            }
+        }
+        catch
+        {
+            return;
         }
     }
 

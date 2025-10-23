@@ -63,19 +63,19 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerCenter rseOnPlayerCenter;
 
     [TabGroup("Outputs")]
-    [SerializeField] private SSO_CameraData ssoCameraData;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+    [SerializeField] private SSO_CameraData ssoCameraData;
 
     private Coroutine shake = null;
     private CinemachineCamera currentCamera = null;

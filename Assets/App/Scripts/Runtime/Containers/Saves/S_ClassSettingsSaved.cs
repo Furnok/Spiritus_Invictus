@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public class S_SettingsSaved
+public class S_ClassSettingsSaved
 {
     [Title("Langues")]
     public int languageIndex = 0;

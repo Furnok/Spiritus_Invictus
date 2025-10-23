@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_ConvictionManager : MonoBehaviour
 {
@@ -17,7 +17,8 @@ public class S_ConvictionManager : MonoBehaviour
     [SerializeField] RSE_OnSpawnProjectile _onSpawnProjectile;
     [SerializeField] RSE_OnAttackStartPerformed _onAttackStartPerformed;
 
-    //[Header("Output")]
+    [Header("Output")]
+    [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
 
     Coroutine _convictionConsumptionCoroutine;
 
@@ -49,6 +50,7 @@ public class S_ConvictionManager : MonoBehaviour
     {
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - _playerConvictionData.Value.healCost, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = newAmmount;
+        rseOnPlayerConvictionUpdate.Call(newAmmount);
 
         DelayWhenConvictionLoss();
     }
@@ -76,6 +78,7 @@ public class S_ConvictionManager : MonoBehaviour
         var newConvictionValue = stepUnder.ammountConvitionNeeded + differenceWithUnder / 100 * percentage;
 
         _playerCurrentConviction.Value = newConvictionValue;
+        rseOnPlayerConvictionUpdate.Call(newConvictionValue);
 
         DelayWhenConvictionLoss();
     }
@@ -89,6 +92,7 @@ public class S_ConvictionManager : MonoBehaviour
         if (step.ammountConvitionNeeded != 0)
         {
             _playerCurrentConviction.Value = newAmmount;
+            rseOnPlayerConvictionUpdate.Call(newAmmount);
 
             DelayWhenConvictionLoss();
         }
@@ -102,6 +106,7 @@ public class S_ConvictionManager : MonoBehaviour
     {
         var ammount = Mathf.Clamp(ammountGain + _playerCurrentConviction.Value, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = ammount;
+        rseOnPlayerConvictionUpdate.Call(ammount);
 
         DelayWhenConvictionGain();
     }
@@ -120,6 +125,7 @@ public class S_ConvictionManager : MonoBehaviour
     {
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = newAmmount;
+        rseOnPlayerConvictionUpdate.Call(newAmmount);
 
         StartConvitionConsumption();
     }

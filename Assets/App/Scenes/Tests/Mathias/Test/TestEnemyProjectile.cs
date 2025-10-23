@@ -1,11 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TestEnemyProjectile : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _lifeTime = 3f;
-    [SerializeField] private float _damage = 5f;
+    //[SerializeField] private float _damage = 5f;
 
     //[Header("References")]
 

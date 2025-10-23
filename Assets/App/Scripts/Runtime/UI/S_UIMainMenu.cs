@@ -1,14 +1,9 @@
 ﻿using Sirenix.OdinInspector;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UIMainMenu : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("TEMP ENABLE CONTINUE")]
-    [SerializeField] private bool isActive;
-
     [TabGroup("References")]
     [Title("Buttons")]
     [SerializeField] private Button buttonStart;
@@ -26,6 +21,9 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private GameObject creditsWindow;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDataTemp rseOnDataTemp;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
@@ -42,21 +40,34 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InGame rsoInGame;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+    [SerializeField] private RSO_DataTempSaved rsoDataTempSaved;
 
     private void OnEnable()
     {
+        rseOnDataTemp.action += SetupMenu;
+
         StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
         StartCoroutine(S_Utils.DelayFrame(() => rsoInGame.Value = false));
         StartCoroutine(S_Utils.DelayFrame(() => rseOnDisplayUIGame.Call(false)));
+    }
 
-        if (isActive)
+    private void OnDisable()
+    {
+        rseOnDataTemp.action -= SetupMenu;
+    }
+
+    private void SetupMenu()
+    {
+        if (rsoDataTempSaved.Value.haveSave)
         {
             buttonContinue.gameObject.SetActive(true);
 

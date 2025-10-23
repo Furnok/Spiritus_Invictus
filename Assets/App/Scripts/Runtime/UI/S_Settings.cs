@@ -17,10 +17,10 @@ public class S_Settings : MonoBehaviour
     [SerializeField] private AudioMixer audioMixer;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
+    [SerializeField] private RSE_OnSaveData rseOnSaveData;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnSaveData rseOnSaveData;
+    [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     private bool isLoaded = false;
     private List<TextMeshProUGUI> listTextAudios = new();

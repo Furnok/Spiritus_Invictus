@@ -8,7 +8,7 @@ public class S_SaveConversion : MonoBehaviour
     [SerializeField, S_SaveName] private string saveName;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_ContentSaved rsoContentSaved;
+    [SerializeField] private RSO_DataSaved rsoContentSaved;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnResetCursor rseOnResetCursor;

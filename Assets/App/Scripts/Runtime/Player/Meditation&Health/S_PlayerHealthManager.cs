@@ -10,6 +10,7 @@ public class S_PlayerHealthManager : MonoBehaviour
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
     [SerializeField] private RSO_PlayerCurrentHealth rsoPlayerCurrentHealth;
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
+    [SerializeField] private RSE_OnPlayerHealthUpdate rseOnPlayerHealthUpdate;
 
     private float maxHealth => ssoPlayerStats.Value.maxHealth;
 
@@ -34,6 +35,7 @@ public class S_PlayerHealthManager : MonoBehaviour
     {
         var newHealth = rsoPlayerCurrentHealth.Value + ssoPlayerStats.Value.healAmount;
         rsoPlayerCurrentHealth.Value = Mathf.Clamp(newHealth, 0, maxHealth);
+        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
         //Debug.Log($"Player Healed, player health: {rsoPlayerCurrentHealth.Value}");
     }
 
@@ -41,6 +43,7 @@ public class S_PlayerHealthManager : MonoBehaviour
     {
         var newHealth= rsoPlayerCurrentHealth.Value - damage;
         rsoPlayerCurrentHealth.Value = Mathf.Clamp(newHealth, 0, maxHealth);
+        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
         //Debug.Log($"Player heal reduced, Player Health: {rsoPlayerCurrentHealth.Value}");
 
         if (rsoPlayerCurrentHealth.Value <= 0)

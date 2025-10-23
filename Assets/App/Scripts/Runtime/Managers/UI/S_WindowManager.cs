@@ -1,7 +1,6 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
@@ -35,6 +34,9 @@ public class S_WindowManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InGame rsoInGame;
@@ -79,11 +81,13 @@ public class S_WindowManager : MonoBehaviour
                 {
                     rseOnUIInputEnabled.Call();
                     OpenWindow(menuWindow);
+                    rseOnGamePause.Call(true);
                 }
                 else
                 {
                     rseOnGameInputEnabled.Call();
                     CloseWindow(menuWindow);
+                    rseOnGamePause.Call(false);
                 }
             }
         }

@@ -31,16 +31,19 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private GameObject extractCanvas;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSO_PlayerCurrentHealth rsoPlayerCurrentHealth;
-
-    [TabGroup("Inputs")]
-    [SerializeField] private RSO_PlayerCurrentConviction rsoPlayerCurrentConviction;
-
-    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerHealthUpdate rseOnPlayerHealthUpdate;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
@@ -50,9 +53,6 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerAttackSteps ssoPlayerAttackSteps;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     private void Awake()
     {
@@ -68,16 +68,16 @@ public class S_UIGameManager : MonoBehaviour
     private void OnEnable()
     {
         rseOnDisplayBossHealth.action += DisplayBossHealth;
-        rsoPlayerCurrentHealth.onValueChanged += SetHealthSliderValue;
-        rsoPlayerCurrentConviction.onValueChanged += SetConvictionSliderValue;
+        rseOnPlayerHealthUpdate.action += SetHealthSliderValue;
+        rseOnPlayerConvictionUpdate.action += SetConvictionSliderValue;
         rseOnOpenExtractWindow.action += DiplayExtract;
     }
 
     private void OnDisable()
     {
         rseOnDisplayBossHealth.action -= DisplayBossHealth;
-        rsoPlayerCurrentHealth.onValueChanged -= SetHealthSliderValue;
-        rsoPlayerCurrentConviction.onValueChanged -= SetConvictionSliderValue;
+        rseOnPlayerHealthUpdate.action -= SetHealthSliderValue;
+        rseOnPlayerConvictionUpdate.action -= SetConvictionSliderValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
     }
 
