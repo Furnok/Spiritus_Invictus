@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 
-public class TestEnemyProjectile : MonoBehaviour
+public class TestEnemyProjectile : MonoBehaviour, IAttackProvider
 {
     [Header("Settings")]
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _lifeTime = 3f;
     //[SerializeField] private float _damage = 5f;
 
-    //[Header("References")]
+    [Header("References")]
+    [SerializeField] SSO_EnemyAttackData _testAttackData;
 
     //[Header("Inputs")]
 
@@ -18,7 +19,12 @@ public class TestEnemyProjectile : MonoBehaviour
     Transform _playerTarget = null;
     bool _isInitialized = false;
     Vector3 _direction = Vector3.zero;
+    EnemyAttackData _attackData;
 
+    private void Awake()
+    {
+        _attackData = _testAttackData.Value;
+    }
     public void Initialize(Transform target = null)
     {
         this._playerTarget = target;
@@ -50,5 +56,36 @@ public class TestEnemyProjectile : MonoBehaviour
 
         transform.position += dir * _speed * Time.deltaTime;
         transform.forward = dir;
+    }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.tag == "Hurtbox" && other.TryGetComponent(out IDamageable damageable))
+    //    {
+    //        Debug.Log("1");
+    //        if (damageable != null)
+    //        {
+    //            Debug.Log("2");
+
+    //            damageable.TakeDamage(_damage);
+    //            Destroy(gameObject);
+
+
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //        Debug.Log("3");
+
+    //    }
+
+    //}
+
+    public ref EnemyAttackData GetAttackData()
+    {
+        Destroy(gameObject);
+
+        return ref _attackData;
     }
 }

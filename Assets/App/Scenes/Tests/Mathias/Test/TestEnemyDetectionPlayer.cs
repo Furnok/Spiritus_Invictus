@@ -8,7 +8,7 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
 
     [Header("References")]
     [SerializeField] TestEnemyProjectile _enemyProjectile;
-
+    [SerializeField] GameObject _spwanProjectilePoint;
     //[Header("Inputs")]
 
     //[Header("Outputs")]
@@ -40,7 +40,7 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
         {
             if (_playerTransform != null)
             {
-                TestEnemyProjectile projectileInstance = Instantiate(_enemyProjectile, transform.position, Quaternion.identity);
+                TestEnemyProjectile projectileInstance = Instantiate(_enemyProjectile, _spwanProjectilePoint.transform.position, Quaternion.identity);
                 projectileInstance.Initialize(_playerTransform);
                 ShootPlayer();
             }

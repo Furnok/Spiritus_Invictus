@@ -68,7 +68,14 @@ public class S_PlayerHitResolver : MonoBehaviour
 
 
         }
-       
+        else if (attackData.attackType == EnemyAttackType.Projectile)
+        {
+            
+            _rseOnPlayerHit.Call(attackData);
+
+
+        }
+
     }
     IEnumerator IsWithinParryWindowCoroutine(System.Action<bool> callback)
     {
