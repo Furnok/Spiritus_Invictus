@@ -33,7 +33,7 @@ public class S_ConvictionManager : MonoBehaviour
         _onHealStart.action += ReduceConvictionOnHealPerformed;
         _onPlayerAttackCancel.action += ReduceConvictionOnAttackCancel;
         _onPlayerGainConviction.action += OnPlayerGainConviction;
-        _onSpawnProjectile.action += ReduceConvitionOnAttackPerform;
+        _onSpawnProjectile.action += ReductionConviction;
         _onAttackStartPerformed.action += StopComsuptioncoroutine;
     }
 
@@ -42,7 +42,7 @@ public class S_ConvictionManager : MonoBehaviour
         _onHealStart.action -= ReduceConvictionOnHealPerformed;
         _onPlayerAttackCancel.action -= ReduceConvictionOnAttackCancel;
         _onPlayerGainConviction.action -= OnPlayerGainConviction;
-        _onSpawnProjectile.action -= ReduceConvitionOnAttackPerform;
+        _onSpawnProjectile.action -= ReductionConviction;
         _onAttackStartPerformed.action -= StopComsuptioncoroutine;
     }
 
@@ -83,24 +83,27 @@ public class S_ConvictionManager : MonoBehaviour
         DelayWhenConvictionLoss();
     }
 
-    void ReduceConvitionOnAttackPerform(int attaqueStep)
-    {
-        var step = _playerAttackSteps.Value.Find(x => x.step == attaqueStep);
+    //void ReduceConvitionOnAttackPerform(int attaqueStep)
+    //{
+    //    var step = _playerAttackSteps.Value.Find(x => x.step == attaqueStep);
 
-        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - step.ammountConvitionNeeded, 0, _playerConvictionData.Value.maxConviction);
+    //    var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - step.ammountConvitionNeeded, 0, _playerConvictionData.Value.maxConviction);
 
-        if (step.ammountConvitionNeeded != 0)
-        {
-            _playerCurrentConviction.Value = newAmmount;
-            rseOnPlayerConvictionUpdate.Call(newAmmount);
+    //    if (step.ammountConvitionNeeded != 0)
+    //    {
+    //        _playerCurrentConviction.Value = newAmmount;
+    //        rseOnPlayerConvictionUpdate.Call(newAmmount);
 
-            DelayWhenConvictionLoss();
-        }
-        else
-        {
-            StartConvitionConsumption();
-        }
-    }
+    //        DelayWhenConvictionLoss();
+    //    }
+    //    else
+    //    {
+    //        StartConvitionConsumption();
+    //    }
+
+    //    DelayWhenConvictionLoss();
+
+    //}
 
     void OnPlayerGainConviction(float ammountGain)
     {
