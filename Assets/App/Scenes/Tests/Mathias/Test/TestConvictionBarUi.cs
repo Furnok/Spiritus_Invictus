@@ -9,6 +9,7 @@ public class TestConvictionBarUi : MonoBehaviour
     [Header("References")]
     [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
     [SerializeField] private RSO_PlayerCurrentConviction _playerCurrentConviction;
+    [SerializeField] RSO_PreconsumedConviction _preconsumedConviction;
     [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
     [SerializeField] Slider _sliderConviction;
     [SerializeField] Slider _sliderAttackStepProgression;
@@ -23,7 +24,6 @@ public class TestConvictionBarUi : MonoBehaviour
     private void Awake()
     {
         _sliderConviction.maxValue = _playerConvictionData.Value.maxConviction;
-        _sliderConviction.value = _sliderConviction.maxValue;
 
         _sliderAttackStepProgression.maxValue = _playerConvictionData.Value.maxConviction;
 
@@ -33,16 +33,23 @@ public class TestConvictionBarUi : MonoBehaviour
     private void OnEnable()
     {
         _playerCurrentConviction.onValueChanged += SetConvictionSliderValue;
+        _preconsumedConviction.onValueChanged += SetPreconvictionSliderValue;
     }
 
     private void OnDisable()
     {
         _playerCurrentConviction.onValueChanged -= SetConvictionSliderValue;
+        _preconsumedConviction.onValueChanged -= SetPreconvictionSliderValue;
     }
 
-    void SetConvictionSliderValue(float health)
+    void SetConvictionSliderValue(float conviction)
     {
-        _sliderConviction.value = health;
+        _sliderConviction.value = conviction;
+    }
+
+    void SetPreconvictionSliderValue(float preconvition)
+    {
+        _sliderAttackStepProgression.value = preconvition;
     }
 
     private IEnumerator BuildTicksNextFrame()

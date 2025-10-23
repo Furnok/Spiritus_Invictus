@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class S_PlayerProjectileManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class S_PlayerProjectileManager : MonoBehaviour
     [SerializeField] private S_PlayerProjectile projectilePrefab;
     [SerializeField] RSO_PlayerPosition _playerPosition;
     [SerializeField] RSO_PlayerRotation _playerRotation;
+    [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
 
     [Header("Input")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
@@ -51,12 +53,17 @@ public class S_PlayerProjectileManager : MonoBehaviour
         target = null;
     }
 
-    private void GetProjectileFromPool(int attackStep)
+
+    private void GetProjectileFromPool(float attackconviction)
     {
+
+        var stepsUpperCurrentConviction = _playerAttackSteps.Value.FindAll(x => x.ammountConvitionNeeded <= attackconviction);
+        var currentStepAttack = stepsUpperCurrentConviction.OrderByDescending(x => x.ammountConvitionNeeded).First();
+
         var projectile = projectilePool.Get();
         projectile.transform.position = _playerPosition.Value + _playerRotation.Value * new Vector3(0,1.5f,0.5f);
         projectile.transform.rotation = _playerRotation.Value;
-        projectile.Initialize(target, attackStep);
+        projectile.Initialize(attackconviction * currentStepAttack.multipliers, target, currentStepAttack.step);
     }
 
     private void ReturnProjectileToPool(S_PlayerProjectile projectile)
