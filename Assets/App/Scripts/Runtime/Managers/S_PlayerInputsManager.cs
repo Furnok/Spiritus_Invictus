@@ -29,6 +29,8 @@ public class S_PlayerInputsManager : MonoBehaviour
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameActionInputEnabled;
     [SerializeField] private RSE_OnUIInputEnabled rseOnUiActionInputEnabled;
     [SerializeField] private RSE_OnPlayerDodgeInputCancel rseOnPlayerDodgeInputCancel;
+    [SerializeField] private RSE_OnSkipInput rseOnSkipInput;
+    [SerializeField] private RSE_OnSkipCancelInput rseOnSkipCancelInput;
 
     private IA_PlayerInput iaPlayerInput = null;
     private bool initialized = false;
@@ -169,6 +171,19 @@ public class S_PlayerInputsManager : MonoBehaviour
     }
     #endregion
 
+    #region Cinematic Input Callback Methods
+
+    private void OnSkipInput(InputAction.CallbackContext ctx)
+    {
+        rseOnSkipInput.Call();
+    }
+
+    private void OnSkipCancelInput(InputAction.CallbackContext ctx)
+    {
+        rseOnSkipCancelInput.Call();
+    }
+    #endregion
+
     private void EnableGameInputs()
     {
         var game = iaPlayerInput.Game;
@@ -227,6 +242,22 @@ public class S_PlayerInputsManager : MonoBehaviour
         ui.Pause.performed -= OnPauseUIInput;
     }
 
+    private void EnableCinematicInputs()
+    {
+        var cinematic = iaPlayerInput.Cinematic;
+
+        cinematic.Skip.performed += OnSkipInput;
+        cinematic.Skip.canceled += OnSkipCancelInput;
+    }
+
+    private void DisableCinematicInputs()
+    {
+        var cinematic = iaPlayerInput.Cinematic;
+
+        cinematic.Skip.performed -= OnSkipInput;
+        cinematic.Skip.canceled -= OnSkipCancelInput;
+    }
+
     private void DeactivateInput()
     {
         if (!initialized) return;
@@ -243,6 +274,7 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         EnableGameInputs();
         DisableUIInputs();
+        DisableCinematicInputs();
 
         playerInput.actions.Disable();
         playerInput.SwitchCurrentActionMap(gameMapName);
@@ -258,6 +290,7 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         DisableGameInputs();
         EnableUIInputs();
+        DisableCinematicInputs();
 
         playerInput.actions.Disable();
         playerInput.SwitchCurrentActionMap(uiMapName);
@@ -273,6 +306,7 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         DisableGameInputs();
         DisableUIInputs();
+        EnableCinematicInputs();
 
         playerInput.actions.Disable();
         playerInput.SwitchCurrentActionMap(cinematicMapName);
