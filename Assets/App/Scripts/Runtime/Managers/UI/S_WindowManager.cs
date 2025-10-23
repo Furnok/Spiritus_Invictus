@@ -39,6 +39,9 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private RSE_OnGamePause rseOnGamePause;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_GameInPause rsoGameInPause;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_InGame rsoInGame;
 
     private List<GameObject> currentWindows = new();
@@ -73,22 +76,14 @@ public class S_WindowManager : MonoBehaviour
 
     private void PauseGame()
     {
-        if (rsoInGame.Value)
+        if (rsoInGame.Value && currentWindows.Count < 1)
         {
-            if (currentWindows.Count < 2)
+            if (!menuWindow.activeInHierarchy)
             {
-                if (!menuWindow.activeInHierarchy)
-                {
-                    rseOnUIInputEnabled.Call();
-                    OpenWindow(menuWindow);
-                    rseOnGamePause.Call(true);
-                }
-                else
-                {
-                    rseOnGameInputEnabled.Call();
-                    CloseWindow(menuWindow);
-                    rseOnGamePause.Call(false);
-                }
+                rseOnUIInputEnabled.Call();
+                OpenWindow(menuWindow);
+                rsoGameInPause.Value = true;
+                rseOnGamePause.Call(true);
             }
         }
     }
