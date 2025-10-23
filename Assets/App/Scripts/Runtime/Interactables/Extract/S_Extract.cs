@@ -1,17 +1,21 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_Extract : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Filter")]
     [SerializeField] [S_TagName] private string tagPlayer;
 
-    [Header("Input")]
+    [TabGroup("Settings")]
+    [Title("Extract")]
+    [SerializeField] private int extractIndex;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
 
-    [Header("Output")]
-    [SerializeField] private SSO_ExtractText ssoExtractText;
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
-    [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
 
     private void OnDisable()
     {
@@ -36,7 +40,6 @@ public class S_Extract : MonoBehaviour
 
     private void ExtractInteract()
     {
-        rseOnOpenExtractWindow.Call();
-        StartCoroutine(S_Utils.DelayFrame(() => rseOnDisplayExtract.Call(ssoExtractText.Value)));
+        rseOnOpenExtractWindow.Call(extractIndex);
     }
 }

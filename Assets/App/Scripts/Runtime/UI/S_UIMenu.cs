@@ -21,6 +21,12 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSE_OnLoadScene rseOnLoadScene;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -28,9 +34,11 @@ public class S_UIMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        rseOnGameInputEnabled.Call();
         rseOnCloseAllWindows.Call();
         rsoNavigation.Value.selectableFocus = null;
         rsoInGame.Value = true;
+        rseOnGamePause.Call(false);
     }
 
     public void Settings()

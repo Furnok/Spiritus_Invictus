@@ -46,6 +46,9 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
 
     [TabGroup("Outputs")]
@@ -53,6 +56,9 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerAttackSteps ssoPlayerAttackSteps;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_ExtractText ssoExtractText;
 
     private void Awake()
     {
@@ -139,10 +145,11 @@ public class S_UIGameManager : MonoBehaviour
         }
     }
 
-    private void DiplayExtract()
+    private void DiplayExtract(int index)
     {
         rseOnUIInputEnabled.Call();
 
         extractCanvas.SetActive(true);
+        rseOnDisplayExtract.Call(ssoExtractText.Value[index]);
     }
 }
