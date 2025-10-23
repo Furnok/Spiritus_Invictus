@@ -1219,7 +1219,7 @@ GameObject:
   - component: {fileID: 4732528117339439400}
   - component: {fileID: 7004302702653084684}
   m_Layer: 5
-  m_Name: TextStart
+  m_Name: TextResume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1272,7 +1272,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start
+  m_text: Resume
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 30b824733b613a546a2e5ec327a7aee6, type: 2}
   m_sharedMaterial: {fileID: 7114413539391100157, guid: 30b824733b613a546a2e5ec327a7aee6, type: 2}
@@ -1941,6 +1941,7 @@ MonoBehaviour:
   toggleFullscreen: {fileID: 432927416295327136}
   sliderMainVolume: {fileID: 6043570550392987664}
   sliderUIVolume: {fileID: 6335642166347103854}
+  rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
   rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
 --- !u!114 &3868484168872521359
@@ -2054,6 +2055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultWindow: {fileID: 7090280352426310551}
+  rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
   rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
 --- !u!1 &1166789436113068875
@@ -2504,7 +2506,7 @@ RectTransform:
   m_Father: {fileID: 2867407876031244206}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5117,7 +5119,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 3349139074424034033}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-          m_MethodName: MouseDown
+          m_MethodName: MouseExit
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 8159717645729807765}
@@ -6541,10 +6543,10 @@ RectTransform:
   - {fileID: 1938847163673169229}
   m_Father: {fileID: 5103536373411869877}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -282}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1791515274060156399
 CanvasRenderer:
@@ -6628,9 +6630,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 20d7180e7bae6694fb8ddf9ff9a7a20d, type: 2}
-        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent, Assembly-CSharp
-        m_MethodName: Call
+      - m_Target: {fileID: 8841715950073183421}
+        m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+        m_MethodName: Clicked
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 3844327853349539105}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4159629814828498666}
+        m_TargetAssemblyTypeName: S_UIMenu, Assembly-CSharp
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6796,7 +6810,7 @@ MonoBehaviour:
     rgba: 3372220415
   image: {fileID: 6131235918437514985}
   image2: {fileID: 0}
-  rsoNavigation: {fileID: 0}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
 --- !u!1 &2756129665914875604
 GameObject:
   m_ObjectHideFlags: 0
@@ -7391,7 +7405,7 @@ RectTransform:
   m_Father: {fileID: 1640700954783911945}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7615,12 +7629,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenuWindow: {fileID: 7090280352426310551}
   menuWindow: {fileID: 8445063460506897426}
+  gameWindow: {fileID: 6324976944753795977}
   rseOnOpenWindow: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
   rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
   rseOnCloseAllWindows: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
   rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
+  rseOnDisplayUIGame: {fileID: 11400000, guid: 0bf0c368d4c90d841af1c0dbb89f0901, type: 2}
   rseOnUIInputEnabled: {fileID: 11400000, guid: 24433aa59215e0d49a3c0da4426f2945, type: 2}
   rseOnGameInputEnabled: {fileID: 11400000, guid: 0526673c0b0752b418ffdef1cdaaf184, type: 2}
+  rsoInGame: {fileID: 11400000, guid: 943dbfd29f5e329458fb1745ff11f0ba, type: 2}
 --- !u!114 &6197051584241607373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7633,6 +7650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021bd746fb409c849a4459252f98c99f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sliderBossHealth: {fileID: 5263218158345323004}
   sliderHealth: {fileID: 4038792757003328915}
   sliderConviction: {fileID: 2558941721883914566}
   sliderFillAreaRectTransform: {fileID: 2867407876031244206}
@@ -7642,6 +7660,7 @@ MonoBehaviour:
   rsoPlayerCurrentHealth: {fileID: 11400000, guid: deb512c1ca8eaec4286f764395e6d686, type: 2}
   rsoPlayerCurrentConviction: {fileID: 11400000, guid: e9e6e673e8d688d4b96f8309938dbfdc, type: 2}
   rseOnOpenExtractWindow: {fileID: 11400000, guid: 35cf34216d315aa4c862e26e5a6884c7, type: 2}
+  rseOnDisplayBossHealth: {fileID: 11400000, guid: 052e4c694acd8a444bcd0135bc6f4cea, type: 2}
   ssoPlayerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   ssoPlayerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
   ssoPlayerAttackSteps: {fileID: 11400000, guid: ffc4fd5ee4fc81442b745bb06394e7be, type: 2}
@@ -8096,10 +8115,10 @@ RectTransform:
   - {fileID: 3771407666457337754}
   m_Father: {fileID: 5103536373411869877}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -118}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &635320274101367344
 CanvasRenderer:
@@ -8183,38 +8202,37 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
-        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent, Assembly-CSharp
-        m_MethodName: Call
+      - m_Target: {fileID: 7437223688023355763}
+        m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+        m_MethodName: ClickedWindow
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1380102054241304615}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7437223688023355763}
+        m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+        m_MethodName: Clicked
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1380102054241304615}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 4159629814828498666}
+        m_TargetAssemblyTypeName: S_UIMenu, Assembly-CSharp
+        m_MethodName: Settings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
-        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent`1[[UnityEngine.GameObject,
-          UnityEngine
-        m_MethodName: Call
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1055139870482316824}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7933088321982871583}
-        m_TargetAssemblyTypeName: S_UISettings, Assembly-CSharp
-        m_MethodName: SetReturn
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8445063460506897426}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8376,7 +8394,7 @@ MonoBehaviour:
     rgba: 3372220415
   image: {fileID: 9142982062701365235}
   image2: {fileID: 0}
-  rsoNavigation: {fileID: 0}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
 --- !u!1 &3745184179535858328
 GameObject:
   m_ObjectHideFlags: 0
@@ -10150,7 +10168,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 7393125018954713934}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-          m_MethodName: MouseDown
+          m_MethodName: MouseExit
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 3643773589439469079}
@@ -13627,10 +13645,10 @@ RectTransform:
   - {fileID: 2827936526016172990}
   m_Father: {fileID: 5103536373411869877}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -200}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1891028433248744454
 CanvasRenderer:
@@ -13714,26 +13732,25 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
-        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent, Assembly-CSharp
-        m_MethodName: Call
-        m_Mode: 1
+      - m_Target: {fileID: 5981304890849422364}
+        m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+        m_MethodName: Clicked
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 4718315767664925532}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
-        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent`1[[UnityEngine.GameObject,
-          UnityEngine
-        m_MethodName: Call
-        m_Mode: 2
+      - m_Target: {fileID: 4159629814828498666}
+        m_TargetAssemblyTypeName: S_UIMenu, Assembly-CSharp
+        m_MethodName: MainMenu
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 7090280352426310551}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -13895,7 +13912,7 @@ MonoBehaviour:
     rgba: 3372220415
   image: {fileID: 6812975625845758635}
   image2: {fileID: 0}
-  rsoNavigation: {fileID: 0}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
 --- !u!1 &5761598803625661968
 GameObject:
   m_ObjectHideFlags: 0
@@ -14324,7 +14341,7 @@ GameObject:
   - component: {fileID: 9132215860314186500}
   - component: {fileID: 3437217075545255646}
   m_Layer: 5
-  m_Name: ButtonStart
+  m_Name: ButtonResume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14345,10 +14362,10 @@ RectTransform:
   - {fileID: 4611301305004250597}
   m_Father: {fileID: 5103536373411869877}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -36}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9148286789561819868
 CanvasRenderer:
@@ -14432,21 +14449,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
-        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent, Assembly-CSharp
-        m_MethodName: Call
-        m_Mode: 1
+      - m_Target: {fileID: 3437217075545255646}
+        m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+        m_MethodName: Clicked
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 6145332841819897374}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: 0526673c0b0752b418ffdef1cdaaf184, type: 2}
-        m_TargetAssemblyTypeName: BT.ScriptablesObject.RuntimeScriptableEvent, Assembly-CSharp
-        m_MethodName: Call
+      - m_Target: {fileID: 4159629814828498666}
+        m_TargetAssemblyTypeName: S_UIMenu, Assembly-CSharp
+        m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14612,7 +14629,7 @@ MonoBehaviour:
     rgba: 3372220415
   image: {fileID: 360184208109881953}
   image2: {fileID: 0}
-  rsoNavigation: {fileID: 0}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
 --- !u!1 &6143930544225330611
 GameObject:
   m_ObjectHideFlags: 0
@@ -15198,7 +15215,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &760842389735724703
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16181,7 +16198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6427930873367168921
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16236,11 +16253,13 @@ MonoBehaviour:
   settingsWindow: {fileID: 1055139870482316824}
   creditsWindow: {fileID: 1137259262900128421}
   rseOnUIInputEnabled: {fileID: 11400000, guid: 24433aa59215e0d49a3c0da4426f2945, type: 2}
-  rseOnGameInputEnabled: {fileID: 11400000, guid: 0526673c0b0752b418ffdef1cdaaf184, type: 2}
+  rseOnCameraIntro: {fileID: 11400000, guid: fa939d572e9aba74982e2577a6615b29, type: 2}
   rseOnOpenWindow: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
   rseOnCloseAllWindows: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
   rseOnQuitGame: {fileID: 11400000, guid: 20d7180e7bae6694fb8ddf9ff9a7a20d, type: 2}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rsoInGame: {fileID: 11400000, guid: 943dbfd29f5e329458fb1745ff11f0ba, type: 2}
+  rseOnDisplayUIGame: {fileID: 11400000, guid: 0bf0c368d4c90d841af1c0dbb89f0901, type: 2}
 --- !u!1 &7201042659565471638
 GameObject:
   m_ObjectHideFlags: 0
@@ -17233,6 +17252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5182206732870989038}
   - component: {fileID: 1751974611278537343}
+  - component: {fileID: 4159629814828498666}
   m_Layer: 5
   m_Name: ContentMenu
   m_TagString: Untagged
@@ -17273,8 +17293,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50c7431c1acf8de4daf77317d39a40b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultFocusSelectable: {fileID: 0}
-  rsoNavigation: {fileID: 0}
+  defaultFocusSelectable: {fileID: 6145332841819897374}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+--- !u!114 &4159629814828498666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8445063460506897426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 284ed8a9f91f32640b09638b5c93ab84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settingsWindow: {fileID: 1055139870482316824}
+  rseOnOpenWindow: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
+  rseOnCloseAllWindows: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
+  rseOnQuitGame: {fileID: 11400000, guid: 20d7180e7bae6694fb8ddf9ff9a7a20d, type: 2}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rsoInGame: {fileID: 11400000, guid: 943dbfd29f5e329458fb1745ff11f0ba, type: 2}
+  rseOnLoadScene: {fileID: 11400000, guid: 3e9462016f0203448bead1ff197b69f0, type: 2}
 --- !u!1 &8454016520320679204
 GameObject:
   m_ObjectHideFlags: 0

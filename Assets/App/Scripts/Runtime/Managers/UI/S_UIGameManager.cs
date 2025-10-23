@@ -7,6 +7,9 @@ public class S_UIGameManager : MonoBehaviour
 {
     [TabGroup("References")]
     [Title("Sliders")]
+    [SerializeField] private Slider sliderBossHealth;
+
+    [TabGroup("References")]
     [SerializeField] private Slider sliderHealth;
 
     [TabGroup("References")]
@@ -36,6 +39,9 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
+
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
 
@@ -61,6 +67,7 @@ public class S_UIGameManager : MonoBehaviour
 
     private void OnEnable()
     {
+        rseOnDisplayBossHealth.action += DisplayBossHealth;
         rsoPlayerCurrentHealth.onValueChanged += SetHealthSliderValue;
         rsoPlayerCurrentConviction.onValueChanged += SetConvictionSliderValue;
         rseOnOpenExtractWindow.action += DiplayExtract;
@@ -68,9 +75,15 @@ public class S_UIGameManager : MonoBehaviour
 
     private void OnDisable()
     {
+        rseOnDisplayBossHealth.action -= DisplayBossHealth;
         rsoPlayerCurrentHealth.onValueChanged -= SetHealthSliderValue;
         rsoPlayerCurrentConviction.onValueChanged -= SetConvictionSliderValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
+    }
+
+    private void DisplayBossHealth(bool value)
+    {
+        sliderBossHealth.gameObject.SetActive(value);
     }
 
     private void SetHealthSliderValue(float health)

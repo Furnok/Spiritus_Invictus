@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,6 +38,9 @@ public class S_UISettings : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private Selectable sliderUIVolume;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCloseWindow rseOnCloseWindow;
 
@@ -48,6 +51,8 @@ public class S_UISettings : MonoBehaviour
 
     private void OnEnable()
     {
+        rseOnPlayerPause.action += Close;
+
         if (defaultPanelSet != null)
         {
             defaultPanelSet.SetActive(true);
@@ -72,6 +77,8 @@ public class S_UISettings : MonoBehaviour
 
     private void OnDisable()
     {
+        rseOnPlayerPause.action -= Close;
+
         if (currentPanelSet != null)
         {
             currentPanelSet.SetActive(false);

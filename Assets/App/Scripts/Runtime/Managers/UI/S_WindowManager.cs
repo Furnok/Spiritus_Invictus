@@ -12,6 +12,9 @@ public class S_WindowManager : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private GameObject menuWindow;
 
+    [TabGroup("References")]
+    [SerializeField] private GameObject gameWindow;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
 
@@ -24,13 +27,24 @@ public class S_WindowManager : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InGame rsoInGame;
+
     private List<GameObject> currentWindows = new();
+
+    private void Awake()
+    {
+        rsoInGame.Value = true;
+    }
 
     private void OnEnable()
     {
@@ -38,6 +52,7 @@ public class S_WindowManager : MonoBehaviour
         rseOnCloseWindow.action += CloseWindow;
         rseOnCloseAllWindows.action += CloseAllWindows;
         rseOnPlayerPause.action += PauseGame;
+        rseOnDisplayUIGame.action += DisplayUIGame;
     }
 
     private void OnDisable()
@@ -46,25 +61,31 @@ public class S_WindowManager : MonoBehaviour
         rseOnCloseWindow.action -= CloseWindow;
         rseOnCloseAllWindows.action -= CloseAllWindows;
         rseOnPlayerPause.action -= PauseGame;
+        rseOnDisplayUIGame.action -= DisplayUIGame;
+    }
+
+    private void DisplayUIGame(bool value)
+    {
+        gameWindow.SetActive(value);
     }
 
     private void PauseGame()
     {
-        if (currentWindows.Count > 0)
+        if (rsoInGame.Value)
         {
-
-        }
-
-
-        if (!menuWindow.activeInHierarchy)
-        {
-            //rseOnUIInputEnabled.Call();
-            //OpenWindow(menuWindow);
-        }
-        else
-        {
-            //rseOnGameInputEnabled.Call();
-            //CloseWindow(menuWindow);
+            if (currentWindows.Count < 2)
+            {
+                if (!menuWindow.activeInHierarchy)
+                {
+                    rseOnUIInputEnabled.Call();
+                    OpenWindow(menuWindow);
+                }
+                else
+                {
+                    rseOnGameInputEnabled.Call();
+                    CloseWindow(menuWindow);
+                }
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_UICredits : MonoBehaviour
@@ -7,11 +7,24 @@ public class S_UICredits : MonoBehaviour
     [Title("Default")]
     [SerializeField] private GameObject defaultWindow;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCloseWindow rseOnCloseWindow;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
+
+    private void OnEnable()
+    {
+        rseOnPlayerPause.action += Close;
+    }
+
+    private void OnDisable()
+    {
+        rseOnPlayerPause.action -= Close;
+    }
 
     public void Close()
     {

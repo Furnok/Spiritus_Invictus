@@ -20,6 +20,7 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private Button buttonSettings;
 
     [TabGroup("References")]
+    [Title("Windows")]
     [SerializeField] private GameObject settingsWindow;
 
     [TabGroup("References")]
@@ -29,7 +30,7 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+    [SerializeField] private RSE_OnCameraIntro rseOnCameraIntro;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
@@ -43,9 +44,17 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InGame rsoInGame;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+
     private void OnEnable()
     {
         StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
+        StartCoroutine(S_Utils.DelayFrame(() => rsoInGame.Value = false));
+        StartCoroutine(S_Utils.DelayFrame(() => rseOnDisplayUIGame.Call(false)));
 
         if (isActive)
         {
@@ -72,7 +81,8 @@ public class S_UIMainMenu : MonoBehaviour
         rseOnCloseAllWindows.Call();
         gameObject.SetActive(false);
         rsoNavigation.Value.selectableFocus = null;
-        rseOnGameInputEnabled.Call();
+        rseOnCameraIntro.Call();
+        rsoInGame.Value = true;
     }
 
     public void ContinueGame()

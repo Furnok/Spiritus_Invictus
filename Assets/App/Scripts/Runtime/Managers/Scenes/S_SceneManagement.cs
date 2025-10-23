@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -44,12 +44,7 @@ public class S_SceneManagement : MonoBehaviour
 
     private void Transition(string sceneName)
     {
-        if (rsoCurrentLevel.Value != null)
-        {
-            StartCoroutine(S_Utils.UnloadSceneAsync(rsoCurrentLevel.Value));
-        }
-
-        StartCoroutine(S_Utils.LoadSceneAsync(sceneName, LoadSceneMode.Additive, () =>
+        StartCoroutine(S_Utils.LoadSceneAsync(sceneName, LoadSceneMode.Single, () =>
         {
             isLoading = false;
 

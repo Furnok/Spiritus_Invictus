@@ -1,8 +1,6 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.AppUI.UI;
 using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
@@ -15,6 +13,9 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Cinemachine")]
+    [SerializeField] private CinemachineCamera cinemachineCameraIntro;
+
+    [TabGroup("References")]
     [SerializeField] private CinemachineCamera cinemachineCameraRail;
 
     [TabGroup("References")]
@@ -47,6 +48,9 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
 
     [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnCameraIntro rseOnCameraIntro;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCameraCinematic rseOnCameraCinematic;
 
     [TabGroup("Inputs")]
@@ -69,6 +73,9 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
 
     private Coroutine shake = null;
     private CinemachineCamera currentCamera = null;
@@ -99,6 +106,7 @@ public class S_CameraManager : MonoBehaviour
         rseOnPlayerCenter.action += PlayerPos;
         rseOnNewTargeting.action += SwitchCameraMode;
         rseOnPlayerCancelTargeting.action += SwitchCameraMode;
+        rseOnCameraIntro.action += CameraIntro;
         rseOnCameraCinematic.action += SwitchCinematicCamera;
         rseOnCameraShake.action += CameraShake;
         rseOnPlayerMove.action += InputsMove;
@@ -110,10 +118,15 @@ public class S_CameraManager : MonoBehaviour
         rseOnPlayerCenter.action -= PlayerPos;
         rseOnNewTargeting.action -= SwitchCameraMode;
         rseOnPlayerCancelTargeting.action -= SwitchCameraMode;
+        rseOnCameraIntro.action -= CameraIntro;
         rseOnCameraCinematic.action -= SwitchCinematicCamera;
         rseOnCameraShake.action -= CameraShake;
         rseOnPlayerMove.action -= InputsMove;
         rseOnCinematicFinish.action -= FinishCinematic;
+
+        Color color = materialPlayer.color;
+        color.a = 1;
+        materialPlayer.color = color;
     }
 
     private void Update()
@@ -129,6 +142,26 @@ public class S_CameraManager : MonoBehaviour
     {
         playerPos = player;
         targetGroupRail.Targets[0].Object = player;
+    }
+
+    private void CameraIntro()
+    {
+        if (cinemachineCameraIntro.transform.parent.gameObject.activeInHierarchy)
+        {
+            rseOnDisplayUIGame.Call(false);
+            rseOnCinematicInputEnabled.Call();
+
+            currentCamera = cinemachineCameraIntro;
+            cinemachineCameraIntro.GetComponent<Animator>().enabled = true;
+            cinemachineCameraIntro.GetComponent<Animator>().SetTrigger("Play");
+
+            currentMode = ModeCamera.Cinematic;
+        }
+        else
+        {
+            rseOnDisplayUIGame.Call(true);
+            rseOnGameInputEnabled.Call();
+        }
     }
 
     private void SwitchCameraMode(GameObject target)
@@ -164,6 +197,7 @@ public class S_CameraManager : MonoBehaviour
             return;
         }
 
+        rseOnDisplayUIGame.Call(false);
         rseOnCinematicInputEnabled.Call();
 
         currentTargetPos = null;
@@ -188,6 +222,7 @@ public class S_CameraManager : MonoBehaviour
 
         currentMode = ModeCamera.Rail;
 
+        rseOnDisplayUIGame.Call(true);
         rseOnGameInputEnabled.Call();
     }
 
