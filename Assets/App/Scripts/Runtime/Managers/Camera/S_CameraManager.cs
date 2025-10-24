@@ -408,7 +408,8 @@ public class S_CameraManager : MonoBehaviour
         color.a = currentAlpha;
         materialPlayer.color = color;
     }
-
+    
+    /*
     private void OnDrawGizmos()
     {
         if (cinemachineCameraRail == null || cinemachineCameraPlayer == null) return;
@@ -434,5 +435,5 @@ public class S_CameraManager : MonoBehaviour
                 EventType.Repaint
             );
         }
-    }
+    }*/
 }
