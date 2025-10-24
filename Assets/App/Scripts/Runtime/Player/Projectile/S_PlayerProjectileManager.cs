@@ -56,7 +56,8 @@ public class S_PlayerProjectileManager : MonoBehaviour
 
     private void GetProjectileFromPool(float attackconviction)
     {
-
+        if (attackconviction < 1) return;
+        
         var stepsUpperCurrentConviction = _playerAttackSteps.Value.FindAll(x => x.ammountConvitionNeeded <= attackconviction);
         var currentStepAttack = stepsUpperCurrentConviction.OrderByDescending(x => x.ammountConvitionNeeded).First();
 

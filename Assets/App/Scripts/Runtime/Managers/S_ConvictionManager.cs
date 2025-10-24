@@ -21,6 +21,7 @@ public class S_ConvictionManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
 
     Coroutine _convictionConsumptionCoroutine;
+    Coroutine _convictionGainOrLossCoroutine;
 
     private void Awake()
     {
@@ -120,7 +121,8 @@ public class S_ConvictionManager : MonoBehaviour
 
         _convictionConsumptionCoroutine = StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.tickIntervalSec, () =>
         {
-            ReductionConviction(_playerConvictionData.Value.ammountLostOverTick);
+            ReductionConsumptionOnConsuption(_playerConvictionData.Value.ammountLostOverTick);
+            StartConvitionConsumption();
         }));
     }
 
@@ -130,14 +132,29 @@ public class S_ConvictionManager : MonoBehaviour
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
 
-        StartConvitionConsumption();
+        if (ammount >= 1)
+        {
+            DelayWhenConvictionLoss();
+        }
+        else
+        {
+            StartConvitionConsumption();
+        }
+    }
+
+    void ReductionConsumptionOnConsuption(float ammount)
+    {
+        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
+        _playerCurrentConviction.Value = newAmmount;
+        rseOnPlayerConvictionUpdate.Call(newAmmount);
     }
 
     void DelayWhenConvictionLoss()
     {
         StopComsuptioncoroutine();
+        if(_convictionGainOrLossCoroutine != null) StopCoroutine(_convictionGainOrLossCoroutine);
 
-        StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterLoss, () =>
+        _convictionGainOrLossCoroutine = StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterLoss, () =>
         {
             if (_playerCurrentConviction.Value > 0)
             {
@@ -149,8 +166,9 @@ public class S_ConvictionManager : MonoBehaviour
     void DelayWhenConvictionGain()
     {
         StopComsuptioncoroutine();
+        if(_convictionGainOrLossCoroutine != null) StopCoroutine(_convictionGainOrLossCoroutine);
 
-        StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterGained, () =>
+        _convictionGainOrLossCoroutine = StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterGained, () =>
         {
             StartConvitionConsumption();
         }));

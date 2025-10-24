@@ -234,10 +234,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         {
             rseOnAnimationBoolValueChange.Call(_attackParam, false);
             var value = Mathf.FloorToInt(_reservedConviction);
-            if(value >= 1)
-            {
-                rseOnSpawnProjectile.Call(value);
-            }
+
+            rseOnSpawnProjectile.Call(value);
 
             _reservedConviction = 0f;
             PublishPreconsume(_reservedConviction);
