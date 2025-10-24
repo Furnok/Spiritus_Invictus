@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEditor;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 public class S_CameraManager : MonoBehaviour
@@ -62,6 +63,12 @@ public class S_CameraManager : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCenter rseOnPlayerCenter;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnSkipInput rseOnSkipInput;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnSkipCancelInput rseOnSkipCancelInput;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
 
@@ -111,6 +118,8 @@ public class S_CameraManager : MonoBehaviour
         rseOnCameraShake.action += CameraShake;
         rseOnPlayerMove.action += InputsMove;
         rseOnCinematicFinish.action += FinishCinematic;
+        rseOnSkipInput.action += Skip;
+        rseOnSkipCancelInput.action += SkipCancel;
     }
 
     private void OnDisable()
@@ -123,11 +132,17 @@ public class S_CameraManager : MonoBehaviour
         rseOnCameraShake.action -= CameraShake;
         rseOnPlayerMove.action -= InputsMove;
         rseOnCinematicFinish.action -= FinishCinematic;
+        rseOnSkipInput.action -= Skip;
+        rseOnSkipCancelInput.action -= SkipCancel;
 
         Color color = materialPlayer.color;
         color.a = 1;
         materialPlayer.color = color;
     }
+
+    private bool isSkipping = false;
+    public float holdTime = 3f;
+    private float currentHold = 0f;
 
     private void Update()
     {
@@ -136,6 +151,33 @@ public class S_CameraManager : MonoBehaviour
         CamPlayerRotate();
 
         PlayerHide();
+
+        if (isSkipping)
+        {
+            currentHold += Time.deltaTime;
+
+            if (currentHold >= holdTime)
+            {
+                SkipCinematic();  
+            }
+        }
+    }
+
+    private void Skip()
+    {
+        isSkipping = true;
+        currentHold = 0f;
+    }
+
+    private void SkipCancel()
+    {
+        isSkipping = false;
+        currentHold = 0f;
+    }
+
+    private void SkipCinematic()
+    {
+        FinishCinematic();
     }
 
     private void PlayerPos(Transform player)
@@ -206,6 +248,7 @@ public class S_CameraManager : MonoBehaviour
         cinemachineCameraPlayer.Priority = unFocus;
         cinemachineCameraCinematic[index].Priority = focusCinematic;
         currentCamera = cinemachineCameraCinematic[index];
+
         currentCamera.GetComponent<Animator>().enabled = true;
         currentCamera.GetComponent<Animator>().SetTrigger("Play");
 
@@ -214,7 +257,10 @@ public class S_CameraManager : MonoBehaviour
 
     private void FinishCinematic()
     {
+        currentCamera.GetComponent<Animator>().Rebind();
+        currentCamera.GetComponent<Animator>().Update(0f);
         currentCamera.GetComponent<Animator>().enabled = false;
+
         currentCamera.Priority = unFocus;
 
         cinemachineCameraRail.Priority = focus;
@@ -222,6 +268,8 @@ public class S_CameraManager : MonoBehaviour
 
         currentMode = ModeCamera.Rail;
 
+        isSkipping = false;
+        currentHold = 0f;
         rseOnDisplayUIGame.Call(true);
         rseOnGameInputEnabled.Call();
     }
