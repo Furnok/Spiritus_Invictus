@@ -16,6 +16,16 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private Slider sliderConviction;
 
     [TabGroup("References")]
+    [SerializeField] private Slider sliderPlayerAttackSteps;
+
+    [TabGroup("References")]
+    [Title("Skip")]
+    [SerializeField] private GameObject skipWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private Image imageSkip;
+
+    [TabGroup("References")]
     [Title("Rect Transform Conviction")]
     [SerializeField] private RectTransform sliderFillAreaRectTransform;
 
@@ -31,9 +41,6 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private GameObject extractCanvas;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
-
-    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
     [TabGroup("Inputs")]
@@ -41,6 +48,15 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDisplaySkip rseOnDisplaySkip;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnSkipHold rseOnSkipHold;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
@@ -50,6 +66,9 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PreconsumedConviction rsoPreconsumedConviction;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
@@ -63,6 +82,9 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_ExtractText ssoExtractText;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_CameraData ssoCameraData;
+
     private void Awake()
     {
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
@@ -70,6 +92,8 @@ public class S_UIGameManager : MonoBehaviour
 
         sliderConviction.maxValue = ssoPlayerConvictionData.Value.maxConviction;
         sliderConviction.value = sliderConviction.maxValue;
+
+        sliderPlayerAttackSteps.maxValue = ssoPlayerConvictionData.Value.maxConviction;
 
         StartCoroutine(BuildTicksNextFrame());
     }
@@ -79,6 +103,9 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplayBossHealth.action += DisplayBossHealth;
         rseOnPlayerHealthUpdate.action += SetHealthSliderValue;
         rseOnPlayerConvictionUpdate.action += SetConvictionSliderValue;
+        rsoPreconsumedConviction.onValueChanged += SetPreconvictionSliderValue;
+        rseOnDisplaySkip.action += DisplaySkip;
+        rseOnSkipHold.action += SetSkipHoldValue;
         rseOnOpenExtractWindow.action += DiplayExtract;
     }
 
@@ -87,6 +114,9 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplayBossHealth.action -= DisplayBossHealth;
         rseOnPlayerHealthUpdate.action -= SetHealthSliderValue;
         rseOnPlayerConvictionUpdate.action -= SetConvictionSliderValue;
+        rsoPreconsumedConviction.onValueChanged -= SetPreconvictionSliderValue;
+        rseOnDisplaySkip.action -= DisplaySkip;
+        rseOnSkipHold.action -= SetSkipHoldValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
     }
 
@@ -100,9 +130,14 @@ public class S_UIGameManager : MonoBehaviour
         sliderHealth.value = health;
     }
 
-    void SetConvictionSliderValue(float conviction)
+    private void SetConvictionSliderValue(float conviction)
     {
         sliderConviction.value = conviction;
+    }
+
+    private void SetPreconvictionSliderValue(float preconvition)
+    {
+        sliderPlayerAttackSteps.value = preconvition;
     }
 
     private IEnumerator BuildTicksNextFrame()
@@ -146,6 +181,16 @@ public class S_UIGameManager : MonoBehaviour
             rt.pivot = new Vector2(0.5f, 0.5f);
             rt.anchoredPosition = Vector2.zero;
         }
+    }
+
+    private void DisplaySkip(bool value)
+    {
+        skipWindow.SetActive(value);
+    }
+
+    private void SetSkipHoldValue(float value)
+    {
+        imageSkip.fillAmount = value / ssoCameraData.Value.holdSkipTime;
     }
 
     private void DiplayExtract(int index)

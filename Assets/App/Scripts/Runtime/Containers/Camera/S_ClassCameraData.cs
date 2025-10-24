@@ -18,6 +18,12 @@ public class S_ClassCameraData
     [SuffixLabel("s", Overlay = true)]
     public float switchDurationCamera;
 
+    [Title("Cinematic")]
+    [SuffixLabel("s", Overlay = true)]
+    public float holdSkipTime;
+    [SuffixLabel("s", Overlay = true)]
+    public float StartDisplaySkipTime;
+
     [Title("Player")]
     public float fadeSpeedPlayer;
 }
