@@ -11,6 +11,10 @@ public class S_UIExtract : MonoBehaviour
     [Title("Scroll")]
     [SerializeField] private float scrollStart;
 
+    [TabGroup("Settings")]
+    [Title("Display")]
+    [SerializeField] private float startDisplay;
+
     [TabGroup("References")]
     [Title("Text")]
     [SerializeField] private TextMeshProUGUI textContent;
@@ -110,7 +114,7 @@ public class S_UIExtract : MonoBehaviour
         textContent.maxVisibleCharacters = 0;
         textContent.text = fullText;
 
-        StartCoroutine(S_Utils.Delay(0.2f, () =>
+        StartCoroutine(S_Utils.Delay(startDisplay, () =>
         {
             displayText = true;
 

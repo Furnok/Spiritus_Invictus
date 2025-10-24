@@ -374,7 +374,7 @@ public class S_CameraManager : MonoBehaviour
 
         float angle = Quaternion.Angle(playerPoint.transform.rotation, targetRotation);
 
-        if (angle > 1f)
+        if (angle > 0.5f)
         {
             float duration = rsoPlayerIsDodging.Value ? ssoCameraData.Value.rotationCameraPlayerDodgeDuration : ssoCameraData.Value.rotationCameraPlayerDuration;
 
