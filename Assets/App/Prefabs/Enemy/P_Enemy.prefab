@@ -2582,6 +2582,10 @@ MonoBehaviour:
   - rid: 891353358349370106
   - rid: 891353358349370105
   - rid: 891353358349370107
+  - rid: 891353742350746158
+  - rid: 891353742350746159
+  - rid: 891353742350746160
+  - rid: 891353742350746161
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -2593,8 +2597,8 @@ MonoBehaviour:
         GUID:
           m_Value0: 13518993330613492086
           m_Value1: 14738503461533524214
-        Name: IdleTime
-        m_Value: 2
+        Name: MinIdleTime
+        m_Value: 1
     - rid: 891353358349370106
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -2611,6 +2615,38 @@ MonoBehaviour:
           m_Value1: 11084865022577308495
         Name: MaxTimeBeforeAttack
         m_Value: 1
+    - rid: 891353742350746158
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 4170405039154724870
+          m_Value1: 7772746849241919386
+        Name: PartolPointMaxTime
+        m_Value: 2
+    - rid: 891353742350746159
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 16081735786282292437
+          m_Value1: 18199064310036644212
+        Name: MaxIdleTime
+        m_Value: 2
+    - rid: 891353742350746160
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 9202226396025232110
+          m_Value1: 14582263097008603125
+        Name: ProjectileDamage
+        m_Value: 10
+    - rid: 891353742350746161
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 5243933157524283350
+          m_Value1: 15483042055696016097
+        Name: ProjectileCooldown
+        m_Value: 3
     - rid: 1782278719113003161
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
