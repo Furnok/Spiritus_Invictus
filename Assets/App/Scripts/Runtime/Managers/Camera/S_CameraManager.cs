@@ -87,6 +87,9 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnSkipHold rseOnSkipHold;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
 
     [TabGroup("Outputs")]
@@ -103,7 +106,8 @@ public class S_CameraManager : MonoBehaviour
     private int focus = 2;
     private int focusCinematic = 100;
     private int unFocus = 1;
-    private Tween playerRotationTween;
+    private Tween playerRotationTween = null;
+    private Coroutine skip = null;
     private bool isSkipping = false;
     private float currentHold = 0f;
 
@@ -203,13 +207,15 @@ public class S_CameraManager : MonoBehaviour
     {
         if (cinemachineCameraIntro.transform.parent.gameObject.activeInHierarchy)
         {
-            StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
+            skip = StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
 
             rseOnDisplayUIGame.Call(false);
             rseOnCinematicStart.Call();
             rseOnCinematicInputEnabled.Call();
 
             currentCamera = cinemachineCameraIntro;
+            cinemachineCameraIntro.GetComponent<Animator>().Rebind();
+            cinemachineCameraIntro.GetComponent<Animator>().Update(0f);
             cinemachineCameraIntro.GetComponent<Animator>().enabled = true;
             cinemachineCameraIntro.GetComponent<Animator>().SetTrigger("Play");
 
@@ -255,7 +261,8 @@ public class S_CameraManager : MonoBehaviour
             return;
         }
 
-        StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
+        rseOnPlayerTargetingCancel.Call();
+        skip = StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
 
         rseOnDisplayUIGame.Call(false);
         rseOnCinematicStart.Call();
@@ -268,6 +275,8 @@ public class S_CameraManager : MonoBehaviour
         cinemachineCameraCinematic[index].Priority = focusCinematic;
         currentCamera = cinemachineCameraCinematic[index];
 
+        currentCamera.GetComponent<Animator>().Rebind();
+        currentCamera.GetComponent<Animator>().Update(0f);
         currentCamera.GetComponent<Animator>().enabled = true;
         currentCamera.GetComponent<Animator>().SetTrigger("Play");
 
@@ -279,9 +288,13 @@ public class S_CameraManager : MonoBehaviour
         currentHold = 0f;
         rseOnSkipHold.Call(currentHold);
         rseOnDisplaySkip.Call(false);
+        
+        if (skip != null)
+        {
+            StopCoroutine(skip);
+            skip = null;
+        }
 
-        currentCamera.GetComponent<Animator>().Rebind();
-        currentCamera.GetComponent<Animator>().Update(0f);
         currentCamera.GetComponent<Animator>().enabled = false;
 
         currentCamera.Priority = unFocus;
