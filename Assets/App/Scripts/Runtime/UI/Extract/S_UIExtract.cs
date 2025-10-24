@@ -1,36 +1,40 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
 using TMPro;
-using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class S_UIExtract : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Scroll")]
     [SerializeField] private float scrollStart;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Text")]
     [SerializeField] private TextMeshProUGUI textContent;
+
+    [TabGroup("References")]
+    [Title("Scroll View")]
     [SerializeField] private ScrollRect scrollRect;
 
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
 
-    [Header("Inputs")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
 
-    [Header("Outputs")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCloseWindow rseOnCloseWindow;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
 
-    [Header("Outputs")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     private bool displayText = false;
