@@ -30,7 +30,6 @@ public struct PlayerStatsData
     public float parryDuration;
 
     [Header("Attack values")]
-    public float baseDamage;
     public float projectileLifeTime;
     public float delayBeforeCastAttack;
     public float timeWaitBetweenSteps;

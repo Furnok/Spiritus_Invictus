@@ -176,6 +176,10 @@ public class S_TargetingManager : MonoBehaviour
                     rseOnNewTargeting.Call(currentTarget);
                     rsoPlayerIsTargeting.Value = true;
                 }
+                else
+                {
+                    rseOnAnimationBoolValueChange.Call("TargetLock", false);
+                }
             }
         }
     }
