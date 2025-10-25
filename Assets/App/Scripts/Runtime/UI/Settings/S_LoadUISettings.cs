@@ -16,6 +16,9 @@ public class S_LoadUISettings : MonoBehaviour
     [SerializeField] private TMP_Dropdown dropDownLanguages;
 
     [TabGroup("References")]
+    [SerializeField] private Toggle toggleHoldLockTarget;
+
+    [TabGroup("References")]
     [SerializeField] private TMP_Dropdown dropDownResolutions;
 
     [TabGroup("References")]
@@ -40,9 +43,11 @@ public class S_LoadUISettings : MonoBehaviour
     {
         LoadLanguages();
 
-        LoadFullScreen();
+        LoadHoldLockTarget();
 
         LoadResolutions();
+
+        LoadFullScreen();
 
         LoadVolumes();
 
@@ -54,9 +59,9 @@ public class S_LoadUISettings : MonoBehaviour
         dropDownLanguages.value = rsoSettingsSaved.Value.languageIndex;
     }
 
-    private void LoadFullScreen()
+    private void LoadHoldLockTarget()
     {
-        toggleFullscreen.isOn = rsoSettingsSaved.Value.fullScreen;
+        toggleHoldLockTarget.isOn = rsoSettingsSaved.Value.holdLockTarget;
     }
 
     private int GetResolutions(int index)
@@ -106,6 +111,11 @@ public class S_LoadUISettings : MonoBehaviour
     private void LoadResolutions()
     {
         dropDownResolutions.value = GetResolutions(rsoSettingsSaved.Value.resolutionIndex);
+    }
+
+    private void LoadFullScreen()
+    {
+        toggleFullscreen.isOn = rsoSettingsSaved.Value.fullScreen;
     }
 
     private void LoadVolumes()

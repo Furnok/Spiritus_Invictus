@@ -29,6 +29,9 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private Selectable dropDownLanguages;
 
     [TabGroup("References")]
+    [SerializeField] private Selectable toggleHoldLockTarget;
+
+    [TabGroup("References")]
     [SerializeField] private Selectable dropDownResolutions;
 
     [TabGroup("References")]
@@ -70,7 +73,7 @@ public class S_UISettings : MonoBehaviour
             Navigation nav2 = buttonReturn.navigation;
             nav2.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = dropDownLanguages;
+            nav2.selectOnUp = toggleHoldLockTarget;
             nav2.selectOnDown = buttonGameplay;
 
             buttonReturn.navigation = nav2;
@@ -176,7 +179,7 @@ public class S_UISettings : MonoBehaviour
             Navigation nav2 = buttonReturn.navigation;
             nav2.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = dropDownLanguages;
+            nav2.selectOnUp = toggleHoldLockTarget;
             nav2.selectOnDown = buttonGameplay;
 
             buttonReturn.navigation = nav2;
