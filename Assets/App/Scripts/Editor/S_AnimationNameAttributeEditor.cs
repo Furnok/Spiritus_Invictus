@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using System;
@@ -12,48 +12,65 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
 
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [S_AnimatorParameter] on a string.");
+            EditorGUI.LabelField(position, label.text, "Use [S_AnimatorParameter] on a String.");
             EditorGUI.EndProperty();
             return;
         }
 
-        // Get the target object (MonoBehaviour) where this property is used
-        UnityEngine.Object target = property.serializedObject.targetObject;
-        Animator animator = null;
-
-        // Try to find Animator in the same GameObject
-        if (target is MonoBehaviour mb)
+        // Get the target MonoBehaviour
+        if (!(property.serializedObject.targetObject is MonoBehaviour mb))
         {
-            animator = mb.GetComponent<Animator>();
+            EditorGUI.LabelField(position, label.text, "Target is not a MonoBehaviour.");
+            EditorGUI.EndProperty();
+            return;
         }
 
+        Animator animator = mb.GetComponent<Animator>();
         if (animator == null)
         {
-            EditorGUI.LabelField(position, label.text, "No Animator found on this GameObject.");
+            EditorGUI.LabelField(position, label.text, "No Animator Found on this GameObject.");
             EditorGUI.EndProperty();
             return;
         }
 
-        AnimatorController controller = animator.runtimeAnimatorController as AnimatorController;
+        RuntimeAnimatorController rac = animator.runtimeAnimatorController;
+        AnimatorController controller = null;
+
+        if (rac is AnimatorOverrideController overrideController)
+        {
+            controller = overrideController.runtimeAnimatorController as AnimatorController;
+        }
+        else
+        {
+            controller = rac as AnimatorController;
+        }
 
         if (controller == null)
         {
-            EditorGUI.LabelField(position, label.text, "No AnimatorController assigned.");
+            EditorGUI.LabelField(position, label.text, "No Valid AnimatorController Assigned.");
             EditorGUI.EndProperty();
             return;
         }
 
-        // Get all parameter names
-        string[] parameterNames = Array.ConvertAll(controller.parameters, p => p.name);
+        var parameters = controller.parameters;
 
-        // Find the index of the current value
-        int selectedIndex = Mathf.Max(0, Array.IndexOf(parameterNames, property.stringValue));
+        if (parameters.Length == 0)
+        {
+            EditorGUI.LabelField(position, label.text, "No Parameters in AnimatorController.");
+            EditorGUI.EndProperty();
+            return;
+        }
 
-        // Draw the popup
-        selectedIndex = EditorGUI.Popup(position, label.text, selectedIndex, parameterNames);
+        string[] parameterNames = Array.ConvertAll(parameters, p => p.name);
+        int selectedIndex = Array.IndexOf(parameterNames, property.stringValue);
 
-        // Update the selected value
-        property.stringValue = parameterNames[selectedIndex];
+        if (selectedIndex < 0)
+        {
+            selectedIndex = 0;
+        }
+
+        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, parameterNames);
+        property.stringValue = parameterNames[newIndex];
 
         EditorGUI.EndProperty();
     }

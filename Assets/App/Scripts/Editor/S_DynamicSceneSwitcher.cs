@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEditor.SceneManagement;
 using System.IO;
@@ -80,6 +80,8 @@ public class S_DynamicSceneSwitcher : EditorWindow
     {
         SetupStyles();
 
+        RefreshSceneList();
+
         EditorGUILayout.Space(5);
 
         EditorGUILayout.LabelField("Search Scenes:", EditorStyles.boldLabel);
@@ -98,14 +100,11 @@ public class S_DynamicSceneSwitcher : EditorWindow
         {
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandHeight(true));
 
-            foreach (string scenePath in scenePaths.Where(path =>
-                string.IsNullOrEmpty(searchQuery) ||
-                Path.GetFileNameWithoutExtension(path).ToLower().Contains(searchQuery.ToLower())))
+            foreach (string scenePath in scenePaths.Where(path => string.IsNullOrEmpty(searchQuery) || Path.GetFileNameWithoutExtension(path).IndexOf(searchQuery, System.StringComparison.OrdinalIgnoreCase) >= 0))
             {
                 string sceneName = Path.GetFileNameWithoutExtension(scenePath);
 
-                if (GUILayout.Button(sceneName, buttonStyle) &&
-                    EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                if (GUILayout.Button(sceneName, buttonStyle) && EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                 {
                     EditorSceneManager.OpenScene(scenePath);
                 }

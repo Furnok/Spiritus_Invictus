@@ -9,7 +9,7 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private bool drawGizmos;
     [SerializeField, S_AnimationName] string _targetParam;
-
+    [SerializeField] RSO_IsTargetToggleMode _rsoIsTargetToggleMode;
     [Header("Input")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
     [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
@@ -120,6 +120,12 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnPlayerTargetingInput()
     {
+        if (_rsoIsTargetToggleMode.Value == true && rsoPlayerIsTargeting.Value == true)
+        {
+            CancelTargeting();
+            return;
+        }
+
         if (targetsPossible.Count == 0 || rsoPlayerIsTargeting.Value == true) return;
 
         currentTarget = TargetSelection();
@@ -133,7 +139,10 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnPlayerCancelTargetingInput()
     {
+        if(_rsoIsTargetToggleMode.Value == true) return;
+        
         CancelTargeting();
+        
     }
 
     private void CancelTargeting()
@@ -159,10 +168,19 @@ public class S_TargetingManager : MonoBehaviour
             if (currentTarget != null)
             {
                 rseOnPlayerCancelTargeting.Call(currentTarget);
-                rsoTargetPosition.Value = Vector3.zero;
-            }
 
-            currentTarget = null;
+                currentTarget = TargetSelection();
+
+                if (currentTarget != null)
+                {
+                    rseOnNewTargeting.Call(currentTarget);
+                    rsoPlayerIsTargeting.Value = true;
+                }
+                else
+                {
+                    rseOnAnimationBoolValueChange.Call("TargetLock", false);
+                }
+            }
         }
     }
 

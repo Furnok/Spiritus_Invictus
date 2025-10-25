@@ -103,6 +103,19 @@ InitTestScene*.unity*
 # Ignore Save Folder
 /[Ss]aves/
 
+# FMOD
+# Ignore the Cache folder since it is updated locally.
+/[Aa]ssets/Plugins/FMOD/Cache/*
+
+# FMOD
+# Ignore bank files in the StreamingAssets folder.
+/[Aa]ssets/StreamingAssets/**/*.bank
+/[Aa]ssets/StreamingAssets/**/*.bank.meta
+
+# FMOD
+# Log files can be ignored.
+fmod_editor.log
+
 # Ignore Office Temporary Files
 ~$*.docx
 ~$*.doc

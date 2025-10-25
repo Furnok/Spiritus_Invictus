@@ -1,4 +1,3 @@
-using NUnit.Framework.Internal;
 using System.Collections;
 using UnityEngine;
 
@@ -38,6 +37,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         if (attackData.attackType == EnemyAttackType.Parryable)
         {
+
             StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>
             {
                 if (canParry == true)
@@ -51,10 +51,6 @@ public class S_PlayerHitResolver : MonoBehaviour
                     _rseOnPlayerHit.Call(attackData);
                 }
             }));
-        }
-        else if (attackData.attackType == EnemyAttackType.Parryable)
-        {
-            _rseOnPlayerHit.Call(attackData);
         }
         else if (attackData.attackType == EnemyAttackType.Dodgeable)
         {
@@ -71,7 +67,14 @@ public class S_PlayerHitResolver : MonoBehaviour
 
 
         }
-       
+        else if (attackData.attackType == EnemyAttackType.Projectile)
+        {
+            
+            _rseOnPlayerHit.Call(attackData);
+
+
+        }
+
     }
     IEnumerator IsWithinParryWindowCoroutine(System.Action<bool> callback)
     {

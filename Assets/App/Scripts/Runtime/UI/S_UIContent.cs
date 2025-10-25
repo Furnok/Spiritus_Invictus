@@ -1,24 +1,25 @@
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIContent : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Selectable defaultSelectable;
+    [TabGroup("References")]
+    [Title("Default")]
+    [SerializeField] private Selectable defaultFocusSelectable;
 
-    [Header("Output")]
-    [SerializeField] private RSO_DefaultSelectable rsoDefaultSelectable;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     private void OnEnable()
     {
-        if (Gamepad.current != null)
-        {
-            defaultSelectable?.Select();
-            defaultSelectable?.GetComponent<S_UISelectable>()?.Selected(defaultSelectable);
-        }
+        StartCoroutine(S_Utils.DelayFrame(() => rsoNavigation.Value.selectableDefault = defaultFocusSelectable));
 
-        rsoDefaultSelectable.Value = defaultSelectable;
+        if (Gamepad.current != null && rsoNavigation.Value.selectableFocus == null)
+        {
+            StartCoroutine(S_Utils.DelayFrame(() => defaultFocusSelectable?.Select()));
+        }
     }
 
     private void OnDisable()

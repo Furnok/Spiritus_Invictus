@@ -12,6 +12,7 @@ public class S_PlayerParry : MonoBehaviour
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
@@ -32,6 +33,9 @@ public class S_PlayerParry : MonoBehaviour
     }
     private void OnEnable()
     {
+        _canParry.Value = false;
+        _parryStartTime.Value = 0f;
+
         rseOnPlayerParry.action += TryParry;
         _rseOnPlayerGettingHit.action += CancelParry;
     }
@@ -46,14 +50,32 @@ public class S_PlayerParry : MonoBehaviour
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false) return;
         _onPlayerAddState.Call(PlayerState.Parrying);
-        
-        _parryStartTime.Value = Time.time;
-        _canParry.Value = true;
+
+        if (_parryCoroutine != null)
+        {
+            StopCoroutine(_parryCoroutine);
+        }
+
         rseOnAnimationBoolValueChange.Call(_parryParam, true);
 
-        _parryCoroutine = StartCoroutine(S_Utils.Delay(_parryDuration, () =>
+        _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryStartupDelay, () =>
         {
-            ResetValue();
+            _parryStartTime.Value = Time.time;
+            _canParry.Value = true;
+
+            _parryCoroutine = StartCoroutine(S_Utils.Delay(_parryDuration, () =>
+            {
+                _canParry.Value = false;
+
+                _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryRecoveryDelay, () =>
+                {
+                    rseOnAnimationBoolValueChange.Call(_parryParam, false);
+                    _onPlayerAddState.Call(PlayerState.None);
+
+                    if (_parryCoroutine == null) return;
+                    StopCoroutine(_parryCoroutine);
+                }));
+            }));
         }));
     }
 
@@ -67,7 +89,6 @@ public class S_PlayerParry : MonoBehaviour
 
     private void ResetValue()
     {
-        _onPlayerAddState.Call(PlayerState.None);
         _canParry.Value = false;
         rseOnAnimationBoolValueChange.Call(_parryParam, false);
     }

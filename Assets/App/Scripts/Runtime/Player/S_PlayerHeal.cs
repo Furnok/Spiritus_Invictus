@@ -12,7 +12,7 @@ public class S_PlayerHeal : MonoBehaviour
     [SerializeField] RSO_PlayerCurrentHealth _playerCurrentHealth;
     [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-
+    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerHealInput rseOnPlayerHeal;
@@ -47,11 +47,18 @@ public class S_PlayerHeal : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_healParam, true);
         _onHealStart.Call();
 
-        healCoroutine = StartCoroutine(S_Utils.Delay(ssoPlayerStats.Value.delayBeforeHeal, () =>
+        healCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.healStartupDelay, () =>
         {
-            rseOnPlayerHealPerformed.Call();
-            _onPlayerAddState.Call(PlayerState.None);
-            rseOnAnimationBoolValueChange.Call(_healParam, false);
+            healCoroutine = StartCoroutine(S_Utils.Delay(ssoPlayerStats.Value.delayBeforeHeal, () =>
+            {
+                rseOnPlayerHealPerformed.Call();
+
+                healCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.healRecoveryDelay, () =>
+                {
+                    _onPlayerAddState.Call(PlayerState.None);
+                    rseOnAnimationBoolValueChange.Call(_healParam, false);
+                }));
+            }));
         }));
     }
 
@@ -60,7 +67,6 @@ public class S_PlayerHeal : MonoBehaviour
         if (healCoroutine == null) return;
 
         StopCoroutine(healCoroutine);
-        _onPlayerAddState.Call(PlayerState.None);
         rseOnAnimationBoolValueChange.Call(_healParam, false);
     }
 }

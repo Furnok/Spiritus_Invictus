@@ -1,19 +1,32 @@
-using DG.Tweening;
-using TMPro;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UISelectable : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Transitions")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float transition = 0.2f;
+
+    [TabGroup("Settings")]
+    [Title("Colors")]
     [SerializeField] private Color32 colorMouseEnter = new(200, 200, 200, 255);
+
+    [TabGroup("Settings")]
     [SerializeField] private Color32 colorMouseDown = new(150, 150, 150, 255);
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Images")]
     [SerializeField] private Image image;
+
+    [TabGroup("References")]
     [SerializeField] private Image image2;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     private Color32 colorBase = new();
     private Color32 colorBase2 = new();
@@ -103,6 +116,7 @@ public class S_UISelectable : MonoBehaviour
         if (uiElement.interactable && Gamepad.current != null)
         {
             PlayColorTransition(colorMouseEnter, colorMouseEnter);
+            rsoNavigation.Value.selectableFocus = uiElement;
         }
     }
 
@@ -114,9 +128,18 @@ public class S_UISelectable : MonoBehaviour
         }
     }
 
-    public void Clicked()
+    public void Clicked(Selectable uiElement)
     {
+        if (uiElement.interactable && Gamepad.current != null)
+        {
+            rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectablePress;
+            rsoNavigation.Value.selectablePress = uiElement;
+        }
+    }
 
+    public void ClickedWindow(Selectable uiElement)
+    {
+        rsoNavigation.Value.selectablePressOldWindow = uiElement;
     }
 
     private void PlayColorTransition(Color32 targetColor, Color32 targetColor2)

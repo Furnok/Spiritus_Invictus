@@ -1,38 +1,88 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class TestEnemyAttackHurtbox : MonoBehaviour, IAttackProvider
+public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
 {
     [Header("Settings")]
-    //[SerializeField] EnemyAttackType _attackType;
+    [SerializeField] float _delayToRespawn;
+    [SerializeField] float _maxHealth;
 
+    float _currentHealth;
+    
     [Header("References")]
-    [SerializeField] SSO_EnemyAttackData _testAttackData;
+    //[SerializeField] GameObject _visuals;
+    //[SerializeField] GameObject _colliders;
+    [SerializeField] List<MeshRenderer> _meshRenderers;
+    [SerializeField] CapsuleCollider _hitbox;
+    [SerializeField] CapsuleCollider _hurtbox;
+    [SerializeField] CapsuleCollider _enemyColisionBox;
+    [SerializeField] GameObject _enemyMotor;
 
     //[Header("Input")]
 
-    //[Header("Output")]
-
-    EnemyAttackData _attackData /*=> _testAttackData.Value*/;
+    [Header("Output")]
+    [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
     void Awake()
     {
-        _attackData = _testAttackData.Value;
-        //_attackData.goSourceId = 50;
-        ////Debug.Log(_attackData == _testAttackData.Value);
-        //Debug.Log(_attackData.goSourceId);
-        //Debug.Log(_testAttackData.Value.goSourceId);
-        //AttackData test = _testAttackData.Value;
-        //Debug.Log($"{test.damage} && {test.attackType}");
+        _currentHealth = _maxHealth;
     }
 
-    public ref EnemyAttackData GetAttackData()
+    public void TakeDamage(float ammount)
     {
-        return ref _attackData;
+        _currentHealth -= ammount;
+        if(_currentHealth <= 0)
+        {
+            Die();
+        }
     }
 
-    //private void ChangeAttackData(AttackData attackData)
-    //{
-    //    _attackData = attackData;
-    //}
+    void Die()
+    {
+        //_visuals.SetActive(false);
+        //_colliders.SetActive(false);
+        rseOnEnemyTargetDied.Call(_enemyMotor);
+        _hurtbox.enabled = false;
+        _enemyColisionBox.enabled = false;
+        if (_hitbox != null)
+        {
+            _hitbox.enabled = false;
+        }
+
+        if (_meshRenderers != null && _meshRenderers.Count > 0)
+        {
+            foreach (var renderer in _meshRenderers)
+            {
+                renderer.enabled = false;
+            }
+        }
+
+        StartCoroutine(S_Utils.Delay(_delayToRespawn, () =>
+        {
+            Respawn();
+        }));
+    }
+
+    void Respawn()
+    {
+        //_visuals.SetActive(true);
+        //_colliders.SetActive(true);
+        _hurtbox.enabled = true;
+        _enemyColisionBox.enabled = true;
+        if (_hitbox != null)
+        {
+            _hitbox.enabled = true;
+
+        }
+
+        if (_meshRenderers != null && _meshRenderers.Count > 0)
+        {
+            foreach (var renderer in _meshRenderers)
+            {
+                renderer.enabled = true;
+            }
+        }
+        _currentHealth = _maxHealth;
+    }
 
 }

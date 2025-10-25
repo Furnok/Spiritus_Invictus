@@ -19,7 +19,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
     [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-
+    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
@@ -27,6 +27,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] private RSE_OnNewTargeting _rseOnNewTargeting;
     [SerializeField] private RSE_OnPlayerCancelTargeting _rseOnPlayerCancelTargeting;
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
+    [SerializeField] private RSE_OnPlayerDodgeInputCancel _onPlayerDodgeInputCancel;
 
     [Header("Output")]
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
@@ -37,6 +38,9 @@ public class S_PlayerDodge : MonoBehaviour
     Vector2 _moveInput;
     Transform _target = null;
     Coroutine _dodgeCoroutine;
+    Coroutine _prepareRunCoroutine;
+    float _linearDamping;
+    bool _canRunAfterDodge = false;
 
     private void OnEnable()
     {
@@ -45,8 +49,11 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnNewTargeting.action += ChangeNewTarget;
         _rseOnPlayerCancelTargeting.action += CancelTarget;
         _rseOnPlayerGettingHit.action += CancelDodge;
+        _onPlayerDodgeInputCancel.action += CancelInputdodge;
 
         _playerIsDodging.Value = false;
+        _canRunAfterDodge = false;
+
     }
 
     private void OnDisable()
@@ -56,12 +63,14 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnNewTargeting.action -= ChangeNewTarget;
         _rseOnPlayerCancelTargeting.action -= CancelTarget;
         _rseOnPlayerGettingHit.action -= CancelDodge;
+        _onPlayerDodgeInputCancel.action -= CancelInputdodge;
 
     }
 
     private void Awake()
     {
         _playerIsDodging.Value = false;
+        _linearDamping = _rb.linearDamping;
     }
 
     private void ChangeNewTarget(GameObject newTarget)
@@ -119,7 +128,11 @@ public class S_PlayerDodge : MonoBehaviour
 
         _playerIsDodging.Value = true;
 
-        _dodgeCoroutine = StartCoroutine(PerformDodge(dodgeDirection));
+
+        _dodgeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.dodgeStartupDelay, () =>
+        {
+            _dodgeCoroutine = StartCoroutine(PerformDodge(dodgeDirection));
+        }));
     }
 
     System.Collections.IEnumerator PerformDodge(Vector3 dodgeDirection)
@@ -141,9 +154,30 @@ public class S_PlayerDodge : MonoBehaviour
         }
 
         _rb.linearVelocity = Vector3.zero;
-        _rb.linearDamping = 5;
+        _rb.linearDamping = _linearDamping;
+        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
+        _playerIsDodging.Value = false;
 
-        ResetValue();
+        _dodgeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.dodgeRecoveryDelay, () =>
+        {
+            _onPlayerAddState.Call(PlayerState.None);
+
+            if (_dodgeCoroutine == null) return;
+            StopCoroutine(_dodgeCoroutine);
+            //if (_prepareRunCoroutine == null) return;
+            //StopCoroutine(_prepareRunCoroutine);
+
+            _canRunAfterDodge = true;
+
+            _prepareRunCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeRunningAfterDodge, () =>
+            {
+                if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == false && _canRunAfterDodge == false) return;
+
+                _onPlayerAddState.Call(PlayerState.Running);
+                if (_prepareRunCoroutine == null) return;
+                StopCoroutine(_prepareRunCoroutine);
+            }));
+        }));
     }
 
     private void Move(Vector2 input)
@@ -153,15 +187,27 @@ public class S_PlayerDodge : MonoBehaviour
 
     void CancelDodge()
     {
+        _canRunAfterDodge = false;
+
         if (_dodgeCoroutine == null) return;
         StopCoroutine(_dodgeCoroutine);
+
+        if (_prepareRunCoroutine == null) return;
+        StopCoroutine(_prepareRunCoroutine);
+
         ResetValue();
+    }
+
+    void CancelInputdodge()
+    {
+        _canRunAfterDodge = false;
+        if (_prepareRunCoroutine == null) return;
+        StopCoroutine(_prepareRunCoroutine);
     }
 
     private void ResetValue()
     {
         _playerIsDodging.Value = false;
-        _onPlayerAddState.Call(PlayerState.None);
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
     }
 }

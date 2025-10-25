@@ -1,16 +1,26 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_SaveConversion : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Save")]
     [SerializeField, S_SaveName] private string saveName;
 
-    [Header("Output")]
-    [SerializeField] private RSO_ContentSaved rsoContentSaved;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataSaved rsoContentSaved;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnResetCursor rseOnResetCursor;
-    [SerializeField] private RSE_OnSaveData rseSaveData;
-    [SerializeField] private RSE_OnLoadData rseLoadData;
-    [SerializeField] private RSE_OnDeleteData rseDeleteData;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSaveData rseOnSaveData;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnLoadData rseOnLoadData;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDeleteData rseOnDeleteData;
 
     public void Setup(string name)
     {
@@ -19,17 +29,17 @@ public class S_SaveConversion : MonoBehaviour
 
     public void ButtonPressSaveData()
     {
-        rseSaveData.Call(saveName, false);
+        rseOnSaveData.Call(saveName, false);
     }
 
     public void ButtonPressLoadData()
     {
-        rseLoadData.Call(saveName, false);
+        rseOnLoadData.Call(saveName, false);
     }
 
     public void ButtonPressDeleteData()
     {
-        rseDeleteData.Call(saveName);
+        rseOnDeleteData.Call(saveName);
         rseOnResetCursor.Call();
     }
 }

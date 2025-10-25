@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,25 +8,33 @@ public class S_SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, 
     [SerializeField] private List<TKey> keys = new();
     [SerializeField] private List<TValue> values = new();
 
-    public void OnAfterDeserialize()
-    {
-        this.Clear();
-
-        for (int i = 0; i < Mathf.Min(keys.Count, values.Count); i++)
-        {
-            this.Add(keys[i], values[i]);
-        }
-    }
-
     public void OnBeforeSerialize()
     {
         keys.Clear();
         values.Clear();
 
+        keys.Capacity = this.Count;
+        values.Capacity = this.Count;
+
         foreach (var kvp in this)
         {
             keys.Add(kvp.Key);
             values.Add(kvp.Value);
+        }
+    }
+
+    public void OnAfterDeserialize()
+    {
+        this.Clear();
+
+        int count = Mathf.Min(keys.Count, values.Count);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (!this.ContainsKey(keys[i]))
+            {
+                this.Add(keys[i], values[i]);
+            }
         }
     }
 }

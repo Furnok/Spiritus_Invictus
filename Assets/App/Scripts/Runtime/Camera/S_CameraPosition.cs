@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_CameraPosition : MonoBehaviour
 {
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
 
     private void OnDisable()

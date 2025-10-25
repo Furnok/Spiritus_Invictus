@@ -1,13 +1,16 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class S_UISelectableScroll : MonoBehaviour, IScrollHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("ScrollBar")]
     [SerializeField] private bool isScrollBar;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("ScrollRect")]
     [SerializeField] private ScrollRect parentScrollRect;
 
     public void Setup(ScrollRect scrollRect)

@@ -8,6 +8,9 @@ public class S_TargetDetector : MonoBehaviour
     [Header("References")]
     [SerializeField] private SphereCollider sphereCollider;
 
+    [Header("Intput")]
+    [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
+
     [Header("Output")]
     [SerializeField] private RSE_OnEnemyEnterTargetingRange rseOnEnemyEnterTargetingRange;
     [SerializeField] private RSE_OnEnemyExitTargetingRange rseOnEnemyExitTargetingRange;
@@ -37,6 +40,24 @@ public class S_TargetDetector : MonoBehaviour
             {
                 rseOnEnemyExitTargetingRange.Call(other.gameObject);
             }
+        }
+    }
+
+    void OnEnable()
+    {
+        rseOnEnemyTargetDied.action += OnEnemyTargetDied;
+    }
+
+    void OnDisable()
+    {
+        rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
+    }
+
+    void OnEnemyTargetDied(GameObject enemyObject)
+    {
+        if(enemyObject != null)
+        {
+            rseOnEnemyExitTargetingRange.Call(enemyObject);
         }
     }
 }

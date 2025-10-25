@@ -16,37 +16,54 @@ MonoBehaviour:
     maxHealth: 100
     healAmount: 20
     delayBeforeHeal: 1
-    moveSpeed: 5
-    strafeSpeed: 4
+    moveSpeed: 6
+    strafeSpeed: 5
     turnSpeed: 12
     turnSpeedTargeting: 10
-    dodgeForce: 12
-    dodgeDuration: 0.5
+    runSpeed: 10
+    delayBeforeRunningAfterDodge: 0.01
+    dodgeForce: 8
+    dodgeDuration: 0.3
     _speedDodgeCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
+        value: 1
+        inSlope: 2.0167985
+        outSlope: 2.0167985
+        tangentMode: 34
         weightedMode: 0
         inWeight: 0
-        outWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.49583536
+        value: 2
+        inSlope: 0.016659737
+        outSlope: 0.016659737
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
+        inSlope: -1.983479
+        outSlope: -1.983479
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.33333334
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    dodgeDistance: 5
+    maxSlopeAngle: 45
     parryToleranceBeforeHit: 0.1
     parryToleranceAfterHit: 0.1
     parryDuration: 0.1
     baseDamage: 5
+    projectileLifeTime: 3
+    delayBeforeCastAttack: 0.2
+    timeWaitBetweenSteps: 0.3
+    hitStunDuration: 0.5

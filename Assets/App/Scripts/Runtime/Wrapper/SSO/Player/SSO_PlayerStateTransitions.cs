@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SSO_PlayerStateTransitions", menuName = "Data/SSO/Player/State/SSO_PlayerStateTransitions")]
+[CreateAssetMenu(fileName = "SSO_PlayerStateTransitions", menuName = "Data/SSO/Player/State/PlayerStateTransitions")]
 public class SSO_PlayerStateTransitions : ScriptableObject
 {
     [System.Serializable]
@@ -34,5 +34,7 @@ public enum PlayerState
     Parrying = 1 << 4,
     Healing = 1 << 5,
     Dying = 1 << 6,
-    //Targeting = 1 << 7,
+    HitReact = 1 << 7,
+    Running = 1 << 8,
+    //Targeting = 1 << 9,
 }
