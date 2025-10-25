@@ -87,7 +87,7 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnSkipHold rseOnSkipHold;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+    [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
@@ -261,7 +261,7 @@ public class S_CameraManager : MonoBehaviour
             return;
         }
 
-        rseOnPlayerTargetingCancel.Call();
+        rseOnCancelTargeting.Call();
         skip = StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
 
         rseOnDisplayUIGame.Call(false);

@@ -14,6 +14,7 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
     [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
     [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+    [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
     [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
@@ -48,6 +49,7 @@ public class S_TargetingManager : MonoBehaviour
         rseOnTargetsInRangeChange.action += OnChangeTargetsPosible;
         rseOnPlayerTargeting.action += OnPlayerTargetingInput;
         rseOnPlayerTargetingCancel.action += OnPlayerCancelTargetingInput;
+        rseOnCancelTargeting.action += CancelTargeting;
         rseOnPlayerSwapTarget.action += OnSwapTargetInput;
 
         rseOnEnemyTargetDied.action += OnEnemyTargetDied;
@@ -60,6 +62,7 @@ public class S_TargetingManager : MonoBehaviour
         rseOnTargetsInRangeChange.action -= OnChangeTargetsPosible;
         rseOnPlayerTargeting.action -= OnPlayerTargetingInput;
         rseOnPlayerTargetingCancel.action -= OnPlayerCancelTargetingInput;
+        rseOnCancelTargeting.action -= CancelTargeting;
         rseOnPlayerSwapTarget.action -= OnSwapTargetInput;
 
         rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
