@@ -80,7 +80,7 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private SSO_PlayerAttackSteps ssoPlayerAttackSteps;
 
     [TabGroup("Outputs")]
-    [SerializeField] private SSO_ExtractText ssoExtractText;
+    [SerializeField] private SSO_Extract ssoExtractText;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
