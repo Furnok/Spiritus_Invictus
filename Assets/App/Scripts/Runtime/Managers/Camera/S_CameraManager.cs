@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEditor;
@@ -194,6 +195,7 @@ public class S_CameraManager : MonoBehaviour
 
     private void SkipCinematic()
     {
+        StartCoroutine(InstantBlendlessSwitch());
         FinishCinematic();
     }
 
@@ -281,6 +283,18 @@ public class S_CameraManager : MonoBehaviour
         currentCamera.GetComponent<Animator>().SetTrigger("Play");
 
         currentMode = ModeCamera.Cinematic;
+    }
+
+    private IEnumerator InstantBlendlessSwitch()
+    {
+        var brain = cameraMain.GetComponent<CinemachineBrain>();
+
+        if (brain != null)
+        {
+            brain.enabled = false;
+            yield return null;
+            brain.enabled = true;
+        }
     }
 
     private void FinishCinematic()
