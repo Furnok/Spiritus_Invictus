@@ -1,6 +1,5 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class S_UIMenu : MonoBehaviour
@@ -34,6 +33,9 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -41,6 +43,9 @@ public class S_UIMenu : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_GameInPause rsoGameInPause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     private void OnEnable()
     {
@@ -72,19 +77,29 @@ public class S_UIMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableFocus = null;
+        rseOnFadeOut.Call();
 
-        rsoGameInPause.Value = false;
-        rseOnGamePause.Call(false);
+        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        {
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableFocus = null;
 
-        Scene currentScene = SceneManager.GetActiveScene();
-        rseOnLoadScene.Call(currentScene.name);
+            rsoGameInPause.Value = false;
+            rseOnGamePause.Call(false);
+
+            Scene currentScene = SceneManager.GetActiveScene();
+            rseOnLoadScene.Call(currentScene.name);
+        }));
     }
 
     public void QuitGame()
     {
-        rseOnQuitGame.Call();
-        rsoNavigation.Value.selectableFocus = null;
+        rseOnFadeOut.Call();
+
+        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        {
+            rseOnQuitGame.Call();
+            rsoNavigation.Value.selectableFocus = null;
+        }));
     }
 }

@@ -43,6 +43,9 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -50,6 +53,9 @@ public class S_UIMainMenu : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_DataTempSaved rsoDataTempSaved;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     private void OnEnable()
     {
@@ -98,8 +104,13 @@ public class S_UIMainMenu : MonoBehaviour
 
     public void ContinueGame()
     {
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableFocus = null;
+        rseOnFadeOut.Call();
+
+        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        {
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableFocus = null;
+        }));
     }
 
     public void Settings()
@@ -118,7 +129,12 @@ public class S_UIMainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        rseOnQuitGame.Call();
-        rsoNavigation.Value.selectableFocus = null;
+        rseOnFadeOut.Call();
+
+        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        {
+            rseOnQuitGame.Call();
+            rsoNavigation.Value.selectableFocus = null;
+        }));
     }
 }

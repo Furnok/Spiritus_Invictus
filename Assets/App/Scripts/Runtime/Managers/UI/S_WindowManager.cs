@@ -1,18 +1,24 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
     [TabGroup("References")]
     [Title("Windows")]
-    [SerializeField] private GameObject mainMenuWindow;
-
-    [TabGroup("References")]
     [SerializeField] private GameObject menuWindow;
 
     [TabGroup("References")]
     [SerializeField] private GameObject gameWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject fadeWindow;
+
+    [TabGroup("References")]
+    [Title("Images")]
+    [SerializeField] private Image imageFade;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
@@ -25,6 +31,12 @@ public class S_WindowManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnFadeIn rseOnFadeIn;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnFadeOut rsOnFadeOut;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
@@ -44,11 +56,15 @@ public class S_WindowManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InGame rsoInGame;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FadeTime ssoFadeTime;
+
     private List<GameObject> currentWindows = new();
 
     private void Awake()
     {
         rsoInGame.Value = true;
+        fadeWindow.SetActive(true);
     }
 
     private void OnEnable()
@@ -57,6 +73,8 @@ public class S_WindowManager : MonoBehaviour
         rseOnCloseWindow.action += CloseWindow;
         rseOnCloseAllWindows.action += CloseAllWindows;
         rseOnPlayerPause.action += PauseGame;
+        rseOnFadeIn.action += FadeIn;
+        rsOnFadeOut.action += FadeOut;
         rseOnDisplayUIGame.action += DisplayUIGame;
     }
 
@@ -66,7 +84,16 @@ public class S_WindowManager : MonoBehaviour
         rseOnCloseWindow.action -= CloseWindow;
         rseOnCloseAllWindows.action -= CloseAllWindows;
         rseOnPlayerPause.action -= PauseGame;
+        rseOnFadeIn.action -= FadeIn;
+        rsOnFadeOut.action -= FadeOut;
         rseOnDisplayUIGame.action -= DisplayUIGame;
+
+        imageFade?.DOKill();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(S_Utils.DelayFrame(() => FadeIn()));
     }
 
     private void DisplayUIGame(bool value)
@@ -128,5 +155,19 @@ public class S_WindowManager : MonoBehaviour
         }
 
         currentWindows.Clear();
+    }
+
+    private void FadeIn()
+    {
+        imageFade?.DOKill();
+
+        imageFade.DOFade(0f, ssoFadeTime.Value).SetEase(Ease.Linear);
+    }
+
+    private void FadeOut()
+    {
+        imageFade?.DOKill();
+
+        imageFade.DOFade(1f, ssoFadeTime.Value).SetEase(Ease.Linear);
     }
 }
