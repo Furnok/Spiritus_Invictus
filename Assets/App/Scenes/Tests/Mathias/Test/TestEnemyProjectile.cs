@@ -115,6 +115,7 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
         }
         else
         {
+            _target = null;
             _direction = reflectOwner.forward;
             transform.forward = _direction;
         }
