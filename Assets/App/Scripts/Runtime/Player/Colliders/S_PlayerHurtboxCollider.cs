@@ -28,73 +28,22 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
         if (other.CompareTag("Hitbox") && other.TryGetComponent(out IAttackProvider attack))
         {
             var attackData = attack.GetAttackData();
-            _onAttackCollide.Call(attackData);
-            var goId = other.gameObject.GetInstanceID();
+            //var goId = other.gameObject.GetInstanceID();
 
-            //if (_attackDataInDodgeableArea.Value.ContainsKey(goId) == false) return;
-            //Debug.Log("remove");
-            //_attackDataInDodgeableArea.Value.Remove(goId);
+            var contact = new AttackContact
+            {
+                data = attackData,
+                source = other
+            };
+
+            _onAttackCollide.Call(contact);
+
         }
     }
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if(other != null && other.CompareTag("Hitbox"))
-    //    {
-    //        IAttackProvider attackProvider = other.GetComponent<IAttackProvider>();
-
-    //        if(attackProvider != null)
-    //        {
-    //            var attackData = attackProvider.GetAttackData();
-    //            EnemyAttackType attackType = attackData.attackType;
-
-    //            if(attackType == EnemyAttackType.Parryable)
-    //            {
-    //                _hitTime = Time.time;
-    //            }
-
-    //            if (attackType == EnemyAttackType.Parryable && _canParry.Value == true)
-    //            {
-    //                //Parry
-    //                Debug.Log("Parry 1");
-    //            }
-    //            else if(attackType == EnemyAttackType.Parryable && _canParry.Value == false)
-    //            {
-    //                if (CanParryAtTime(_hitTime))
-    //                {
-    //                    //Parry
-    //                    Debug.Log("Parry 2");
-
-    //                }
-    //                else
-    //                {
-    //                    StartCoroutine(S_Utils.Delay(_parryToleranceAfterHit, () =>
-    //                    {
-    //                        if (_canParry.Value == true)
-    //                        {
-    //                            //Parry
-    //                            Debug.Log("Parry 3");
-
-    //                        }
-    //                        else
-    //                        {
-    //                            Debug.Log("get Hit");
-    //                        }
-    //                    }));
-    //                }
-    //            }
-    //            else if (attackType == EnemyAttackType.Dodgeable)
-    //            {
-
-    //            }
-    //            _parryStartTime.Value = 0f;
-    //        }
-    //    }
-    //}
-
-    //bool CanParryAtTime(float hitTime)
-    //{
-    //    return Mathf.Abs(hitTime - _parryStartTime.Value) <= _parryDuration + _parryToleranceBeforeHit;
-    //}
 }
 
+public struct AttackContact
+{
+    public EnemyAttackData data;
+    public Collider source;
+}

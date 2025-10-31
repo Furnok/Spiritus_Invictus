@@ -9,6 +9,7 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
     [Header("References")]
     [SerializeField] TestEnemyProjectile _enemyProjectile;
     [SerializeField] GameObject _spwanProjectilePoint;
+    [SerializeField] Transform _hurtbox;
     //[Header("Inputs")]
 
     //[Header("Outputs")]
@@ -38,10 +39,10 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
     {
         _shootCoroutine = StartCoroutine(S_Utils.Delay(_delayToShoot, () =>
         {
-            if (_playerTransform != null)
+            if (_playerTransform != null && _playerTransform.gameObject.activeInHierarchy)
             {
                 TestEnemyProjectile projectileInstance = Instantiate(_enemyProjectile, _spwanProjectilePoint.transform.position, Quaternion.identity);
-                projectileInstance.Initialize(_playerTransform);
+                projectileInstance.Initialize(_hurtbox, _playerTransform);
                 ShootPlayer();
             }
         }));

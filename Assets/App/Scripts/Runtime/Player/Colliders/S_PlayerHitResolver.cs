@@ -33,8 +33,10 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         _onAttackCollide.action -= ResolveHit;
     }
-    void ResolveHit(EnemyAttackData attackData)
+    void ResolveHit(AttackContact contact)
     {
+        var attackData = contact.data;
+
         if (attackData.attackType == EnemyAttackType.Parryable)
         {
 
@@ -70,8 +72,22 @@ public class S_PlayerHitResolver : MonoBehaviour
         else if (attackData.attackType == EnemyAttackType.Projectile)
         {
             
-            _rseOnPlayerHit.Call(attackData);
+            StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>
+            {
+                if (canParry == true)
+                {
+                    _rseOnParrySuccess.Call(attackData);
+                    _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
 
+                    TryReflectProjectile(contact.source);
+                    Debug.Log("Parried!");
+                }
+                else
+                {
+                    Destroy(contact.source.gameObject);
+                    _rseOnPlayerHit.Call(attackData);
+                }
+            }));
 
         }
 
@@ -96,5 +112,20 @@ public class S_PlayerHitResolver : MonoBehaviour
         bool valid = t >= start - tolAfter && t <= start + duration + tolBefore;
         callback(valid);
     }
-   
+
+    void TryReflectProjectile(Collider source)
+    {
+        if (source == null) return;
+
+        if (source.TryGetComponent<IReflectableProjectile>(out var proj))
+        {
+            proj.Reflect();
+        }
+        else
+        {
+            var p = source.GetComponentInParent<IReflectableProjectile>();
+            if (p != null) p.Reflect();
+        }
+    }
+
 }
