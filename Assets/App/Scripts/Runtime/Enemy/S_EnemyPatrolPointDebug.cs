@@ -1,42 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class S_EnemyPatrolPointDebug : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] private List<Transform> patrolPointList;
-
-    private void OnValidate()
-    {
-        patrolPointList.Clear();
-
-        foreach (Transform child in transform)
-        {
-            patrolPointList.Add(child);
-        }
-    }
+    [TabGroup("Settings")]
+    [Title("Patrol Points")]
+    [SerializeField] private List<Transform> patrolPointsList;
 
     private void Awake()
     {
-        patrolPointList.Clear();
+        Refresh();
+    }
+
+    [Button(ButtonSizes.Medium)]
+    private void RefreshPatrolPoints()
+    {
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        patrolPointsList.Clear();
 
         foreach (Transform child in transform)
         {
-            patrolPointList.Add(child);
+            patrolPointsList.Add(child);
         }
     }
 
     private void OnDrawGizmos()
     {
-        if (patrolPointList == null || patrolPointList.Count < 2)
+        if (patrolPointsList == null || patrolPointsList.Count < 2)
             return;
 
         Gizmos.color = Color.yellow;
 
-        for (int i = 0; i < patrolPointList.Count; i++)
+        for (int i = 0; i < patrolPointsList.Count; i++)
         {
-            Transform current = patrolPointList[i];
-            Transform next = patrolPointList[(i + 1) % patrolPointList.Count];
+            Transform current = patrolPointsList[i];
+            Transform next = patrolPointsList[(i + 1) % patrolPointsList.Count];
 
             if (current != null && next != null)
             {

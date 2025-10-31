@@ -1,23 +1,18 @@
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class S_EnemyAttackData : MonoBehaviour
 {
-    //[Header("Settings")]
-
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Collider")]
     [SerializeField] Collider weaponCollider;
 
-    //[Header("Input")]
-
-    //[Header("Output")]
     [HideInInspector] public UnityEvent<SSO_EnemyAttackData> onChangeAttackData;
-
 
     public void SetAttackMode(SSO_EnemyAttackData SSO_AttackData)
     {
         onChangeAttackData.Invoke(SSO_AttackData);
-        Debug.Log("GetData");
     }
 
     public void EnableWeaponCollider()

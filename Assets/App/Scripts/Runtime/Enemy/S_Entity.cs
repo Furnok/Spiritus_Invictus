@@ -27,6 +27,10 @@ public class S_Entity : MonoBehaviour
 
     [Header("InpUt")]
     [SerializeField] RSE_OnPlayerDeath RSE_OnPLayerDeath;
+
+    [Header("References")]
+    [SerializeField] private SSO_EnemyHealth ssoEnemyHealthMax;
+
     private void Awake()
     {
         agent.SetVariableValue<string>("MoveParam", moveParam);

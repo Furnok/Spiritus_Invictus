@@ -3,7 +3,6 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
-using UnityEditor;
 using UnityEngine;
 
 public class S_CameraManager : MonoBehaviour

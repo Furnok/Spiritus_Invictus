@@ -3,8 +3,7 @@ using UnityEngine.Events;
 
 public class S_EnemyHealth : MonoBehaviour, IDamageable
 {
-    [Header("References")]
-    [SerializeField] private SSO_EnemyHealth ssoEnemyHealthMax;
+
     [SerializeField] GameObject enemyBody;
     [Header("Input")]
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth;
@@ -12,6 +11,9 @@ public class S_EnemyHealth : MonoBehaviour, IDamageable
     [Header("Output")]
     [SerializeField] RSE_OnEnemyTargetDied RSE_OnEnemyTargetDied;
     private float enemyHealth = 0;
+
+    [Header("References")]
+    [SerializeField] private SSO_EnemyHealth ssoEnemyHealthMax;
 
     private void Start()
     {
