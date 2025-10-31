@@ -3,5 +3,5 @@ using UnityEngine;
 
 public interface IReflectableProjectile
 {
-    void Reflect();
+    void Reflect(Transform reflectOwner);
 }

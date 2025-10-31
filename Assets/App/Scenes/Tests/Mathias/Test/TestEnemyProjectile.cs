@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using DG.Tweening.Plugins.Core.PathCore;
+using UnityEngine;
 
 public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableProjectile
 {
     [Header("Settings")]
     [SerializeField] private float _speed = 5f;
-    [SerializeField] private float _lifeTime = 3f;
+    [SerializeField] private float _lifeTime = 5f;
     [SerializeField] Rigidbody _rb;
     [SerializeField] string _enemyLayer = "EnemyProjectile";
     [SerializeField] string _playerLayer = "PlayerProjectile";
@@ -14,6 +15,19 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     [SerializeField] float _reflectSpeedMul = 1.5f;
     [SerializeField] float _reflectDmgMul = 1.5f;
 
+    [Header("Arc Settings")]
+    [Tooltip("Arc height factor 1 = average, 2 = hight")]
+    [SerializeField] private float _arcHeightMultiplier = 1f;
+    [Tooltip("Curve direction : 0=top, 1=right diagonal, -1=left diagonal")]
+    [SerializeField] private float _arcDirection = 0f;
+    [Tooltip("Makes the trajectory random")]
+    [SerializeField] private bool _randomizeArc = true;
+    [Tooltip("Min arc direction if random")]
+    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMin = -1f;
+    [Tooltip("Max arc direction if random")]
+    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMax = 1f;
+    [Tooltip("How long does it take for the projectile to reach the target (s)?")]
+    [SerializeField] private float _travelTime = 1f;
 
     [Header("References")]
     [SerializeField] SSO_EnemyAttackData _testAttackData;
@@ -30,6 +44,8 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     EnemyAttackData _attackData;
     bool _reflected;
     Vector3 _lastDirection;
+    private Vector3 _startPos;
+    private Vector3 _controlPoint;
 
     private void Awake()
     {
@@ -42,6 +58,8 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
         _isInitialized = true;
         _reflected = false;
         _owner = owner;
+
+        CalculateControlPoint();
     }
 
     private void Update()
@@ -49,6 +67,7 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
         if (!_isInitialized) return;
 
         _timeAlive += Time.deltaTime;
+        float t = _timeAlive / _travelTime;
 
         if (_timeAlive >= _lifeTime)
         {
@@ -56,23 +75,29 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
             return;
         }
 
-        Vector3 dir;
+        Vector3 endPos = _target != null ? _target.position : _startPos + transform.forward * 10f;
+
+        Vector3 a = Vector3.Lerp(_startPos, _controlPoint, t);
+        Vector3 b = Vector3.Lerp(_controlPoint, endPos, t);
+        Vector3 newPos = Vector3.Lerp(a, b, t);
+        Vector3 tangent = (b - a).normalized;
+
+
         if (_target != null && _target.gameObject.activeInHierarchy)
         {
-            dir = (_target.position - transform.position).normalized;
+            transform.position = newPos;
+            transform.forward = tangent;
+
+            _direction = tangent;
         }
         else
         {
-            dir = _direction;
+            transform.position += _direction * _speed * Time.deltaTime;
+            transform.forward = _direction;
         }
-
-        transform.position += dir * _speed * Time.deltaTime;
-        transform.forward = dir;
-        _direction = dir;
-        
     }
 
-    public void Reflect()
+    public void Reflect(Transform reflectOwner)
     {
         _reflected = true;
 
@@ -83,10 +108,47 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
         gameObject.layer = LayerMask.NameToLayer(_playerLayer);
         if (_renderer && _playerMat) _renderer.material = _playerMat;
 
-        if ( _owner != null) _target = _owner;
-        else _direction = -transform.forward;
-
+        if (_owner != null && _owner.gameObject.activeInHierarchy)
+        {
+            _target = _owner;
+            CalculateControlPoint();
+        }
+        else
+        {
+            _direction = reflectOwner.forward;
+            transform.forward = _direction;
+        }
     }
+
+    void CalculateControlPoint()
+    {
+        this._startPos = transform.position;
+
+        Vector3 toTarget = _target != null ? (_target.position - _startPos) : transform.forward * 10f;
+        Vector3 midPoint = _startPos + toTarget * 0.5f;
+
+        //Default arc direction (top)
+        Vector3 arcDir = Vector3.up;
+
+        if (_arcDirection != 0f || _randomizeArc == true)
+        {
+            Vector3 side = Vector3.Cross(Vector3.up, toTarget.normalized).normalized;
+            if (_randomizeArc)
+            {
+                side *= Random.Range(_arcRandomDirectionMin, _arcRandomDirectionMax);
+                arcDir = (Vector3.up + side).normalized;
+
+            }
+            else
+            {
+                arcDir = (Vector3.up + side * _arcDirection).normalized;
+            }
+        }
+
+        float arcHeight = toTarget.magnitude * 0.25f * _arcHeightMultiplier;
+        _controlPoint = midPoint + arcDir * arcHeight;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Hurtbox" && other.TryGetComponent(out IDamageable damageable))

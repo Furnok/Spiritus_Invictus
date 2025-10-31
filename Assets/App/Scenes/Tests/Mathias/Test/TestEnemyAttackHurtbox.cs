@@ -44,6 +44,7 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
         rseOnEnemyTargetDied.Call(_enemyMotor);
         _hurtbox.enabled = false;
         _enemyColisionBox.enabled = false;
+        _enemyMotor.SetActive(false);
         if (_hitbox != null)
         {
             _hitbox.enabled = false;
@@ -69,6 +70,8 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
         //_colliders.SetActive(true);
         _hurtbox.enabled = true;
         _enemyColisionBox.enabled = true;
+        _enemyMotor.SetActive(true);
+
         if (_hitbox != null)
         {
             _hitbox.enabled = true;

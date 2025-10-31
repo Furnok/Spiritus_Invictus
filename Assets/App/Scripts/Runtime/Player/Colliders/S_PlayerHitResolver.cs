@@ -14,7 +14,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
     [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-
+    [SerializeField] GameObject _playerMotorGO;
     [Header("Input")]
     [SerializeField] RSE_OnAttackCollide _onAttackCollide;
 
@@ -119,12 +119,12 @@ public class S_PlayerHitResolver : MonoBehaviour
 
         if (source.TryGetComponent<IReflectableProjectile>(out var proj))
         {
-            proj.Reflect();
+            proj.Reflect(_playerMotorGO.transform);
         }
         else
         {
             var p = source.GetComponentInParent<IReflectableProjectile>();
-            if (p != null) p.Reflect();
+            if (p != null) p.Reflect(_playerMotorGO.transform);
         }
     }
 
