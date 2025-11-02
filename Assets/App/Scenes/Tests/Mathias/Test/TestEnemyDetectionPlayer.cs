@@ -14,14 +14,15 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
 
     //[Header("Outputs")]
 
-    Transform _playerTransform;
+    Transform _aimPoint;
     Coroutine _shootCoroutine;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(_playerTag))
         {
-            _playerTransform = other.transform;
+            other.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            _aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : other.transform;
             ShootPlayer();
         }
     }
@@ -30,7 +31,7 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
     {
         if (other.CompareTag(_playerTag))
         {
-            _playerTransform = null;
+            _aimPoint = null;
             StopCoroutine(_shootCoroutine);
         }
     }
@@ -39,10 +40,10 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
     {
         _shootCoroutine = StartCoroutine(S_Utils.Delay(_delayToShoot, () =>
         {
-            if (_playerTransform != null && _playerTransform.gameObject.activeInHierarchy)
+            if (_aimPoint != null && _aimPoint.gameObject.activeInHierarchy)
             {
                 TestEnemyProjectile projectileInstance = Instantiate(_enemyProjectile, _spwanProjectilePoint.transform.position, Quaternion.identity);
-                projectileInstance.Initialize(_motorBox, _playerTransform);
+                projectileInstance.Initialize(_motorBox, _aimPoint);
                 ShootPlayer();
             }
         }));
