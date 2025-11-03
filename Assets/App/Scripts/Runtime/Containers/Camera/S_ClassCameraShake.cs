@@ -1,13 +1,13 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using System;
 
 [Serializable]
 public class S_ClassCameraShake
 {
     [Title("Shake")]
-    public float amplitude;
-    public float frequency;
+    public float amplitude = 0;
+    public float frequency = 0;
 
     [Title("Time")]
-    public float duration;
+    public float duration = 0;
 }

@@ -41,7 +41,7 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     Transform _target = null;
     bool _isInitialized = false;
     Vector3 _direction = Vector3.zero;
-    EnemyAttackData _attackData;
+    S_StructEnemyAttackData _attackData;
     bool _reflected;
     Vector3 _lastDirection;
     private Vector3 _startPos;
@@ -163,7 +163,7 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     
     }
 
-    public ref EnemyAttackData GetAttackData()
+    public ref S_StructEnemyAttackData GetAttackData()
     {
 
         return ref _attackData;

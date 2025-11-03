@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class S_PlayerHitResolver : MonoBehaviour
@@ -37,7 +37,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         var attackData = contact.data;
 
-        if (attackData.attackType == EnemyAttackType.Parryable)
+        if (attackData.attackType == S_EnumEnemyAttackType.Parryable)
         {
 
             StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>
@@ -54,7 +54,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                 }
             }));
         }
-        else if (attackData.attackType == EnemyAttackType.Dodgeable)
+        else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
         {
             var canHit = _attackCanHitPlayer.Value.ContainsKey(attackData.goSourceId);
 
@@ -69,7 +69,7 @@ public class S_PlayerHitResolver : MonoBehaviour
 
 
         }
-        else if (attackData.attackType == EnemyAttackType.Projectile)
+        else if (attackData.attackType == S_EnumEnemyAttackType.Projectile)
         {
             
             StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>

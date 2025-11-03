@@ -7,5 +7,6 @@ public enum S_EnumEnemyState
 	Patrol,
 	Chase,
 	Attack,
-	Hit,
+	HeavyHit,
+	LightHit,
 }

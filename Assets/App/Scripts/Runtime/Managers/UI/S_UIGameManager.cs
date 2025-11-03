@@ -1,10 +1,16 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UIGameManager : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [Title("Time")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float animationSlider;
+
     [TabGroup("References")]
     [Title("Sliders")]
     [SerializeField] private Slider sliderBossHealth;
@@ -85,6 +91,10 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
 
+    private Tween healthTween;
+    private Tween convictionTween;
+    private Tween preconvictionTween;
+
     private void Awake()
     {
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
@@ -118,6 +128,10 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplaySkip.action -= DisplaySkip;
         rseOnSkipHold.action -= SetSkipHoldValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
+
+        healthTween?.Kill();
+        convictionTween?.Kill();
+        preconvictionTween?.Kill();
     }
 
     private void DisplayBossHealth(bool value)
@@ -127,17 +141,23 @@ public class S_UIGameManager : MonoBehaviour
 
     private void SetHealthSliderValue(float health)
     {
-        sliderHealth.value = health;
+        healthTween?.Kill();
+
+        healthTween = sliderHealth.DOValue(health, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private void SetConvictionSliderValue(float conviction)
     {
-        sliderConviction.value = conviction;
+        convictionTween?.Kill();
+
+        convictionTween = sliderConviction.DOValue(conviction, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private void SetPreconvictionSliderValue(float preconvition)
     {
-        sliderPlayerAttackSteps.value = preconvition;
+        preconvictionTween?.Kill();
+
+        preconvictionTween = sliderPlayerAttackSteps.DOValue(preconvition, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private IEnumerator BuildTicksNextFrame()

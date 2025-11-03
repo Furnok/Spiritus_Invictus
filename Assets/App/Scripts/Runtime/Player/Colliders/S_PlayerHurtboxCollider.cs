@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_PlayerHurtboxCollider : MonoBehaviour
 {
@@ -44,6 +44,6 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
 
 public struct AttackContact
 {
-    public EnemyAttackData data;
+    public S_StructEnemyAttackData data;
     public Collider source;
 }

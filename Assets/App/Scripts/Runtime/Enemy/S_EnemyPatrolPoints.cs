@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class S_EnemyPatrolPointDebug : MonoBehaviour
+public class S_EnemyPatrolPoints : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Patrol Points")]
-    [SerializeField] private List<Transform> patrolPointsList;
+    [SerializeField] private List<GameObject> patrolPointsList;
 
     private void Awake()
     {
@@ -19,13 +19,18 @@ public class S_EnemyPatrolPointDebug : MonoBehaviour
         Refresh();
     }
 
+    public List<GameObject> GetPatrolPointsList()
+    {
+        return patrolPointsList;
+    }
+
     private void Refresh()
     {
         patrolPointsList.Clear();
 
         foreach (Transform child in transform)
         {
-            patrolPointsList.Add(child);
+            patrolPointsList.Add(child.gameObject);
         }
     }
 
@@ -38,13 +43,13 @@ public class S_EnemyPatrolPointDebug : MonoBehaviour
 
         for (int i = 0; i < patrolPointsList.Count; i++)
         {
-            Transform current = patrolPointsList[i];
-            Transform next = patrolPointsList[(i + 1) % patrolPointsList.Count];
+            GameObject current = patrolPointsList[i];
+            GameObject next = patrolPointsList[(i + 1) % patrolPointsList.Count];
 
             if (current != null && next != null)
             {
-                Gizmos.DrawLine(current.position, next.position);
-                Gizmos.DrawSphere(current.position, 0.2f);
+                Gizmos.DrawLine(current.transform.position, next.transform.position);
+                Gizmos.DrawSphere(current.transform.position, 0.2f);
             }
         }
     }

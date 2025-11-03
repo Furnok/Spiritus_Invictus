@@ -1,3 +1,4 @@
+﻿using Unity.VisualScripting;
 using UnityEngine;
 
 public class S_EnemyProjectileManager : MonoBehaviour
@@ -11,7 +12,7 @@ public class S_EnemyProjectileManager : MonoBehaviour
     [SerializeField] Transform spawnProjectile;
     [SerializeField] Transform poolProjectileParent;
     [SerializeField] S_EnemyProjectile projectilePrefab;
-    [SerializeField] private S_EnemyRangeDetection S_EnemyRangeDetection;
+    [SerializeField] private S_EnemyDetectionRange S_EnemyRangeDetection;
 
     [Header("Inputs")]
     [SerializeField] private RSE_OnDespawnEnemyProjectile RSE_OnDespawnEnemyProjectile;

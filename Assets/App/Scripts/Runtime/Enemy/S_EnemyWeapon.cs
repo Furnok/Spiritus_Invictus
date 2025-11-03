@@ -7,7 +7,7 @@ public class S_EnemyWeapon : MonoBehaviour, IAttackProvider
     [Title("Enemy")]
     [SerializeField] S_EnemyAttackData S_EnemyAttackData;
 
-    private EnemyAttackData AttackData;
+    private S_StructEnemyAttackData AttackData;
 
     private void OnEnable()
     {
@@ -19,13 +19,13 @@ public class S_EnemyWeapon : MonoBehaviour, IAttackProvider
         S_EnemyAttackData.onChangeAttackData.RemoveListener(ChangeAttackData);
     }
 
-    public ref EnemyAttackData GetAttackData()
+    public ref S_StructEnemyAttackData GetAttackData()
     {
         return ref AttackData;
     }
 
-    private void ChangeAttackData(SSO_EnemyAttackData SSO_attackData)
+    private void ChangeAttackData(S_StructEnemyAttackData enemyAttackData)
     {
-        AttackData = SSO_attackData.Value;
+        AttackData = enemyAttackData;
     }
 }

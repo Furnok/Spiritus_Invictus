@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class S_DodgeableAreaDetector : MonoBehaviour
 {
@@ -14,10 +14,10 @@ public class S_DodgeableAreaDetector : MonoBehaviour
 
     private void Awake()
     {
-        _attackDataInDodgeableArea.Value = new System.Collections.Generic.Dictionary<int, EnemyAttackData>();
+        _attackDataInDodgeableArea.Value = new System.Collections.Generic.Dictionary<int, S_StructEnemyAttackData>();
         _attackDataInDodgeableArea.Value.Clear();
 
-        _attackCanHitPlayer.Value = new System.Collections.Generic.Dictionary<int, EnemyAttackData>();
+        _attackCanHitPlayer.Value = new System.Collections.Generic.Dictionary<int, S_StructEnemyAttackData>();
         _attackCanHitPlayer.Value.Clear();
     }
 
@@ -29,11 +29,11 @@ public class S_DodgeableAreaDetector : MonoBehaviour
             ref var attackData = ref attack.GetAttackData();
             attackData.goSourceId = goId;
 
-            if (_attackDataInDodgeableArea.Value == null || _attackDataInDodgeableArea.Value.ContainsKey(goId) || attackData.attackType != EnemyAttackType.Dodgeable) return;
+            if (_attackDataInDodgeableArea.Value == null || _attackDataInDodgeableArea.Value.ContainsKey(goId) || attackData.attackType != S_EnumEnemyAttackType.Dodgeable) return;
             
             _attackDataInDodgeableArea.Value.Add(goId, attack.GetAttackData());
 
-            if (_attackCanHitPlayer.Value == null || _attackCanHitPlayer.Value.ContainsKey(goId) || attackData.attackType != EnemyAttackType.Dodgeable) return;
+            if (_attackCanHitPlayer.Value == null || _attackCanHitPlayer.Value.ContainsKey(goId) || attackData.attackType != S_EnumEnemyAttackType.Dodgeable) return;
 
             _attackCanHitPlayer.Value.Add(goId, attack.GetAttackData());
 

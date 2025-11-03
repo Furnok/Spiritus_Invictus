@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using System;
 using UnityEngine.UI;
 
@@ -6,17 +6,17 @@ using UnityEngine.UI;
 public class S_ClassNavigation
 {
     [Title("Default Selectable")]
-    public Selectable selectableDefault;
+    public Selectable selectableDefault = null;
 
     [Title("Selectable Focus")]
-    public Selectable selectableFocus;
+    public Selectable selectableFocus = null;
 
     [Title("Selectable Press Old Window")]
-    public Selectable selectablePressOldWindow;
+    public Selectable selectablePressOldWindow = null;
 
     [Title("Selectable Press Old")]
-    public Selectable selectablePressOld;
+    public Selectable selectablePressOld = null;
 
     [Title("Selectable Press")]
-    public Selectable selectablePress;
+    public Selectable selectablePress = null;
 }

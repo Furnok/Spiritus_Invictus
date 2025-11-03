@@ -38,7 +38,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     }
 
 
-    private void TakeDamage(EnemyAttackData attackData)
+    private void TakeDamage(S_StructEnemyAttackData attackData)
     {
 
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true)

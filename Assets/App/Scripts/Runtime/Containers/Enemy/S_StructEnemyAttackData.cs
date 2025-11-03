@@ -1,20 +1,13 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 
 [Serializable]
-public struct EnemyAttackData
+public struct S_StructEnemyAttackData
 {
     public int attackId;
     [HideInInspector]public int goSourceId;
-    public EnemyAttackType attackType;
+    public S_EnumEnemyAttackType attackType;
     public float damage;
     public float knockbackForce;
     public float convictionReduction;
-}
-
-public enum EnemyAttackType
-{
-    Dodgeable,
-    Parryable,
-    Projectile,
 }

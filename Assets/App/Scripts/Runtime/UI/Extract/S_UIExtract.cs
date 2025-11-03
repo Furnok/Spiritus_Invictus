@@ -9,10 +9,12 @@ public class S_UIExtract : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Scroll")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float scrollStart;
 
     [TabGroup("Settings")]
     [Title("Display")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float startDisplay;
 
     [TabGroup("References")]
