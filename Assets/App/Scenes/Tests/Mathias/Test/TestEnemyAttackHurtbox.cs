@@ -23,13 +23,21 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
     [Header("Output")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
+
+    bool _isInvicible = false;
     void Awake()
     {
         _currentHealth = _maxHealth;
+        if (_maxHealth <= 0)
+        {
+            _isInvicible = true;
+        }
     }
 
     public void TakeDamage(float ammount)
     {
+        if (_isInvicible == true) return;
+
         _currentHealth -= ammount;
         if(_currentHealth <= 0)
         {

@@ -7,7 +7,6 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _lifeTime = 5f;
     [SerializeField] Rigidbody _rb;
-    [SerializeField] string _enemyLayer = "EnemyProjectile";
     [SerializeField] string _playerLayer = "PlayerProjectile";
     [SerializeField] Material _enemyMat;
     [SerializeField] Material _playerMat;
@@ -42,7 +41,6 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     bool _isInitialized = false;
     Vector3 _direction = Vector3.zero;
     S_StructEnemyAttackData _attackData;
-    bool _reflected;
     Vector3 _lastDirection;
     private Vector3 _startPos;
     private Vector3 _controlPoint;
@@ -56,7 +54,6 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
         this._target = target;
         this._direction = transform.forward;
         _isInitialized = true;
-        _reflected = false;
         _owner = owner;
 
         CalculateControlPoint();
@@ -99,8 +96,6 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
 
     public void Reflect(Transform reflectOwner)
     {
-        _reflected = true;
-
         _attackData.damage *= _reflectDmgMul;
         _speed *= _reflectSpeedMul;
         _timeAlive = 0;
