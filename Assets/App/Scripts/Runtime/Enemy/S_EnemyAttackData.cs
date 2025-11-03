@@ -44,7 +44,6 @@ public class S_EnemyAttackData : MonoBehaviour
            temp.damage = ssoAttackData.Value.damage;
         }
 
-        temp.knockbackForce = ssoAttackData.Value.knockbackForce;
         temp.convictionReduction = ssoAttackData.Value.convictionReduction;
 
         onChangeAttackData.Invoke(temp);

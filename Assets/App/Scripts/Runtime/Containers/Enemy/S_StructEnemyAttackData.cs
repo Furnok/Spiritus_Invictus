@@ -8,6 +8,11 @@ public struct S_StructEnemyAttackData
     [HideInInspector]public int goSourceId;
     public S_EnumEnemyAttackType attackType;
     public float damage;
-    public float knockbackForce;
+    public float knockbackDuration; //maybe remove it if hit stun is same as knockback duration who make sense 
+    public float knockbackDistance;
+    public float parryToleranceBeforeHit;
+    public float parryToleranceAfterHit;
+    public float hitStunDuration;
     public float convictionReduction;
+
 }
