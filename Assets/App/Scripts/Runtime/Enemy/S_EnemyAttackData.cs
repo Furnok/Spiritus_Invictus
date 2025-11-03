@@ -23,10 +23,7 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void SetAttackMode(SSO_EnemyAttackData ssoAttackData)
     {
-        S_StructEnemyAttackData temp = new();
-
-        temp.attackId = ssoAttackData.Value.attackId;
-        temp.attackType = ssoAttackData.Value.attackType;
+        S_StructEnemyAttackData temp = ssoAttackData.Value;
 
         if (setup)
         {
@@ -43,8 +40,6 @@ public class S_EnemyAttackData : MonoBehaviour
         {
            temp.damage = ssoAttackData.Value.damage;
         }
-
-        temp.convictionReduction = ssoAttackData.Value.convictionReduction;
 
         onChangeAttackData.Invoke(temp);
     }
