@@ -8,5 +8,5 @@ public enum S_EnumEnemyState
 	Chase,
 	Attack,
 	HeavyHit,
-	LightHit,
+	Death,
 }

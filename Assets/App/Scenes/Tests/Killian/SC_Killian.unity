@@ -1429,6 +1429,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3495865099561543266, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyHit'\n\tFrom
+        animation clip 'A_EnemyDeath'\n\tFrom animation clip 'A_EnemyIAttack'\n\tFrom
+        animation clip 'A_EnemyLAttack1'\n\tFrom animation clip 'A_EnemyHAttack2'"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7430720674804394264, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
+      propertyPath: hitLightParam
+      value: IsMoving
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

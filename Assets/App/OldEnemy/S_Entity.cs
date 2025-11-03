@@ -111,7 +111,7 @@ public class S_Entity : MonoBehaviour
     {
         agent.SetVariableValue<float>("Health", health);
         onGetHit.Invoke();
-        agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.LightHit);
+        agent.SetVariableValue<S_EnumEnemyState>("S_EnumEnemyState", S_EnumEnemyState.HeavyHit);
     }
 
     private void PlayAnimationEasterEgg()

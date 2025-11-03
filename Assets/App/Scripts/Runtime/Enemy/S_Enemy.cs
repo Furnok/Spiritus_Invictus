@@ -31,9 +31,6 @@ public class S_Enemy : MonoBehaviour
     [SerializeField, S_AnimationName] private string hitHeavyParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string hitLightParam;
-
-    [TabGroup("Settings")]
     [SerializeField, S_AnimationName] private string tBagParam;
 
     [TabGroup("Settings")]
@@ -134,7 +131,6 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.SetVariableValue<string>("AttackIdleParam", idleAttack);
         behaviorAgent.SetVariableValue<string>("AttackParam", attackParam);
         behaviorAgent.SetVariableValue<string>("HitHeavyParam", hitHeavyParam);
-        behaviorAgent.SetVariableValue<string>("HitLightParam", hitLightParam);
 
         enemyAttackData.Setup(ssoEnemyData);
         enemyDetectionRange.Setup(ssoEnemyData);
