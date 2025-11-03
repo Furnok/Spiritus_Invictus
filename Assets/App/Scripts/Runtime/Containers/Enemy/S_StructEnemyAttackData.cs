@@ -12,7 +12,8 @@ public struct S_StructEnemyAttackData
     public float knockbackDistance;
     public float parryToleranceBeforeHit;
     public float parryToleranceAfterHit;
-    public float hitStunDuration;
+    //public float hitStunDuration;
+    public float invicibilityDuration;
     public float convictionReduction;
 
 }

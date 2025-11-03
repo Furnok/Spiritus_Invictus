@@ -2,9 +2,12 @@
 
 public class S_PlayerDamageSystem : MonoBehaviour
 {
+    [Header("Reference")]
+
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
     [SerializeField] SSO_PlayerStats _playerStats;
+    [SerializeField] RSO_IsInvicible _isInvicible;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerTakeDamage rseOnPlayerTakeDamage;
@@ -41,7 +44,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     private void TakeDamage(S_StructEnemyAttackData attackData)
     {
 
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true)
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true && _isInvicible.Value == false)
         {
             if (_hitReactCoroutine != null)
             {
@@ -50,10 +53,16 @@ public class S_PlayerDamageSystem : MonoBehaviour
 
             rseOnAnimationTriggerValueChange.Call("isHit");
             _onPlayerAddState.Call(PlayerState.HitReact);
+            _isInvicible.Value = true;
 
-            _hitReactCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.hitStunDuration, () =>
+            _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackDuration, () =>
             {
                 _onPlayerAddState.Call(PlayerState.None);
+            }));
+
+            StartCoroutine(S_Utils.Delay(attackData.invicibilityDuration, () =>
+            {
+                _isInvicible.Value = false;
             }));
         }
         rseOnPlayerHealthReduced.Call(attackData.damage);
