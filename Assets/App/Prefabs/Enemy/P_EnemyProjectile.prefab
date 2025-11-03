@@ -95,9 +95,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8667001306787889985}
-  - component: {fileID: 7501301468289437560}
   - component: {fileID: 6375349480578834582}
   - component: {fileID: 3724131154372977999}
+  - component: {fileID: 7501301468289437560}
   m_Layer: 9
   m_Name: P_EnemyProjectile
   m_TagString: Hitbox
@@ -121,28 +121,6 @@ Transform:
   - {fileID: 402425814130646597}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7501301468289437560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8767378737508242072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e80515df17b4f24489093c152ef318d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectileLifeTime: 5
-  projectileSpeed: 4
-  _travelTime: 0.7
-  _arcHeightMultiplier: 1.5
-  _arcDirection: 1
-  _randomizeArc: 1
-  _arcRandomDirectionMin: 0.5
-  _arcRandomDirectionMax: 1
-  RSE_OnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
-  RSE_OnDespawnEnemyProjectile: {fileID: 11400000, guid: aeda82c797ce4264fb40b9fed9cd4513, type: 2}
 --- !u!54 &6375349480578834582
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -191,3 +169,25 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7501301468289437560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8767378737508242072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e80515df17b4f24489093c152ef318d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileLifeTime: 5
+  projectileSpeed: 4
+  travelTime: 0.7
+  arcHeightMultiplier: 1.5
+  arcDirection: 1
+  randomizeArc: 1
+  arcRandomDirectionMin: 0.5
+  arcRandomDirectionMax: 1
+  rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
+  rseOnDespawnEnemyProjectile: {fileID: 11400000, guid: aeda82c797ce4264fb40b9fed9cd4513, type: 2}
