@@ -60,6 +60,13 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private GameObject body;
 
     [TabGroup("References")]
+    [Title("Projectile")]
+    [SerializeField] GameObject spawnProjectilePoint;
+
+    [TabGroup("References")]
+    [SerializeField] S_EnemyProjectile enemyProjectile;
+
+    [TabGroup("References")]
     [Title("Scripts")]
     [SerializeField] private S_EnemyAttackData enemyAttackData;
 
@@ -75,9 +82,6 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_EnemyPatrolPoints enemyPatrolPoints;
 
-    [TabGroup("References")]
-    [SerializeField] private S_EnemyProjectileManager enemyProjectileManager;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
 
@@ -86,9 +90,6 @@ public class S_Enemy : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnGamePause rseOnGamePause;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnSpawnEnemyProjectile rseOnSpawnEnemyProjectile;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
@@ -100,6 +101,7 @@ public class S_Enemy : MonoBehaviour
     private float maxhealth = 0;
     private bool isPaused = false;
     private GameObject target = null;
+    private Transform aimPoint = null;
     private BlackboardVariable<bool> isAttacking;
     private AnimatorOverrideController overrideController;
     private Coroutine comboCoroutine;
@@ -220,6 +222,9 @@ public class S_Enemy : MonoBehaviour
 
         if (newTarget != null)
         {
+            newTarget.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
+
             float distance = Vector3.Distance(transform.position, newTarget.transform.position);
             Vector3 dir = (newTarget.transform.position - transform.position).normalized;
 
@@ -243,6 +248,8 @@ public class S_Enemy : MonoBehaviour
         }
         else
         {
+            aimPoint = null;
+
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
         }
     }
@@ -257,7 +264,6 @@ public class S_Enemy : MonoBehaviour
 
         if (damage >= maxhealth / 2)
         {
-            Debug.Log("Hit");
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
 
             if (comboCoroutine != null)
@@ -350,7 +356,8 @@ public class S_Enemy : MonoBehaviour
 
             if (combo[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
-                enemyProjectileManager.onSpawnProjectile.Invoke(bodyCollider.transform);
+                S_EnemyProjectile projectileInstance = Instantiate(enemyProjectile, spawnProjectilePoint.transform.position, Quaternion.identity);
+                projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo[i].attackData);
             }
 
             yield return WaitForSecondsWhileUnpaused(combo[i].animation.length);

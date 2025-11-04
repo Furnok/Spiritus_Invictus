@@ -1,151 +1,156 @@
-﻿using DG.Tweening.Plugins.Core.PathCore;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableProjectile
 {
     [TabGroup("Settings")]
-    [Title("Projectile")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float _speed = 5f;
-    [SerializeField] private float _lifeTime = 5f;
-    [SerializeField] Rigidbody _rb;
-    [SerializeField] string _playerLayer = "PlayerProjectile";
-    [SerializeField] Material _enemyMat;
-    [SerializeField] Material _playerMat;
-    [SerializeField] Renderer _renderer;
-    [SerializeField] float _reflectSpeedMul = 1.5f;
-    [SerializeField] float _reflectDmgMul = 1.5f;
+    [Title("Layer")]
+    [SerializeField] private string playerLayer;
 
     [TabGroup("Settings")]
-    [Header("Arc Settings")]
-    [Tooltip("Arc height factor 1 = average, 2 = hight")]
-    [SerializeField] private float _arcHeightMultiplier = 1f;
-    [Tooltip("Curve direction : 0=top, 1=right diagonal, -1=left diagonal")]
-    [SerializeField] private float _arcDirection = 0f;
-    [Tooltip("Makes the trajectory random")]
-    [SerializeField] private bool _randomizeArc = true;
-    [Tooltip("Min arc direction if random")]
-    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMin = -1f;
-    [Tooltip("Max arc direction if random")]
-    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMax = 1f;
-    [Tooltip("How long does it take for the projectile to reach the target (s)?")]
-    [SerializeField] private float _travelTime = 1f;
+    [Title("Projectile")]
+    [SerializeField] private float speed;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float lifeTime;
+
+    [TabGroup("Settings")]
+    [Title("Reflect")]
+    [SerializeField] private float reflectSpeedMul;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float reflectDmgMul;
 
     [TabGroup("References")]
-    [SerializeField] SSO_EnemyAttackData _testAttackData;
+    [Title("Rigidbody")]
+    [SerializeField] private Rigidbody rb;
 
-    Transform _owner;
-    float _timeAlive = 0f;
-    Transform _target = null;
-    bool _isInitialized = false;
-    Vector3 _direction = Vector3.zero;
-    S_StructEnemyAttackData _attackData;
-    Vector3 _lastDirection;
-    private Vector3 _startPos;
-    private Vector3 _controlPoint;
+    [TabGroup("References")]
+    [Title("Materials")]
+    [SerializeField] private Material enemyMat;
 
-    private void Awake()
+    [TabGroup("References")]
+    [SerializeField] private Material playerMat;
+
+    [TabGroup("References")]
+    [Title("Renderer")]
+    [SerializeField] private Renderer rendered;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_ProjectileData ssoProjectileData;
+
+    private Transform owner = null;
+    private float timeAlive = 0f;
+    private Transform target = null;
+    private bool isInitialized = false;
+    private Vector3 direction = Vector3.zero;
+    private S_StructEnemyAttackData attackData;
+    private Vector3 startPos = Vector3.zero;
+    private Vector3 controlPoint = Vector3.zero;
+
+    private float arcHeightMultiplier => ssoProjectileData.Value.arcHeightMultiplier;
+    private float arcDirection => ssoProjectileData.Value.arcDirection;
+    private bool randomizeArc => ssoProjectileData.Value.randomizeArc;
+    private float arcRandomDirectionMin => ssoProjectileData.Value.arcRandomDirectionMin;
+    private float arcRandomDirectionMax => ssoProjectileData.Value.arcRandomDirectionMax;
+    private float travelTime => ssoProjectileData.Value.travelTime;
+
+    public void Initialize(Transform owner, Transform target = null, S_StructEnemyAttackData attackData = new())
     {
-        _attackData = _testAttackData.Value;
-    }
-
-    public void Initialize(Transform owner, Transform target = null)
-    {
-        this._target = target;
-        this._direction = transform.forward;
-        _isInitialized = true;
-        _owner = owner;
+        this.target = target;
+        this.direction = transform.forward;
+        this.attackData = attackData;
+        isInitialized = true;
+        this.owner = owner;
 
         CalculateControlPoint();
     }
 
     private void Update()
     {
-        if (!_isInitialized) return;
+        if (!isInitialized) return;
 
-        _timeAlive += Time.deltaTime;
-        float t = _timeAlive / _travelTime;
+        timeAlive += Time.deltaTime;
+        float t = timeAlive / travelTime;
 
-        if (_timeAlive >= _lifeTime)
+        if (timeAlive >= lifeTime)
         {
             Destroy(gameObject);
             return;
         }
 
-        Vector3 endPos = _target != null ? _target.position : _startPos + transform.forward * 10f;
+        Vector3 endPos = target != null ? target.position : startPos + transform.forward * 10f;
 
-        Vector3 a = Vector3.Lerp(_startPos, _controlPoint, t);
-        Vector3 b = Vector3.Lerp(_controlPoint, endPos, t);
+        Vector3 a = Vector3.Lerp(startPos, controlPoint, t);
+        Vector3 b = Vector3.Lerp(controlPoint, endPos, t);
         Vector3 newPos = Vector3.Lerp(a, b, t);
         Vector3 tangent = (b - a).normalized;
 
 
-        if (_target != null && _target.gameObject.activeInHierarchy)
+        if (target != null && target.gameObject.activeInHierarchy)
         {
             transform.position = newPos;
             transform.forward = tangent;
 
-            _direction = tangent;
+            direction = tangent;
         }
         else
         {
-            transform.position += _direction * _speed * Time.deltaTime;
-            transform.forward = _direction;
+            transform.position += direction * speed * Time.deltaTime;
+            transform.forward = direction;
         }
     }
 
     public void Reflect(Transform reflectOwner)
     {
-        _attackData.damage *= _reflectDmgMul;
-        _speed *= _reflectSpeedMul;
-        _timeAlive = 0;
+        attackData.damage *= reflectDmgMul;
+        speed *= reflectSpeedMul;
+        timeAlive = 0;
 
-        gameObject.layer = LayerMask.NameToLayer(_playerLayer);
-        if (_renderer && _playerMat) _renderer.material = _playerMat;
+        gameObject.layer = LayerMask.NameToLayer(playerLayer);
+        if (rendered && playerMat) rendered.material = playerMat;
 
-        if (_owner != null && _owner.gameObject.activeInHierarchy)
+        if (owner != null && owner.gameObject.activeInHierarchy)
         {
-            _target = _owner;
+            target = owner;
             CalculateControlPoint();
         }
         else
         {
-            _target = null;
-            _direction = reflectOwner.forward;
-            transform.forward = _direction;
+            target = null;
+            direction = reflectOwner.forward;
+            transform.forward = direction;
         }
     }
 
-    void CalculateControlPoint()
+    private void CalculateControlPoint()
     {
-        this._startPos = transform.position;
+        this.startPos = transform.position;
 
-        Vector3 toTarget = _target != null ? (_target.position - _startPos) : transform.forward * 10f;
-        Vector3 midPoint = _startPos + toTarget * 0.5f;
+        Vector3 toTarget = target != null ? (target.position - startPos) : transform.forward * 10f;
+        Vector3 midPoint = startPos + toTarget * 0.5f;
 
         //Default arc direction (top)
         Vector3 arcDir = Vector3.up;
 
-        if (_arcDirection != 0f || _randomizeArc == true)
+        if (arcDirection != 0f || randomizeArc == true)
         {
             Vector3 side = Vector3.Cross(Vector3.up, toTarget.normalized).normalized;
-            if (_randomizeArc)
+            if (randomizeArc)
             {
-                side *= Random.Range(_arcRandomDirectionMin, _arcRandomDirectionMax);
+                side *= Random.Range(arcRandomDirectionMin, arcRandomDirectionMax);
                 arcDir = (Vector3.up + side).normalized;
 
             }
             else
             {
-                arcDir = (Vector3.up + side * _arcDirection).normalized;
+                arcDir = (Vector3.up + side * arcDirection).normalized;
             }
         }
 
-        float arcHeight = toTarget.magnitude * 0.25f * _arcHeightMultiplier;
-        _controlPoint = midPoint + arcDir * arcHeight;
+        float arcHeight = toTarget.magnitude * 0.25f * arcHeightMultiplier;
+        controlPoint = midPoint + arcDir * arcHeight;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -154,7 +159,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         {
             if (damageable != null)
             {
-                damageable.TakeDamage(_attackData.damage);
+                damageable.TakeDamage(attackData.damage);
                 Destroy(gameObject);
             }
         }
@@ -162,7 +167,6 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
 
     public ref S_StructEnemyAttackData GetAttackData()
     {
-
-        return ref _attackData;
+        return ref attackData;
     }
 }

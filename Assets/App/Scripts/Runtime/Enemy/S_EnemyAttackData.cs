@@ -42,16 +42,19 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void DisplayTriggerWarning()
     {
-        if (attackData.attackType == S_EnumEnemyAttackType.Parryable)
+        if (warning != null)
         {
-            warning.color = Color.yellow;
-        }
-        else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
-        {
-            warning.color = Color.red;
-        }
+            if (attackData.attackType == S_EnumEnemyAttackType.Parryable && attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            {
+                warning.color = Color.yellow;
+            }
+            else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
+            {
+                warning.color = Color.red;
+            }
 
-        StartCoroutine(DisplayWarning());
+            StartCoroutine(DisplayWarning());
+        }
     }
 
     private IEnumerator DisplayWarning()

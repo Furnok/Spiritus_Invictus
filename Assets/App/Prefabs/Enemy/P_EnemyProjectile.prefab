@@ -181,19 +181,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e80515df17b4f24489093c152ef318d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
-  _lifeTime: 5
-  _rb: {fileID: 6375349480578834582}
-  _playerLayer: PlayerProjectile
-  _enemyMat: {fileID: 2100000, guid: 13817ca0c4182e145b1fae5f8f4f7a34, type: 2}
-  _playerMat: {fileID: 2100000, guid: 82059eb0281b93740954c0c88d8ec6a5, type: 2}
-  _renderer: {fileID: 3757806925846237130}
-  _reflectSpeedMul: 1.5
-  _reflectDmgMul: 1.5
-  _arcHeightMultiplier: 1
-  _arcDirection: 2
-  _randomizeArc: 1
-  _arcRandomDirectionMin: -1
-  _arcRandomDirectionMax: 1
-  _travelTime: 1
-  _testAttackData: {fileID: 11400000, guid: e615917ec56feff479a2961c7d603f6e, type: 2}
+  playerLayer: PlayerProjectile
+  speed: 5
+  lifeTime: 3
+  reflectSpeedMul: 1.5
+  reflectDmgMul: 1.5
+  rb: {fileID: 6375349480578834582}
+  enemyMat: {fileID: 2100000, guid: 46fd367f7816d434ba541584b0a91a9f, type: 2}
+  playerMat: {fileID: 2100000, guid: 6548b5bace388d2448daab8c8e3e506b, type: 2}
+  rendered: {fileID: 3757806925846237130}
+  ssoProjectileData: {fileID: 11400000, guid: 317737fd7f3f47b4a8b94bb0b06bc92a, type: 2}
