@@ -1,6 +1,8 @@
 ﻿using Sirenix.OdinInspector;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class S_EnemyAttackData : MonoBehaviour
 {
@@ -8,12 +10,14 @@ public class S_EnemyAttackData : MonoBehaviour
     [Title("Collider")]
     [SerializeField] Collider weaponCollider;
 
+    [SerializeField] Image warning;
+
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
 
     private bool setup = false;
     private float damageDodge = 0;
     private float damageParry = 0;
-
+    [SerializeField] SSO_EnemyAttackData SsoAttackData;
     public void Setup(SSO_EnemyData ssoEnemyData)
     {
         damageDodge = ssoEnemyData.Value.attackLightDamage;
@@ -58,5 +62,27 @@ public class S_EnemyAttackData : MonoBehaviour
         {
             weaponCollider.enabled = false;
         }
+    }
+
+    public void DisplayTriggerWarning()
+    {
+        S_StructEnemyAttackData temp = SsoAttackData.Value;
+        if(temp.attackType == S_EnumEnemyAttackType.Parryable)
+        {
+            warning.color = Color.yellow;
+        }
+        else if (temp.attackType == S_EnumEnemyAttackType.Dodgeable)
+        {
+            warning.color = Color.red;
+        }
+
+        StartCoroutine(DisplayWarning());
+    }
+
+    private IEnumerator DisplayWarning()
+    {
+        warning.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        warning.gameObject.SetActive(false);
     }
 }
