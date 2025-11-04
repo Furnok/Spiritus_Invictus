@@ -14,22 +14,9 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     [SerializeField] float _reflectSpeedMul = 1.5f;
     [SerializeField] float _reflectDmgMul = 1.5f;
 
-    [Header("Arc Settings")]
-    [Tooltip("Arc height factor 1 = average, 2 = hight")]
-    [SerializeField] private float _arcHeightMultiplier = 1f;
-    [Tooltip("Curve direction : 0=top, 1=right diagonal, -1=left diagonal")]
-    [SerializeField] private float _arcDirection = 0f;
-    [Tooltip("Makes the trajectory random")]
-    [SerializeField] private bool _randomizeArc = true;
-    [Tooltip("Min arc direction if random")]
-    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMin = -1f;
-    [Tooltip("Max arc direction if random")]
-    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMax = 1f;
-    [Tooltip("How long does it take for the projectile to reach the target (s)?")]
-    [SerializeField] private float _travelTime = 1f;
-
     [Header("References")]
     [SerializeField] SSO_EnemyAttackData _testAttackData;
+    [SerializeField] SSO_ProjectileData _projectileData;
 
     //[Header("Inputs")]
 
@@ -44,6 +31,14 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
     Vector3 _lastDirection;
     private Vector3 _startPos;
     private Vector3 _controlPoint;
+
+    private float _arcHeightMultiplier => _projectileData.Value.arcHeightMultiplier;
+    private float _arcDirection => _projectileData.Value.arcDirection;
+    private bool _randomizeArc => _projectileData.Value.randomizeArc;
+    private float _arcRandomDirectionMin => _projectileData.Value.arcRandomDirectionMin;
+    private float _arcRandomDirectionMax => _projectileData.Value.arcRandomDirectionMax;
+    private float _travelTime => _projectileData.Value.travelTime;
+    private AnimationCurve _arcCurve => _projectileData.Value.speedAnimationCurve;
 
     private void Awake()
     {

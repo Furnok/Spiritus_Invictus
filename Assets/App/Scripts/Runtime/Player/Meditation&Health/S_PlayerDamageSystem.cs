@@ -23,6 +23,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     Coroutine _hitReactCoroutine;
     private void OnEnable()
     {
+        _isInvicible.Value = false;
         rseOnPlayerTakeDamage.action += TakeDamage;
         _rseOnPlayerHit.action += TakeDamage;
     }
@@ -31,14 +32,15 @@ public class S_PlayerDamageSystem : MonoBehaviour
     {
         rseOnPlayerTakeDamage.action -= TakeDamage;
         _rseOnPlayerHit.action -= TakeDamage;
+        _isInvicible.Value = false;
 
     }
 
     private void TakeDamage(float damage)
     {
-        rseOnAnimationTriggerValueChange.Call("isHit");
-        rseOnPlayerHealthReduced.Call(damage);
-        _rseOnPlayerGettingHit.Call();
+        //rseOnAnimationTriggerValueChange.Call("isHit");
+        //rseOnPlayerHealthReduced.Call(damage);
+        //_rseOnPlayerGettingHit.Call();
     }
 
 
@@ -65,8 +67,10 @@ public class S_PlayerDamageSystem : MonoBehaviour
             {
                 _isInvicible.Value = false;
             }));
+
+            rseOnPlayerHealthReduced.Call(attackData.damage);
+            _rseOnPlayerGettingHit.Call();
         }
-        rseOnPlayerHealthReduced.Call(attackData.damage);
-        _rseOnPlayerGettingHit.Call();
+        
     }
 }

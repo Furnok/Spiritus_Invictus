@@ -141,6 +141,7 @@ public class S_PlayerDodge : MonoBehaviour
 
         _rb.linearDamping = 0;
         _rb.angularVelocity = Vector3.zero;
+        _canRunAfterDodge = true;
 
         while (elapsed < _playerStats.Value.dodgeDuration)
         {
@@ -167,11 +168,10 @@ public class S_PlayerDodge : MonoBehaviour
             //if (_prepareRunCoroutine == null) return;
             //StopCoroutine(_prepareRunCoroutine);
 
-            _canRunAfterDodge = true;
 
             _prepareRunCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeRunningAfterDodge, () =>
             {
-                if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == false && _canRunAfterDodge == false) return;
+                if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == false || _canRunAfterDodge == false) return;
 
                 _onPlayerAddState.Call(PlayerState.Running);
                 if (_prepareRunCoroutine == null) return;
@@ -189,11 +189,11 @@ public class S_PlayerDodge : MonoBehaviour
     {
         _canRunAfterDodge = false;
 
-        if (_dodgeCoroutine == null) return;
-        StopCoroutine(_dodgeCoroutine);
+        if (_dodgeCoroutine != null) StopCoroutine(_dodgeCoroutine);
 
-        if (_prepareRunCoroutine == null) return;
-        StopCoroutine(_prepareRunCoroutine);
+
+        if (_prepareRunCoroutine != null) StopCoroutine(_prepareRunCoroutine);
+
 
         ResetValue();
     }
@@ -201,13 +201,23 @@ public class S_PlayerDodge : MonoBehaviour
     void CancelInputdodge()
     {
         _canRunAfterDodge = false;
-        if (_prepareRunCoroutine == null) return;
-        StopCoroutine(_prepareRunCoroutine);
+
+        if (_playerCurrentState.Value != PlayerState.Running && _prepareRunCoroutine != null)
+        {
+            StopCoroutine(_prepareRunCoroutine);
+            _onPlayerAddState.Call(PlayerState.None);
+        }
+        
+        if(_playerCurrentState.Value == PlayerState.Running)
+        {
+            _onPlayerAddState.Call(PlayerState.None);
+        }
     }
 
     private void ResetValue()
     {
         _playerIsDodging.Value = false;
+        _canRunAfterDodge = false;
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
     }
 }

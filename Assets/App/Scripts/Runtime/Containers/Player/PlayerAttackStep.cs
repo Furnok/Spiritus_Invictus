@@ -9,5 +9,5 @@ public struct PlayerAttackStep
     public float ammountConvitionNeeded;
     public float timeHoldingInput;
     public float speed;
-    public Color color;
+    public ProjectileData projectileData;
 }

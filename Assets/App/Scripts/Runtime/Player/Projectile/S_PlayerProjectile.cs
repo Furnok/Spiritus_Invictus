@@ -10,20 +10,6 @@ public class S_PlayerProjectile : MonoBehaviour
 
     [SerializeField] private RSE_OnEnemyTargetDied _onEnemyTargetDied;
 
-    [Header("Arc Settings")]
-    [Tooltip("Arc height factor 1 = average, 2 = hight")]
-    [SerializeField] private float _arcHeightMultiplier = 1f;
-    [Tooltip("Curve direction : 0=top, 1=right diagonal, -1=left diagonal")]
-    [SerializeField] private float _arcDirection = 0f;
-    [Tooltip("Makes the trajectory random")]
-    [SerializeField] private bool _randomizeArc = true;
-    [Tooltip("Min arc direction if random")]
-    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMin = -1f;
-    [Tooltip("Max arc direction if random")]
-    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMax = 1f;
-    [Tooltip("How long does it take for the projectile to reach the target (s)?")]
-    [SerializeField] private float _travelTime = 1f;
-
     [Header("Output")]
     [SerializeField] private RSE_OnDespawnProjectile rseOnDespawnProjectile;
 
@@ -36,6 +22,16 @@ public class S_PlayerProjectile : MonoBehaviour
     private bool _isInitialized = false;
     private Vector3 _startPos;
     private Vector3 _controlPoint;
+
+    private ProjectileData _projectileData;
+
+    private float _arcHeightMultiplier => _projectileData.arcHeightMultiplier;
+    private float _arcDirection => _projectileData.arcDirection;
+    private bool _randomizeArc => _projectileData.randomizeArc;
+    private float _arcRandomDirectionMin;
+    private float _arcRandomDirectionMax;
+    private float _travelTime => _projectileData.travelTime;
+    private AnimationCurve _arcCurve => _projectileData.speedAnimationCurve;
 
     int _attackStep = 0;
 
@@ -58,7 +54,9 @@ public class S_PlayerProjectile : MonoBehaviour
         _attackStep = attackStep;
         _speed = _playerAttackSteps.Value.Find(x => x.step == attackStep).speed;
         _damage = damage;
-
+        _projectileData = _playerAttackSteps.Value.Find(x => x.step == attackStep).projectileData;
+        _arcRandomDirectionMin = _projectileData.arcRandomDirectionMin;
+        _arcRandomDirectionMax = _projectileData.arcRandomDirectionMax;
         this._startPos = transform.position;
 
         Vector3 toTarget = target != null ? (target.position - _startPos) : transform.forward * 10f;
