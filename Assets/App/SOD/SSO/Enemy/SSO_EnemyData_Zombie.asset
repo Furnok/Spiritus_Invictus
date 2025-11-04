@@ -15,10 +15,6 @@ MonoBehaviour:
   _value:
     health: 100
     speed: 3
-    attackHeavyDamage: 10
-    attackLightDamage: 5
-    projectileDamage: 0
-    projectileCooldown: 0
     detectionRange: 5
     detectionAggroRangeMax: 50
     distanceToChase: 0.6
@@ -32,14 +28,79 @@ MonoBehaviour:
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
+    controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
-      - {fileID: -8709411803423658444, guid: 0d9a68d0653cbf04e8ebdb9a99dccc85, type: 3}
-      - {fileID: 7713716175428577925, guid: 90775e7df3deb674b90fad3bbd28728a, type: 3}
-      - {fileID: -2621343224683262629, guid: 98544f118e7a81242a836f0905a93e82, type: 3}
-      isProjectile: 0
+      - animation: {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 1
+          damage: 5
+          knockbackDuration: 0.5
+          knockbackDistance: 2
+          parryToleranceBeforeHit: 0.1
+          parryToleranceAfterHit: 0.1
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+      - animation: {fileID: 5800342443961765143, guid: 666e46b01acb2d54897ba2db67166f1b, type: 3}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 1
+          damage: 5
+          knockbackDuration: 0.5
+          knockbackDistance: 2
+          parryToleranceBeforeHit: 0.1
+          parryToleranceAfterHit: 0.1
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+      - animation: {fileID: -8890989884591690541, guid: 7197894df208133418e1c8fe41a7f498, type: 3}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 1
+          damage: 5
+          knockbackDuration: 0.5
+          knockbackDistance: 2
+          parryToleranceBeforeHit: 0.1
+          parryToleranceAfterHit: 0.1
+          invicibilityDuration: 0.7
+          convictionReduction: 0
     - listAnimationsCombos:
-      - {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
-      - {fileID: 5800342443961765143, guid: 666e46b01acb2d54897ba2db67166f1b, type: 3}
-      - {fileID: -8890989884591690541, guid: 7197894df208133418e1c8fe41a7f498, type: 3}
-      isProjectile: 0
+      - animation: {fileID: -8709411803423658444, guid: 0d9a68d0653cbf04e8ebdb9a99dccc85, type: 3}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 0
+          damage: 10
+          knockbackDuration: 1
+          knockbackDistance: 2
+          parryToleranceBeforeHit: 0.1
+          parryToleranceAfterHit: 0.1
+          invicibilityDuration: 1.2
+          convictionReduction: 0
+      - animation: {fileID: 7713716175428577925, guid: 90775e7df3deb674b90fad3bbd28728a, type: 3}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 0
+          damage: 10
+          knockbackDuration: 1
+          knockbackDistance: 2
+          parryToleranceBeforeHit: 0.1
+          parryToleranceAfterHit: 0.1
+          invicibilityDuration: 1.2
+          convictionReduction: 0
+      - animation: {fileID: -2621343224683262629, guid: 98544f118e7a81242a836f0905a93e82, type: 3}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 0
+          damage: 10
+          knockbackDuration: 1
+          knockbackDistance: 2
+          parryToleranceBeforeHit: 0.1
+          parryToleranceAfterHit: 0.1
+          invicibilityDuration: 1.2
+          convictionReduction: 0

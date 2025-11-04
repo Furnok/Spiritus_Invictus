@@ -10,42 +10,18 @@ public class S_EnemyAttackData : MonoBehaviour
     [Title("Collider")]
     [SerializeField] Collider weaponCollider;
 
+    [TabGroup("References")]
+    [Title("Image")]
     [SerializeField] Image warning;
 
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
 
-    private bool setup = false;
-    private float damageDodge = 0;
-    private float damageParry = 0;
-    [SerializeField] SSO_EnemyAttackData SsoAttackData;
-    public void Setup(SSO_EnemyData ssoEnemyData)
+    private S_StructEnemyAttackData attackData;
+
+    public void SetAttackMode(S_StructEnemyAttackData enemyAttackData)
     {
-        damageDodge = ssoEnemyData.Value.attackLightDamage;
-        damageParry = ssoEnemyData.Value.attackHeavyDamage;
-        setup = true;
-    }
-
-    public void SetAttackMode(SSO_EnemyAttackData ssoAttackData)
-    {
-        S_StructEnemyAttackData temp = ssoAttackData.Value;
-
-        if (setup)
-        {
-            if (temp.attackType == S_EnumEnemyAttackType.Dodgeable)
-            {
-                temp.damage = damageDodge;
-            }
-            else if (temp.attackType == S_EnumEnemyAttackType.Parryable)
-            {
-                temp.damage = damageParry;
-            }
-        }
-        else
-        {
-           temp.damage = ssoAttackData.Value.damage;
-        }
-
-        onChangeAttackData.Invoke(temp);
+        attackData = enemyAttackData;
+        onChangeAttackData.Invoke(enemyAttackData);
     }
 
     public void EnableWeaponCollider()
@@ -66,12 +42,11 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void DisplayTriggerWarning()
     {
-        S_StructEnemyAttackData temp = SsoAttackData.Value;
-        if(temp.attackType == S_EnumEnemyAttackType.Parryable)
+        if (attackData.attackType == S_EnumEnemyAttackType.Parryable)
         {
             warning.color = Color.yellow;
         }
-        else if (temp.attackType == S_EnumEnemyAttackType.Dodgeable)
+        else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
         {
             warning.color = Color.red;
         }
