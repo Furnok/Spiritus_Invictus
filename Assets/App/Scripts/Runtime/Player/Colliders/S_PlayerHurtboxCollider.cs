@@ -17,8 +17,6 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
     [Header("Output")]
     [SerializeField] RSE_OnAttackCollide _onAttackCollide;
 
-    float _parryToleranceBeforeHit => _playerStats.Value.parryToleranceBeforeHit;
-    float _parryToleranceAfterHit => _playerStats.Value.parryToleranceAfterHit;
     float _parryDuration => _playerStats.Value.parryDuration;
 
     float _hitTime;

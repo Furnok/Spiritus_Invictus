@@ -40,19 +40,21 @@ public class S_PlayerHitResolver : MonoBehaviour
         if (attackData.attackType == S_EnumEnemyAttackType.Parryable)
         {
 
-            StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>
-            {
-                if (canParry == true)
+            StartCoroutine(IsWithinParryWindowCoroutine((canParry, data) =>
                 {
-                    _rseOnParrySuccess.Call(attackData);
-                    _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
-                    Debug.Log("Parried!");
-                }
-                else
-                {
-                    _rseOnPlayerHit.Call(attackData);
-                }
-            }));
+                    if (canParry == true)
+                    {
+                        _rseOnParrySuccess.Call(data);
+                        _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
+                        Debug.Log("Parried!");
+                    }
+                    else
+                    {
+                        _rseOnPlayerHit.Call(data);
+                    }
+                },
+                attackData
+            ));
         }
         else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
         {
@@ -71,8 +73,7 @@ public class S_PlayerHitResolver : MonoBehaviour
         }
         else if (attackData.attackType == S_EnumEnemyAttackType.Projectile)
         {
-            
-            StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>
+            StartCoroutine(IsWithinParryWindowCoroutine((canParry, data) =>
             {
                 if (canParry == true)
                 {
@@ -87,22 +88,23 @@ public class S_PlayerHitResolver : MonoBehaviour
                     Destroy(contact.source.gameObject);
                     _rseOnPlayerHit.Call(attackData);
                 }
-            }));
-
+            },
+               attackData
+           ));
         }
 
     }
-    IEnumerator IsWithinParryWindowCoroutine(System.Action<bool> callback)
+    IEnumerator IsWithinParryWindowCoroutine(System.Action<bool, S_StructEnemyAttackData> callback, S_StructEnemyAttackData enemyAttackData)
     {
         float t = Time.time; //moment getting hit
         float start = _parryStartTime.Value; //when parry started
         float duration = _playerStats.Value.parryDuration;
-        float tolBefore = _playerStats.Value.parryToleranceBeforeHit;
-        float tolAfter = _playerStats.Value.parryToleranceAfterHit;
+        float tolBefore = enemyAttackData.parryToleranceBeforeHit;
+        float tolAfter = enemyAttackData.parryToleranceAfterHit;
 
         if (t <= start + duration + tolBefore)
         {
-            callback(true);
+            callback(true, enemyAttackData);
             yield break;
         }
 
@@ -110,7 +112,7 @@ public class S_PlayerHitResolver : MonoBehaviour
 
         start = _parryStartTime.Value;
         bool valid = t >= start - tolAfter && t <= start + duration + tolBefore;
-        callback(valid);
+        callback(valid, enemyAttackData);
     }
 
     void TryReflectProjectile(Collider source)
