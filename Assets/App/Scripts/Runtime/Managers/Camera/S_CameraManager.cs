@@ -29,9 +29,6 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Target")]
-    [SerializeField] private CinemachineTargetGroup targetGroupRail;
-
-    [TabGroup("References")]
     [SerializeField] private Transform playerPoint;
 
     [TabGroup("References")]
@@ -201,7 +198,7 @@ public class S_CameraManager : MonoBehaviour
     private void PlayerPos(Transform player)
     {
         playerPos = player;
-        targetGroupRail.Targets[0].Object = player;
+        cinemachineCameraRail.Target.TrackingTarget = player;
     }
 
     private void CameraIntro()
