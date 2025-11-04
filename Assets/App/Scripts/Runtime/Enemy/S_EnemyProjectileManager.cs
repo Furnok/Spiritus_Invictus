@@ -1,5 +1,7 @@
 ﻿using Sirenix.OdinInspector;
+using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class S_EnemyProjectileManager : MonoBehaviour
 {
@@ -30,7 +32,7 @@ public class S_EnemyProjectileManager : MonoBehaviour
 
     private S_ObjectPool<S_EnemyProjectile> projectilePool = null;
     private Transform target = null;
-
+    [HideInInspector] public UnityEvent<Transform> onSpawnProjectile;
     private void Awake()
     {
         projectilePool = new S_ObjectPool<S_EnemyProjectile>(projectilePrefab, initialPoolSize, poolProjectileParent);
@@ -42,6 +44,8 @@ public class S_EnemyProjectileManager : MonoBehaviour
 
         RSE_OnDespawnEnemyProjectile.action += ReturnProjectileToPool;
         RSE_OnSpawnEnemyProjectile.action += GetProjectileFromPool;
+
+        onSpawnProjectile.AddListener(GetProjectileFromPool);
     }
 
     private void OnDisable()
@@ -50,22 +54,24 @@ public class S_EnemyProjectileManager : MonoBehaviour
 
         RSE_OnDespawnEnemyProjectile.action -= ReturnProjectileToPool;
         RSE_OnSpawnEnemyProjectile.action -= GetProjectileFromPool;
+
+        onSpawnProjectile.RemoveListener(GetProjectileFromPool);
     }
 
     private void GetTarget(GameObject newTarget)
     {
-        if (newTarget != null)
+        if (newTarget != null && newTarget.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPoitProvider))
         {
-            target = newTarget.transform;
+            target = aimPoitProvider != null ? aimPoitProvider.GetAimPoint() : newTarget.transform;
         }
     }
 
-    private void GetProjectileFromPool(float damage)
+    private void GetProjectileFromPool(Transform owner)
     {
         var projectile = projectilePool.Get();
         projectile.transform.position = spawnProjectile.position;
         projectile.transform.rotation = spawnProjectile.rotation;
-        projectile.Initialize(damage,target);
+        projectile.Initialize(owner, target);
     }
 
     private void ReturnProjectileToPool(S_EnemyProjectile projectile)

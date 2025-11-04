@@ -126,6 +126,9 @@ MonoBehaviour:
   S_EnemyRangeDetection: {fileID: 2811589338267356800}
   RSE_OnDespawnEnemyProjectile: {fileID: 11400000, guid: aeda82c797ce4264fb40b9fed9cd4513, type: 2}
   RSE_OnSpawnEnemyProjectile: {fileID: 11400000, guid: f7b7c92434fe57544aa6b48358f11f88, type: 2}
+  onSpawnProjectile:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &481751962266192794
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,13 +350,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveParam: IsMoving
-  deathParam: IsDead
+  deathParam: isDead
   idleAttack: IsIdleAttack
   attackParam: IsAttack
   comboParam: IsCombo
   stopAttackParam: IsStopAttack
   hitHeavyParam: IsHeavyHit
-  hitLightParam: IsLightHit
   tBagParam: T-Bag
   obstacleMask:
     serializedVersion: 2
@@ -369,6 +371,7 @@ MonoBehaviour:
   enemyHurt: {fileID: 2132075167513657250}
   enemyUI: {fileID: 4394752163360763578}
   enemyPatrolPoints: {fileID: 1718197067355500433}
+  enemyProjectileManager: {fileID: 6088328765305503230}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
   rseOnGamePause: {fileID: 11400000, guid: ae0312c6248bf454a8f047511417352d, type: 2}

@@ -75,6 +75,9 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_EnemyPatrolPoints enemyPatrolPoints;
 
+    [TabGroup("References")]
+    [SerializeField] private S_EnemyProjectileManager enemyProjectileManager;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
 
@@ -246,6 +249,7 @@ public class S_Enemy : MonoBehaviour
 
         if (damage >= maxhealth / 2)
         {
+            Debug.Log("Hit");
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
 
             if (comboCoroutine != null)
@@ -277,8 +281,13 @@ public class S_Enemy : MonoBehaviour
                 resetCoroutine = null;
             }
 
+            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);
             rseOnEnemyTargetDied.Call(body);
             enemyAttackData.DisableWeaponCollider();
+        }
+        else
+        {
+            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
         }
     }
 
@@ -343,8 +352,7 @@ public class S_Enemy : MonoBehaviour
                 overrideController[overrideKey] = combo[i];
 
                 animator.SetTrigger(i == 0 ? attackParam : comboParam);
-
-                rseOnSpawnEnemyProjectile.Call(ssoEnemyData.Value.projectileDamage);
+                enemyProjectileManager.onSpawnProjectile.Invoke(bodyCollider.transform);
 
                 yield return WaitForSecondsWhileUnpaused(combo[i].length);
             }
