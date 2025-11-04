@@ -1,112 +1,151 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening.Plugins.Core.PathCore;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.UI.GridLayoutGroup;
 
-public class S_EnemyProjectile : MonoBehaviour
+public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableProjectile
 {
     [TabGroup("Settings")]
     [Title("Projectile")]
     [SuffixLabel("s", Overlay = true)]
-    [SerializeField] float projectileLifeTime;
-
-    [TabGroup("Settings")]
-    [SerializeField] float projectileSpeed;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float travelTime;
+    [SerializeField] private float _speed = 5f;
+    [SerializeField] private float _lifeTime = 5f;
+    [SerializeField] Rigidbody _rb;
+    [SerializeField] string _playerLayer = "PlayerProjectile";
+    [SerializeField] Material _enemyMat;
+    [SerializeField] Material _playerMat;
+    [SerializeField] Renderer _renderer;
+    [SerializeField] float _reflectSpeedMul = 1.5f;
+    [SerializeField] float _reflectDmgMul = 1.5f;
 
     [TabGroup("Settings")]
     [Header("Arc Settings")]
-    [SerializeField] private float arcHeightMultiplier;
+    [Tooltip("Arc height factor 1 = average, 2 = hight")]
+    [SerializeField] private float _arcHeightMultiplier = 1f;
+    [Tooltip("Curve direction : 0=top, 1=right diagonal, -1=left diagonal")]
+    [SerializeField] private float _arcDirection = 0f;
+    [Tooltip("Makes the trajectory random")]
+    [SerializeField] private bool _randomizeArc = true;
+    [Tooltip("Min arc direction if random")]
+    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMin = -1f;
+    [Tooltip("Max arc direction if random")]
+    [SerializeField, Range(-5, 5)] private float _arcRandomDirectionMax = 1f;
+    [Tooltip("How long does it take for the projectile to reach the target (s)?")]
+    [SerializeField] private float _travelTime = 1f;
 
-    [TabGroup("Settings")]
-    [SerializeField] private float arcDirection;
+    [TabGroup("References")]
+    [SerializeField] SSO_EnemyAttackData _testAttackData;
 
-    [TabGroup("Settings")]
-    [SerializeField] private bool randomizeArc;
-
-    [TabGroup("Settings")]
-    [SerializeField, Range(-5, 5)] private float arcRandomDirectionMin;
-
-    [TabGroup("Settings")]
-    [SerializeField, Range(-5, 5)] private float arcRandomDirectionMax;
-
-    [TabGroup("Inputs")]
-    [SerializeField] RSE_OnPlayerDeath rseOnPlayerDeath;
-
-    [TabGroup("Outputs")]
-    [SerializeField] RSE_OnDespawnEnemyProjectile rseOnDespawnEnemyProjectile;
-
-    private float projectileDamage = 0f;
-    private Transform enemyTarget = null;
-    private float timeAlive = 0f;
-    private Vector3 direction = Vector3.zero;
-    private bool isInitialized = false;
-    private Vector3 startPos = Vector3.zero;
-    private Vector3 controlPoint = Vector3.zero;
-    private float speed = 0;
+    Transform _owner;
+    float _timeAlive = 0f;
+    Transform _target = null;
+    bool _isInitialized = false;
+    Vector3 _direction = Vector3.zero;
+    S_StructEnemyAttackData _attackData;
+    Vector3 _lastDirection;
+    private Vector3 _startPos;
+    private Vector3 _controlPoint;
 
     private void Awake()
     {
-        if (randomizeArc)
-        {
-            if (arcRandomDirectionMax < arcRandomDirectionMin)
-            {
-                float temp = arcRandomDirectionMax;
-                arcRandomDirectionMax = arcRandomDirectionMin;
-                arcRandomDirectionMin = temp;
-            }
-        }
+        _attackData = _testAttackData.Value;
     }
 
-    private void OnEnable()
+    public void Initialize(Transform owner, Transform target = null)
     {
-        rseOnPlayerDeath.action += OnTargetDie;
-    }
+        this._target = target;
+        this._direction = transform.forward;
+        _isInitialized = true;
+        _owner = owner;
 
-    private void OnDisable()
-    {
-        isInitialized = false;
-        timeAlive = 0f;
-        enemyTarget = null;
-        direction = Vector3.zero;
-
-        rseOnPlayerDeath.action -= OnTargetDie;
+        CalculateControlPoint();
     }
 
     private void Update()
     {
-        if (!isInitialized) return;
+        if (!_isInitialized) return;
 
-        timeAlive += Time.deltaTime;
-        float t = timeAlive / travelTime;
+        _timeAlive += Time.deltaTime;
+        float t = _timeAlive / _travelTime;
 
-        if (timeAlive >= projectileLifeTime)
+        if (_timeAlive >= _lifeTime)
         {
-            rseOnDespawnEnemyProjectile.Call(this);
+            Destroy(gameObject);
             return;
         }
 
-        Vector3 endPos = enemyTarget != null ? enemyTarget.position : startPos + transform.forward * 10f;
+        Vector3 endPos = _target != null ? _target.position : _startPos + transform.forward * 10f;
 
-        Vector3 a = Vector3.Lerp(startPos, controlPoint, t);
-        Vector3 b = Vector3.Lerp(controlPoint, endPos, t);
+        Vector3 a = Vector3.Lerp(_startPos, _controlPoint, t);
+        Vector3 b = Vector3.Lerp(_controlPoint, endPos, t);
         Vector3 newPos = Vector3.Lerp(a, b, t);
         Vector3 tangent = (b - a).normalized;
 
 
-        if (enemyTarget != null && enemyTarget.gameObject.activeInHierarchy)
+        if (_target != null && _target.gameObject.activeInHierarchy)
         {
             transform.position = newPos;
             transform.forward = tangent;
 
-            direction = tangent;
+            _direction = tangent;
         }
         else
         {
-            transform.position += direction * speed * Time.deltaTime;
-            transform.forward = direction;
+            transform.position += _direction * _speed * Time.deltaTime;
+            transform.forward = _direction;
         }
+    }
+
+    public void Reflect(Transform reflectOwner)
+    {
+        _attackData.damage *= _reflectDmgMul;
+        _speed *= _reflectSpeedMul;
+        _timeAlive = 0;
+
+        gameObject.layer = LayerMask.NameToLayer(_playerLayer);
+        if (_renderer && _playerMat) _renderer.material = _playerMat;
+
+        if (_owner != null && _owner.gameObject.activeInHierarchy)
+        {
+            _target = _owner;
+            CalculateControlPoint();
+        }
+        else
+        {
+            _target = null;
+            _direction = reflectOwner.forward;
+            transform.forward = _direction;
+        }
+    }
+
+    void CalculateControlPoint()
+    {
+        this._startPos = transform.position;
+
+        Vector3 toTarget = _target != null ? (_target.position - _startPos) : transform.forward * 10f;
+        Vector3 midPoint = _startPos + toTarget * 0.5f;
+
+        //Default arc direction (top)
+        Vector3 arcDir = Vector3.up;
+
+        if (_arcDirection != 0f || _randomizeArc == true)
+        {
+            Vector3 side = Vector3.Cross(Vector3.up, toTarget.normalized).normalized;
+            if (_randomizeArc)
+            {
+                side *= Random.Range(_arcRandomDirectionMin, _arcRandomDirectionMax);
+                arcDir = (Vector3.up + side).normalized;
+
+            }
+            else
+            {
+                arcDir = (Vector3.up + side * _arcDirection).normalized;
+            }
+        }
+
+        float arcHeight = toTarget.magnitude * 0.25f * _arcHeightMultiplier;
+        _controlPoint = midPoint + arcDir * arcHeight;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -115,61 +154,15 @@ public class S_EnemyProjectile : MonoBehaviour
         {
             if (damageable != null)
             {
-
-                damageable.TakeDamage(projectileDamage);
-                rseOnDespawnEnemyProjectile.Call(this);
-
-                Debug.Log($"Hit enemy for {projectileDamage} damage.");
-
+                damageable.TakeDamage(_attackData.damage);
+                Destroy(gameObject);
             }
         }
-        else
-        {
-            rseOnDespawnEnemyProjectile.Call(this);
-        }
-
     }
 
-    public void Initialize(float damage, Transform target = null)
+    public ref S_StructEnemyAttackData GetAttackData()
     {
-        enemyTarget = target;
-        direction = transform.forward;
-        projectileDamage = damage;
 
-        startPos = transform.position;
-
-        Vector3 toTarget = target != null ? (target.position - startPos) : transform.forward * 10f;
-        Vector3 midPoint = startPos + toTarget * 0.5f;
-
-        Vector3 arcDir = Vector3.up;
-
-        if (arcDirection != 0f || randomizeArc == true)
-        {
-            Vector3 side = Vector3.Cross(Vector3.up, toTarget.normalized).normalized;
-            if (randomizeArc)
-            {
-                side *= Random.Range(arcRandomDirectionMin, arcRandomDirectionMax);
-                arcDir = (Vector3.up + side).normalized;
-
-            }
-            else
-            {
-                arcDir = (Vector3.up + side * arcDirection).normalized;
-            }
-        }
-
-        float arcHeight = toTarget.magnitude * 0.25f * arcHeightMultiplier;
-        controlPoint = midPoint + arcDir * arcHeight;
-
-        isInitialized = true;
-
-    }
-
-    private void OnTargetDie()
-    {
-        if (enemyTarget != null)
-        {
-            enemyTarget = null;
-        }
+        return ref _attackData;
     }
 }

@@ -181,13 +181,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e80515df17b4f24489093c152ef318d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileLifeTime: 5
-  projectileSpeed: 4
-  travelTime: 0.7
-  arcHeightMultiplier: 1.5
-  arcDirection: 1
-  randomizeArc: 1
-  arcRandomDirectionMin: 0.5
-  arcRandomDirectionMax: 1
-  rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
-  rseOnDespawnEnemyProjectile: {fileID: 11400000, guid: aeda82c797ce4264fb40b9fed9cd4513, type: 2}
+  _speed: 5
+  _lifeTime: 5
+  _rb: {fileID: 6375349480578834582}
+  _playerLayer: PlayerProjectile
+  _enemyMat: {fileID: 2100000, guid: 13817ca0c4182e145b1fae5f8f4f7a34, type: 2}
+  _playerMat: {fileID: 2100000, guid: 82059eb0281b93740954c0c88d8ec6a5, type: 2}
+  _renderer: {fileID: 3757806925846237130}
+  _reflectSpeedMul: 1.5
+  _reflectDmgMul: 1.5
+  _arcHeightMultiplier: 1
+  _arcDirection: 2
+  _randomizeArc: 1
+  _arcRandomDirectionMin: -1
+  _arcRandomDirectionMax: 1
+  _travelTime: 1
+  _testAttackData: {fileID: 11400000, guid: e615917ec56feff479a2961c7d603f6e, type: 2}
