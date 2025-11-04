@@ -108,6 +108,7 @@ public class S_Enemy : MonoBehaviour
     private bool isPerformingCombo = false;
     private S_EnumEnemyState? pendingState = null;
     private GameObject pendingTarget = null;
+    private bool isPlayerDead = false;
 
     private void Awake()
     {
@@ -312,30 +313,41 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
+    private void TBag()
+    {
+        if (isPlayerDead)
+        {
+            float rnd = Random.Range(0f, 100f);
+            float chance = ssoEnemyData.Value.chanceForEasterEgg;
+
+            if (rnd < chance)
+            {
+                animator.SetTrigger(tBagParam);
+
+                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
+            }
+            else
+            {
+                animator.SetBool(idleAttack, false);
+
+                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
+            }
+
+            isPlayerDead = false;
+        }
+    }
+
     private void PlayerDied()
     {
+        isPlayerDead = true;
+
         if (isPerformingCombo)
         {
             pendingState = S_EnumEnemyState.Idle;
             return;
         }
 
-        float rnd = Random.Range(0f, 100f);
-        float chance = ssoEnemyData.Value.chanceForEasterEgg;
-
-        if (rnd < chance)
-        {
-            Debug.Log("Enemy is doing the t-pose taunt!");
-            animator.SetTrigger(tBagParam);
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
-        }
-        else
-        {
-            animator.SetBool(idleAttack, false);
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
-        }
+        TBag();
     }
 
     public void AttackCombo()
@@ -391,6 +403,9 @@ public class S_Enemy : MonoBehaviour
         if (pendingState.HasValue)
         {
             animator.SetBool(idleAttack, false);
+
+            TBag();
+
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", pendingState.Value);
             pendingState = null;
         }
