@@ -202,13 +202,13 @@ public class S_PlayerDodge : MonoBehaviour
     {
         _canRunAfterDodge = false;
 
-        if (_playerCurrentState.Value != PlayerState.Running && _prepareRunCoroutine != null)
+        if (_playerCurrentState.Value != PlayerState.Running && _prepareRunCoroutine != null && _dodgeCoroutine == null)
         {
             StopCoroutine(_prepareRunCoroutine);
             _onPlayerAddState.Call(PlayerState.None);
         }
         
-        if(_playerCurrentState.Value == PlayerState.Running)
+        if(_playerCurrentState.Value == PlayerState.Running && _dodgeCoroutine != null)
         {
             _onPlayerAddState.Call(PlayerState.None);
         }

@@ -54,6 +54,17 @@ public class S_ConvictionManager : MonoBehaviour
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
 
+        if (_debugPlayer.Value.infiniteConviction == true)
+        {
+            StartCoroutine(S_Utils.Delay(0.3f, () =>
+            {
+                _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
+                rseOnPlayerConvictionUpdate.Call(_playerConvictionData.Value.maxConviction);
+            }));
+
+            return;
+        }
+
         DelayWhenConvictionLoss();
     }
 
