@@ -129,7 +129,6 @@ public class S_PlayerProjectile : MonoBehaviour
         Vector3 newPos = Vector3.Lerp(a, b, t);
         Vector3 tangent = (b - a).normalized;
 
-
         if (_target != null && _target.gameObject.activeInHierarchy)
         {
             transform.position = newPos;

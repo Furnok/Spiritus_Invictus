@@ -53,7 +53,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                         _rseOnPlayerHit.Call(data);
                     }
                 },
-                attackData
+                contact
             ));
         }
         else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
@@ -62,7 +62,7 @@ public class S_PlayerHitResolver : MonoBehaviour
 
             if (canHit == true)
             {
-                _rseOnPlayerHit.Call(attackData);
+                _rseOnPlayerHit.Call(contact);
             }
             else
             {
@@ -77,7 +77,7 @@ public class S_PlayerHitResolver : MonoBehaviour
             {
                 if (canParry == true)
                 {
-                    _rseOnParrySuccess.Call(attackData);
+                    _rseOnParrySuccess.Call(contact);
                     _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
 
                     TryReflectProjectile(contact.source);
@@ -86,21 +86,21 @@ public class S_PlayerHitResolver : MonoBehaviour
                 else
                 {
                     Destroy(contact.source.gameObject);
-                    _rseOnPlayerHit.Call(attackData);
+                    _rseOnPlayerHit.Call(contact);
                 }
             },
-               attackData
+               contact
            ));
         }
 
     }
-    IEnumerator IsWithinParryWindowCoroutine(System.Action<bool, S_StructEnemyAttackData> callback, S_StructEnemyAttackData enemyAttackData)
+    IEnumerator IsWithinParryWindowCoroutine(System.Action<bool, AttackContact> callback, AttackContact enemyAttackData)
     {
         float t = Time.time; //moment getting hit
         float start = _parryStartTime.Value; //when parry started
         float duration = _playerStats.Value.parryDuration;
-        float tolBefore = enemyAttackData.parryToleranceBeforeHit;
-        float tolAfter = enemyAttackData.parryToleranceAfterHit;
+        float tolBefore = enemyAttackData.data.parryToleranceBeforeHit;
+        float tolAfter = enemyAttackData.data.parryToleranceAfterHit;
 
         if (t <= start + duration + tolBefore)
         {

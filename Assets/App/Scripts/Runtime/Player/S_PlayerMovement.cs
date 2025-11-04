@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEditor.Rendering;
+using UnityEngine;
 
 public class S_PlayerMovement : MonoBehaviour
 {
@@ -44,6 +46,9 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
     [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
 
+    [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
+    [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
+
     [Header("Output")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
@@ -61,6 +66,8 @@ public class S_PlayerMovement : MonoBehaviour
     bool isGrounded;
     Vector3 groundNormal = Vector3.up;
     float groundAngle;
+
+    Coroutine knockbackCoroutine;
 
     private void Awake()
     {
@@ -86,6 +93,9 @@ public class S_PlayerMovement : MonoBehaviour
         rseOnNewTargeting.action += ChangeNewTarget;
         rseOnPlayerCancelTargeting.action += CancelTarget;
         _onPlayerMoveInputCancel.action += OnCancelInput;
+
+        _rseOnParrySuccess.action += DoKnockback;
+        _rseOnPlayerHit.action += DoKnockback;
     }
 
     private void OnDisable()
@@ -94,6 +104,9 @@ public class S_PlayerMovement : MonoBehaviour
         rseOnNewTargeting.action -= ChangeNewTarget;
         rseOnPlayerCancelTargeting.action -= CancelTarget;
         _onPlayerMoveInputCancel.action -= OnCancelInput;
+
+        _rseOnParrySuccess.action -= DoKnockback;
+        _rseOnPlayerHit.action -= DoKnockback;
     }
 
     private void ChangeNewTarget(GameObject newTarget)
@@ -265,7 +278,42 @@ public class S_PlayerMovement : MonoBehaviour
         }
     }
 
-        void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
+    void DoKnockback(AttackContact attackContact)
+    {
+        //if (knockbackCoroutine != null)
+        //{
+        //    StopCoroutine(knockbackCoroutine);
+        //}
+
+        //knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact));
+    }
+
+    IEnumerator KnockbackCoroutine(AttackContact attackContact)
+    {
+        var attackData = attackContact.data;
+        var knockbackDuration = attackData.knockbackDuration;
+        var knockbackDistance = attackData.knockbackDistance;
+        float elapsed = 0f;
+
+        while (elapsed < knockbackDuration)
+        {
+            float step = knockbackDistance / knockbackDuration;
+
+            transform.position += -transform.forward * step * Time.deltaTime;
+
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        Vector3 fromDir = (transform.position - attackContact.source.transform.position).normalized;
+        fromDir.y = 0f;
+        fromDir.Normalize();
+
+        yield return null;
+    }
+
+    void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
     {
         float height = Mathf.Max(capsule.height * Mathf.Abs(transform.lossyScale.y), capsule.radius * 2f);
         radius = capsule.radius * Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));

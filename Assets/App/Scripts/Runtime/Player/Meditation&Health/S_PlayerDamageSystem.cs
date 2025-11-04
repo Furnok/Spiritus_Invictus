@@ -44,11 +44,13 @@ public class S_PlayerDamageSystem : MonoBehaviour
     }
 
 
-    private void TakeDamage(S_StructEnemyAttackData attackData)
+    private void TakeDamage(AttackContact attackContact)
     {
 
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true && _isInvicible.Value == false && _debugPlayer.Value.cantGetttingHit == false)
         {
+            var attackData = attackContact.data;
+
             if (_hitReactCoroutine != null)
             {
                 StopCoroutine(_hitReactCoroutine);
