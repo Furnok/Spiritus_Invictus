@@ -9,4 +9,14 @@ public class S_UISkip : MonoBehaviour
     //[Header("Inputs")]
 
     //[Header("Outputs")]
+
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        
+    }
 }

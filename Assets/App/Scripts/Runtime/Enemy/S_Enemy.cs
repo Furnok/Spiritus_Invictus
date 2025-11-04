@@ -96,10 +96,12 @@ public class S_Enemy : MonoBehaviour
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth;
     [HideInInspector] public UnityEvent onGetHit;
 
+    [SerializeField] private AnimatorOverrideController baseOverrideController;
+
     private float health = 0;
     private float maxhealth = 0;
     private bool isPaused = false;
-    private GameObject target;
+    private GameObject target = null;
     private BlackboardVariable<bool> isAttacking;
     private AnimatorOverrideController overrideController;
     private Coroutine comboCoroutine;
@@ -107,6 +109,15 @@ public class S_Enemy : MonoBehaviour
 
     private void Awake()
     {
+        Animator anim = GetComponent<Animator>();
+        AnimatorOverrideController instance = new AnimatorOverrideController(baseOverrideController);
+
+        var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+        baseOverrideController.GetOverrides(overrides);
+        instance.ApplyOverrides(overrides);
+
+        anim.runtimeAnimatorController = instance;
+
         overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
 
         behaviorAgent.SetVariableValue<GameObject>("Body", body);
