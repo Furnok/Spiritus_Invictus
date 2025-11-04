@@ -13,7 +13,7 @@ public partial class S_SpawnProjectileAction : Action
 
     protected override Status OnStart()
     {
-        Projectile.Value.Call(Damage.Value);
+        //Projectile.Value.Call(Damage.Value);
         return Status.Running;
     }
 
