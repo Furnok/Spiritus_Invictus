@@ -94,18 +94,20 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
 
-    [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth;
-    [HideInInspector] public UnityEvent onGetHit;
+    [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth = null;
+    [HideInInspector] public UnityEvent onGetHit = null;
 
     private float health = 0;
     private float maxhealth = 0;
     private bool isPaused = false;
-    private GameObject target = null;
     private Transform aimPoint = null;
-    private BlackboardVariable<bool> isAttacking;
-    private AnimatorOverrideController overrideController;
-    private Coroutine comboCoroutine;
-    private Coroutine resetCoroutine;
+    private BlackboardVariable<bool> isAttacking = null;
+    private AnimatorOverrideController overrideController = null;
+    private Coroutine comboCoroutine = null;
+    private Coroutine resetCoroutine = null;
+    private bool isPerformingCombo = false;
+    private S_EnumEnemyState? pendingState = null;
+    private GameObject pendingTarget = null;
 
     private void Awake()
     {
@@ -157,7 +159,7 @@ public class S_Enemy : MonoBehaviour
         enemyDetectionRange.onTargetDetected.AddListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
 
-        rseOnPlayerDeath.action += EasterEggsTBAG;
+        rseOnPlayerDeath.action += PlayerDied;
 
         if (behaviorAgent.GetVariable("IsAttacking", out isAttacking))
         {
@@ -172,7 +174,7 @@ public class S_Enemy : MonoBehaviour
         enemyDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
 
-        rseOnPlayerDeath.action -= EasterEggsTBAG;
+        rseOnPlayerDeath.action -= PlayerDied;
 
         if (isAttacking != null)
         {
@@ -216,9 +218,14 @@ public class S_Enemy : MonoBehaviour
 
     private void SetTarget(GameObject newTarget)
     {
-        behaviorAgent.SetVariableValue<GameObject>("Target", newTarget);
+        if (isPerformingCombo)
+        {
+            pendingTarget = newTarget;
+            pendingState = (newTarget == null) ? S_EnumEnemyState.Patrol : S_EnumEnemyState.Chase;
+            return;
+        }
 
-        target = newTarget;
+        behaviorAgent.SetVariableValue<GameObject>("Target", newTarget);
 
         if (newTarget != null)
         {
@@ -305,18 +312,28 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
-    private void EasterEggsTBAG()
+    private void PlayerDied()
     {
+        if (isPerformingCombo)
+        {
+            pendingState = S_EnumEnemyState.Idle;
+            return;
+        }
+
         float rnd = Random.Range(0f, 100f);
         float chance = ssoEnemyData.Value.chanceForEasterEgg;
 
         if (rnd < chance)
         {
+            Debug.Log("Enemy is doing the t-pose taunt!");
             animator.SetTrigger(tBagParam);
+
+            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
         }
         else
         {
             animator.SetBool(idleAttack, false);
+
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
         }
     }
@@ -342,6 +359,8 @@ public class S_Enemy : MonoBehaviour
 
     private IEnumerator PlayComboSequence()
     {
+        isPerformingCombo = true;
+
         int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
 
         var combo = ssoEnemyData.Value.listCombos[rnd].listAnimationsCombos;
@@ -366,6 +385,21 @@ public class S_Enemy : MonoBehaviour
         isAttacking.Value = false;
         comboCoroutine = null;
         animator.SetTrigger(stopAttackParam);
+
+        isPerformingCombo = false;
+
+        if (pendingState.HasValue)
+        {
+            animator.SetBool(idleAttack, false);
+            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", pendingState.Value);
+            pendingState = null;
+        }
+
+        if (pendingTarget != null)
+        {
+            SetTarget(pendingTarget);
+            pendingTarget = null;
+        }
 
         resetCoroutine = StartCoroutine(ResetAttack());
     }

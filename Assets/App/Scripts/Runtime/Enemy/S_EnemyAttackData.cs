@@ -6,13 +6,18 @@ using UnityEngine.UI;
 
 public class S_EnemyAttackData : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [Title("Time")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeDisplay;
+
     [TabGroup("References")]
     [Title("Collider")]
-    [SerializeField] Collider weaponCollider;
+    [SerializeField] private Collider weaponCollider;
 
     [TabGroup("References")]
     [Title("Image")]
-    [SerializeField] Image warning;
+    [SerializeField] private Image warning;
 
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
 
@@ -44,7 +49,7 @@ public class S_EnemyAttackData : MonoBehaviour
     {
         if (warning != null)
         {
-            if (attackData.attackType == S_EnumEnemyAttackType.Parryable && attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            if (attackData.attackType == S_EnumEnemyAttackType.Parryable || attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
                 warning.color = Color.yellow;
             }
@@ -60,7 +65,7 @@ public class S_EnemyAttackData : MonoBehaviour
     private IEnumerator DisplayWarning()
     {
         warning.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(timeDisplay);
         warning.gameObject.SetActive(false);
     }
 }

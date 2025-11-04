@@ -131,7 +131,6 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         Vector3 toTarget = target != null ? (target.position - startPos) : transform.forward * 10f;
         Vector3 midPoint = startPos + toTarget * 0.5f;
 
-        //Default arc direction (top)
         Vector3 arcDir = Vector3.up;
 
         if (arcDirection != 0f || randomizeArc == true)
