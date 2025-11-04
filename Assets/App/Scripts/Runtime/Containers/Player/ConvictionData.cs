@@ -5,6 +5,7 @@ using System;
 public struct ConvictionData
 {
     public float maxConviction;
+    public float startConviction;
     public float healCost;
     public float ammountLostOverTick;
     public float tickIntervalSec;

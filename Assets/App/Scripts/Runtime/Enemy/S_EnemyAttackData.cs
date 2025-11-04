@@ -46,11 +46,17 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void EnableWeaponCollider()
     {
-        weaponCollider.enabled = true;
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = true;
+        }
     }
 
     public void DisableWeaponCollider()
     {
-        weaponCollider.enabled = false;
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
     }
 }

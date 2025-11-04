@@ -21,12 +21,12 @@ public struct PlayerStatsData
     public float dodgeForce;
     public float dodgeDuration;
     public AnimationCurve _speedDodgeCurve;
-    public float dodgeDistance;
-    public float maxSlopeAngle;
+    public float dodgeDistance; //not implemented
+    public float maxSlopeAngle; //not implemented
 
     [Header("Parry values")]
-    public float parryToleranceBeforeHit;
-    public float parryToleranceAfterHit;
+    //public float parryToleranceBeforeHit;
+    //public float parryToleranceAfterHit;
     public float parryDuration;
 
     [Header("Attack values")]

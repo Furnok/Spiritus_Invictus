@@ -8,6 +8,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] RSO_IsInvicible _isInvicible;
+    [SerializeField] SSO_DebugPlayer _debugPlayer;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerTakeDamage rseOnPlayerTakeDamage;
@@ -44,7 +45,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     private void TakeDamage(S_StructEnemyAttackData attackData)
     {
 
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true && _isInvicible.Value == false)
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true && _isInvicible.Value == false && _debugPlayer.Value.cantGetttingHit == false)
         {
             if (_hitReactCoroutine != null)
             {
