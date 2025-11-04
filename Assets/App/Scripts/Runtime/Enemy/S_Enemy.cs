@@ -165,6 +165,9 @@ public class S_Enemy : MonoBehaviour
         {
             isAttacking.OnValueChanged -= AttackCombo;
         }
+
+        overrideController["AttackAnimation"] = null;
+        overrideController["AttackAnimation2"] = null;
     }
 
     private void Update()
