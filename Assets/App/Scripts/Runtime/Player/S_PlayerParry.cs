@@ -67,15 +67,19 @@ public class S_PlayerParry : MonoBehaviour
             {
                 _canParry.Value = false;
 
+                if (_parryCoroutine != null) StopCoroutine(_parryCoroutine);
+                rseOnAnimationBoolValueChange.Call(_parryParam, false);
+                //_onPlayerAddState.Call(PlayerState.None);
+
                 _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryRecoveryDelay, () =>
                 {
                     if (_parryCoroutine != null) StopCoroutine(_parryCoroutine);
 
 
-                    rseOnAnimationBoolValueChange.Call(_parryParam, false);
+                    //rseOnAnimationBoolValueChange.Call(_parryParam, false);
                     _onPlayerAddState.Call(PlayerState.None);
 
-                    
+
                 }));
             }));
         }));
