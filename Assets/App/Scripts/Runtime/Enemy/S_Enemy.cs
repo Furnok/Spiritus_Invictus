@@ -96,8 +96,6 @@ public class S_Enemy : MonoBehaviour
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth;
     [HideInInspector] public UnityEvent onGetHit;
 
-    [SerializeField] private AnimatorOverrideController baseOverrideController;
-
     private float health = 0;
     private float maxhealth = 0;
     private bool isPaused = false;
@@ -110,10 +108,10 @@ public class S_Enemy : MonoBehaviour
     private void Awake()
     {
         Animator anim = GetComponent<Animator>();
-        AnimatorOverrideController instance = new AnimatorOverrideController(baseOverrideController);
+        AnimatorOverrideController instance = new AnimatorOverrideController(ssoEnemyData.Value.controllerOverride);
 
         var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
-        baseOverrideController.GetOverrides(overrides);
+        ssoEnemyData.Value.controllerOverride.GetOverrides(overrides);
         instance.ApplyOverrides(overrides);
 
         anim.runtimeAnimatorController = instance;
@@ -146,7 +144,6 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.SetVariableValue<string>("AttackParam", attackParam);
         behaviorAgent.SetVariableValue<string>("HitHeavyParam", hitHeavyParam);
 
-        enemyAttackData.Setup(ssoEnemyData);
         enemyDetectionRange.Setup(ssoEnemyData);
         enemyUI.Setup(ssoEnemyData);
     }
@@ -343,30 +340,20 @@ public class S_Enemy : MonoBehaviour
 
         var combo = ssoEnemyData.Value.listCombos[rnd].listAnimationsCombos;
 
-        if (!ssoEnemyData.Value.listCombos[rnd].isProjectile)
+        for (int i = 0; i < combo.Count; i++)
         {
-            for (int i = 0; i < combo.Count; i++)
+            string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+            overrideController[overrideKey] = combo[i].animation;
+
+            enemyAttackData.SetAttackMode(combo[i].attackData);
+            animator.SetTrigger(i == 0 ? attackParam : comboParam);
+
+            if (combo[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
-                string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
-                overrideController[overrideKey] = combo[i];
-
-                animator.SetTrigger(i == 0 ? attackParam : comboParam);
-
-                yield return WaitForSecondsWhileUnpaused(combo[i].length);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < combo.Count; i++)
-            {
-                string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
-                overrideController[overrideKey] = combo[i];
-
-                animator.SetTrigger(i == 0 ? attackParam : comboParam);
                 enemyProjectileManager.onSpawnProjectile.Invoke(bodyCollider.transform);
-
-                yield return WaitForSecondsWhileUnpaused(combo[i].length);
             }
+
+            yield return WaitForSecondsWhileUnpaused(combo[i].animation.length);
         }
 
         isAttacking.Value = false;

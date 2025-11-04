@@ -1,62 +1,55 @@
 ﻿using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class S_ClassEnemyData
 {
     [Title("General Settings")]
-    public float health;
+    public float health = 0;
 
-    public float speed;
+    public float speed = 0;
 
     [Title("Combat")]
-    public float attackHeavyDamage;
+    public float detectionRange = 0;
 
-    public float attackLightDamage;
+    public float detectionAggroRangeMax = 0;
 
-    public float projectileDamage;
+    public float distanceToChase = 0;
 
-    [SuffixLabel("s", Overlay = true)]
-    public float projectileCooldown;
-
-    public float detectionRange;
-
-    public float detectionAggroRangeMax;
-
-    public float distanceToChase;
-
-    public float distanceToLoseAttack;
+    public float distanceToLoseAttack = 0;
 
     [SuffixLabel("s", Overlay = true)]
-    public float attackCooldown;
+    public float attackCooldown = 0;
 
     [SuffixLabel("s", Overlay = true)]
-    public float timeDespawn;
+    public float timeDespawn = 0;
 
     [Title("Secret")]
     [SuffixLabel("%", Overlay = true)]
-    public float chanceForEasterEgg;
+    public float chanceForEasterEgg = 0;
 
     [Title("Delay")]
     [SuffixLabel("s", Overlay = true)]
-    public float patrolPointWaitMin;
+    public float patrolPointWaitMin = 0;
 
     [SuffixLabel("s", Overlay = true)]
-    public float patrolPointWaitMax;
+    public float patrolPointWaitMax = 0;
 
     [SuffixLabel("s", Overlay = true)]
-    public float startPatrolWaitMin;
+    public float startPatrolWaitMin = 0;
 
     [SuffixLabel("s", Overlay = true)]
-    public float startPatrolWaitMax;
+    public float startPatrolWaitMax = 0;
 
     [SuffixLabel("s", Overlay = true)]
-    public float timeBeforeChaseMin;
+    public float timeBeforeChaseMin = 0;
 
     [SuffixLabel("s", Overlay = true)]
-    public float timeBeforeChaseMax;
+    public float timeBeforeChaseMax = 0;
 
     [Title("Animations")]
-    public List<S_ClassAnimationsCombos> listCombos;
+    public AnimatorOverrideController controllerOverride = null;
+    public List<S_ClassAnimationsCombos> listCombos = null;
 }

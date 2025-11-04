@@ -15,10 +15,6 @@ MonoBehaviour:
   _value:
     health: 100
     speed: 3
-    attackHeavyDamage: 10
-    attackLightDamage: 5
-    projectileDamage: 10
-    projectileCooldown: 3
     detectionRange: 10
     detectionAggroRangeMax: 50
     distanceToChase: 4.1
@@ -32,7 +28,18 @@ MonoBehaviour:
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
+    controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
-      - {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
-      isProjectile: 1
+      - animation: {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 10
+          knockbackDuration: 0.5
+          knockbackDistance: 2
+          parryToleranceBeforeHit: 0.1
+          parryToleranceAfterHit: 0.1
+          invicibilityDuration: 0.7
+          convictionReduction: 0
