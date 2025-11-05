@@ -1,5 +1,7 @@
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class S_UIInterractible : MonoBehaviour
 {
@@ -7,10 +9,53 @@ public class S_UIInterractible : MonoBehaviour
     [Title("Transform")]
     [SerializeField] private Transform content;
 
+    [TabGroup("References")]
+    [Title("Images")]
+    [SerializeField] private Image image;
+
+    [TabGroup("References")]
+    [Title("Text")]
+    [SerializeField] private TextMeshProUGUI text;
+
+    [TabGroup("References")]
+    [Title("Keyboard & Mouse")]
+    [SerializeField] private Sprite imageKeyboardMouse;
+
+    [TabGroup("References")]
+    [Title("PlayStation")]
+    [SerializeField] private Sprite imagePlayStation;
+
+    [TabGroup("References")]
+    [Title("Xbox")]
+    [SerializeField] private Sprite imageXbox;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Device rsoDevice;
+
     private void LateUpdate()
     {
-        var lookPos = Camera.main.transform;
+        if (content.gameObject.activeInHierarchy)
+        {
+            if (rsoDevice.Value == S_EnumDevice.KeyboardMouse)
+            {
+                image.sprite = imageKeyboardMouse;
+                text.text = "E";
 
-        content.LookAt(lookPos);
+            }
+            else if (rsoDevice.Value == S_EnumDevice.PlastationController)
+            {
+                image.sprite = imagePlayStation;
+                text.text = "";
+            }
+            else if (rsoDevice.Value == S_EnumDevice.XboxController)
+            {
+                image.sprite = imageXbox;
+                text.text = "";
+            }
+
+            var lookPos = Camera.main.transform;
+
+            content.LookAt(content.position + lookPos.rotation * Vector3.forward, lookPos.rotation * Vector3.up);
+        }
     }
 }

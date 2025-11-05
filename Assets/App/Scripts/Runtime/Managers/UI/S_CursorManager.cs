@@ -1,4 +1,6 @@
 using Sirenix.OdinInspector;
+using Unity.VisualScripting;
+using UnityEditor.Hardware;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -37,10 +39,14 @@ public class S_CursorManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Device rsoDevice;
+
     private void Awake()
     {
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
         rsoNavigation.Value = new();
+        rsoDevice.Value = S_EnumDevice.None;
     }
 
     private void OnEnable()
@@ -71,11 +77,33 @@ public class S_CursorManager : MonoBehaviour
     {
         if (Gamepad.current != null)
         {
+            Device(Gamepad.current);
             HideMouseCursor();
         }
         else
         {
+            rsoDevice.Value = S_EnumDevice.KeyboardMouse;
             ShowMouseCursor();
+        }
+    }
+
+    private void Device(InputDevice device)
+    {
+        string layout = device.layout.ToLower();
+        string displayName = device.displayName?.ToLower() ?? "";
+        string description = device.description.product?.ToLower() ?? "";
+
+        if (layout.Contains("dualshock") || layout.Contains("dualSense") || displayName.Contains("playstation") || description.Contains("dualshock") || description.Contains("dualsense"))
+        {
+            rsoDevice.Value = S_EnumDevice.PlastationController;
+        }
+        else if (layout.Contains("xinput") || displayName.Contains("xbox") || description.Contains("xbox"))
+        {
+            rsoDevice.Value = S_EnumDevice.XboxController;
+        }
+        else
+        {
+            rsoDevice.Value = S_EnumDevice.None;
         }
     }
 
@@ -87,6 +115,8 @@ public class S_CursorManager : MonoBehaviour
             {
                 HideMouseCursor();
 
+                Device(device);
+
                 if (rsoNavigation.Value.selectableDefault != null)
                 {
                     SetFocus(rsoNavigation.Value.selectableDefault);
@@ -96,6 +126,7 @@ public class S_CursorManager : MonoBehaviour
             {
                 ResetFocus();
 
+                rsoDevice.Value = S_EnumDevice.KeyboardMouse;
                 ShowMouseCursor();
             }
         }
