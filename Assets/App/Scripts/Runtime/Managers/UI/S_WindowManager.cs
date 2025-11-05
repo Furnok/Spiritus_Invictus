@@ -57,13 +57,15 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private RSO_InGame rsoInGame;
 
     [TabGroup("Outputs")]
-    [SerializeField] private SSO_FadeTime ssoFadeTime;
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
-    private List<GameObject> currentWindows = new();
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     private void Awake()
     {
         rsoInGame.Value = true;
+        rsoCurrentWindows.Value = new();
         fadeWindow.SetActive(true);
     }
 
@@ -103,7 +105,7 @@ public class S_WindowManager : MonoBehaviour
 
     private void PauseGame()
     {
-        if (rsoInGame.Value && currentWindows.Count < 1)
+        if (rsoInGame.Value && rsoCurrentWindows.Value.Count < 1)
         {
             if (!menuWindow.activeInHierarchy)
             {
@@ -134,7 +136,7 @@ public class S_WindowManager : MonoBehaviour
     {
         window.SetActive(true);
 
-        currentWindows.Add(window);
+        rsoCurrentWindows.Value.Add(window);
     }
 
     private void CloseWindow(GameObject window)
@@ -143,18 +145,18 @@ public class S_WindowManager : MonoBehaviour
         {
             window.SetActive(false);
 
-            currentWindows.Remove(window);
+            rsoCurrentWindows.Value.Remove(window);
         }
     }
 
     private void CloseAllWindows()
     {
-        foreach (var window in currentWindows)
+        foreach (var window in rsoCurrentWindows.Value)
         {
             window.SetActive(false);
         }
 
-        currentWindows.Clear();
+        rsoCurrentWindows.Value.Clear();
     }
 
     private void FadeIn()

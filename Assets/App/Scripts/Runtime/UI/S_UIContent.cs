@@ -12,6 +12,9 @@ public class S_UIContent : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnResetCursor rseOnResetCursor;
+
     private void OnEnable()
     {
         StartCoroutine(S_Utils.DelayFrame(() => rsoNavigation.Value.selectableDefault = defaultFocusSelectable));
@@ -24,6 +27,6 @@ public class S_UIContent : MonoBehaviour
 
     private void OnDisable()
     {
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        rseOnResetCursor.Call();
     }
 }

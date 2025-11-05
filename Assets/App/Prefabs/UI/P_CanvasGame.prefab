@@ -1993,6 +1993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultFocusSelectable: {fileID: 1096930571029089604}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
 --- !u!114 &7933088321982871583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2119,6 +2120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultFocusSelectable: {fileID: 3620066095168830334}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
 --- !u!114 &2500854541414040894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8647,7 +8649,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3388d8a2570cd6446897733719b3e911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handCursor: {fileID: 2800000, guid: 3e29908b462578640ab389bf9d553d8e, type: 3}
+  defaultCursor: {fileID: 2800000, guid: 1b79635cf70d3494cbccf95c06300916, type: 3}
+  SelectableCursor: {fileID: 2800000, guid: 0378ca20091ada248b03dfec37f39a30, type: 3}
   rseOnShowMouseCursor: {fileID: 11400000, guid: 677eb2460a6811943b20cd8bbfcb572b, type: 2}
   rseOnHideMouseCursor: {fileID: 11400000, guid: cbddb45ab2313e443bf895053f04fe1e, type: 2}
   rseOnSetFocus: {fileID: 11400000, guid: 7e70b76f869714e4ea3369cdd69eb241, type: 2}
@@ -8684,6 +8687,7 @@ MonoBehaviour:
   rseOnGamePause: {fileID: 11400000, guid: ae0312c6248bf454a8f047511417352d, type: 2}
   rsoGameInPause: {fileID: 11400000, guid: bdeb21dbb174a4d40baf0b4969e7a47a, type: 2}
   rsoInGame: {fileID: 11400000, guid: 943dbfd29f5e329458fb1745ff11f0ba, type: 2}
+  rsoCurrentWindows: {fileID: 11400000, guid: 4f6db46974f57594082b5f18f257f781, type: 2}
   ssoFadeTime: {fileID: 11400000, guid: 611e366585d4976458e7989ec5477367, type: 2}
 --- !u!114 &6197051584241607373
 MonoBehaviour:
@@ -13241,6 +13245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultFocusSelectable: {fileID: 9045909740706241615}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
 --- !u!114 &4501364209175856146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18741,6 +18746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultFocusSelectable: {fileID: 5599488742029719898}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
 --- !u!114 &5631918249351191476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19929,6 +19935,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultFocusSelectable: {fileID: 6145332841819897374}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
 --- !u!114 &4159629814828498666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19954,6 +19961,7 @@ MonoBehaviour:
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
   rsoInGame: {fileID: 11400000, guid: 943dbfd29f5e329458fb1745ff11f0ba, type: 2}
   rsoGameInPause: {fileID: 11400000, guid: bdeb21dbb174a4d40baf0b4969e7a47a, type: 2}
+  rsoCurrentWindows: {fileID: 11400000, guid: 4f6db46974f57594082b5f18f257f781, type: 2}
   ssoFadeTime: {fileID: 11400000, guid: 611e366585d4976458e7989ec5477367, type: 2}
 --- !u!1 &8454016520320679204
 GameObject:
