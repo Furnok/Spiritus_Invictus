@@ -13,6 +13,7 @@ public class S_PlayerMovement : MonoBehaviour
     [Header("Grounding")]
     [SerializeField] private CapsuleCollider capsule;
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private float groundCheckDist = 0.5f;
     [SerializeField] private float maxSlopeAngle = 45f;
     [SerializeField] private float skin = 0.02f;
@@ -94,8 +95,8 @@ public class S_PlayerMovement : MonoBehaviour
         rseOnPlayerCancelTargeting.action += CancelTarget;
         _onPlayerMoveInputCancel.action += OnCancelInput;
 
-        _rseOnParrySuccess.action += DoKnockback;
-        _rseOnPlayerHit.action += DoKnockback;
+        _rseOnParrySuccess.action += DoKnockbackOnParry;
+        _rseOnPlayerHit.action += DoKnockbackOnHit;
     }
 
     private void OnDisable()
@@ -105,8 +106,8 @@ public class S_PlayerMovement : MonoBehaviour
         rseOnPlayerCancelTargeting.action -= CancelTarget;
         _onPlayerMoveInputCancel.action -= OnCancelInput;
 
-        _rseOnParrySuccess.action -= DoKnockback;
-        _rseOnPlayerHit.action -= DoKnockback;
+        _rseOnParrySuccess.action -= DoKnockbackOnParry;
+        _rseOnPlayerHit.action -= DoKnockbackOnHit;
     }
 
     private void ChangeNewTarget(GameObject newTarget)
@@ -278,39 +279,77 @@ public class S_PlayerMovement : MonoBehaviour
         }
     }
 
-    void DoKnockback(AttackContact attackContact)
+    void DoKnockbackOnHit(AttackContact attackContact)
     {
-        //if (knockbackCoroutine != null)
-        //{
-        //    StopCoroutine(knockbackCoroutine);
-        //}
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
 
-        //knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact));
+        knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact, false));
     }
 
-    IEnumerator KnockbackCoroutine(AttackContact attackContact)
+    void DoKnockbackOnParry(AttackContact attackContact)
     {
-        var attackData = attackContact.data;
-        var knockbackDuration = attackData.knockbackDuration;
-        var knockbackDistance = attackData.knockbackDistance;
-        float elapsed = 0f;
-
-        while (elapsed < knockbackDuration)
+        if (knockbackCoroutine != null)
         {
-            float step = knockbackDistance / knockbackDuration;
+            StopCoroutine(knockbackCoroutine);
+        }
 
-            transform.position += -transform.forward * step * Time.deltaTime;
+        knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact, true));
+
+        _onPlayerAddState.Call(PlayerState.HitReact);
+
+        StartCoroutine(S_Utils.Delay(attackContact.data.knockbackOnParryDuration, () =>
+        {
+            _onPlayerAddState.Call(PlayerState.None);
+        }));
+    }
+
+    IEnumerator KnockbackCoroutine(AttackContact contact, bool fromParry)
+    {
+        var data = contact.data;
+        float duration = fromParry ? data.knockbackOnParryDuration : data.knockbackHitDuration;
+        float distance = fromParry ? data.knockbackOnParrryDistance : data.knockbackHitDistance;
+
+        if (duration <= 0f || distance <= 0f)
+            yield break;
+
+        Vector3 dir;
+
+        if (contact.data.attackDirection != Vector3.zero)
+        {
+            dir = contact.data.attackDirection.normalized;
+        }
+        else
+        {
+            dir = (transform.position - contact.source.transform.position).normalized;
+        }
+
+        dir = Vector3.ProjectOnPlane(dir, groundNormal).normalized;
+        if (dir.sqrMagnitude < 0.0001f) yield break;
+
+        float allowedDist = ProbeObstacle(dir, distance);
+
+        allowedDist = ProbeGroundAhead(dir, allowedDist);
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + dir * allowedDist;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+
+            Vector3 next = Vector3.Lerp(startPos, endPos, t);
+
+            rigidbodyPlayer.MovePosition(next);
 
             elapsed += Time.deltaTime;
-
             yield return null;
         }
 
-        Vector3 fromDir = (transform.position - attackContact.source.transform.position).normalized;
-        fromDir.y = 0f;
-        fromDir.Normalize();
-
-        yield return null;
+        rigidbodyPlayer.MovePosition(endPos);
     }
 
     void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
@@ -464,6 +503,35 @@ public class S_PlayerMovement : MonoBehaviour
             rseOnAnimationFloatValueChange.Call(speedParam, 0f);
         }
     }
+
+    float ProbeObstacle(Vector3 dir, float maxDist)
+    {
+        GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
+
+        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, maxDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        {
+            return Mathf.Max(0f, hit.distance - 0.03f);
+        }
+        return maxDist;
+    }
+
+    float ProbeGroundAhead(Vector3 dir, float maxDist)
+    {
+        if (!preventFallFromEdges) return maxDist;
+
+        Vector3 probePos = transform.position + dir * maxDist + Vector3.up * edgeProbeHeight;
+        if (Physics.Raycast(probePos, Vector3.down, out var hit, edgeProbeHeight * 2f, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            float ang = Vector3.Angle(hit.normal, Vector3.up);
+            if (ang > maxDownStepAngle)
+            {
+                return 0f;
+            }
+            return maxDist;
+        }
+        return 0f;
+    }
+
 
 }
 

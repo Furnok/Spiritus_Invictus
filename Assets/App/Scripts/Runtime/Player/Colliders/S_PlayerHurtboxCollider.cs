@@ -27,6 +27,7 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
         {
             var attackData = attack.GetAttackData();
             //var goId = other.gameObject.GetInstanceID();
+            attackData.attackDirection = (transform.position - other.transform.position).normalized;
 
             var contact = new AttackContact
             {
