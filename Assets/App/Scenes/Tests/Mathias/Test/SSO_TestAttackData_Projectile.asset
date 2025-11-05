@@ -17,9 +17,12 @@ MonoBehaviour:
     goSourceId: 0
     attackType: 2
     damage: 10
-    knockbackDuration: 0.5
-    knockbackDistance: 5
+    knockbackHitDuration: 0.3
+    knockbackHitDistance: 2
+    knockbackOnParryDuration: 0.2
+    knockbackOnParrryDistance: 1
     parryToleranceBeforeHit: 0.1
     parryToleranceAfterHit: 0.1
     invicibilityDuration: 0.7
     convictionReduction: 0
+    attackDirection: {x: 0, y: 0, z: 0}
