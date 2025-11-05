@@ -109,6 +109,7 @@ public class S_Enemy : MonoBehaviour
     private S_EnumEnemyState? pendingState = null;
     private GameObject pendingTarget = null;
     private bool isPlayerDead = false;
+    private GameObject target = null;
 
     private void Awake()
     {
@@ -219,6 +220,8 @@ public class S_Enemy : MonoBehaviour
 
     private void SetTarget(GameObject newTarget)
     {
+        target = newTarget;
+
         if (isPerformingCombo)
         {
             pendingTarget = newTarget;
@@ -272,42 +275,31 @@ public class S_Enemy : MonoBehaviour
 
         if (damage >= maxhealth / 2)
         {
+            enemyAttackData.DisableWeaponCollider();
+
+            StopAllCoroutines();
+            comboCoroutine = null;
+            resetCoroutine = null;
+
+            isPerformingCombo = false;
+
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
-
-            if (comboCoroutine != null)
-            {
-                StopCoroutine(comboCoroutine);
-                comboCoroutine = null;
-            }
-
-            if (resetCoroutine != null)
-            {
-                StopCoroutine(resetCoroutine);
-                resetCoroutine = null;
-            }
 
             resetCoroutine = StartCoroutine(ResetAttack());
         }
 
         if (health <= 0)
         {
-            if (comboCoroutine != null)
-            {
-                StopCoroutine(comboCoroutine);
-                comboCoroutine = null;
-            }
+            enemyAttackData.DisableWeaponCollider();
 
-            if (resetCoroutine != null)
-            {
-                StopCoroutine(resetCoroutine);
-                resetCoroutine = null;
-            }
+            StopAllCoroutines();
+            comboCoroutine = null;
+            resetCoroutine = null;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);
             rseOnEnemyTargetDied.Call(body);
-            enemyAttackData.DisableWeaponCollider();
         }
-        else
+        else if (target == null)
         {
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
         }
@@ -371,6 +363,8 @@ public class S_Enemy : MonoBehaviour
 
     private IEnumerator PlayComboSequence()
     {
+        yield return new WaitForSeconds(0.4f);
+
         isPerformingCombo = true;
 
         int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);

@@ -19,9 +19,35 @@ public class S_EnemyAttackData : MonoBehaviour
     [Title("Image")]
     [SerializeField] private Image warning;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
+
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
 
     private S_StructEnemyAttackData attackData;
+    private bool isPaused = false;
+
+    private void OnEnable()
+    {
+        rseOnGamePause.action += Pause;
+    }
+
+    private void OnDisable()
+    {
+        rseOnGamePause.action -= Pause;
+    }
+
+    private void Pause(bool value)
+    {
+        if (value)
+        {
+            isPaused = true;
+        }
+        else
+        {
+            isPaused = false;
+        }
+    }
 
     public void SetAttackMode(S_StructEnemyAttackData enemyAttackData)
     {
@@ -62,10 +88,21 @@ public class S_EnemyAttackData : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitForSecondsWhileUnpaused(float duration)
+    {
+        float timer = 0f;
+        while (timer < duration)
+        {
+            if (!isPaused)
+                timer += Time.deltaTime;
+            yield return null;
+        }
+    }
+
     private IEnumerator DisplayWarning()
     {
         warning.gameObject.SetActive(true);
-        yield return new WaitForSeconds(timeDisplay);
+        yield return WaitForSecondsWhileUnpaused(timeDisplay);
         warning.gameObject.SetActive(false);
     }
 }

@@ -37,6 +37,9 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
     [Title("Renderer")]
     [SerializeField] private Renderer rendered;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
+
     [TabGroup("Outputs")]
     [SerializeField] private SSO_ProjectileData ssoProjectileData;
 
@@ -48,6 +51,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
     private S_StructEnemyAttackData attackData;
     private Vector3 startPos = Vector3.zero;
     private Vector3 controlPoint = Vector3.zero;
+    private bool isPaused = false;
 
     private float arcHeightMultiplier => ssoProjectileData.Value.arcHeightMultiplier;
     private float arcDirection => ssoProjectileData.Value.arcDirection;
@@ -67,9 +71,31 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         CalculateControlPoint();
     }
 
+    private void OnEnable()
+    {
+        rseOnGamePause.action += Pause;
+    }
+
+    private void OnDisable()
+    {
+        rseOnGamePause.action -= Pause;
+    }
+
+    private void Pause(bool value)
+    {
+        if (value)
+        {
+            isPaused = true;
+        }
+        else
+        {
+            isPaused = false;
+        }
+    }
+
     private void Update()
     {
-        if (!isInitialized) return;
+        if (!isInitialized || isPaused) return;
 
         timeAlive += Time.deltaTime;
         float t = timeAlive / travelTime;
