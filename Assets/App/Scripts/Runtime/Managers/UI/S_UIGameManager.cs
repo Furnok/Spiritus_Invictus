@@ -11,6 +11,10 @@ public class S_UIGameManager : MonoBehaviour
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float animationSlider;
 
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFade;
+
     [TabGroup("References")]
     [Title("Sliders")]
     [SerializeField] private Slider sliderBossHealth;
@@ -205,7 +209,19 @@ public class S_UIGameManager : MonoBehaviour
 
     private void DisplaySkip(bool value)
     {
-        skipWindow.SetActive(value);
+        skipWindow.GetComponent<CanvasGroup>()?.DOKill();
+
+        if (value && !skipWindow.activeInHierarchy)
+        {
+            skipWindow.SetActive(true);
+
+            skipWindow.GetComponent<CanvasGroup>().alpha = 0f;
+            skipWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
+        }
+        else if (!value)
+        {
+            skipWindow.SetActive(false);
+        }
     }
 
     private void SetSkipHoldValue(float value)

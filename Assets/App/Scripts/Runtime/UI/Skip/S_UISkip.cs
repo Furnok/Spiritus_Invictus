@@ -1,20 +1,10 @@
-using DG.Tweening;
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UISkip : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Time")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFade;
-
-    [TabGroup("References")]
-    [Title("Canvas Group")]
-    [SerializeField] private CanvasGroup canvasGroup;
-
     [TabGroup("References")]
     [Title("Images")]
     [SerializeField] private Image image;
@@ -41,11 +31,6 @@ public class S_UISkip : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Device rsoDevice;
 
-    private void OnEnable()
-    {
-        canvasGroup.alpha = 0f;
-        canvasGroup.DOFade(1f, timeFade).SetEase(Ease.Linear);
-    }
 
     private void LateUpdate()
     {
