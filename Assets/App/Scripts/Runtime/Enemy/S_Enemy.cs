@@ -331,6 +331,11 @@ public class S_Enemy : MonoBehaviour
 
     private void PlayerDied()
     {
+        if (target == null)
+        {
+            return;
+        }
+
         isPlayerDead = true;
 
         if (isPerformingCombo)
