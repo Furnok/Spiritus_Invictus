@@ -52,6 +52,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
     private Vector3 startPos = Vector3.zero;
     private Vector3 controlPoint = Vector3.zero;
     private bool isPaused = false;
+    private Vector3 origin = Vector3.zero;
 
     private float arcHeightMultiplier => ssoProjectileData.Value.arcHeightMultiplier;
     private float arcDirection => ssoProjectileData.Value.arcDirection;
@@ -67,6 +68,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         this.attackData = attackData;
         isInitialized = true;
         this.owner = owner;
+        origin = target.position;
 
         CalculateControlPoint();
     }
@@ -106,15 +108,23 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
             return;
         }
 
-        Vector3 endPos = target != null ? target.position : startPos + transform.forward * 10f;
+        Vector3 endPos = Vector3.zero;
+
+        if (owner != target)
+        {
+            endPos = target != null ? origin : startPos + transform.forward * 10f;
+        }
+        else
+        {
+            endPos = target != null ? target.position : startPos + transform.forward * 10f;
+        }
 
         Vector3 a = Vector3.Lerp(startPos, controlPoint, t);
         Vector3 b = Vector3.Lerp(controlPoint, endPos, t);
         Vector3 newPos = Vector3.Lerp(a, b, t);
         Vector3 tangent = (b - a).normalized;
 
-
-        if (target != null && target.gameObject.activeInHierarchy)
+        if (target != null && target.gameObject.activeInHierarchy && t <= 1f)
         {
             transform.position = newPos;
             transform.forward = tangent;
@@ -123,6 +133,13 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         }
         else
         {
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.1f))
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            direction = Vector3.Lerp(direction, Vector3.down, Time.deltaTime * 2f).normalized;
             transform.position += direction * speed * Time.deltaTime;
             transform.forward = direction;
         }

@@ -17,6 +17,10 @@ public class S_EnemyAttackData : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Image")]
+    [SerializeField] private GameObject content;
+
+    [TabGroup("References")]
+    [Title("Image")]
     [SerializeField] private Image warning;
 
     [TabGroup("Inputs")]
@@ -70,7 +74,6 @@ public class S_EnemyAttackData : MonoBehaviour
             weaponCollider.enabled = false;
         }
     }
-
     public void DisplayTriggerWarning()
     {
         if (warning != null)
@@ -101,8 +104,8 @@ public class S_EnemyAttackData : MonoBehaviour
 
     private IEnumerator DisplayWarning()
     {
-        warning.gameObject.SetActive(true);
+        content.gameObject.SetActive(true);
         yield return WaitForSecondsWhileUnpaused(timeDisplay);
-        warning.gameObject.SetActive(false);
+        content.gameObject.SetActive(false);
     }
 }

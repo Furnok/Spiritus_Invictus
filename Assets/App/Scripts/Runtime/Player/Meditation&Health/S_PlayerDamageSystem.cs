@@ -60,7 +60,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
             _onPlayerAddState.Call(PlayerState.HitReact);
             _isInvicible.Value = true;
 
-            _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackDuration, () =>
+            _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackHitDuration, () =>
             {
                 _onPlayerAddState.Call(PlayerState.None);
             }));

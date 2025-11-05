@@ -45,6 +45,9 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSO_GameInPause rsoGameInPause;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     private void OnEnable()
@@ -59,14 +62,17 @@ public class S_UIMenu : MonoBehaviour
 
     public void ResumeGame()
     {
-        rseOnGameInputEnabled.Call();
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableDefault = null;
-        rseOnResetFocus.Call();
-        rsoNavigation.Value.selectableFocus = null;
-        rsoInGame.Value = true;
-        rsoGameInPause.Value = false;
-        rseOnGamePause.Call(false);
+        if (rsoCurrentWindows.Value.Count < 2)
+        {
+            rseOnGameInputEnabled.Call();
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableDefault = null;
+            rseOnResetFocus.Call();
+            rsoNavigation.Value.selectableFocus = null;
+            rsoInGame.Value = true;
+            rsoGameInPause.Value = false;
+            rseOnGamePause.Call(false);
+        }
     }
 
     public void Settings()
