@@ -82,6 +82,9 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_EnemyPatrolPoints enemyPatrolPoints;
 
+    [TabGroup("References")]
+    [SerializeField] private S_EnemyMaxTravelZone enemyMaxTravelZone;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
 
@@ -160,6 +163,7 @@ public class S_Enemy : MonoBehaviour
 
         enemyDetectionRange.onTargetDetected.AddListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
+        enemyMaxTravelZone.onTargetDetected.AddListener(SetTarget);
 
         rseOnPlayerDeath.action += PlayerDied;
 
@@ -175,6 +179,7 @@ public class S_Enemy : MonoBehaviour
 
         enemyDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
+        enemyMaxTravelZone.onTargetDetected.RemoveListener(SetTarget);
 
         rseOnPlayerDeath.action -= PlayerDied;
 

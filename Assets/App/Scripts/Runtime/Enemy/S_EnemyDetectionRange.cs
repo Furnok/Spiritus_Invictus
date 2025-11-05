@@ -17,7 +17,6 @@ public class S_EnemyDetectionRange : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_Enemy enemy;
 
-    [TabGroup("References")]
     [HideInInspector] public UnityEvent<GameObject> onTargetDetected;
 
     private GameObject targetDetected = null;
@@ -47,15 +46,6 @@ public class S_EnemyDetectionRange : MonoBehaviour
             onTargetDetected.Invoke(targetDetected);
         }
 
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag(playerTag))
-        {
-            targetDetected = null;
-            onTargetDetected.Invoke(targetDetected);
-        }
     }
 
     public void Setup(SSO_EnemyData enemyData)
