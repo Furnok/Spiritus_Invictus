@@ -11,6 +11,10 @@ public class S_Extract : MonoBehaviour
     [Title("Extract")]
     [SerializeField] private int extractIndex;
 
+    [TabGroup("References")]
+    [Title("Content")]
+    [SerializeField] private GameObject content;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
 
@@ -26,6 +30,7 @@ public class S_Extract : MonoBehaviour
     {
         if (other.CompareTag(tagPlayer))
         {
+            content.SetActive(true);
             rseOnPlayerInteract.action += ExtractInteract;
         }
     }
@@ -34,6 +39,7 @@ public class S_Extract : MonoBehaviour
     {
         if (other.CompareTag(tagPlayer))
         {
+            content.SetActive(false);
             rseOnPlayerInteract.action -= ExtractInteract;
         }
     }
