@@ -70,7 +70,6 @@ public class S_EnemyAttackData : MonoBehaviour
             weaponCollider.enabled = false;
         }
     }
-
     public void DisplayTriggerWarning()
     {
         if (warning != null)

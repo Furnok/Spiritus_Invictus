@@ -124,7 +124,6 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         Vector3 newPos = Vector3.Lerp(a, b, t);
         Vector3 tangent = (b - a).normalized;
 
-
         if (target != null && target.gameObject.activeInHierarchy && t <= 1f)
         {
             transform.position = newPos;
