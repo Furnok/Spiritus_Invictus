@@ -125,7 +125,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         Vector3 tangent = (b - a).normalized;
 
 
-        if (target != null && target.gameObject.activeInHierarchy)
+        if (target != null && target.gameObject.activeInHierarchy && t <= 1f)
         {
             transform.position = newPos;
             transform.forward = tangent;
@@ -134,14 +134,15 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         }
         else
         {
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.1f))
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            direction = Vector3.Lerp(direction, Vector3.down, Time.deltaTime * 2f).normalized;
             transform.position += direction * speed * Time.deltaTime;
             transform.forward = direction;
-        }
-
-        if (origin == transform.position)
-        {
-            Destroy(gameObject);
-            return;
         }
     }
 
