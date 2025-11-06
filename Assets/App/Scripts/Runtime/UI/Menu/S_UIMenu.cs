@@ -50,14 +50,20 @@ public class S_UIMenu : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
+    private bool isTransit = false;
+
     private void OnEnable()
     {
         rseOnPlayerPause.action += ResumeGame;
+
+        isTransit = false;
     }
 
     private void OnDisable()
     {
         rseOnPlayerPause.action -= ResumeGame;
+
+        isTransit = false;
     }
 
     public void ResumeGame()
@@ -83,29 +89,38 @@ public class S_UIMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        rseOnFadeOut.Call();
-
-        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        if (!isTransit)
         {
-            rseOnCloseAllWindows.Call();
-            rsoNavigation.Value.selectableFocus = null;
+            isTransit = true;
+            rseOnFadeOut.Call();
 
-            rsoGameInPause.Value = false;
-            rseOnGamePause.Call(false);
+            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            {
+                rseOnCloseAllWindows.Call();
+                rsoNavigation.Value.selectableFocus = null;
 
-            Scene currentScene = SceneManager.GetActiveScene();
-            rseOnLoadScene.Call(currentScene.name);
-        }));
+                rsoGameInPause.Value = false;
+                rseOnGamePause.Call(false);
+
+                Scene currentScene = SceneManager.GetActiveScene();
+                rseOnLoadScene.Call(currentScene.name);
+            }));
+        }
     }
 
     public void QuitGame()
     {
-        rseOnFadeOut.Call();
-
-        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        if (!isTransit)
         {
-            rseOnQuitGame.Call();
-            rsoNavigation.Value.selectableFocus = null;
-        }));
+            isTransit = true;
+
+            rseOnFadeOut.Call();
+
+            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            {
+                rseOnQuitGame.Call();
+                rsoNavigation.Value.selectableFocus = null;
+            }));
+        }
     }
 }

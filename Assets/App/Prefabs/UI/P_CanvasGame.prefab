@@ -19077,6 +19077,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6427930873367168921}
+  - component: {fileID: 281046846018242950}
   - component: {fileID: 7081359592423764172}
   - component: {fileID: 5631918249351191476}
   m_Layer: 5
@@ -19107,6 +19108,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &281046846018242950
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7090280352426310551}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &7081359592423764172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19134,6 +19147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914f6612808d74d4e88246af9860cc79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeFadeSkip: 0.2
   buttonStart: {fileID: 5599488742029719898}
   buttonContinue: {fileID: 6769405791822966820}
   buttonSettings: {fileID: 8847822647306883821}
