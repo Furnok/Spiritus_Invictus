@@ -15,7 +15,7 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private float groundCheckDist = 0.5f;
-    [SerializeField] private float maxSlopeAngle = 45f;
+    private float maxSlopeAngle =>_playerStats.Value.maxSlopeAngle;
     [SerializeField] private float skin = 0.02f;
 
     [Header("Stick To Ground")]
@@ -25,7 +25,7 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private bool preventFallFromEdges = true;
     [SerializeField] private float edgeProbeDistance = 0.6f;
     [SerializeField] private float edgeProbeHeight = 0.5f;
-    [SerializeField] private float maxDownStepAngle = 40f;
+    private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
 
     [Header("Slope Slowdown")]
     [SerializeField, Range(0f, 60f)] private float slopeSlowStart = 5f;
@@ -259,8 +259,9 @@ public class S_PlayerMovement : MonoBehaviour
                 {
                     _onPlayerAddState.Call(PlayerState.Moving);
                 }
-                else if (!_isInputCanceled && _playerCurrentState.Value == PlayerState.Running)
+                else if (_playerCurrentState.Value == PlayerState.Running && moveInput.sqrMagnitude > 0.0001f)
                 {
+                    _isInputCanceled = false;
                 }
                 else
                 {

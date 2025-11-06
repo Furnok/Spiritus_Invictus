@@ -576,6 +576,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4096
   groundCheckDist: 0.5
   maxSlopeAngle: 45
   skin: 0.02
@@ -583,7 +586,7 @@ MonoBehaviour:
   preventFallFromEdges: 1
   edgeProbeDistance: 0.6
   edgeProbeHeight: 0.5
-  maxDownStepAngle: 40
+  maxDownStepAngle: 45
   slopeSlowStart: 5
   slopeSlowMax: 45
   slopeSlowAtMax: 0.3
@@ -723,6 +726,18 @@ MonoBehaviour:
   _dodgeParam: isDodging
   _dodgeDirXParam: DodgeDirectionX
   _dodgeDirYParam: DodgeDirectionY
+  _capsule: {fileID: 8798378845392338462}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  maxSlopeAngle: 45
+  maxDownStepAngle: 45
+  edgeProbeDistance: 0.6
+  edgeProbeHeight: 0.5
+  stopFromWall: 0.03
   _ssoPlayerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
   _rb: {fileID: 4310562184785814063}
   _playerIsDodging: {fileID: 11400000, guid: f932dda1749effc4aac91cb2aeeff6d5, type: 2}

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class S_PlayerDodge : MonoBehaviour
 {
@@ -7,6 +8,15 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField, S_AnimationName] string _dodgeDirXParam;
     [SerializeField, S_AnimationName] string _dodgeDirYParam;
 
+    [Header("World / collision")]
+    [SerializeField] CapsuleCollider _capsule;
+    [SerializeField] LayerMask groundMask;
+    [SerializeField] LayerMask obstacleMask;
+    float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
+    float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
+    [SerializeField] float edgeProbeDistance = 0.6f;
+    [SerializeField] float edgeProbeHeight = 0.5f;
+    [SerializeField] float stopFromWall = 0.03f;
 
     [Header("References")]
     [SerializeField] private SSO_PlayerStateTransitions _ssoPlayerStateTransitions;
@@ -128,56 +138,104 @@ public class S_PlayerDodge : MonoBehaviour
 
         _playerIsDodging.Value = true;
 
-
-        _dodgeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.dodgeStartupDelay, () =>
-        {
-            _dodgeCoroutine = StartCoroutine(PerformDodge(dodgeDirection));
-        }));
+        if (_dodgeCoroutine != null) StopCoroutine(_dodgeCoroutine);
+        _dodgeCoroutine = StartCoroutine(StartupAndDash(dodgeDirection));
     }
 
-    System.Collections.IEnumerator PerformDodge(Vector3 dodgeDirection)
-    {
-        var elapsed = 0f;
+   
 
-        _rb.linearDamping = 0;
+    
+    IEnumerator StartupAndDash(Vector3 dodgeDir)
+    {
+        float startup = _animationTransitionDelays.Value.dodgeStartupDelay;
+        if (startup > 0f)
+        {
+            yield return new WaitForSeconds(startup);
+        }
+
+        _rb.linearDamping = 0f;
         _rb.angularVelocity = Vector3.zero;
+        _playerIsDodging.Value = true;
         _canRunAfterDodge = true;
 
-        while (elapsed < _playerStats.Value.dodgeDuration)
+        float dur = _playerStats.Value.dodgeDuration;
+        float wantedDist = _playerStats.Value.dodgeDistance;
+        AnimationCurve curve = _playerStats.Value._speedDodgeCurve;
+
+        Vector3 groundNormal;
+        bool onGround = CheckGround(out groundNormal);
+        if (onGround)
         {
-            float t = elapsed / _playerStats.Value.dodgeDuration;
-            float speed = _playerStats.Value._speedDodgeCurve != null ? _playerStats.Value._speedDodgeCurve.Evaluate(t) : 1f;
+            dodgeDir = Vector3.ProjectOnPlane(dodgeDir, groundNormal).normalized;
+        }
+        else
+        {
+            dodgeDir = dodgeDir.normalized;
+        }
 
-            _rb.linearVelocity = dodgeDirection * _playerStats.Value.dodgeForce * speed;
+        float elapsed = 0f;
+        float travelled = 0f;
 
+        Vector3 startPos = transform.position;
+
+        while (elapsed < dur)
+        {
+            float t = elapsed / dur;
+            float speedMul = curve != null ? curve.Evaluate(t) : 1f;
+
+            float frameDist = (wantedDist / dur) * speedMul * Time.deltaTime;
+
+            float remaining = wantedDist - travelled;
+            if (remaining <= 0f) break;
+            if (frameDist > remaining) frameDist = remaining;
+
+            onGround = CheckGround(out groundNormal);
+            Vector3 stepDir = dodgeDir;
+            if (onGround)
+            {
+                stepDir = Vector3.ProjectOnPlane(stepDir, groundNormal).normalized;
+            }
+
+            float allowed = ProbeObstacle(stepDir, frameDist);
+            if (allowed <= 0f)
+            {
+                break;
+            }
+
+            allowed = ProbeGroundAhead(stepDir, allowed, groundNormal);
+            if (allowed <= 0f)
+            {
+                break;
+            }
+
+            Vector3 nextPos = transform.position + stepDir * allowed;
+            _rb.MovePosition(nextPos);
+
+            travelled += allowed;
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         _rb.linearVelocity = Vector3.zero;
         _rb.linearDamping = _linearDamping;
-        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
         _playerIsDodging.Value = false;
+        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
 
-        _dodgeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.dodgeRecoveryDelay, () =>
+        float rec = _animationTransitionDelays.Value.dodgeRecoveryDelay;
+        if (rec > 0f)
         {
-            _onPlayerAddState.Call(PlayerState.None);
+            yield return new WaitForSeconds(rec);
+        }
 
-            if (_dodgeCoroutine == null) return;
-            StopCoroutine(_dodgeCoroutine);
-            //if (_prepareRunCoroutine == null) return;
-            //StopCoroutine(_prepareRunCoroutine);
+        _onPlayerAddState.Call(PlayerState.None);
 
+        yield return new WaitForSeconds(_playerStats.Value.delayBeforeRunningAfterDodge);
+        if (_canRunAfterDodge && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running))
+        {
+            _onPlayerAddState.Call(PlayerState.Running);
+        }
 
-            _prepareRunCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeRunningAfterDodge, () =>
-            {
-                if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == false || _canRunAfterDodge == false) return;
-
-                _onPlayerAddState.Call(PlayerState.Running);
-                if (_prepareRunCoroutine == null) return;
-                StopCoroutine(_prepareRunCoroutine);
-            }));
-        }));
+        _dodgeCoroutine = null;
     }
 
     private void Move(Vector2 input)
@@ -188,9 +246,11 @@ public class S_PlayerDodge : MonoBehaviour
     void CancelDodge()
     {
         _canRunAfterDodge = false;
+        _playerIsDodging.Value = false;
 
         if (_dodgeCoroutine != null) StopCoroutine(_dodgeCoroutine);
-
+        _rb.linearDamping = _linearDamping;
+        rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
 
         if (_prepareRunCoroutine != null) StopCoroutine(_prepareRunCoroutine);
 
@@ -202,13 +262,13 @@ public class S_PlayerDodge : MonoBehaviour
     {
         _canRunAfterDodge = false;
 
-        if (_playerCurrentState.Value != PlayerState.Running && _prepareRunCoroutine != null && _dodgeCoroutine == null)
-        {
-            StopCoroutine(_prepareRunCoroutine);
-            _onPlayerAddState.Call(PlayerState.None);
-        }
+        //if (_playerCurrentState.Value != PlayerState.Running /*&& _prepareRunCoroutine != null*/ && _dodgeCoroutine == null)
+        //{
+        //    //StopCoroutine(_prepareRunCoroutine);
+        //    _onPlayerAddState.Call(PlayerState.None);
+        //}
         
-        if(_playerCurrentState.Value == PlayerState.Running && _dodgeCoroutine != null)
+        if(_playerCurrentState.Value == PlayerState.Running /*&& _dodgeCoroutine != null*/)
         {
             _onPlayerAddState.Call(PlayerState.None);
         }
@@ -219,5 +279,57 @@ public class S_PlayerDodge : MonoBehaviour
         _playerIsDodging.Value = false;
         _canRunAfterDodge = false;
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
+    }
+
+    void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
+    {
+        float height = Mathf.Max(_capsule.height * Mathf.Abs(transform.lossyScale.y), _capsule.radius * 2f);
+        radius = _capsule.radius * Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));
+        Vector3 center = transform.TransformPoint(_capsule.center);
+        Vector3 up = transform.up;
+        top = center + up * (height * 0.5f - radius);
+        bottom = center - up * (height * 0.5f - radius);
+    }
+
+    bool CheckGround(out Vector3 normal)
+    {
+        GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
+        Vector3 start = bottom + Vector3.up * 0.02f;
+        float dist = 0.6f;
+
+        if (Physics.Raycast(start, Vector3.down, out var hit, dist, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            float ang = Vector3.Angle(hit.normal, Vector3.up);
+            if (ang <= maxSlopeAngle)
+            {
+                normal = hit.normal;
+                return true;
+            }
+        }
+        normal = Vector3.up;
+        return false;
+    }
+
+    float ProbeObstacle(Vector3 dir, float maxDist)
+    {
+        GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
+
+        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, maxDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        {
+            return Mathf.Max(0f, hit.distance - stopFromWall);
+        }
+        return maxDist;
+    }
+
+    float ProbeGroundAhead(Vector3 dir, float maxDist, Vector3 currentGroundNormal)
+    {
+        Vector3 probePos = transform.position + dir * maxDist + Vector3.up * edgeProbeHeight;
+        if (Physics.Raycast(probePos, Vector3.down, out var hit, edgeProbeHeight * 2f, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            float ang = Vector3.Angle(hit.normal, Vector3.up);
+            if (ang > maxDownStepAngle) return 0f;
+            return maxDist;
+        }
+        return 0f;
     }
 }
