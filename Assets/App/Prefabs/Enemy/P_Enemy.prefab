@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 658990216900876784}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -250,6 +250,7 @@ Transform:
   - {fileID: 8382064584298650195}
   - {fileID: 4234250431613318041}
   - {fileID: 600018255059543512}
+  - {fileID: 4588398711804790321}
   m_Father: {fileID: 7972417589024532759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &495233547217921218
@@ -327,7 +328,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1.8
-  m_BaseOffset: -0.58
+  m_BaseOffset: -0.08
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!95 &5886562096679836169
@@ -375,6 +376,11 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4096
+  patrolPointsList:
+  - {fileID: 5199276408535089712}
+  - {fileID: 4238934561793798638}
+  - {fileID: 3932769474522726717}
+  - {fileID: 481751962266192794}
   behaviorAgent: {fileID: 495233547217921218}
   navMeshAgent: {fileID: 1431773725924121066}
   bodyCollider: {fileID: 6217138946037749130}
@@ -387,8 +393,8 @@ MonoBehaviour:
   enemyDetectionRange: {fileID: 2811589338267356800}
   enemyHurt: {fileID: 2132075167513657250}
   enemyUI: {fileID: 4394752163360763578}
-  enemyPatrolPoints: {fileID: 1718197067355500433}
   enemyMaxTravelZone: {fileID: 5830951658339230131}
+  patrolPoints: {fileID: 2395496571129997540}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
   rseOnGamePause: {fileID: 11400000, guid: ae0312c6248bf454a8f047511417352d, type: 2}
@@ -428,7 +434,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2395496571129997540}
-  - component: {fileID: 1718197067355500433}
   m_Layer: 0
   m_Name: PatrolPoints
   m_TagString: Untagged
@@ -455,23 +460,6 @@ Transform:
   - {fileID: 9026819057358649732}
   m_Father: {fileID: 7972417589024532759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1718197067355500433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1364728067752000304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08d95f71ecd2d4a42a0a80f6a189b510, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrolPointsList:
-  - {fileID: 5199276408535089712}
-  - {fileID: 4238934561793798638}
-  - {fileID: 3932769474522726717}
-  - {fileID: 481751962266192794}
 --- !u!1 &1550224854591006150
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,7 +542,7 @@ GameObject:
   m_Component:
   - component: {fileID: 600018255059543512}
   m_Layer: 0
-  m_Name: SpawnPoint
+  m_Name: ProjectileSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -780,7 +768,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 2
-  m_Center: {x: 0, y: 1.4, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &2811589338267356800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -888,7 +876,7 @@ CapsuleCollider:
   m_Radius: 0.4
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 1.4, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &2132075167513657250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -904,6 +892,37 @@ MonoBehaviour:
   onUpdateEnemyHealth:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &5421673960955687534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4588398711804790321}
+  m_Layer: 10
+  m_Name: AimPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4588398711804790321
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5421673960955687534}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5276679289733621114}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6905421159853868602
 GameObject:
   m_ObjectHideFlags: 0
@@ -914,6 +933,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7389261747006536606}
   - component: {fileID: 6217138946037749130}
+  - component: {fileID: 5681955892619754416}
   m_Layer: 11
   m_Name: Body
   m_TagString: Enemy
@@ -930,7 +950,7 @@ Transform:
   m_GameObject: {fileID: 6905421159853868602}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -958,7 +978,20 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &5681955892619754416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6905421159853868602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85115176fcdb0464fb0025332d10b4c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aimPointObject: {fileID: 5421673960955687534}
 --- !u!1 &6992590529645992291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1327,7 +1360,7 @@ Transform:
   m_GameObject: {fileID: 8944502541329920824}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1352,7 +1385,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 25, y: 5, z: 25}
+  m_Size: {x: 30, y: 30, z: 30}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5830951658339230131
 MonoBehaviour:

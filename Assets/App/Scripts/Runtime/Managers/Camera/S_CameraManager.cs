@@ -391,7 +391,9 @@ public class S_CameraManager : MonoBehaviour
 
         playerRotationTween?.Kill();
 
-        Vector3 directionToTarget = (currentTargetPos.position - playerPos.position).normalized;
+        Vector3 directionToTarget = currentTargetPos.position - playerPos.position;
+        directionToTarget.y = 0;
+        directionToTarget.Normalize();
 
         Quaternion targetRotation = Quaternion.LookRotation(directionToTarget, Vector3.up);
 

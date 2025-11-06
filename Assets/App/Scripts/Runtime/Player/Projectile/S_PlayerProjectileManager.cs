@@ -64,7 +64,11 @@ public class S_PlayerProjectileManager : MonoBehaviour
         var projectile = projectilePool.Get();
         projectile.transform.position = _playerPosition.Value + _playerRotation.Value * new Vector3(0,1.5f,0.5f);
         projectile.transform.rotation = _playerRotation.Value;
-        projectile.Initialize(attackconviction * currentStepAttack.multipliers, target, currentStepAttack.step);
+
+        target.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+        Transform aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : target.transform;
+
+        projectile.Initialize(attackconviction * currentStepAttack.multipliers, aimPoint, currentStepAttack.step);
     }
 
     private void ReturnProjectileToPool(S_PlayerProjectile projectile)
