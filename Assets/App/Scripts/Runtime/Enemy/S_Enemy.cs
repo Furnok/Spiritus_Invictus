@@ -102,6 +102,7 @@ public class S_Enemy : MonoBehaviour
 
     private float health = 0;
     private float maxhealth = 0;
+    private List<GameObject> patrolPointsList = new();
     private bool isPaused = false;
     private Transform aimPoint = null;
     private BlackboardVariable<bool> isAttacking = null;
@@ -128,7 +129,8 @@ public class S_Enemy : MonoBehaviour
         overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
 
         behaviorAgent.SetVariableValue<GameObject>("Body", body);
-        behaviorAgent.SetVariableValue<List<GameObject>>("PatrolPoints", enemyPatrolPoints.GetPatrolPointsList());
+        patrolPointsList = enemyPatrolPoints.GetPatrolPointsList();
+        behaviorAgent.SetVariableValue<List<GameObject>>("PatrolPoints", patrolPointsList);
         behaviorAgent.SetVariableValue<Animator>("Animator", animator);
         behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
         behaviorAgent.SetVariableValue<Collider>("DetectionRangeCollider", DetectionCollider);
