@@ -117,7 +117,7 @@ public class S_UIExtract : MonoBehaviour
 
     private void DisplayTextContent(S_ClassExtract classExtract)
     {
-        string fullText = classExtract.text;
+        string fullText = classExtract.text.GetLocalizedString();
 
         textContent.maxVisibleCharacters = 0;
         textContent.text = fullText;

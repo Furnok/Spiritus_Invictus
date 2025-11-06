@@ -342,7 +342,7 @@ MonoBehaviour:
         value:
           x: -0.00000007152556
           y: -0.00000007152556
-          z: -9.996824e-12
+          z: -9.996837e-12
           w: 1
     - Position:
         x: -14
@@ -570,6 +570,7 @@ GameObject:
   - component: {fileID: 2696501370200541855}
   - component: {fileID: 3517097554541668451}
   - component: {fileID: 7670151665400194650}
+  - component: {fileID: 9034462338912775660}
   m_Layer: 0
   m_Name: CinemachineCameraRail
   m_TagString: Untagged
@@ -585,8 +586,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2575732486268715434}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.36441752, y: -0.07290305, z: 0.028630365, w: 0.9279361}
-  m_LocalPosition: {x: 1.0930523, y: 8.000001, z: -6.9134426}
+  m_LocalRotation: {x: 0.2957204, y: -0.07479713, z: 0.02323286, w: 0.9520584}
+  m_LocalPosition: {x: 1.2492001, y: 7.0000005, z: -7.9011765}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -758,6 +759,21 @@ MonoBehaviour:
     NearLimit: 5
     FarLimit: 30
     MaxQualityBoost: 0.2
+--- !u!114 &9034462338912775660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2575732486268715434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4700f9f03ad19f94baf0367cb7a9c988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Width: 12
+  Damping: 1
+  FovRange: {x: 3, y: 60}
 --- !u!1 &3641470845849660972
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,8 +911,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3839073689257792411}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.36441752, y: -0.07290305, z: 0.028630365, w: 0.9279361}
-  m_LocalPosition: {x: 1.0930523, y: 8.000001, z: -6.9134426}
+  m_LocalRotation: {x: 0.2957204, y: -0.07479713, z: 0.02323286, w: 0.9520584}
+  m_LocalPosition: {x: 1.2492001, y: 7.0000005, z: -7.9011765}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -935,7 +951,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1615,7 +1631,7 @@ Transform:
   m_GameObject: {fileID: 8183550097162921955}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08052145, y: 0.3812272, z: -0.033353075, w: 0.9203639}
-  m_LocalPosition: {x: -20, y: 10, z: -30}
+  m_LocalPosition: {x: -14, y: 10, z: -30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
