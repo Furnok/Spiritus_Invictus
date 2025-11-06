@@ -440,7 +440,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8174768722539903590}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: bab5456402744074f9e9276e9b61798e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -580,13 +580,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   groundCheckDist: 0.5
-  maxSlopeAngle: 45
   skin: 0.02
   stickToGroundForce: 12
   preventFallFromEdges: 1
   edgeProbeDistance: 0.6
   edgeProbeHeight: 0.5
-  maxDownStepAngle: 45
   slopeSlowStart: 5
   slopeSlowMax: 45
   slopeSlowAtMax: 0.3
@@ -733,8 +731,6 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4096
-  maxSlopeAngle: 45
-  maxDownStepAngle: 45
   edgeProbeDistance: 0.6
   edgeProbeHeight: 0.5
   stopFromWall: 0.03
