@@ -13,7 +13,11 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFade;
+    [SerializeField] private float timeFadeBoss;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeSkip;
 
     [TabGroup("References")]
     [Title("Sliders")]
@@ -98,6 +102,7 @@ public class S_UIGameManager : MonoBehaviour
     private Tween healthTween;
     private Tween convictionTween;
     private Tween preconvictionTween;
+    private Tween skipTween;
 
     private void Awake()
     {
@@ -140,7 +145,23 @@ public class S_UIGameManager : MonoBehaviour
 
     private void DisplayBossHealth(bool value)
     {
-        sliderBossHealth.gameObject.SetActive(value);
+        sliderBossHealth.GetComponent<CanvasGroup>()?.DOKill();
+
+        if (value && !sliderBossHealth.gameObject.activeInHierarchy)
+        {
+            sliderBossHealth.gameObject.gameObject.SetActive(true);
+
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeFadeBoss).SetEase(Ease.Linear);
+        }
+        else if (!value)
+        {
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeBoss).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                sliderBossHealth.gameObject.SetActive(false);
+            });
+        }
     }
 
     private void SetHealthSliderValue(float health)
@@ -216,7 +237,7 @@ public class S_UIGameManager : MonoBehaviour
             skipWindow.SetActive(true);
 
             skipWindow.GetComponent<CanvasGroup>().alpha = 0f;
-            skipWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
+            skipWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
         }
         else if (!value)
         {
@@ -226,7 +247,9 @@ public class S_UIGameManager : MonoBehaviour
 
     private void SetSkipHoldValue(float value)
     {
-        imageSkip.fillAmount = value / ssoCameraData.Value.holdSkipTime;
+        skipTween?.Kill();
+
+        skipTween = imageSkip.DOFillAmount(value / ssoCameraData.Value.holdSkipTime, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private void DiplayExtract(int index)

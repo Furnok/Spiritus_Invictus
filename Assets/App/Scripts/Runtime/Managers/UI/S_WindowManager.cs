@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFade;
+
     [TabGroup("References")]
     [Title("Windows")]
     [SerializeField] private GameObject menuWindow;
@@ -99,7 +103,23 @@ public class S_WindowManager : MonoBehaviour
 
     private void DisplayUIGame(bool value)
     {
-        gameWindow.SetActive(value);
+        gameWindow.GetComponent<CanvasGroup>()?.DOKill();
+
+        if (value && !gameWindow.activeInHierarchy)
+        {
+            gameWindow.gameObject.SetActive(true);
+
+            gameWindow.GetComponent<CanvasGroup>().alpha = 0f;
+            gameWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
+        }
+        else if (!value)
+        {
+            gameWindow.GetComponent<CanvasGroup>().alpha = 1f;
+            gameWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                gameWindow.SetActive(false);
+            });
+        }
     }
 
     private void PauseGame()
@@ -133,7 +153,12 @@ public class S_WindowManager : MonoBehaviour
 
     private void OpenWindow(GameObject window)
     {
+        window.GetComponent<CanvasGroup>()?.DOKill();
+
         window.SetActive(true);
+
+        window.GetComponent<CanvasGroup>().alpha = 0f;
+        window.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
 
         rsoCurrentWindows.Value.Add(window);
     }
@@ -142,7 +167,13 @@ public class S_WindowManager : MonoBehaviour
     {
         if (window != null && window.activeInHierarchy)
         {
-            window.SetActive(false);
+            window.GetComponent<CanvasGroup>()?.DOKill();
+
+            window.GetComponent<CanvasGroup>().alpha = 1f;
+            window.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                window.SetActive(false);
+            });
 
             rsoCurrentWindows.Value.Remove(window);
         }

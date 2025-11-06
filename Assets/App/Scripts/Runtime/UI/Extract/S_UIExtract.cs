@@ -47,6 +47,7 @@ public class S_UIExtract : MonoBehaviour
     private bool userIsScrolling = false;
     private Tween textDisplay = null;
     private Tween scrollTween = null;
+    private bool isClosing = false;
 
     private void OnEnable()
     {
@@ -54,6 +55,7 @@ public class S_UIExtract : MonoBehaviour
         rseOnPlayerPause.action += Close;
 
         scrollRect.verticalNormalizedPosition = 1;
+        isClosing = false;
     }
 
     private void OnDisable()
@@ -103,10 +105,14 @@ public class S_UIExtract : MonoBehaviour
 
     public void Close()
     {
-        rseOnGameInputEnabled.Call();
-        rseOnCloseWindow.Call(gameObject);
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnResetFocus.Call();
+        if (!isClosing)
+        {
+            isClosing = true;
+            rseOnGameInputEnabled.Call();
+            rseOnCloseWindow.Call(gameObject);
+            rsoNavigation.Value.selectableFocus = null;
+            rseOnResetFocus.Call();
+        }
     }
 
     private void DisplayTextContent(S_ClassExtract classExtract)

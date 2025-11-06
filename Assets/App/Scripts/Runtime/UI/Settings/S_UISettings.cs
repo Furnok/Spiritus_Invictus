@@ -1,9 +1,15 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UISettings : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeSkip;
+
     [TabGroup("References")]
     [Title("Default")]
     [SerializeField] private GameObject defaultWindow;
@@ -23,6 +29,16 @@ public class S_UISettings : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private Button buttonReturn;
+
+    [TabGroup("References")]
+    [Title("Text")]
+    [SerializeField] private TextMeshProUGUI textGameplay;
+
+    [TabGroup("References")]
+    [SerializeField] private TextMeshProUGUI textGraphics;
+
+    [TabGroup("References")]
+    [SerializeField] private TextMeshProUGUI textAudio;
 
     [TabGroup("References")]
     [Title("Selectables")]
@@ -53,6 +69,7 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     private GameObject currentPanelSet = null;
+    private bool isClosing = false;
 
     private void OnEnable()
     {
@@ -60,7 +77,14 @@ public class S_UISettings : MonoBehaviour
 
         if (defaultPanelSet != null)
         {
+            textGameplay.color = Color.red;
+
+            defaultPanelSet.GetComponent<CanvasGroup>()?.DOKill();
+
             defaultPanelSet.SetActive(true);
+            defaultPanelSet.GetComponent<CanvasGroup>().alpha = 0f;
+            defaultPanelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+
             currentPanelSet = defaultPanelSet;
 
             Navigation nav = buttonGameplay.navigation;
@@ -78,6 +102,8 @@ public class S_UISettings : MonoBehaviour
 
             buttonReturn.navigation = nav2;
         }
+
+        isClosing = false;
     }
 
     private void OnDisable()
@@ -89,21 +115,31 @@ public class S_UISettings : MonoBehaviour
             currentPanelSet.SetActive(false);
             currentPanelSet = null;
         }
+
+        isClosing = false;
+        textGameplay.color = Color.white;
+        textGraphics.color = Color.white;
+        textAudio.color = Color.white;
     }
 
     public void Close()
     {
-        rseOnCloseWindow.Call(gameObject);
+        if (!isClosing)
+        {
+            isClosing = true;
 
-        if (rsoNavigation.Value.selectablePressOldWindow == null)
-        {
-            rsoNavigation.Value.selectableFocus = null;
-            defaultWindow.SetActive(true);
-        }
-        else
-        {
-            rsoNavigation.Value.selectablePressOldWindow?.Select();
-            rsoNavigation.Value.selectablePressOldWindow = null;
+            rseOnCloseWindow.Call(gameObject);
+
+            if (rsoNavigation.Value.selectablePressOldWindow == null)
+            {
+                rsoNavigation.Value.selectableFocus = null;
+                defaultWindow.SetActive(true);
+            }
+            else
+            {
+                rsoNavigation.Value.selectablePressOldWindow?.Select();
+                rsoNavigation.Value.selectablePressOldWindow = null;
+            }
         }
     }
 
@@ -111,7 +147,19 @@ public class S_UISettings : MonoBehaviour
     {
         if (currentPanelSet != null)
         {
-            currentPanelSet.SetActive(false);
+            textGameplay.color = Color.white;
+            textGraphics.color = Color.white;
+            textAudio.color = Color.white;
+
+            currentPanelSet.GetComponent<CanvasGroup>()?.DOKill();
+
+            GameObject oldpanel = currentPanelSet;
+
+            currentPanelSet.GetComponent<CanvasGroup>().alpha = 1f;
+            currentPanelSet.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                oldpanel.SetActive(false);
+            });
 
             Navigation nav = buttonGameplay.navigation;
             nav.mode = Navigation.Mode.Explicit;
@@ -166,7 +214,14 @@ public class S_UISettings : MonoBehaviour
         {
             ClosePanel();
 
+            textGameplay.color = Color.red;
+
+            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+
             panelSet.SetActive(true);
+            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+
             currentPanelSet = panelSet;
 
             Navigation nav = buttonGameplay.navigation;
@@ -192,7 +247,14 @@ public class S_UISettings : MonoBehaviour
         {
             ClosePanel();
 
+            textGraphics.color = Color.red;
+
+            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+
             panelSet.SetActive(true);
+            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+
             currentPanelSet = panelSet;
 
             Navigation nav = buttonGraphics.navigation;
@@ -218,7 +280,14 @@ public class S_UISettings : MonoBehaviour
         {
             ClosePanel();
 
+            textAudio.color = Color.red;
+
+            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+
             panelSet.SetActive(true);
+            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+
             currentPanelSet = panelSet;
 
             Navigation nav = buttonAudio.navigation;

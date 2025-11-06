@@ -165,7 +165,7 @@ public class S_CameraManager : MonoBehaviour
 
             rseOnSkipHold.Call(currentHold);
 
-            if (currentHold >= ssoCameraData.Value.holdSkipTime)
+            if (currentHold >= ssoCameraData.Value.holdSkipTime + 0.35f)
             {
                 SkipCinematic();  
             }
