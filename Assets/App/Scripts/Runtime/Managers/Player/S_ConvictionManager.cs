@@ -9,6 +9,7 @@ public class S_ConvictionManager : MonoBehaviour
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
+    [SerializeField] SSO_DebugPlayer _debugPlayer;
 
     [Header("Input")]
     [SerializeField] RSE_OnHealStart _onHealStart;
@@ -25,7 +26,7 @@ public class S_ConvictionManager : MonoBehaviour
 
     private void Awake()
     {
-        _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
+        _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
         StartConvitionConsumption(); //change it when the player are playing and not pause the game
     }
 
@@ -53,11 +54,23 @@ public class S_ConvictionManager : MonoBehaviour
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
 
+        if (_debugPlayer.Value.infiniteConviction == true)
+        {
+            StartCoroutine(S_Utils.Delay(0.3f, () =>
+            {
+                _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
+                rseOnPlayerConvictionUpdate.Call(_playerConvictionData.Value.maxConviction);
+            }));
+
+            return;
+        }
+
         DelayWhenConvictionLoss();
     }
 
     void ReduceConvictionOnAttackCancel(int stepCancel)
     {
+        if (_debugPlayer.Value.infiniteConviction == true) return;
         if (stepCancel == 0) return;
 
         var currentStep = _playerAttackSteps.Value.Find(x => x.step == stepCancel);
@@ -117,6 +130,7 @@ public class S_ConvictionManager : MonoBehaviour
 
     void StartConvitionConsumption()
     {
+        if (_debugPlayer.Value.infiniteConviction == true) return;
         StopComsuptioncoroutine();
 
         _convictionConsumptionCoroutine = StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.tickIntervalSec, () =>
@@ -131,6 +145,17 @@ public class S_ConvictionManager : MonoBehaviour
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
+
+        if (_debugPlayer.Value.infiniteConviction == true)
+        {
+            StartCoroutine(S_Utils.Delay(0.3f, () =>
+            {
+                _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
+                rseOnPlayerConvictionUpdate.Call(_playerConvictionData.Value.maxConviction);
+            }));
+            
+            return;
+        }
 
         if (ammount >= 1)
         {

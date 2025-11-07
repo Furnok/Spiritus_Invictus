@@ -1,9 +1,14 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UIMainMenu : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeSkip;
+
     [TabGroup("References")]
     [Title("Buttons")]
     [SerializeField] private Button buttonStart;
@@ -43,6 +48,9 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -51,6 +59,11 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_DataTempSaved rsoDataTempSaved;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FadeTime ssoFadeTime;
+
+    private bool isTransit = false;
+
     private void OnEnable()
     {
         rseOnDataTemp.action += SetupMenu;
@@ -58,11 +71,24 @@ public class S_UIMainMenu : MonoBehaviour
         StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
         StartCoroutine(S_Utils.DelayFrame(() => rsoInGame.Value = false));
         StartCoroutine(S_Utils.DelayFrame(() => rseOnDisplayUIGame.Call(false)));
+
+        gameObject.GetComponent<CanvasGroup>()?.DOKill();
+
+        gameObject.GetComponent<CanvasGroup>().alpha = 0f;
+
+        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        {
+            gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+        }));
+
+        isTransit = false;
     }
 
     private void OnDisable()
     {
         rseOnDataTemp.action -= SetupMenu;
+
+        isTransit = false;
     }
 
     private void SetupMenu()
@@ -89,17 +115,39 @@ public class S_UIMainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        rseOnCloseAllWindows.Call();
-        gameObject.SetActive(false);
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnCameraIntro.Call();
-        rsoInGame.Value = true;
+        if (!isTransit)
+        {
+            isTransit = true;
+
+            rseOnCloseAllWindows.Call();
+
+            gameObject.GetComponent<CanvasGroup>()?.DOKill();
+
+            gameObject.GetComponent<CanvasGroup>().alpha = 1f;
+            gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                rsoNavigation.Value.selectableFocus = null;
+                rseOnCameraIntro.Call();
+                rsoInGame.Value = true;
+            });
+        }
     }
 
     public void ContinueGame()
     {
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableFocus = null;
+        if (!isTransit)
+        {
+            isTransit = true;
+
+            rseOnFadeOut.Call();
+
+            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            {
+                rseOnCloseAllWindows.Call();
+                rsoNavigation.Value.selectableFocus = null;
+            }));
+        }
     }
 
     public void Settings()
@@ -118,7 +166,17 @@ public class S_UIMainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        rseOnQuitGame.Call();
-        rsoNavigation.Value.selectableFocus = null;
+        if (!isTransit)
+        {
+            isTransit = true;
+
+            rseOnFadeOut.Call();
+
+            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            {
+                rseOnQuitGame.Call();
+                rsoNavigation.Value.selectableFocus = null;
+            }));
+        }
     }
 }

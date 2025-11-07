@@ -1,4 +1,4 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using System.Linq;
 using TMPro;
 using UnityEditor;
@@ -55,7 +55,7 @@ public class S_Version : MonoBehaviour
 
         if (normalizedVersion != lastVersionText)
         {
-            versionText.text = $"Version: {normalizedVersion}";
+            versionText.text = $"{normalizedVersion}";
             lastVersionText = normalizedVersion;
         }
     }

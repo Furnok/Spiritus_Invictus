@@ -1,32 +1,111 @@
+﻿using Sirenix.OdinInspector;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class S_EnemyAttackData : MonoBehaviour
 {
-    //[Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Time")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeDisplay;
 
-    [Header("References")]
-    [SerializeField] Collider weaponCollider;
+    [TabGroup("References")]
+    [Title("Collider")]
+    [SerializeField] private Collider weaponCollider;
 
-    //[Header("Input")]
+    [TabGroup("References")]
+    [Title("Image")]
+    [SerializeField] private GameObject content;
 
-    //[Header("Output")]
-    [HideInInspector] public UnityEvent<SSO_EnemyAttackData> onChangeAttackData;
+    [TabGroup("References")]
+    [Title("Image")]
+    [SerializeField] private Image warning;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
 
-    public void SetAttackMode(SSO_EnemyAttackData SSO_AttackData)
+    [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
+
+    private S_StructEnemyAttackData attackData;
+    private bool isPaused = false;
+
+    private void OnEnable()
     {
-        onChangeAttackData.Invoke(SSO_AttackData);
-        Debug.Log("GetData");
+        rseOnGamePause.action += Pause;
+    }
+
+    private void OnDisable()
+    {
+        rseOnGamePause.action -= Pause;
+    }
+
+    private void Pause(bool value)
+    {
+        if (value)
+        {
+            isPaused = true;
+        }
+        else
+        {
+            isPaused = false;
+        }
+    }
+
+    public void SetAttackMode(S_StructEnemyAttackData enemyAttackData)
+    {
+        attackData = enemyAttackData;
+        onChangeAttackData.Invoke(enemyAttackData);
     }
 
     public void EnableWeaponCollider()
     {
-        weaponCollider.enabled = true;
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = true;
+        }
     }
 
     public void DisableWeaponCollider()
     {
-        weaponCollider.enabled = false;
+        if (weaponCollider != null)
+        {
+            weaponCollider.enabled = false;
+        }
+    }
+    public void DisplayTriggerWarning()
+    {
+        if (warning != null)
+        {
+            if (attackData.attackType == S_EnumEnemyAttackType.Parryable || attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            {
+                warning.color = Color.yellow;
+            }
+            else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
+            {
+                warning.color = Color.red;
+            }
+
+            StartCoroutine(DisplayWarning());
+        }
+    }
+
+    private IEnumerator WaitForSecondsWhileUnpaused(float duration)
+    {
+        float timer = 0f;
+        while (timer < duration)
+        {
+            if (!isPaused)
+                timer += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator DisplayWarning()
+    {
+        content.gameObject.SetActive(true);
+        yield return WaitForSecondsWhileUnpaused(timeDisplay);
+        content.gameObject.SetActive(false);
     }
 }

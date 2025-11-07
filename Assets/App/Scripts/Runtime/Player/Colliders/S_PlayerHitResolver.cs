@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class S_PlayerHitResolver : MonoBehaviour
@@ -14,7 +14,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
     [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-
+    [SerializeField] GameObject _playerMotorGO;
     [Header("Input")]
     [SerializeField] RSE_OnAttackCollide _onAttackCollide;
 
@@ -33,32 +33,36 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         _onAttackCollide.action -= ResolveHit;
     }
-    void ResolveHit(EnemyAttackData attackData)
+    void ResolveHit(AttackContact contact)
     {
-        if (attackData.attackType == EnemyAttackType.Parryable)
+        var attackData = contact.data;
+
+        if (attackData.attackType == S_EnumEnemyAttackType.Parryable)
         {
 
-            StartCoroutine(IsWithinParryWindowCoroutine((bool canParry) =>
-            {
-                if (canParry == true)
+            StartCoroutine(IsWithinParryWindowCoroutine((canParry, data) =>
                 {
-                    _rseOnParrySuccess.Call(attackData);
-                    _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
-                    Debug.Log("Parried!");
-                }
-                else
-                {
-                    _rseOnPlayerHit.Call(attackData);
-                }
-            }));
+                    if (canParry == true)
+                    {
+                        _rseOnParrySuccess.Call(data);
+                        _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
+                        Debug.Log("Parried!");
+                    }
+                    else
+                    {
+                        _rseOnPlayerHit.Call(data);
+                    }
+                },
+                contact
+            ));
         }
-        else if (attackData.attackType == EnemyAttackType.Dodgeable)
+        else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
         {
             var canHit = _attackCanHitPlayer.Value.ContainsKey(attackData.goSourceId);
 
             if (canHit == true)
             {
-                _rseOnPlayerHit.Call(attackData);
+                _rseOnPlayerHit.Call(contact);
             }
             else
             {
@@ -67,26 +71,40 @@ public class S_PlayerHitResolver : MonoBehaviour
 
 
         }
-        else if (attackData.attackType == EnemyAttackType.Projectile)
+        else if (attackData.attackType == S_EnumEnemyAttackType.Projectile)
         {
-            
-            _rseOnPlayerHit.Call(attackData);
+            StartCoroutine(IsWithinParryWindowCoroutine((canParry, data) =>
+            {
+                if (canParry == true)
+                {
+                    _rseOnParrySuccess.Call(contact);
+                    _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
 
-
+                    TryReflectProjectile(contact.source);
+                    Debug.Log("Parried!");
+                }
+                else
+                {
+                    Destroy(contact.source.gameObject);
+                    _rseOnPlayerHit.Call(contact);
+                }
+            },
+               contact
+           ));
         }
 
     }
-    IEnumerator IsWithinParryWindowCoroutine(System.Action<bool> callback)
+    IEnumerator IsWithinParryWindowCoroutine(System.Action<bool, AttackContact> callback, AttackContact enemyAttackData)
     {
         float t = Time.time; //moment getting hit
         float start = _parryStartTime.Value; //when parry started
         float duration = _playerStats.Value.parryDuration;
-        float tolBefore = _playerStats.Value.parryToleranceBeforeHit;
-        float tolAfter = _playerStats.Value.parryToleranceAfterHit;
+        float tolBefore = enemyAttackData.data.parryToleranceBeforeHit;
+        float tolAfter = enemyAttackData.data.parryToleranceAfterHit;
 
         if (t <= start + duration + tolBefore)
         {
-            callback(true);
+            callback(true, enemyAttackData);
             yield break;
         }
 
@@ -94,7 +112,22 @@ public class S_PlayerHitResolver : MonoBehaviour
 
         start = _parryStartTime.Value;
         bool valid = t >= start - tolAfter && t <= start + duration + tolBefore;
-        callback(valid);
+        callback(valid, enemyAttackData);
     }
-   
+
+    void TryReflectProjectile(Collider source)
+    {
+        if (source == null) return;
+
+        if (source.TryGetComponent<IReflectableProjectile>(out var proj))
+        {
+            proj.Reflect(_playerMotorGO.transform);
+        }
+        else
+        {
+            var p = source.GetComponentInParent<IReflectableProjectile>();
+            if (p != null) p.Reflect(_playerMotorGO.transform);
+        }
+    }
+
 }

@@ -1,76 +1,204 @@
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_EnemyProjectile : MonoBehaviour
+public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableProjectile
 {
-    [Header("Settings")]
-    [SerializeField] float projectileLifeTime;
-    float projectileDamage;
-    [SerializeField] float projectileSpeed;
+    [TabGroup("Settings")]
+    [Title("Layer")]
+    [SerializeField] private string playerLayer;
 
-    Transform enemyTarget = null;
-    float timeAlive = 0f;
-    Vector3 direction = Vector3.zero;
-    bool isInitialized = false;
+    [TabGroup("Settings")]
+    [Title("Projectile")]
+    [SerializeField] private float speed;
 
-    //[Header("References")]
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float lifeTime;
 
-    [Header("Inputs")]
-    [SerializeField] RSE_OnPlayerDeath RSE_OnPlayerDeath;
-    [SerializeField] RSE_OnDespawnEnemyProjectile RSE_OnDespawnEnemyProjectile;
-    //[Header("Outputs")]
-    public void Initialize(float damage, Transform target = null)
+    [TabGroup("Settings")]
+    [Title("Reflect")]
+    [SerializeField] private float reflectSpeedMul;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float reflectDmgMul;
+
+    [TabGroup("References")]
+    [Title("Rigidbody")]
+    [SerializeField] private Rigidbody rb;
+
+    [TabGroup("References")]
+    [Title("Materials")]
+    [SerializeField] private Material enemyMat;
+
+    [TabGroup("References")]
+    [SerializeField] private Material playerMat;
+
+    [TabGroup("References")]
+    [Title("Renderer")]
+    [SerializeField] private Renderer rendered;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_ProjectileData ssoProjectileData;
+
+    private Transform owner = null;
+    private float timeAlive = 0f;
+    private Transform target = null;
+    private bool isInitialized = false;
+    private Vector3 direction = Vector3.zero;
+    private S_StructEnemyAttackData attackData;
+    private Vector3 startPos = Vector3.zero;
+    private Vector3 controlPoint = Vector3.zero;
+    private bool isPaused = false;
+    private Vector3 origin = Vector3.zero;
+    private Transform startAimPoint = null;
+
+    private float arcHeightMultiplier => ssoProjectileData.Value.arcHeightMultiplier;
+    private float arcDirection => ssoProjectileData.Value.arcDirection;
+    private bool randomizeArc => ssoProjectileData.Value.randomizeArc;
+    private float arcRandomDirectionMin => ssoProjectileData.Value.arcRandomDirectionMin;
+    private float arcRandomDirectionMax => ssoProjectileData.Value.arcRandomDirectionMax;
+    private float travelTime => ssoProjectileData.Value.travelTime;
+
+    public void Initialize(Transform owner, Transform target = null, S_StructEnemyAttackData attackData = new())
     {
-        enemyTarget = target;
-        direction = transform.forward;
-        projectileDamage = damage;
+        this.target = target;
+        this.direction = transform.forward;
+        this.attackData = attackData;
         isInitialized = true;
+        this.owner = owner;
+        origin = target.position;
 
+        owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+        startAimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : null;
+
+        CalculateControlPoint();
     }
+
     private void OnEnable()
     {
-        RSE_OnPlayerDeath.action += OnTargetDie;
+        rseOnGamePause.action += Pause;
     }
 
     private void OnDisable()
     {
-        isInitialized = false;
-        timeAlive = 0f;
-        enemyTarget = null;
-        direction = Vector3.zero;
-
-        RSE_OnPlayerDeath.action -= OnTargetDie;
+        rseOnGamePause.action -= Pause;
     }
-    void OnTargetDie()
+
+    private void Pause(bool value)
     {
-        if (enemyTarget != null)
+        if (value)
         {
-            enemyTarget = null;
+            isPaused = true;
+        }
+        else
+        {
+            isPaused = false;
         }
     }
 
     private void Update()
     {
-        if (!isInitialized) return;
+        if (!isInitialized || isPaused) return;
 
         timeAlive += Time.deltaTime;
-        if (timeAlive >= projectileLifeTime)
+        float t = timeAlive / travelTime;
+
+        if (timeAlive >= lifeTime)
         {
-            RSE_OnDespawnEnemyProjectile.Call(this);
+            Destroy(gameObject);
             return;
         }
 
-        Vector3 dir;
-        if (enemyTarget != null)
+        Vector3 endPos = Vector3.zero;
+
+        if (owner != target && startAimPoint != target)
         {
-            dir = (enemyTarget.position - transform.position).normalized;
+            endPos = target != null ? origin : startPos + transform.forward * 10f;
         }
         else
         {
-            dir = direction;
+            endPos = target != null ? target.position : startPos + transform.forward * 10f;
         }
 
-        transform.position += dir * projectileSpeed * Time.deltaTime;
-        transform.forward = dir;
+        Vector3 a = Vector3.Lerp(startPos, controlPoint, t);
+        Vector3 b = Vector3.Lerp(controlPoint, endPos, t);
+        Vector3 newPos = Vector3.Lerp(a, b, t);
+        Vector3 tangent = (b - a).normalized;
+
+        if (target != null && target.gameObject.activeInHierarchy && t <= 1f)
+        {
+            transform.position = newPos;
+            transform.forward = tangent;
+
+            direction = tangent;
+        }
+        else
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.1f))
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            direction = Vector3.Lerp(direction, Vector3.down, Time.deltaTime * 2f).normalized;
+            transform.position += direction * speed * Time.deltaTime;
+            transform.forward = direction;
+        }
+    }
+
+    public void Reflect(Transform reflectOwner)
+    {
+        attackData.damage *= reflectDmgMul;
+        speed *= reflectSpeedMul;
+        timeAlive = 0;
+
+        gameObject.layer = LayerMask.NameToLayer(playerLayer);
+        if (rendered && playerMat) rendered.material = playerMat;
+
+        if (owner != null && owner.gameObject.activeInHierarchy)
+        {
+            owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            target = aimPointProvider != null ? aimPointProvider.GetAimPoint() : owner;
+
+            CalculateControlPoint();
+        }
+        else
+        {
+            target = null;
+            direction = reflectOwner.forward;
+            transform.forward = direction;
+        }
+    }
+
+    private void CalculateControlPoint()
+    {
+        this.startPos = transform.position;
+
+        Vector3 toTarget = target != null ? (target.position - startPos) : transform.forward * 10f;
+        Vector3 midPoint = startPos + toTarget * 0.5f;
+
+        Vector3 arcDir = Vector3.up;
+
+        if (arcDirection != 0f || randomizeArc == true)
+        {
+            Vector3 side = Vector3.Cross(Vector3.up, toTarget.normalized).normalized;
+            if (randomizeArc)
+            {
+                side *= Random.Range(arcRandomDirectionMin, arcRandomDirectionMax);
+                arcDir = (Vector3.up + side).normalized;
+
+            }
+            else
+            {
+                arcDir = (Vector3.up + side * arcDirection).normalized;
+            }
+        }
+
+        float arcHeight = toTarget.magnitude * 0.25f * arcHeightMultiplier;
+        controlPoint = midPoint + arcDir * arcHeight;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -79,18 +207,14 @@ public class S_EnemyProjectile : MonoBehaviour
         {
             if (damageable != null)
             {
-
-                damageable.TakeDamage(projectileDamage);
-                RSE_OnDespawnEnemyProjectile.Call(this);
-
-                Debug.Log($"Hit enemy for {projectileDamage} damage.");
-
+                damageable.TakeDamage(attackData.damage);
+                Destroy(gameObject);
             }
         }
-        else
-        {
-            RSE_OnDespawnEnemyProjectile.Call(this);
-        }
+    }
 
+    public ref S_StructEnemyAttackData GetAttackData()
+    {
+        return ref attackData;
     }
 }

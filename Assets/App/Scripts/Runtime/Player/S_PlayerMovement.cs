@@ -1,12 +1,36 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEditor.Rendering;
+using UnityEngine;
 
 public class S_PlayerMovement : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] [S_AnimationName] private string moveParam;
-    [SerializeField] [S_AnimationName] private string speedParam;
+    [SerializeField][S_AnimationName] private string moveParam;
+    [SerializeField][S_AnimationName] private string speedParam;
     [SerializeField, S_AnimationName] string _strafXParam;
     [SerializeField, S_AnimationName] string _strafYParam;
+
+    [Header("Grounding")]
+    [SerializeField] private CapsuleCollider capsule;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] private float groundCheckDist = 0.5f;
+    private float maxSlopeAngle =>_playerStats.Value.maxSlopeAngle;
+    [SerializeField] private float skin = 0.02f;
+
+    [Header("Stick To Ground")]
+    [SerializeField] private float stickToGroundForce = 12f;
+
+    [Header("Edge Guard")]
+    [SerializeField] private bool preventFallFromEdges = true;
+    [SerializeField] private float edgeProbeDistance = 0.6f;
+    [SerializeField] private float edgeProbeHeight = 0.5f;
+    private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
+
+    [Header("Slope Slowdown")]
+    [SerializeField, Range(0f, 60f)] private float slopeSlowStart = 5f;
+    [SerializeField, Range(0f, 60f)] private float slopeSlowMax = 45f;
+    [SerializeField, Range(0f, 0.9f)] private float slopeSlowAtMax = 0.10f;
 
     [Header("References")]
     [SerializeField] private Rigidbody rigidbodyPlayer;
@@ -23,6 +47,9 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
     [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
 
+    [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
+    [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
+
     [Header("Output")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
@@ -36,6 +63,12 @@ public class S_PlayerMovement : MonoBehaviour
     private Quaternion camRotInInputPerformed = Quaternion.identity;
     private Transform target = null;
     bool _isInputCanceled = false;
+
+    bool isGrounded;
+    Vector3 groundNormal = Vector3.up;
+    float groundAngle;
+
+    Coroutine knockbackCoroutine;
 
     private void Awake()
     {
@@ -61,6 +94,9 @@ public class S_PlayerMovement : MonoBehaviour
         rseOnNewTargeting.action += ChangeNewTarget;
         rseOnPlayerCancelTargeting.action += CancelTarget;
         _onPlayerMoveInputCancel.action += OnCancelInput;
+
+        _rseOnParrySuccess.action += DoKnockbackOnParry;
+        _rseOnPlayerHit.action += DoKnockbackOnHit;
     }
 
     private void OnDisable()
@@ -69,6 +105,9 @@ public class S_PlayerMovement : MonoBehaviour
         rseOnNewTargeting.action -= ChangeNewTarget;
         rseOnPlayerCancelTargeting.action -= CancelTarget;
         _onPlayerMoveInputCancel.action -= OnCancelInput;
+
+        _rseOnParrySuccess.action -= DoKnockbackOnParry;
+        _rseOnPlayerHit.action -= DoKnockbackOnHit;
     }
 
     private void ChangeNewTarget(GameObject newTarget)
@@ -100,71 +139,17 @@ public class S_PlayerMovement : MonoBehaviour
         _isInputCanceled = true;
     }
 
+
+
     private void Update()
     {
-        if (rsoPlayerIsTargeting.Value && target != null && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == true || rsoPlayerIsTargeting.Value && target != null && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == true)
-        {
-            Vector3 directionToTarget = target.position - transform.position;
-            directionToTarget.y = 0f; // Ignore the heigth
-
-            if (directionToTarget.sqrMagnitude > 0.001f)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-                rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, targetRotation, _playerStats.Value.turnSpeedTargeting * Time.fixedDeltaTime));
-            }
-
-            Vector3 right = Vector3.Cross(Vector3.up, directionToTarget.normalized);
-            Vector3 forward = directionToTarget.normalized;
-
-            Vector3 desiredDirection = right * moveInput.x + forward * moveInput.y;
-            desiredDirection.Normalize();
-
-            float inputMag = Mathf.Clamp01(moveInput.magnitude);
-            var multiplierSpeed = _playerCurrentState.Value == PlayerState.Running ? _playerStats.Value.runSpeed : _playerStats.Value.strafeSpeed;
-            Vector3 desiredHorizontalVel = desiredDirection * multiplierSpeed * inputMag;
-
-            // Get current velocity
-            Vector3 vel = rigidbodyPlayer.linearVelocity;
-
-            // Replace only XZ components
-            vel.x = desiredHorizontalVel.x;
-            vel.z = desiredHorizontalVel.z;
-
-            // Reassign velocity once
-            rigidbodyPlayer.linearVelocity = vel;
-
-            rsoPlayerPosition.Value = transform.position;
-            rsoPlayerRotation.Value = transform.rotation;
-
-            if (moveInput.sqrMagnitude > 0.0001f)
-            {
-                rseOnAnimationBoolValueChange.Call(moveParam, true);
-                rseOnAnimationFloatValueChange.Call(speedParam, vel.magnitude);
-                rseOnAnimationFloatValueChange.Call(_strafXParam, moveInput.x);
-                rseOnAnimationFloatValueChange.Call(_strafYParam, moveInput.y);
-
-                if (_playerCurrentState.Value != PlayerState.Running)
-                {
-                    _onPlayerAddState.Call(PlayerState.Moving);
-                }
-
-            }
-            else
-            {
-                rseOnAnimationFloatValueChange.Call(speedParam, 0);
-                rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
-                rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
-                rseOnAnimationBoolValueChange.Call(moveParam, false);
-                _onPlayerAddState.Call(PlayerState.None);
-
-            }
-
-            return;
-        }
+        
     }
 
     private void FixedUpdate()
     {
+        UpdateGround();
+
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false)
         {
             rseOnAnimationFloatValueChange.Call(speedParam, 0);
@@ -173,107 +158,381 @@ public class S_PlayerMovement : MonoBehaviour
             rseOnAnimationBoolValueChange.Call(moveParam, false);
 
             if (_playerCurrentState.Value != PlayerState.Dodging) // Allow movement after dodging
-            { 
+            {
                 rigidbodyPlayer.linearVelocity = Vector3.zero;
             }
-
-            //return;
         }
 
 
 
         if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
         {
-            if (!rsoPlayerIsTargeting.Value && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == true || !rsoPlayerIsTargeting.Value && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == true)
+            if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == true ||
+                _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == true)
             {
-               
-                Quaternion camRot;
+                BuildDesiredDirection(out Vector3 desiredDir, out float baseSpeed);
 
-                if (inputCanceledOrNoInput == true)
+                if (rsoPlayerIsTargeting.Value && target != null)
                 {
-                    camRot = rsoCameraRotation ? rsoCameraRotation.Value : Quaternion.identity; //take the rotation of the camera if exist otherwise take the world
+                    Vector3 toTarget = target.position - transform.position;
+                    toTarget.y = 0f;
+                    if (toTarget.sqrMagnitude > 1e-4f)
+                    {
+                        Quaternion face = Quaternion.LookRotation(toTarget.normalized, Vector3.up);
+                        rigidbodyPlayer.MoveRotation(
+                            Quaternion.Slerp(rigidbodyPlayer.rotation, face, _playerStats.Value.turnSpeedTargeting * Time.fixedDeltaTime)
+                        );
+                    }
                 }
-                else
+                else if (desiredDir.sqrMagnitude > 1e-6f)
                 {
-                    camRot = camRotInInputPerformed;
-                }
-
-                Vector3 camForward = camRot * Vector3.forward;
-                camForward.y = 0f; //ignore vertical camera forward
-                camForward.Normalize();
-
-                Vector3 camRight = camRot * Vector3.right;
-                camRight.y = 0f;
-                camRight.Normalize();
-
-                Vector3 desiredDir = camRight * moveInput.x + camForward * moveInput.y; //desired direction in world space from the input and the camera orientation
-
-                if (moveInput != Vector2.zero) //turn character only if there is some input
-                {
-                    desiredDir.Normalize();
-                    Quaternion target = Quaternion.LookRotation(desiredDir, Vector3.up);
-                    rigidbodyPlayer.MoveRotation(Quaternion.Slerp(rigidbodyPlayer.rotation, target, _playerStats.Value.turnSpeed * Time.fixedDeltaTime));
+                    Quaternion face = Quaternion.LookRotation(desiredDir, Vector3.up);
+                    rigidbodyPlayer.MoveRotation(
+                        Quaternion.Slerp(rigidbodyPlayer.rotation, face, _playerStats.Value.turnSpeed * Time.fixedDeltaTime)
+                    );
                 }
                 else
                 {
                     rigidbodyPlayer.angularVelocity = Vector3.zero;
-                    desiredDir = Vector3.zero;
                 }
 
-                float inputMag = Mathf.Clamp01(moveInput.magnitude);
+                Vector3 groundDir = desiredDir;
+                if (isGrounded && groundDir.sqrMagnitude > 1e-6f)
+                {
+                    groundDir = Vector3.ProjectOnPlane(groundDir, groundNormal).normalized;
+                }
 
-                var multiplierSpeed = _playerCurrentState.Value == PlayerState.Running ? _playerStats.Value.runSpeed : _playerStats.Value.moveSpeed;
-                Vector3 desiredHorizontalVel = desiredDir * multiplierSpeed * inputMag;
+                float speedMul = 1f;
+                if (isGrounded && groundDir.sqrMagnitude > 1e-6f)
+                {
+                    Vector3 upslope = Vector3.ProjectOnPlane(Vector3.up, groundNormal);
+                    float upslopeMag = upslope.magnitude;
 
-                // Get current velocity
+                    if (upslopeMag > 1e-6f)
+                    {
+                        upslope /= upslopeMag;
+                        float uphillDot = Vector3.Dot(groundDir, upslope);
+                        if (uphillDot > 0f)
+                        {
+                            float t = Mathf.InverseLerp(slopeSlowStart, slopeSlowMax, groundAngle);
+                            float penalty = Mathf.Clamp01(t) * slopeSlowAtMax;
+                            speedMul = 1f - penalty;
+
+                            speedMul = 1f - (1f - speedMul) * uphillDot;
+                            speedMul = Mathf.Clamp(speedMul, 0.1f, 1f);
+                        }
+                    }
+                }
+                baseSpeed *= speedMul;
+
+                groundDir = LimitSteepDescend(groundDir);
+
+                Vector3 desiredVel = groundDir * baseSpeed;
+                if (preventFallFromEdges && desiredVel.sqrMagnitude > 1e-6f)
+                {
+                    Vector3 stepDir = desiredVel.normalized;
+                    if (!HasGroundAhead(rigidbodyPlayer.position, stepDir * edgeProbeDistance, out _))
+                        desiredVel = Vector3.zero;
+                }
+
                 Vector3 vel = rigidbodyPlayer.linearVelocity;
+                vel.x = desiredVel.x;
+                vel.z = desiredVel.z;
 
-                // Replace only XZ components
-                vel.x = desiredHorizontalVel.x;
-                vel.z = desiredHorizontalVel.z;
-
-                // Reassign velocity once
+                if (isGrounded)
+                {
+                    float vn = Vector3.Dot(vel, groundNormal);
+                    if (vn > 0f) vel -= groundNormal * vn;
+                    const float targetVn = -0.6f;
+                    if (vn > targetVn) vel += -groundNormal * (vn - targetVn);
+                }
                 rigidbodyPlayer.linearVelocity = vel;
+
+                // Animations
+                float horizSpeed = new Vector2(vel.x, vel.z).magnitude;
+                rseOnAnimationFloatValueChange.Call(speedParam, horizSpeed);
+
+                bool targetMode = rsoPlayerIsTargeting.Value && target != null;
+                PushMovementAnims(targetMode, horizSpeed, moveInput);
 
                 if (moveInput.sqrMagnitude > 0.0001f && _playerCurrentState.Value != PlayerState.Running)
                 {
-                    rseOnAnimationFloatValueChange.Call(speedParam, vel.magnitude);
-                    rseOnAnimationBoolValueChange.Call(moveParam, true);
                     _onPlayerAddState.Call(PlayerState.Moving);
-
-                    //if (_playerCurrentState.Value != PlayerState.Running)
-                    //{
-                    //}
-
                 }
-                else if (_isInputCanceled == false && _playerCurrentState.Value == PlayerState.Running)
+                else if (_playerCurrentState.Value == PlayerState.Running && moveInput.sqrMagnitude > 0.0001f)
                 {
-                    rseOnAnimationFloatValueChange.Call(speedParam, vel.magnitude);
-                    rseOnAnimationBoolValueChange.Call(moveParam, true);
+                    _isInputCanceled = false;
                 }
                 else
                 {
-                    rseOnAnimationFloatValueChange.Call(speedParam, 0);
-                    rseOnAnimationBoolValueChange.Call(moveParam, false);
                     _onPlayerAddState.Call(PlayerState.None);
                     _isInputCanceled = false;
                 }
 
                 rsoPlayerPosition.Value = transform.position;
                 rsoPlayerRotation.Value = transform.rotation;
-
-                if (inputCanceledOrNoInput == true)
-                {
-                    camRotInInputPerformed = camRot;
-                }
             }
         }
         else
         {
             rigidbodyPlayer.linearVelocity = Vector3.zero;
-
             rseOnAnimationFloatValueChange.Call(speedParam, 0);
         }
     }
+
+    void DoKnockbackOnHit(AttackContact attackContact)
+    {
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
+
+        knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact, false));
+    }
+
+    void DoKnockbackOnParry(AttackContact attackContact)
+    {
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
+
+        knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact, true));
+
+        _onPlayerAddState.Call(PlayerState.HitReact);
+
+        StartCoroutine(S_Utils.Delay(attackContact.data.knockbackOnParryDuration, () =>
+        {
+            _onPlayerAddState.Call(PlayerState.None);
+        }));
+    }
+
+    IEnumerator KnockbackCoroutine(AttackContact contact, bool fromParry)
+    {
+        var data = contact.data;
+        float duration = fromParry ? data.knockbackOnParryDuration : data.knockbackHitDuration;
+        float distance = fromParry ? data.knockbackOnParrryDistance : data.knockbackHitDistance;
+
+        if (duration <= 0f || distance <= 0f)
+            yield break;
+
+        Vector3 dir;
+
+        if (contact.data.attackDirection != Vector3.zero)
+        {
+            dir = contact.data.attackDirection.normalized;
+        }
+        else
+        {
+            dir = (transform.position - contact.source.transform.position).normalized;
+        }
+
+        dir = Vector3.ProjectOnPlane(dir, groundNormal).normalized;
+        if (dir.sqrMagnitude < 0.0001f) yield break;
+
+        float allowedDist = ProbeObstacle(dir, distance);
+
+        allowedDist = ProbeGroundAhead(dir, allowedDist);
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + dir * allowedDist;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+
+            Vector3 next = Vector3.Lerp(startPos, endPos, t);
+
+            rigidbodyPlayer.MovePosition(next);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        rigidbodyPlayer.MovePosition(endPos);
+    }
+
+    void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
+    {
+        float height = Mathf.Max(capsule.height * Mathf.Abs(transform.lossyScale.y), capsule.radius * 2f);
+        radius = capsule.radius * Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));
+        Vector3 center = transform.TransformPoint(capsule.center);
+        Vector3 up = transform.up;
+        top = center + up * (height * 0.5f - radius);
+        bottom = center - up * (height * 0.5f - radius);
+    }
+
+    bool CheckGround(out RaycastHit hit)
+    {
+        GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
+
+        Vector3 probeStart = bottom + Vector3.up * 0.02f;
+        float dist = groundCheckDist + 0.05f;
+
+        bool ok = Physics.Raycast(
+            probeStart, Vector3.down, out hit, dist,
+            groundMask, QueryTriggerInteraction.Ignore
+        );
+
+        if (ok)
+        {
+            float ang = Vector3.Angle(hit.normal, Vector3.up);
+            if (ang > maxSlopeAngle) ok = false;
+        }
+        return ok;
+    }
+
+    void UpdateGround()
+    {
+        if (CheckGround(out var hit))
+        {
+            isGrounded = true;
+            groundNormal = hit.normal;
+            groundAngle = Vector3.Angle(groundNormal, Vector3.up);
+        }
+        else
+        {
+            isGrounded = false;
+            groundNormal = Vector3.up;
+            groundAngle = 90f;
+        }
+    }
+
+    void ApplyGroundStick(ref Vector3 vel)
+    {
+        if (!isGrounded) return;
+
+        if (vel.y > 0f) vel.y = 0f;
+        rigidbodyPlayer.AddForce(Vector3.down * stickToGroundForce, ForceMode.Acceleration);
+
+        if (CheckGround(out var hit) && rigidbodyPlayer.linearVelocity.magnitude <= 3f)
+        {
+            float corr = hit.distance - skin;
+            if (Mathf.Abs(corr) < 0.03f)
+            {
+                rigidbodyPlayer.MovePosition(rigidbodyPlayer.position + Vector3.down * corr);
+            }
+        }
+    }
+
+    Vector3 LimitSteepDescend(Vector3 along)
+    {
+        if (!isGrounded) return along;
+        if (groundAngle <= maxSlopeAngle) return along;
+
+        Vector3 downhill = Vector3.Cross(Vector3.Cross(groundNormal, Vector3.up), groundNormal).normalized;
+        float dotDown = Vector3.Dot(along, downhill);
+        if (dotDown > 0f) along -= downhill * dotDown;
+        return along.normalized;
+    }
+
+    bool HasGroundAhead(Vector3 currentPos, Vector3 horizontalStep, out RaycastHit hit)
+    {
+        Vector3 probeOrigin = currentPos + horizontalStep + Vector3.up * edgeProbeHeight;
+        if (Physics.Raycast(probeOrigin, Vector3.down, out hit, edgeProbeHeight * 2f, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            float ang = Vector3.Angle(hit.normal, Vector3.up);
+            return ang <= maxDownStepAngle;
+        }
+        return false;
+    }
+
+    void BuildDesiredDirection(out Vector3 desiredDir, out float baseSpeed)
+    {
+        float inputMag = Mathf.Clamp01(moveInput.magnitude);
+        bool running = (_playerCurrentState.Value == PlayerState.Running);
+
+        if (rsoPlayerIsTargeting.Value && target != null)// If targeting mode
+        {
+            Vector3 toTarget = target.position - transform.position;
+            toTarget.y = 0f;
+            if (toTarget.sqrMagnitude > 1e-6f)
+            {
+                Vector3 forward = toTarget.normalized;
+                Vector3 right = Vector3.Cross(Vector3.up, forward).normalized; //Strafe basis
+
+                desiredDir = (right * moveInput.x + forward * moveInput.y);
+            }
+            else
+            {
+                desiredDir = Vector3.zero;
+            }
+
+            baseSpeed = (running ? _playerStats.Value.runSpeed : _playerStats.Value.strafeSpeed) * inputMag;
+        }
+        else
+        {
+            Quaternion camRot = (inputCanceledOrNoInput ? (rsoCameraRotation ? rsoCameraRotation.Value : Quaternion.identity) : camRotInInputPerformed);
+
+            Vector3 camF = camRot * Vector3.forward; camF.y = 0f; camF.Normalize();
+            Vector3 camR = camRot * Vector3.right; camR.y = 0f; camR.Normalize();
+
+            desiredDir = camR * moveInput.x + camF * moveInput.y;
+            baseSpeed = (running ? _playerStats.Value.runSpeed : _playerStats.Value.moveSpeed) * inputMag;
+
+            if (inputCanceledOrNoInput) camRotInInputPerformed = camRot;
+        }
+
+        if (desiredDir.sqrMagnitude > 1e-6f) desiredDir.Normalize();
+    }
+
+    void PushMovementAnims(bool isTargetMode, float horizSpeed, Vector2 rawInput)
+    {
+        rseOnAnimationFloatValueChange.Call(speedParam, horizSpeed);
+
+        if (rawInput.sqrMagnitude > 0.0001f)
+        {
+            rseOnAnimationBoolValueChange.Call(moveParam, true);
+
+            if (isTargetMode)
+            {
+                rseOnAnimationFloatValueChange.Call(_strafXParam, rawInput.x);
+                rseOnAnimationFloatValueChange.Call(_strafYParam, rawInput.y);
+            }
+            else
+            {
+                rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
+                rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
+            }
+        }
+        else
+        {
+            rseOnAnimationBoolValueChange.Call(moveParam, false);
+            rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
+            rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
+            rseOnAnimationFloatValueChange.Call(speedParam, 0f);
+        }
+    }
+
+    float ProbeObstacle(Vector3 dir, float maxDist)
+    {
+        GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
+
+        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, maxDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        {
+            return Mathf.Max(0f, hit.distance - 0.03f);
+        }
+        return maxDist;
+    }
+
+    float ProbeGroundAhead(Vector3 dir, float maxDist)
+    {
+        if (!preventFallFromEdges) return maxDist;
+
+        Vector3 probePos = transform.position + dir * maxDist + Vector3.up * edgeProbeHeight;
+        if (Physics.Raycast(probePos, Vector3.down, out var hit, edgeProbeHeight * 2f, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            float ang = Vector3.Angle(hit.normal, Vector3.up);
+            if (ang > maxDownStepAngle)
+            {
+                return 0f;
+            }
+            return maxDist;
+        }
+        return 0f;
+    }
+
+
 }
 

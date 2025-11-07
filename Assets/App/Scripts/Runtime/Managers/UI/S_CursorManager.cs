@@ -7,8 +7,11 @@ using UnityEngine.UI;
 public class S_CursorManager : MonoBehaviour
 {
     [TabGroup("References")]
-    [Title("Cursor")]
-    [SerializeField] private Texture2D handCursor;
+    [Title("Cursors")]
+    [SerializeField] private Texture2D defaultCursor;
+
+    [TabGroup("References")]
+    [SerializeField] private Texture2D SelectableCursor;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
@@ -34,9 +37,14 @@ public class S_CursorManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Device rsoDevice;
+
     private void Awake()
     {
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
         rsoNavigation.Value = new();
+        rsoDevice.Value = S_EnumDevice.None;
     }
 
     private void OnEnable()
@@ -67,11 +75,33 @@ public class S_CursorManager : MonoBehaviour
     {
         if (Gamepad.current != null)
         {
+            Device(Gamepad.current);
             HideMouseCursor();
         }
         else
         {
+            rsoDevice.Value = S_EnumDevice.KeyboardMouse;
             ShowMouseCursor();
+        }
+    }
+
+    private void Device(InputDevice device)
+    {
+        string layout = device.layout.ToLower();
+        string displayName = device.displayName?.ToLower() ?? "";
+        string description = device.description.product?.ToLower() ?? "";
+
+        if (layout.Contains("dualshock") || layout.Contains("dualSense") || displayName.Contains("playstation") || description.Contains("dualshock") || description.Contains("dualsense"))
+        {
+            rsoDevice.Value = S_EnumDevice.PlastationController;
+        }
+        else if (layout.Contains("xinput") || displayName.Contains("xbox") || description.Contains("xbox"))
+        {
+            rsoDevice.Value = S_EnumDevice.XboxController;
+        }
+        else
+        {
+            rsoDevice.Value = S_EnumDevice.None;
         }
     }
 
@@ -83,6 +113,8 @@ public class S_CursorManager : MonoBehaviour
             {
                 HideMouseCursor();
 
+                Device(device);
+
                 if (rsoNavigation.Value.selectableDefault != null)
                 {
                     SetFocus(rsoNavigation.Value.selectableDefault);
@@ -92,6 +124,7 @@ public class S_CursorManager : MonoBehaviour
             {
                 ResetFocus();
 
+                rsoDevice.Value = S_EnumDevice.KeyboardMouse;
                 ShowMouseCursor();
             }
         }
@@ -102,7 +135,7 @@ public class S_CursorManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
     }
 
     private void HideMouseCursor()
@@ -110,16 +143,14 @@ public class S_CursorManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
     }
 
     private void MouseEnter(Selectable uiElement)
     {
         if (uiElement.interactable)
         {
-            Vector2 cursorOffset = new Vector2(handCursor.width / 3, handCursor.height / 40);
-
-            Cursor.SetCursor(handCursor, cursorOffset, CursorMode.Auto);
+            Cursor.SetCursor(SelectableCursor, Vector2.zero, CursorMode.Auto);
         }
     }
 
@@ -127,7 +158,7 @@ public class S_CursorManager : MonoBehaviour
     {
         if (uiElement.interactable)
         {
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
         }
     }
 
@@ -141,7 +172,7 @@ public class S_CursorManager : MonoBehaviour
 
     private void ResetCursor()
     {
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
     }
 
     private void ResetFocus()

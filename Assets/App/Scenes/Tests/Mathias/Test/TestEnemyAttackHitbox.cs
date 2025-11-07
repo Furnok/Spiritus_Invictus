@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TestEnemyAttackHitbox : MonoBehaviour, IAttackProvider
 {
@@ -12,7 +12,7 @@ public class TestEnemyAttackHitbox : MonoBehaviour, IAttackProvider
 
     //[Header("Output")]
 
-    EnemyAttackData _attackData /*=> _testAttackData.Value*/;
+    S_StructEnemyAttackData _attackData /*=> _testAttackData.Value*/;
 
     void Awake()
     {
@@ -25,7 +25,7 @@ public class TestEnemyAttackHitbox : MonoBehaviour, IAttackProvider
         //Debug.Log($"{test.damage} && {test.attackType}");
     }
 
-    public ref EnemyAttackData GetAttackData()
+    public ref S_StructEnemyAttackData GetAttackData()
     {
         return ref _attackData;
     }

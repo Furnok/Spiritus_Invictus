@@ -11,6 +11,10 @@ public class S_Reminiscence : MonoBehaviour
     [Title("Camera Cinematic")]
     [SerializeField] private int cameraIndex;
 
+    [TabGroup("References")]
+    [Title("Content")]
+    [SerializeField] private GameObject content;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
 
@@ -34,6 +38,7 @@ public class S_Reminiscence : MonoBehaviour
     {
         if (other.CompareTag(tagName))
         {
+            content.SetActive(true);
             rseOnPlayerInteract.action += Interract;
         }
     }
@@ -42,6 +47,7 @@ public class S_Reminiscence : MonoBehaviour
     {
         if (other.CompareTag(tagName))
         {
+            content.SetActive(false);
             rseOnPlayerInteract.action -= Interract;
         }
     }

@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1447424327842527477}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -88,7 +88,7 @@ CapsuleCollider:
   m_Radius: 0.2
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 1.4, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &2402318043027937270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,6 +105,7 @@ MonoBehaviour:
   _parryStartTime: {fileID: 11400000, guid: 9da05f4356989674baabec68e1a341fa, type: 2}
   _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}
+  _hurtboxCollider: {fileID: 5194451788174936841}
   _onAttackCollide: {fileID: 11400000, guid: 01e50bd3bc6fbd64699dca52d9398f0a, type: 2}
 --- !u!1 &2791005402213774945
 GameObject:
@@ -161,10 +162,92 @@ MonoBehaviour:
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}
   _attackCanHitPlayer: {fileID: 11400000, guid: a2911e0025cdad94891abd994425effc, type: 2}
   _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
+  _playerMotorGO: {fileID: 8174768722539903590}
   _onAttackCollide: {fileID: 11400000, guid: 01e50bd3bc6fbd64699dca52d9398f0a, type: 2}
   _rseOnParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
   _rseOnPlayerHit: {fileID: 11400000, guid: 577377e3b86e97b4eb3c9400800347ce, type: 2}
   _onPlayerGainConviction: {fileID: 11400000, guid: c3ba1e97cce4a3d4e929f7197f47a3c1, type: 2}
+--- !u!1 &3087244059546289160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2297367305915252104}
+  m_Layer: 10
+  m_Name: AimPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2297367305915252104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3087244059546289160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3473314807466382836}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3486870078301174081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8153173563361757933}
+  - component: {fileID: 4236493625650689256}
+  m_Layer: 10
+  m_Name: VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8153173563361757933
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3486870078301174081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6828950947144670064}
+  m_Father: {fileID: 3473314807466382836}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4236493625650689256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3486870078301174081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 255e9b0bbe772d54cb99c920c61a86b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _forwardOffset: 0.5
+  _upwardOffset: 0.2
+  _particleEffectParent: {fileID: 6828950947144670064}
+  _prefabParryEffect: {fileID: 7037283364390755613, guid: f671b5c181719594aaad66529f73ace8, type: 3}
+  _onParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
 --- !u!1 &3630292079689624107
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +347,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 10
-  m_Center: {x: 0, y: 1.4, z: 0}
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &8480268941253436221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,7 +436,7 @@ CapsuleCollider:
   m_Radius: 1
   m_Height: 2.5
   m_Direction: 1
-  m_Center: {x: 0, y: 1.4, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &594229652376039088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,6 +451,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}
   _attackCanHitPlayer: {fileID: 11400000, guid: a2911e0025cdad94891abd994425effc, type: 2}
+--- !u!1 &7802207246985257632
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6828950947144670064}
+  m_Layer: 10
+  m_Name: ParryEffects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6828950947144670064
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7802207246985257632}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8153173563361757933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8174768722539903590
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,6 +492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2916006883664575983}
   - component: {fileID: 8798378845392338462}
+  - component: {fileID: 8254438765904868356}
   m_Layer: 10
   m_Name: Body
   m_TagString: Player
@@ -394,7 +509,7 @@ Transform:
   m_GameObject: {fileID: 8174768722539903590}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -407,7 +522,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8174768722539903590}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: bab5456402744074f9e9276e9b61798e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -422,7 +537,20 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &8254438765904868356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8174768722539903590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85115176fcdb0464fb0025332d10b4c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aimPointObject: {fileID: 3087244059546289160}
 --- !u!1 &8313228278302547986
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,6 +593,8 @@ Transform:
   m_Children:
   - {fileID: 722889686683985793}
   - {fileID: 4305507460654289795}
+  - {fileID: 2297367305915252104}
+  - {fileID: 8153173563361757933}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &4310562184785814063
@@ -525,6 +655,22 @@ MonoBehaviour:
   speedParam: MoveSpeed
   _strafXParam: StrafeDirectionX
   _strafYParam: StrafeDirectionY
+  capsule: {fileID: 8798378845392338462}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  groundCheckDist: 0.5
+  skin: 0.02
+  stickToGroundForce: 12
+  preventFallFromEdges: 1
+  edgeProbeDistance: 0.6
+  edgeProbeHeight: 0.5
+  slopeSlowStart: 5
+  slopeSlowMax: 45
+  slopeSlowAtMax: 0.3
   rigidbodyPlayer: {fileID: 4310562184785814063}
   _playerIsDodging: {fileID: 11400000, guid: f932dda1749effc4aac91cb2aeeff6d5, type: 2}
   _playerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
@@ -536,6 +682,8 @@ MonoBehaviour:
   rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
   rseOnPlayerCancelTargeting: {fileID: 11400000, guid: d8d0a24f7352ea84ba1f5614f16bb752, type: 2}
   _onPlayerMoveInputCancel: {fileID: 11400000, guid: aefdd8190e1be8d44a7e72a7506b2ee0, type: 2}
+  _rseOnParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
+  _rseOnPlayerHit: {fileID: 11400000, guid: 577377e3b86e97b4eb3c9400800347ce, type: 2}
   rseOnAnimationBoolValueChange: {fileID: 11400000, guid: f3b68030aacb033438a094c87c0e44ca, type: 2}
   rseOnAnimationFloatValueChange: {fileID: 11400000, guid: 647c462e77eded84f8317681638362bb, type: 2}
   rsoCameraRotation: {fileID: 11400000, guid: 04261daa98f35d44f84baecbdcfa77df, type: 2}
@@ -659,6 +807,16 @@ MonoBehaviour:
   _dodgeParam: isDodging
   _dodgeDirXParam: DodgeDirectionX
   _dodgeDirYParam: DodgeDirectionY
+  _capsule: {fileID: 8798378845392338462}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  edgeProbeDistance: 0.6
+  edgeProbeHeight: 0.5
+  stopFromWall: 0.03
   _ssoPlayerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
   _rb: {fileID: 4310562184785814063}
   _playerIsDodging: {fileID: 11400000, guid: f932dda1749effc4aac91cb2aeeff6d5, type: 2}
@@ -705,7 +863,6 @@ MonoBehaviour:
   rseOnPlayerAttack: {fileID: 11400000, guid: 87ff9d1d837c0324eb87e1b22c96bdf5, type: 2}
   _rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   _onPlayerAttackInputCancel: {fileID: 11400000, guid: 3409a69fdaba2c54cbb587daee9258f3, type: 2}
-  ssoDelayIncantationAttack: {fileID: 11400000, guid: f02ebcf44e98c9d43b0d0f66a50b1935, type: 2}
   rseOnSpawnProjectile: {fileID: 11400000, guid: 908a575ef5f3d5145b1903cb17a80456, type: 2}
   rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
   _onPlayerAddState: {fileID: 11400000, guid: 38569afc7ffff0c4eb66c76bc8a6146e, type: 2}

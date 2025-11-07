@@ -49,22 +49,11 @@ public class S_Settings : MonoBehaviour
         }
     }
 
-    public void UpdateFullscreen(bool value)
+    public void UpdateHoldLockTarget(bool value)
     {
-        if (isLoaded && rsoSettingsSaved.Value.fullScreen != value)
+        if (isLoaded && rsoSettingsSaved.Value.holdLockTarget != value)
         {
-            if (value)
-            {
-                Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-            }
-            else
-            {
-                Screen.fullScreenMode = FullScreenMode.Windowed;
-            }
-
-            Screen.fullScreen = value;
-
-            rsoSettingsSaved.Value.fullScreen = value;
+            rsoSettingsSaved.Value.holdLockTarget = value;
 
             Save();
         }
@@ -104,6 +93,27 @@ public class S_Settings : MonoBehaviour
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
 
             rsoSettingsSaved.Value.resolutionIndex = index;
+
+            Save();
+        }
+    }
+
+    public void UpdateFullscreen(bool value)
+    {
+        if (isLoaded && rsoSettingsSaved.Value.fullScreen != value)
+        {
+            if (value)
+            {
+                Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+            }
+            else
+            {
+                Screen.fullScreenMode = FullScreenMode.Windowed;
+            }
+
+            Screen.fullScreen = value;
+
+            rsoSettingsSaved.Value.fullScreen = value;
 
             Save();
         }

@@ -26,7 +26,6 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] RSE_OnPlayerAttackInputCancel _onPlayerAttackInputCancel;
 
     [Header("Output")]
-    [SerializeField] private SSO_BasicAttackDelayIncantation ssoDelayIncantationAttack;
     [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
@@ -243,6 +242,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
             _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.attackRecoveryDelay, () =>
             {
                 _onPlayerAddState.Call(PlayerState.None);
+                if (_attackChargeCoroutine == null) return;
+                _attackChargeCoroutine = null;
             }));
 
         }));

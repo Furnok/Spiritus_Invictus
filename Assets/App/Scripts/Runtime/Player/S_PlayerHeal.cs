@@ -41,6 +41,7 @@ public class S_PlayerHeal : MonoBehaviour
     private void TryHeal()
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Healing) == false) return;
+
         if (_playerCurrentHealth.Value >= ssoPlayerStats.Value.maxHealth || _playerCurrentConviction.Value < _playerConvictionData.Value.healCost) return;
 
         _onPlayerAddState.Call(PlayerState.Healing);

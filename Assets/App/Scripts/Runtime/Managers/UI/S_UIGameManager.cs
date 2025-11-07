@@ -1,10 +1,24 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_UIGameManager : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [Title("Time")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float animationSlider;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeBoss;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeSkip;
+
     [TabGroup("References")]
     [Title("Sliders")]
     [SerializeField] private Slider sliderBossHealth;
@@ -80,10 +94,15 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private SSO_PlayerAttackSteps ssoPlayerAttackSteps;
 
     [TabGroup("Outputs")]
-    [SerializeField] private SSO_ExtractText ssoExtractText;
+    [SerializeField] private SSO_Extract ssoExtractText;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
+
+    private Tween healthTween;
+    private Tween convictionTween;
+    private Tween preconvictionTween;
+    private Tween skipTween;
 
     private void Awake()
     {
@@ -118,26 +137,52 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplaySkip.action -= DisplaySkip;
         rseOnSkipHold.action -= SetSkipHoldValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
+
+        healthTween?.Kill();
+        convictionTween?.Kill();
+        preconvictionTween?.Kill();
     }
 
     private void DisplayBossHealth(bool value)
     {
-        sliderBossHealth.gameObject.SetActive(value);
+        sliderBossHealth.GetComponent<CanvasGroup>()?.DOKill();
+
+        if (value && !sliderBossHealth.gameObject.activeInHierarchy)
+        {
+            sliderBossHealth.gameObject.gameObject.SetActive(true);
+
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeFadeBoss).SetEase(Ease.Linear);
+        }
+        else if (!value)
+        {
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
+            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeBoss).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                sliderBossHealth.gameObject.SetActive(false);
+            });
+        }
     }
 
     private void SetHealthSliderValue(float health)
     {
-        sliderHealth.value = health;
+        healthTween?.Kill();
+
+        healthTween = sliderHealth.DOValue(health, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private void SetConvictionSliderValue(float conviction)
     {
-        sliderConviction.value = conviction;
+        convictionTween?.Kill();
+
+        convictionTween = sliderConviction.DOValue(conviction, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private void SetPreconvictionSliderValue(float preconvition)
     {
-        sliderPlayerAttackSteps.value = preconvition;
+        preconvictionTween?.Kill();
+
+        preconvictionTween = sliderPlayerAttackSteps.DOValue(preconvition, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private IEnumerator BuildTicksNextFrame()
@@ -185,12 +230,26 @@ public class S_UIGameManager : MonoBehaviour
 
     private void DisplaySkip(bool value)
     {
-        skipWindow.SetActive(value);
+        skipWindow.GetComponent<CanvasGroup>()?.DOKill();
+
+        if (value && !skipWindow.activeInHierarchy)
+        {
+            skipWindow.SetActive(true);
+
+            skipWindow.GetComponent<CanvasGroup>().alpha = 0f;
+            skipWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+        }
+        else if (!value)
+        {
+            skipWindow.SetActive(false);
+        }
     }
 
     private void SetSkipHoldValue(float value)
     {
-        imageSkip.fillAmount = value / ssoCameraData.Value.holdSkipTime;
+        skipTween?.Kill();
+
+        skipTween = imageSkip.DOFillAmount(value / ssoCameraData.Value.holdSkipTime, animationSlider).SetEase(Ease.OutCubic);
     }
 
     private void DiplayExtract(int index)

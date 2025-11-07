@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
@@ -8,12 +7,12 @@ public class S_TargetingManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private bool drawGizmos;
-    [SerializeField, S_AnimationName] string _targetParam;
-    [SerializeField] RSO_IsTargetToggleMode _rsoIsTargetToggleMode;
+    
     [Header("Input")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
     [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
     [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+    [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
     [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
@@ -29,7 +28,7 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private SSO_TargetObstacleBreakDelay ssoPargetObstacleBreakDelay;
     [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
-
+    [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     private GameObject currentTarget = null;
     private HashSet<GameObject> targetsPossible = new();
@@ -48,6 +47,7 @@ public class S_TargetingManager : MonoBehaviour
         rseOnTargetsInRangeChange.action += OnChangeTargetsPosible;
         rseOnPlayerTargeting.action += OnPlayerTargetingInput;
         rseOnPlayerTargetingCancel.action += OnPlayerCancelTargetingInput;
+        rseOnCancelTargeting.action += CancelTargeting;
         rseOnPlayerSwapTarget.action += OnSwapTargetInput;
 
         rseOnEnemyTargetDied.action += OnEnemyTargetDied;
@@ -60,6 +60,7 @@ public class S_TargetingManager : MonoBehaviour
         rseOnTargetsInRangeChange.action -= OnChangeTargetsPosible;
         rseOnPlayerTargeting.action -= OnPlayerTargetingInput;
         rseOnPlayerTargetingCancel.action -= OnPlayerCancelTargetingInput;
+        rseOnCancelTargeting.action -= CancelTargeting;
         rseOnPlayerSwapTarget.action -= OnSwapTargetInput;
 
         rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
@@ -120,7 +121,7 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnPlayerTargetingInput()
     {
-        if (_rsoIsTargetToggleMode.Value == true && rsoPlayerIsTargeting.Value == true)
+        if (rsoSettingsSaved.Value.holdLockTarget == false && rsoPlayerIsTargeting.Value == true)
         {
             CancelTargeting();
             return;
@@ -139,7 +140,7 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnPlayerCancelTargetingInput()
     {
-        if(_rsoIsTargetToggleMode.Value == true) return;
+        if(rsoSettingsSaved.Value.holdLockTarget == false) return;
         
         CancelTargeting();
         

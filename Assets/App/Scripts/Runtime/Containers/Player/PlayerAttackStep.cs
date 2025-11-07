@@ -10,4 +10,5 @@ public struct PlayerAttackStep
     public float timeHoldingInput;
     public float speed;
     public Color color;
+    public ProjectileData projectileData;
 }

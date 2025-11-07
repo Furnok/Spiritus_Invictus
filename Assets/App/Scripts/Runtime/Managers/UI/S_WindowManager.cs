@@ -1,18 +1,27 @@
-﻿using Sirenix.OdinInspector;
-using System.Collections.Generic;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
-    [TabGroup("References")]
-    [Title("Windows")]
-    [SerializeField] private GameObject mainMenuWindow;
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFade;
 
     [TabGroup("References")]
+    [Title("Windows")]
     [SerializeField] private GameObject menuWindow;
 
     [TabGroup("References")]
     [SerializeField] private GameObject gameWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject fadeWindow;
+
+    [TabGroup("References")]
+    [Title("Images")]
+    [SerializeField] private Image imageFade;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
@@ -25,6 +34,12 @@ public class S_WindowManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnFadeIn rseOnFadeIn;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnFadeOut rsOnFadeOut;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
@@ -44,11 +59,17 @@ public class S_WindowManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InGame rsoInGame;
 
-    private List<GameObject> currentWindows = new();
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     private void Awake()
     {
         rsoInGame.Value = true;
+        rsoCurrentWindows.Value = new();
+        fadeWindow.SetActive(true);
     }
 
     private void OnEnable()
@@ -57,6 +78,8 @@ public class S_WindowManager : MonoBehaviour
         rseOnCloseWindow.action += CloseWindow;
         rseOnCloseAllWindows.action += CloseAllWindows;
         rseOnPlayerPause.action += PauseGame;
+        rseOnFadeIn.action += FadeIn;
+        rsOnFadeOut.action += FadeOut;
         rseOnDisplayUIGame.action += DisplayUIGame;
     }
 
@@ -66,17 +89,42 @@ public class S_WindowManager : MonoBehaviour
         rseOnCloseWindow.action -= CloseWindow;
         rseOnCloseAllWindows.action -= CloseAllWindows;
         rseOnPlayerPause.action -= PauseGame;
+        rseOnFadeIn.action -= FadeIn;
+        rsOnFadeOut.action -= FadeOut;
         rseOnDisplayUIGame.action -= DisplayUIGame;
+
+        imageFade?.DOKill();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(S_Utils.DelayFrame(() => FadeIn()));
     }
 
     private void DisplayUIGame(bool value)
     {
-        gameWindow.SetActive(value);
+        gameWindow.GetComponent<CanvasGroup>()?.DOKill();
+
+        if (value && !gameWindow.activeInHierarchy)
+        {
+            gameWindow.gameObject.SetActive(true);
+
+            gameWindow.GetComponent<CanvasGroup>().alpha = 0f;
+            gameWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
+        }
+        else if (!value)
+        {
+            gameWindow.GetComponent<CanvasGroup>().alpha = 1f;
+            gameWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                gameWindow.SetActive(false);
+            });
+        }
     }
 
     private void PauseGame()
     {
-        if (rsoInGame.Value && currentWindows.Count < 1)
+        if (rsoInGame.Value && rsoCurrentWindows.Value.Count < 1)
         {
             if (!menuWindow.activeInHierarchy)
             {
@@ -105,28 +153,53 @@ public class S_WindowManager : MonoBehaviour
 
     private void OpenWindow(GameObject window)
     {
+        window.GetComponent<CanvasGroup>()?.DOKill();
+
         window.SetActive(true);
 
-        currentWindows.Add(window);
+        window.GetComponent<CanvasGroup>().alpha = 0f;
+        window.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
+
+        rsoCurrentWindows.Value.Add(window);
     }
 
     private void CloseWindow(GameObject window)
     {
         if (window != null && window.activeInHierarchy)
         {
-            window.SetActive(false);
+            window.GetComponent<CanvasGroup>()?.DOKill();
 
-            currentWindows.Remove(window);
+            window.GetComponent<CanvasGroup>().alpha = 1f;
+            window.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                window.SetActive(false);
+            });
+
+            rsoCurrentWindows.Value.Remove(window);
         }
     }
 
     private void CloseAllWindows()
     {
-        foreach (var window in currentWindows)
+        foreach (var window in rsoCurrentWindows.Value)
         {
             window.SetActive(false);
         }
 
-        currentWindows.Clear();
+        rsoCurrentWindows.Value.Clear();
+    }
+
+    private void FadeIn()
+    {
+        imageFade?.DOKill();
+
+        imageFade.DOFade(0f, ssoFadeTime.Value).SetEase(Ease.Linear);
+    }
+
+    private void FadeOut()
+    {
+        imageFade?.DOKill();
+
+        imageFade.DOFade(1f, ssoFadeTime.Value).SetEase(Ease.Linear);
     }
 }

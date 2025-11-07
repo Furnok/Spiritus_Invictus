@@ -16,29 +16,39 @@ public class S_UICredits : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    private bool isClosing = false;
+
     private void OnEnable()
     {
         rseOnPlayerPause.action += Close;
+
+        isClosing = false;
     }
 
     private void OnDisable()
     {
         rseOnPlayerPause.action -= Close;
+
+        isClosing = false;
     }
 
     public void Close()
     {
-        rseOnCloseWindow.Call(gameObject);
+        if (!isClosing)
+        {
+            isClosing = true;
+            rseOnCloseWindow.Call(gameObject);
 
-        if (rsoNavigation.Value.selectablePressOldWindow == null)
-        {
-            rsoNavigation.Value.selectableFocus = null;
-            defaultWindow.SetActive(true);
-        }
-        else
-        {
-            rsoNavigation.Value.selectablePressOldWindow?.Select();
-            rsoNavigation.Value.selectablePressOldWindow = null;
+            if (rsoNavigation.Value.selectablePressOldWindow == null)
+            {
+                rsoNavigation.Value.selectableFocus = null;
+                defaultWindow.SetActive(true);
+            }
+            else
+            {
+                rsoNavigation.Value.selectablePressOldWindow?.Select();
+                rsoNavigation.Value.selectablePressOldWindow = null;
+            }
         }
     }
 }

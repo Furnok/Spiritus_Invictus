@@ -16,17 +16,14 @@ public struct PlayerStatsData
     public float turnSpeedTargeting;
     public float runSpeed;
     public float delayBeforeRunningAfterDodge;
+    public float maxSlopeAngle;
 
     [Header("Dodge values")]
-    public float dodgeForce;
     public float dodgeDuration;
     public AnimationCurve _speedDodgeCurve;
     public float dodgeDistance;
-    public float maxSlopeAngle;
 
     [Header("Parry values")]
-    public float parryToleranceBeforeHit;
-    public float parryToleranceAfterHit;
     public float parryDuration;
 
     [Header("Attack values")]
@@ -34,7 +31,4 @@ public struct PlayerStatsData
     public float delayBeforeCastAttack;
     public float timeWaitBetweenSteps;
 
-
-    [Header("Getting hit values")]
-    public float hitStunDuration;
 }

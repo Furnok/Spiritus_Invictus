@@ -23,13 +23,21 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
     [Header("Output")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
+
+    bool _isInvicible = false;
     void Awake()
     {
         _currentHealth = _maxHealth;
+        if (_maxHealth <= 0)
+        {
+            _isInvicible = true;
+        }
     }
 
     public void TakeDamage(float ammount)
     {
+        if (_isInvicible == true) return;
+
         _currentHealth -= ammount;
         if(_currentHealth <= 0)
         {
@@ -44,6 +52,7 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
         rseOnEnemyTargetDied.Call(_enemyMotor);
         _hurtbox.enabled = false;
         _enemyColisionBox.enabled = false;
+        _enemyMotor.SetActive(false);
         if (_hitbox != null)
         {
             _hitbox.enabled = false;
@@ -69,6 +78,8 @@ public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
         //_colliders.SetActive(true);
         _hurtbox.enabled = true;
         _enemyColisionBox.enabled = true;
+        _enemyMotor.SetActive(true);
+
         if (_hitbox != null)
         {
             _hitbox.enabled = true;

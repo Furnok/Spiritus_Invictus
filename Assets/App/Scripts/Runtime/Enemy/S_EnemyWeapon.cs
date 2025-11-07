@@ -1,32 +1,31 @@
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_EnemyWeapon : MonoBehaviour, IAttackProvider
 {
-    //[Header("Settings")]
-
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Enemy")]
     [SerializeField] S_EnemyAttackData S_EnemyAttackData;
-    //[Header("Input")]
 
-    //[Header("Output")]
+    private S_StructEnemyAttackData AttackData;
 
-    private EnemyAttackData AttackData;
     private void OnEnable()
     {
         S_EnemyAttackData.onChangeAttackData.AddListener(ChangeAttackData);
     }
+
     private void OnDisable()
     {
         S_EnemyAttackData.onChangeAttackData.RemoveListener(ChangeAttackData);
     }
-    public ref EnemyAttackData GetAttackData()
+
+    public ref S_StructEnemyAttackData GetAttackData()
     {
         return ref AttackData;
     }
 
-    private void ChangeAttackData(SSO_EnemyAttackData SSO_attackData)
+    private void ChangeAttackData(S_StructEnemyAttackData enemyAttackData)
     {
-        AttackData = SSO_attackData.Value;
-        Debug.Log("SetData");
+        AttackData = enemyAttackData;
     }
 }

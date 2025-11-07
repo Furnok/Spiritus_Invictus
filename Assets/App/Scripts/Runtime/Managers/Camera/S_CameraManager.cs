@@ -1,8 +1,8 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
-using UnityEditor;
 using UnityEngine;
 
 public class S_CameraManager : MonoBehaviour
@@ -29,9 +29,6 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Target")]
-    [SerializeField] private CinemachineTargetGroup targetGroupRail;
-
-    [TabGroup("References")]
     [SerializeField] private Transform playerPoint;
 
     [TabGroup("References")]
@@ -87,7 +84,7 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnSkipHold rseOnSkipHold;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+    [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
@@ -168,7 +165,7 @@ public class S_CameraManager : MonoBehaviour
 
             rseOnSkipHold.Call(currentHold);
 
-            if (currentHold >= ssoCameraData.Value.holdSkipTime)
+            if (currentHold >= ssoCameraData.Value.holdSkipTime + 0.35f)
             {
                 SkipCinematic();  
             }
@@ -194,13 +191,14 @@ public class S_CameraManager : MonoBehaviour
 
     private void SkipCinematic()
     {
+        StartCoroutine(InstantBlendlessSwitch());
         FinishCinematic();
     }
 
     private void PlayerPos(Transform player)
     {
         playerPos = player;
-        targetGroupRail.Targets[0].Object = player;
+        cinemachineCameraRail.Target.TrackingTarget = player;
     }
 
     private void CameraIntro()
@@ -261,7 +259,7 @@ public class S_CameraManager : MonoBehaviour
             return;
         }
 
-        rseOnPlayerTargetingCancel.Call();
+        rseOnCancelTargeting.Call();
         skip = StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
 
         rseOnDisplayUIGame.Call(false);
@@ -281,6 +279,18 @@ public class S_CameraManager : MonoBehaviour
         currentCamera.GetComponent<Animator>().SetTrigger("Play");
 
         currentMode = ModeCamera.Cinematic;
+    }
+
+    private IEnumerator InstantBlendlessSwitch()
+    {
+        var brain = cameraMain.GetComponent<CinemachineBrain>();
+
+        if (brain != null)
+        {
+            brain.enabled = false;
+            yield return null;
+            brain.enabled = true;
+        }
     }
 
     private void FinishCinematic()
@@ -381,7 +391,9 @@ public class S_CameraManager : MonoBehaviour
 
         playerRotationTween?.Kill();
 
-        Vector3 directionToTarget = (currentTargetPos.position - playerPos.position).normalized;
+        Vector3 directionToTarget = currentTargetPos.position - playerPos.position;
+        directionToTarget.y = 0;
+        directionToTarget.Normalize();
 
         Quaternion targetRotation = Quaternion.LookRotation(directionToTarget, Vector3.up);
 

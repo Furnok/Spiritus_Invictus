@@ -8,6 +8,9 @@ public class S_ClassSettingsSaved
     [Title("Langues")]
     public int languageIndex = 0;
 
+    [Title("Target")]
+    public bool holdLockTarget = true;
+
     [Title("Screen")]
     public bool fullScreen = true;
     public int resolutionIndex = -1;

@@ -13,9 +13,16 @@ MonoBehaviour:
   m_Name: SSO_TestAttackData_Projectile
   m_EditorClassIdentifier: 
   _value:
-    attackId: 10
+    attackId: 5
     goSourceId: 0
     attackType: 2
-    damage: 5
-    knockbackForce: 5
+    damage: 10
+    knockbackHitDuration: 0.3
+    knockbackHitDistance: 2
+    knockbackOnParryDuration: 0.2
+    knockbackOnParrryDistance: 1
+    parryToleranceBeforeHit: 0.1
+    parryToleranceAfterHit: 0.1
+    invicibilityDuration: 0.7
     convictionReduction: 0
+    attackDirection: {x: 0, y: 0, z: 0}

@@ -1,15 +1,14 @@
 ﻿using Sirenix.OdinInspector;
 using System;
-using UnityEngine;
+using UnityEngine.Localization;
 
 [Serializable]
 public class S_ClassExtract
 {
     [Title("Dialogue")]
-    [TextArea(1, 20)]
-    public string text;
+    public LocalizedString text;
 
     [Title("Time")]
     [SuffixLabel("s", Overlay = true)]
-    public int duration;
+    public int duration = 0;
 }
