@@ -18,4 +18,5 @@ public struct S_StructEnemyAttackData
     public float invicibilityDuration;
     public float convictionReduction;
     [HideInInspector] public Vector3 attackDirection;
+    [HideInInspector] public Vector3 contactPoint;
 }
