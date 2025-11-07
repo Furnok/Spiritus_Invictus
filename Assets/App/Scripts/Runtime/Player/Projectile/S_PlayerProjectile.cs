@@ -30,23 +30,11 @@ public class S_PlayerProjectile : MonoBehaviour
     private bool _randomizeArc => _projectileData.randomizeArc;
     private float _arcRandomDirectionMin;
     private float _arcRandomDirectionMax;
-    private float _travelTime => _projectileData.travelTime;
+    private float _travelTime;
     private AnimationCurve _arcCurve => _projectileData.speedAnimationCurve;
 
     int _attackStep = 0;
 
-    private void Awake()
-    {
-        if (_randomizeArc)
-        {
-            if ( _arcRandomDirectionMax < _arcRandomDirectionMin )
-            {
-                float temp = _arcRandomDirectionMax;
-                _arcRandomDirectionMax = _arcRandomDirectionMin;
-                _arcRandomDirectionMin = temp;
-            }
-        }
-    }
     public void Initialize(float damage, Transform target = null, int attackStep = 0)
     {
         this._target = target;
@@ -57,9 +45,30 @@ public class S_PlayerProjectile : MonoBehaviour
         _projectileData = _playerAttackSteps.Value.Find(x => x.step == attackStep).projectileData;
         _arcRandomDirectionMin = _projectileData.arcRandomDirectionMin;
         _arcRandomDirectionMax = _projectileData.arcRandomDirectionMax;
+
+        if (_randomizeArc)
+        {
+            if (_arcRandomDirectionMax < _arcRandomDirectionMin)
+            {
+                float temp = _arcRandomDirectionMax;
+                _arcRandomDirectionMax = _arcRandomDirectionMin;
+                _arcRandomDirectionMin = temp;
+            }
+        }
+
+        _travelTime = _projectileData.travelTime;
         this._startPos = transform.position;
 
         Vector3 toTarget = target != null ? (target.position - _startPos) : transform.forward * 10f;
+
+        float dist = toTarget.magnitude;
+
+        float baseTravel = _projectileData.travelTime;
+        float distRef = 8f;
+        float scaledTravel = baseTravel * (dist / distRef);
+        scaledTravel = Mathf.Clamp(scaledTravel, 0.12f, baseTravel);
+        _travelTime = scaledTravel;
+
         Vector3 midPoint = _startPos + toTarget * 0.5f;
 
         //Default arc direction (top)
@@ -114,7 +123,8 @@ public class S_PlayerProjectile : MonoBehaviour
         if (!_isInitialized) return;
 
         _timeAlive += Time.deltaTime;
-        float t = _timeAlive / _travelTime;
+        float t01 = _timeAlive / _travelTime;
+        t01 = Mathf.Clamp01(t01);
 
         if (_timeAlive >= _lifeTime)
         {
@@ -124,9 +134,11 @@ public class S_PlayerProjectile : MonoBehaviour
 
         Vector3 endPos = _target != null ? _target.position : _startPos + transform.forward * 10f;
 
-        Vector3 a = Vector3.Lerp(_startPos, _controlPoint, t);
-        Vector3 b = Vector3.Lerp(_controlPoint, endPos, t);
-        Vector3 newPos = Vector3.Lerp(a, b, t);
+        float easedT = _arcCurve != null ? _arcCurve.Evaluate(t01) : t01;
+        // on utilise easedT pour le Bézier
+        Vector3 a = Vector3.Lerp(_startPos, _controlPoint, easedT);
+        Vector3 b = Vector3.Lerp(_controlPoint, endPos, easedT);
+        Vector3 newPos = Vector3.Lerp(a, b, easedT);
         Vector3 tangent = (b - a).normalized;
 
         if (_target != null && _target.gameObject.activeInHierarchy)
