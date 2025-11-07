@@ -65,8 +65,13 @@ public class S_PlayerProjectileManager : MonoBehaviour
         projectile.transform.position = _playerPosition.Value + _playerRotation.Value * new Vector3(0,1.5f,0.5f);
         projectile.transform.rotation = _playerRotation.Value;
 
-        target.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
-        Transform aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : target.transform;
+        Transform aimPoint = null;
+
+        if (target != null)
+        {
+            target.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : target;
+        }
 
         projectile.Initialize(attackconviction * currentStepAttack.multipliers, aimPoint, currentStepAttack.step);
     }
