@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _value:
     health: 100
-    speed: 3
+    speedPatrol: 2
+    speedChase: 3
     detectionRange: 10
     detectionAggroRangeMax: 50
     distanceToChase: 4.4
@@ -46,3 +47,4 @@ MonoBehaviour:
           invicibilityDuration: 0.7
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}

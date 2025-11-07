@@ -9,7 +9,9 @@ public class S_ClassEnemyData
     [Title("General Settings")]
     public float health = 0;
 
-    public float speed = 0;
+    public float speedPatrol = 0;
+
+    public float speedChase = 0;
 
     [Title("Combat")]
     public float detectionRange = 0;

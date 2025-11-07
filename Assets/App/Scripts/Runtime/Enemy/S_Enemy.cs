@@ -65,10 +65,10 @@ public class S_Enemy : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Projectile")]
-    [SerializeField] GameObject spawnProjectilePoint;
+    [SerializeField] private GameObject spawnProjectilePoint;
 
     [TabGroup("References")]
-    [SerializeField] S_EnemyProjectile enemyProjectile;
+    [SerializeField] private S_EnemyProjectile enemyProjectile;
 
     [TabGroup("References")]
     [Title("Scripts")]
@@ -125,7 +125,6 @@ public class S_Enemy : MonoBehaviour
     private bool isChase = false;
     private bool isPatrolling = false;
     private bool lastMoveState = false;
-    private Vector3 velocity = Vector3.zero;
 
     private void Awake()
     {
@@ -151,7 +150,6 @@ public class S_Enemy : MonoBehaviour
         health = ssoEnemyData.Value.health;
         maxhealth = ssoEnemyData.Value.health;
         behaviorAgent.SetVariableValue<float>("Health", ssoEnemyData.Value.health);
-        behaviorAgent.SetVariableValue<float>("Speed", ssoEnemyData.Value.speed);
         behaviorAgent.SetVariableValue<float>("DistanceToChase", ssoEnemyData.Value.distanceToChase);
         behaviorAgent.SetVariableValue<float>("DistanceToLoseAttack", ssoEnemyData.Value.distanceToLoseAttack);
         behaviorAgent.SetVariableValue<float>("TimeDespawn", ssoEnemyData.Value.timeDespawn);
@@ -304,7 +302,7 @@ public class S_Enemy : MonoBehaviour
             animator.speed = 1f;
             behaviorAgent.enabled = true;
             navMeshAgent.isStopped = false;
-            navMeshAgent.speed = ssoEnemyData.Value.speed;
+            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
         }
     }
 
@@ -467,7 +465,8 @@ public class S_Enemy : MonoBehaviour
                 StopCoroutine(patrolCoroutine);
                 patrolCoroutine = null;
             }
-                
+
+            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
             patrolCoroutine = StartCoroutine(PatrolRoutine());
         }
         else
@@ -516,6 +515,7 @@ public class S_Enemy : MonoBehaviour
                 patrolCoroutine = null;
             }
 
+            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
             isChase = true;
         }
         else
