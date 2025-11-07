@@ -125,6 +125,7 @@ public class S_Enemy : MonoBehaviour
     private bool isChase = false;
     private bool isPatrolling = false;
     private bool lastMoveState = false;
+    private bool isDead = false;
 
     private void Awake()
     {
@@ -308,7 +309,7 @@ public class S_Enemy : MonoBehaviour
 
     private void SetTarget(GameObject newTarget)
     {
-        if (newTarget == target)
+        if (newTarget == target || isDead)
         {
             return;
         }
@@ -378,6 +379,10 @@ public class S_Enemy : MonoBehaviour
             StopAllCoroutines();
             comboCoroutine = null;
             resetCoroutine = null;
+            patrolCoroutine = null;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
 
             isPerformingCombo = false;
 
@@ -389,12 +394,16 @@ public class S_Enemy : MonoBehaviour
 
         if (health <= 0)
         {
+            isDead = true;
+
             enemyAttackData.DisableWeaponCollider();
 
             StopAllCoroutines();
             comboCoroutine = null;
             resetCoroutine = null;
+            patrolCoroutine = null;
 
+            navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);

@@ -53,6 +53,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
     private Vector3 controlPoint = Vector3.zero;
     private bool isPaused = false;
     private Vector3 origin = Vector3.zero;
+    private Transform startAimPoint = null;
 
     private float arcHeightMultiplier => ssoProjectileData.Value.arcHeightMultiplier;
     private float arcDirection => ssoProjectileData.Value.arcDirection;
@@ -69,6 +70,9 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         isInitialized = true;
         this.owner = owner;
         origin = target.position;
+
+        owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+        startAimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : null;
 
         CalculateControlPoint();
     }
@@ -110,7 +114,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
 
         Vector3 endPos = Vector3.zero;
 
-        if (owner != target)
+        if (owner != target && startAimPoint != target)
         {
             endPos = target != null ? origin : startPos + transform.forward * 10f;
         }
@@ -156,7 +160,9 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
 
         if (owner != null && owner.gameObject.activeInHierarchy)
         {
-            target = owner;
+            owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            target = aimPointProvider != null ? aimPointProvider.GetAimPoint() : owner;
+
             CalculateControlPoint();
         }
         else
