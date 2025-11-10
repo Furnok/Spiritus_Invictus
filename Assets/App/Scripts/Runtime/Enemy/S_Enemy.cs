@@ -126,6 +126,7 @@ public class S_Enemy : MonoBehaviour
     private bool isPatrolling = false;
     private bool lastMoveState = false;
     private bool isDead = false;
+    private S_ClassAnimationsCombos combo;
 
     private void Awake()
     {
@@ -151,9 +152,6 @@ public class S_Enemy : MonoBehaviour
         health = ssoEnemyData.Value.health;
         maxhealth = ssoEnemyData.Value.health;
         behaviorAgent.SetVariableValue<float>("Health", ssoEnemyData.Value.health);
-        behaviorAgent.SetVariableValue<float>("DistanceToChase", ssoEnemyData.Value.distanceToChase);
-        behaviorAgent.SetVariableValue<float>("DistanceToLoseAttack", ssoEnemyData.Value.distanceToLoseAttack);
-        behaviorAgent.SetVariableValue<float>("TimeDespawn", ssoEnemyData.Value.timeDespawn);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMin", ssoEnemyData.Value.startPatrolWaitMin);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMax", ssoEnemyData.Value.startPatrolWaitMax);
         behaviorAgent.SetVariableValue<float>("TimeBeforeChaseMin", ssoEnemyData.Value.timeBeforeChaseMin);
@@ -267,7 +265,7 @@ public class S_Enemy : MonoBehaviour
     {
         float distance = Vector3.Distance(body.transform.position, target.transform.position);
 
-        bool destinationReached = distance <= (ssoEnemyData.Value.distanceToChase);
+        bool destinationReached = distance <= (combo.distanceToChase);
 
         if (!destinationReached)
         {
@@ -524,6 +522,7 @@ public class S_Enemy : MonoBehaviour
                 patrolCoroutine = null;
             }
 
+            GetCombo();
             navMeshAgent.speed = ssoEnemyData.Value.speedChase;
             isChase = true;
         }
@@ -531,6 +530,15 @@ public class S_Enemy : MonoBehaviour
         {
             isChase = false;
         }
+    }
+
+    private void GetCombo()
+    {
+        int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
+
+        combo = ssoEnemyData.Value.listCombos[rnd];
+
+        behaviorAgent.SetVariableValue<float>("DistanceToLoseAttack", combo.distanceToLoseAttack);
     }
 
     public void AttackCombo()
@@ -558,25 +566,21 @@ public class S_Enemy : MonoBehaviour
 
         isPerformingCombo = true;
 
-        int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
-
-        var combo = ssoEnemyData.Value.listCombos[rnd].listAnimationsCombos;
-
-        for (int i = 0; i < combo.Count; i++)
+        for (int i = 0; i < combo.listAnimationsCombos.Count; i++)
         {
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
-            overrideController[overrideKey] = combo[i].animation;
+            overrideController[overrideKey] = combo.listAnimationsCombos[i].animation;
 
-            enemyAttackData.SetAttackMode(combo[i].attackData);
+            enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
-            if (combo[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            if (combo.listAnimationsCombos[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
                 S_EnemyProjectile projectileInstance = Instantiate(enemyProjectile, spawnProjectilePoint.transform.position, Quaternion.identity);
-                projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo[i].attackData);
+                projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo.listAnimationsCombos[i].attackData);
             }
 
-            yield return WaitForSecondsWhileUnpaused(combo[i].animation.length);
+            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length);
         }
 
         isAttacking.Value = false;
@@ -603,6 +607,7 @@ public class S_Enemy : MonoBehaviour
             pendingTarget = null;
         }
 
+        GetCombo();
         resetCoroutine = StartCoroutine(ResetAttack());
     }
 

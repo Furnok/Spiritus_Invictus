@@ -18,15 +18,8 @@ public class S_ClassEnemyData
 
     public float detectionAggroRangeMax = 0;
 
-    public float distanceToChase = 0;
-
-    public float distanceToLoseAttack = 0;
-
     [SuffixLabel("s", Overlay = true)]
     public float attackCooldown = 0;
-
-    [SuffixLabel("s", Overlay = true)]
-    public float timeDespawn = 0;
 
     [Title("Secret")]
     [SuffixLabel("%", Overlay = true)]

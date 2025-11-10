@@ -7,4 +7,8 @@ public class S_ClassAnimationsCombos
 {
     [Title("Combos")]
     public List<S_ClassAnimation> listAnimationsCombos = null;
+
+    public float distanceToChase = 0;
+
+    public float distanceToLoseAttack = 0;
 }
