@@ -292,7 +292,6 @@ public class S_Enemy : MonoBehaviour
             behaviorAgent.enabled = false;
             navMeshAgent.isStopped = true;
             navMeshAgent.velocity = Vector3.zero;
-            navMeshAgent.speed = 0;
         }
         else
         {
@@ -301,7 +300,6 @@ public class S_Enemy : MonoBehaviour
             animator.speed = 1f;
             behaviorAgent.enabled = true;
             navMeshAgent.isStopped = false;
-            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
         }
     }
 
