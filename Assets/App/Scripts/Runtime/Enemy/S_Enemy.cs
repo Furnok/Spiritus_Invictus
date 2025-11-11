@@ -351,6 +351,8 @@ public class S_Enemy : MonoBehaviour
         {
             aimPoint = null;
 
+            DetectionCollider.enabled = false;
+
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
         }
 
@@ -501,6 +503,8 @@ public class S_Enemy : MonoBehaviour
             {
                 yield return null;
             }
+
+            DetectionCollider.enabled = true;
 
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
 
