@@ -2,6 +2,7 @@
 {
     None,
     Rail,
+    Bridge,
     Player,
     Cinematic,
 };
