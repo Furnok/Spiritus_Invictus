@@ -165,6 +165,7 @@ public class S_Enemy : MonoBehaviour
 
         enemyDetectionRange.Setup(ssoEnemyData);
         enemyUI.Setup(ssoEnemyData);
+        enemyMaxTravelZone.Setup(ssoEnemyData);
     }
 
     private void OnEnable()

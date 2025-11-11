@@ -786,6 +786,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   detectionCollider: {fileID: 1536210782470915829}
+  maxTravelZone: {fileID: 1081287201517365919}
   enemy: {fileID: 445208566684554611}
   onTargetDetected:
     m_PersistentCalls:
@@ -1385,7 +1386,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 30, y: 30, z: 30}
+  m_Size: {x: 50, y: 50, z: 50}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5830951658339230131
 MonoBehaviour:
@@ -1400,6 +1401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
+  box: {fileID: 7837490951314405229}
   onTargetDetected:
     m_PersistentCalls:
       m_Calls: []
