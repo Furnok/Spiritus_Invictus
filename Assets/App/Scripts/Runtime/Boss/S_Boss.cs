@@ -31,7 +31,35 @@ public class S_Boss : MonoBehaviour
     [TabGroup("References")]
     [Title("Animator")]
     [SerializeField] private Animator animator;
-    //[Header("Inputs")]
 
-    //[Header("Outputs")]
+    [TabGroup("References")]
+    [Title("Scripts")]
+    [SerializeField] private S_BossDetectionRange bossDetectionRange;
+
+    private GameObject target = null;
+    private bool isDead = false;
+    private void Awake()
+    {
+        behaviorAgent.SetVariableValue<Animator>("Animator", animator);
+        behaviorAgent.SetVariableValue<float>("Health", 100);
+        behaviorAgent.SetVariableValue<float>("MoveSpeed", 5);
+        behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
+        behaviorAgent.SetVariableValue<string>("DeathParam", deathParam);
+        behaviorAgent.SetVariableValue<string>("MoveParam", moveParam);
+        behaviorAgent.SetVariableValue<string>("StunParam", stunParam);
+        behaviorAgent.SetVariableValue<string>("AttackParam", attackParam);
+    }
+    private void OnEnable()
+    {
+        bossDetectionRange.onTargetDetected.AddListener(SetTarget);
+    }
+    private void OnDisable()
+    {
+        bossDetectionRange.onTargetDetected.RemoveListener(SetTarget);
+    }
+    void SetTarget(GameObject newTarget)
+    {
+        behaviorAgent.SetVariableValue<GameObject>("Target", newTarget);
+        behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
+    }
 }
