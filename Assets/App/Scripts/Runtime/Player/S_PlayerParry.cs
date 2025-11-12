@@ -26,6 +26,8 @@ public class S_PlayerParry : MonoBehaviour
 
     Coroutine _parryCoroutine;
 
+    bool _parryUp = true;
+
     private void Awake()
     {
         _canParry.Value = false;
@@ -48,13 +50,19 @@ public class S_PlayerParry : MonoBehaviour
 
     private void TryParry()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false) return;
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false || _parryUp == false) return;
         _onPlayerAddState.Call(PlayerState.Parrying);
 
         if (_parryCoroutine != null)
         {
             StopCoroutine(_parryCoroutine);
         }
+
+        _parryUp = false;
+        StartCoroutine(S_Utils.Delay(_playerStats.Value.parryCooldown, () =>
+        {
+            _parryUp = true;
+        }));
 
         rseOnAnimationBoolValueChange.Call(_parryParam, true);
 
