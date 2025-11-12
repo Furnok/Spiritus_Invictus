@@ -151,6 +151,7 @@ public class S_Enemy : MonoBehaviour
 
         health = ssoEnemyData.Value.health;
         maxhealth = ssoEnemyData.Value.health;
+        navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
         behaviorAgent.SetVariableValue<float>("Health", ssoEnemyData.Value.health);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMin", ssoEnemyData.Value.startPatrolWaitMin);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMax", ssoEnemyData.Value.startPatrolWaitMax);
@@ -474,7 +475,6 @@ public class S_Enemy : MonoBehaviour
                 patrolCoroutine = null;
             }
 
-            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
             patrolCoroutine = StartCoroutine(PatrolRoutine());
         }
         else
@@ -505,6 +505,7 @@ public class S_Enemy : MonoBehaviour
                 yield return null;
             }
 
+            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
             DetectionCollider.enabled = true;
 
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
