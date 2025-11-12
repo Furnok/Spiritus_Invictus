@@ -8,6 +8,9 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
     [SerializeField] private string playerLayer;
 
     [TabGroup("Settings")]
+    [SerializeField] private LayerMask blockLayer;
+
+    [TabGroup("Settings")]
     [Title("Projectile")]
     [SerializeField] private float speed;
 
@@ -127,7 +130,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         }
         else
         {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.1f))
+            if (Physics.Raycast(transform.position, Vector3.down, 0.01f, blockLayer))
             {
                 Destroy(gameObject);
                 return;

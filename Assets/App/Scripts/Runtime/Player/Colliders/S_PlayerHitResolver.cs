@@ -85,8 +85,11 @@ public class S_PlayerHitResolver : MonoBehaviour
                 }
                 else
                 {
-                    Destroy(contact.source.gameObject);
-                    _rseOnPlayerHit.Call(contact);
+                    if (contact.source != null && contact.source.gameObject != null)
+                    {
+                        Destroy(contact.source.gameObject);
+                        _rseOnPlayerHit.Call(contact);
+                    }
                 }
             },
                contact
