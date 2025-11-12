@@ -44,8 +44,6 @@ public class S_Settings : MonoBehaviour
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
 
             rsoSettingsSaved.Value.languageIndex = index;
-
-            Save();
         }
     }
 
@@ -54,8 +52,6 @@ public class S_Settings : MonoBehaviour
         if (isLoaded && rsoSettingsSaved.Value.holdLockTarget != value)
         {
             rsoSettingsSaved.Value.holdLockTarget = value;
-
-            Save();
         }
     }
 
@@ -93,8 +89,6 @@ public class S_Settings : MonoBehaviour
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
 
             rsoSettingsSaved.Value.resolutionIndex = index;
-
-            Save();
         }
     }
 
@@ -114,8 +108,6 @@ public class S_Settings : MonoBehaviour
             Screen.fullScreen = value;
 
             rsoSettingsSaved.Value.fullScreen = value;
-
-            Save();
         }
     }
 
@@ -158,11 +150,9 @@ public class S_Settings : MonoBehaviour
         rsoSettingsSaved.Value.listVolumes[index].volume = value;
 
         listTextAudios[index].text = $"{value}%";
-
-        Save();
     }
 
-    private void Save()
+    public void SaveSettings()
     {
         rseOnSaveData.Call(saveSettingsName, true);
     }

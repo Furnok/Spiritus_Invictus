@@ -28,6 +28,12 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private Button buttonAudio;
 
     [TabGroup("References")]
+    [SerializeField] private Button buttonApply;
+
+    [TabGroup("References")]
+    [SerializeField] private Button buttonReset;
+
+    [TabGroup("References")]
     [SerializeField] private Button buttonReturn;
 
     [TabGroup("References")]
@@ -94,13 +100,29 @@ public class S_UISettings : MonoBehaviour
 
             buttonGameplay.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = toggleHoldLockTarget;
-            nav2.selectOnDown = buttonGameplay;
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
 
-            buttonReturn.navigation = nav2;
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReturn.navigation = nav;
         }
 
         isClosing = false;
@@ -164,47 +186,23 @@ public class S_UISettings : MonoBehaviour
             Navigation nav = buttonGameplay.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
-            nav.selectOnDown = buttonReturn;
+            nav.selectOnDown = buttonApply;
 
             buttonGameplay.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = buttonGameplay;
-            nav2.selectOnDown = buttonGameplay;
+            nav.selectOnDown = buttonApply;
 
-            buttonReturn.navigation = nav2;
+            buttonGraphics.navigation = nav;
 
-            Navigation nav3 = buttonGraphics.navigation;
-            nav3.mode = Navigation.Mode.Explicit;
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav3.selectOnDown = buttonReturn;
+            nav.selectOnDown = buttonApply;
 
-            buttonGraphics.navigation = nav3;
-
-            Navigation nav4 = buttonReturn.navigation;
-            nav4.mode = Navigation.Mode.Explicit;
-
-            nav4.selectOnUp = buttonGraphics;
-            nav4.selectOnDown = buttonGraphics;
-
-            buttonReturn.navigation = nav4;
-
-            Navigation nav5 = buttonAudio.navigation;
-            nav5.mode = Navigation.Mode.Explicit;
-
-            nav5.selectOnDown = buttonReturn;
-
-            buttonAudio.navigation = nav5;
-
-            Navigation nav6 = buttonReturn.navigation;
-            nav6.mode = Navigation.Mode.Explicit;
-
-            nav6.selectOnUp = buttonAudio;
-            nav6.selectOnDown = buttonAudio;
-
-            buttonReturn.navigation = nav6;
+            buttonAudio.navigation = nav;
         }
     }
 
@@ -231,13 +229,29 @@ public class S_UISettings : MonoBehaviour
 
             buttonGameplay.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = toggleHoldLockTarget;
-            nav2.selectOnDown = buttonGameplay;
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
 
-            buttonReturn.navigation = nav2;
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReturn.navigation = nav;
         }
     }
 
@@ -264,13 +278,29 @@ public class S_UISettings : MonoBehaviour
 
             buttonGraphics.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = toggleFullscreen;
-            nav2.selectOnDown = buttonGraphics;
+            nav.selectOnUp = toggleFullscreen;
+            nav.selectOnDown = buttonGraphics;
 
-            buttonReturn.navigation = nav2;
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleFullscreen;
+            nav.selectOnDown = buttonGraphics;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleFullscreen;
+            nav.selectOnDown = buttonGraphics;
+
+            buttonReturn.navigation = nav;
         }
     }
 
@@ -297,13 +327,29 @@ public class S_UISettings : MonoBehaviour
 
             buttonAudio.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = sliderUIVolume;
-            nav2.selectOnDown = buttonAudio;
+            nav.selectOnUp = sliderUIVolume;
+            nav.selectOnDown = buttonAudio;
 
-            buttonReturn.navigation = nav2;
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = sliderUIVolume;
+            nav.selectOnDown = buttonAudio;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = sliderUIVolume;
+            nav.selectOnDown = buttonAudio;
+
+            buttonReturn.navigation = nav;
         }
     }
 }
