@@ -51,6 +51,7 @@ public class S_PlayerDodge : MonoBehaviour
     Coroutine _prepareRunCoroutine;
     float _linearDamping;
     bool _canRunAfterDodge = false;
+    bool _dodgeUp = true;
 
     private void OnEnable()
     {
@@ -94,8 +95,15 @@ public class S_PlayerDodge : MonoBehaviour
     }
     private void TryDodge()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false) return;
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false || _dodgeUp == false) return;
         _onPlayerAddState.Call(PlayerState.Dodging);
+
+        _dodgeUp = false;
+        StartCoroutine(S_Utils.Delay(_playerStats.Value.dodgeCooldown, () =>
+        {
+            _dodgeUp = true;
+        }));
+
 
         //Test triggerDodgePerfect
         var isDodgePrefect = _attackDataInDodgeableArea.Value.Count > 0;
