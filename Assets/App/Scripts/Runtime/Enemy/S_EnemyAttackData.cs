@@ -30,7 +30,7 @@ public class S_EnemyAttackData : MonoBehaviour
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
 
     private S_StructEnemyAttackData attackData;
-    private bool isPaused = false;
+    private Tween fadeTween;
 
     private void OnEnable()
     {
@@ -44,13 +44,15 @@ public class S_EnemyAttackData : MonoBehaviour
 
     private void Pause(bool value)
     {
+        if (fadeTween == null) return;
+
         if (value)
         {
-            isPaused = true;
-        }
+            fadeTween.Pause();
+        }      
         else
         {
-            isPaused = false;
+            fadeTween.Play();
         }
     }
 
@@ -94,7 +96,7 @@ public class S_EnemyAttackData : MonoBehaviour
             content.gameObject.gameObject.SetActive(true);
 
             content.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
-            content.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeDisplay).SetEase(Ease.Linear);
+            fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeDisplay).SetEase(Ease.Linear);
         }
     }
 
@@ -103,7 +105,7 @@ public class S_EnemyAttackData : MonoBehaviour
         content.gameObject.GetComponent<CanvasGroup>()?.DOKill();
 
         content.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
-        content.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeDisplay).SetEase(Ease.Linear).OnComplete(() =>
+        fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeDisplay).SetEase(Ease.Linear).OnComplete(() =>
         {
             content.gameObject.SetActive(false);
         });
