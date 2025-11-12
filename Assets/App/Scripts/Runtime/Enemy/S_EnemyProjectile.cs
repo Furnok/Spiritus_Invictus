@@ -112,27 +112,17 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
             return;
         }
 
-        Vector3 endPos = Vector3.zero;
+        Vector3 endPos = target != null ? origin : startPos + transform.forward * 10f;
 
-        if (owner != target && startAimPoint != target)
-        {
-            endPos = target != null ? origin : startPos + transform.forward * 10f;
-        }
-        else
-        {
-            endPos = target != null ? target.position : startPos + transform.forward * 10f;
-        }
-
-        Vector3 a = Vector3.Lerp(startPos, controlPoint, t);
-        Vector3 b = Vector3.Lerp(controlPoint, endPos, t);
-        Vector3 newPos = Vector3.Lerp(a, b, t);
+        Vector3 a = Vector3.Lerp(startPos, controlPoint, Mathf.Clamp01(t));
+        Vector3 b = Vector3.Lerp(controlPoint, endPos, Mathf.Clamp01(t));
+        Vector3 newPos = Vector3.Lerp(a, b, Mathf.Clamp01(t));
         Vector3 tangent = (b - a).normalized;
 
-        if (target != null && target.gameObject.activeInHierarchy && t <= 1f)
+        if (t <= 1f)
         {
             transform.position = newPos;
             transform.forward = tangent;
-
             direction = tangent;
         }
         else
@@ -143,9 +133,10 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
                 return;
             }
 
-            direction = Vector3.Lerp(direction, Vector3.down, Time.deltaTime * 2f).normalized;
-            transform.position += direction * speed * Time.deltaTime;
-            transform.forward = direction;
+            float curveSpeed = (b - a).magnitude / (travelTime * 0.5f);
+            transform.position += tangent * curveSpeed * Time.deltaTime;
+            transform.forward = tangent;
+            direction = tangent;
         }
     }
 
