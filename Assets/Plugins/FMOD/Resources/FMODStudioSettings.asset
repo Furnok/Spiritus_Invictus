@@ -307,8 +307,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: Assets/FMOD/project/project.fspro
-  sourceBankPath: Assets/FMOD/project/Build
+  sourceProjectPath: FMOD/project/project.fspro
+  sourceBankPath: FMOD/project/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -332,7 +332,8 @@ MonoBehaviour:
   Plugins: []
   MasterBanks:
   - Master
-  Banks: []
+  Banks:
+  - SoundEffect
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
