@@ -87,25 +87,12 @@ public class S_EnemyAttackData : MonoBehaviour
                 warning.color = Color.red;
             }
 
-            StartCoroutine(DisplayWarning());
+            content.gameObject.SetActive(true);
         }
     }
 
-    private IEnumerator WaitForSecondsWhileUnpaused(float duration)
+    public void UnDisplayTriggerWarning()
     {
-        float timer = 0f;
-        while (timer < duration)
-        {
-            if (!isPaused)
-                timer += Time.deltaTime;
-            yield return null;
-        }
-    }
-
-    private IEnumerator DisplayWarning()
-    {
-        content.gameObject.SetActive(true);
-        yield return WaitForSecondsWhileUnpaused(timeDisplay);
         content.gameObject.SetActive(false);
     }
 }
