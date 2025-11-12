@@ -121,6 +121,7 @@ public class S_Enemy : MonoBehaviour
     private S_EnumEnemyState? pendingState = null;
     private GameObject pendingTarget = null;
     private bool isPlayerDead = false;
+    private GameObject targetInZone = null;
     private GameObject target = null;
     private bool isChase = false;
     private bool isPatrolling = false;
@@ -176,6 +177,7 @@ public class S_Enemy : MonoBehaviour
         enemyDetectionRange.onTargetDetected.AddListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.AddListener(SetTarget);
+        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action += PlayerDied;
 
@@ -202,6 +204,7 @@ public class S_Enemy : MonoBehaviour
         enemyDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.RemoveListener(SetTarget);
+        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action -= PlayerDied;
 
@@ -305,6 +308,11 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
+    private void SetInsideBox(GameObject newTarget)
+    {
+        targetInZone = newTarget;
+    }
+
     private void SetTarget(GameObject newTarget)
     {
         if (newTarget == target || isDead)
@@ -337,6 +345,11 @@ public class S_Enemy : MonoBehaviour
 
                 if (hit.collider.gameObject != newTarget)
                 {
+                    health = maxhealth;
+                    onUpdateEnemyHealth.Invoke(health);
+
+                    behaviorAgent.SetVariableValue<float>("Health", health);
+
                     behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
                 }
                 else
@@ -351,6 +364,11 @@ public class S_Enemy : MonoBehaviour
         }
         else
         {
+            health = maxhealth;
+            onUpdateEnemyHealth.Invoke(health);
+
+            behaviorAgent.SetVariableValue<float>("Health", health);
+
             aimPoint = null;
 
             DetectionCollider.enabled = false;
@@ -364,7 +382,7 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.Restart();
     }
 
-    private void UpdateHealth(float damage)
+    private void SetHealth(float damage)
     {
         health = Mathf.Max(health - damage, 0);
         onUpdateEnemyHealth.Invoke(health);
@@ -411,10 +429,25 @@ public class S_Enemy : MonoBehaviour
 
             rseOnEnemyTargetDied.Call(body);
         }
-        else if (target == null)
+    }
+
+    private void UpdateHealth(float damage)
+    {
+        if (target == null)
         {
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
-            behaviorAgent.Restart();
+            if (targetInZone != null)
+            {
+                SetTarget(targetInZone);
+
+                SetHealth(damage);
+
+                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
+                behaviorAgent.Restart();
+            }
+        }
+        else
+        {
+            SetHealth(damage);
         }
     }
 
