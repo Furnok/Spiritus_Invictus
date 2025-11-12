@@ -433,8 +433,16 @@ public class S_CameraManager : MonoBehaviour
         if (currentMode == ModeCamera.Player)
         {
             Vector3 dir = (currentTarget.position - playerPos.position).normalized;
-            dir.y = 0f;
-            var targetRot = Quaternion.LookRotation(dir, Vector3.up);
+
+            Quaternion targetRot = Quaternion.LookRotation(dir, Vector3.up);
+
+            Vector3 euler = targetRot.eulerAngles;
+
+            if (euler.x > 180f) euler.x -= 360f;
+
+            euler.x = Mathf.Clamp(euler.x, ssoCameraData.Value.minVerticalCameraPlayer, ssoCameraData.Value.maxVerticalCameraPlayer);
+
+            targetRot = Quaternion.Euler(euler);
 
             float angle = Quaternion.Angle(playerPoint.transform.rotation, targetRot);
 
