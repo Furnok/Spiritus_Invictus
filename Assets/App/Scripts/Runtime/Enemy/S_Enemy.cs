@@ -578,13 +578,15 @@ public class S_Enemy : MonoBehaviour
             enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
+            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length / 2);
+
             if (combo.listAnimationsCombos[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
                 S_EnemyProjectile projectileInstance = Instantiate(enemyProjectile, spawnProjectilePoint.transform.position, Quaternion.identity);
                 projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo.listAnimationsCombos[i].attackData);
             }
 
-            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length);
+            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length / 2);
         }
 
         isAttacking.Value = false;
