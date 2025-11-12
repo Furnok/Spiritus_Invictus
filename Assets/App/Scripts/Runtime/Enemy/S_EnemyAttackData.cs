@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -74,10 +75,13 @@ public class S_EnemyAttackData : MonoBehaviour
             weaponCollider.enabled = false;
         }
     }
+
     public void DisplayTriggerWarning()
     {
         if (warning != null)
         {
+            content.gameObject.GetComponent<CanvasGroup>()?.DOKill();
+
             if (attackData.attackType == S_EnumEnemyAttackType.Parryable || attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
                 warning.color = Color.yellow;
@@ -87,12 +91,21 @@ public class S_EnemyAttackData : MonoBehaviour
                 warning.color = Color.red;
             }
 
-            content.gameObject.SetActive(true);
+            content.gameObject.gameObject.SetActive(true);
+
+            content.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
+            content.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeDisplay).SetEase(Ease.Linear);
         }
     }
 
     public void UnDisplayTriggerWarning()
     {
-        content.gameObject.SetActive(false);
+        content.gameObject.GetComponent<CanvasGroup>()?.DOKill();
+
+        content.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
+        content.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeDisplay).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            content.gameObject.SetActive(false);
+        });
     }
 }

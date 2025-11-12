@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TestEnemyText : MonoBehaviour
+public class S_LookAtCamera : MonoBehaviour
 {
     private void LateUpdate()
     {
