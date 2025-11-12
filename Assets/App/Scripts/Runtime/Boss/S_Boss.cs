@@ -1,7 +1,13 @@
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using Unity.Behavior;
 using UnityEngine;
 
+public struct listAttackOwned
+{
+    public S_ClassBossAttack bossAttack;
+    public float frequency;
+}
 public class S_Boss : MonoBehaviour
 {
     [TabGroup("Settings")]
@@ -36,13 +42,17 @@ public class S_Boss : MonoBehaviour
     [Title("Scripts")]
     [SerializeField] private S_BossDetectionRange bossDetectionRange;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_BossData ssoBossData;
+
+    private List<listAttackOwned> listAttackOwneds;
     private GameObject target = null;
     private bool isDead = false;
     private void Awake()
     {
         behaviorAgent.SetVariableValue<Animator>("Animator", animator);
-        behaviorAgent.SetVariableValue<float>("Health", 100);
-        behaviorAgent.SetVariableValue<float>("MoveSpeed", 5);
+        behaviorAgent.SetVariableValue<float>("Health", ssoBossData.Value.healthPhase1);
+        behaviorAgent.SetVariableValue<float>("MoveSpeed", ssoBossData.Value.walkSpeed);
         behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
         behaviorAgent.SetVariableValue<string>("DeathParam", deathParam);
         behaviorAgent.SetVariableValue<string>("MoveParam", moveParam);
@@ -60,6 +70,13 @@ public class S_Boss : MonoBehaviour
     void SetTarget(GameObject newTarget)
     {
         behaviorAgent.SetVariableValue<GameObject>("Target", newTarget);
-        behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
+        if(target != null)
+        {
+            behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
+        }
+        else
+        {
+            behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Idle);
+        }
     }
 }
