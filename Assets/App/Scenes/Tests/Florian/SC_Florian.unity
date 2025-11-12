@@ -741,7 +741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3874155762252318603, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: field of view
-      value: 60
+      value: 60.000004
       objectReference: {fileID: 0}
     - target: {fileID: 4678236891978517612, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2738,6 +2738,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1271687767}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1321857654 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4965557393169002088, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+  m_PrefabInstance: {fileID: 5297156960388552988}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1336750726
 GameObject:
   m_ObjectHideFlags: 0
@@ -2978,6 +2983,17 @@ Light:
   m_LightUnit: 2
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!114 &1368067799 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4648933286139395769, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+  m_PrefabInstance: {fileID: 5297156960388552988}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53f3e7e40379da74bb437b27a8eedd05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1460360491
 GameObject:
   m_ObjectHideFlags: 0
@@ -3346,6 +3362,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1551332522681332327, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2051178369004520943, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5
@@ -3387,6 +3407,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2884425564829725366, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+      propertyPath: managedReferences[891353335327096941].m_Value
+      value: 
+      objectReference: {fileID: 1321857654}
     - target: {fileID: 5658497749865926140, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
       propertyPath: m_Name
       value: P_BossEnemy
@@ -3430,6 +3454,26 @@ PrefabInstance:
     - target: {fileID: 7208576249231040003, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+      propertyPath: bossHurt
+      value: 
+      objectReference: {fileID: 1368067799}
+    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+      propertyPath: bossDifficultyLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+      propertyPath: rseOnPlayerGettingHit
+      value: 
+      objectReference: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
+    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+      propertyPath: difficultyGainPerSecond
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+      propertyPath: difficultyLoseWhenPlayerHit
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
