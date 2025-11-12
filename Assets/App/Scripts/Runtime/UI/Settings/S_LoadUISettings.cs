@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 public class S_LoadUISettings : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [Title("Save")]
+    [SerializeField, S_SaveName] private string saveSettingsName;
+
     [TabGroup("References")]
     [Title("Settings Script")]
     [SerializeField] private S_Settings settings;
@@ -32,11 +36,23 @@ public class S_LoadUISettings : MonoBehaviour
     [SerializeField] private List<TextMeshProUGUI> listTextsVolume;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSaveData rseOnSaveData;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     private void OnEnable()
     {
         LoadUI();
+    }
+
+    public void ResetSettings()
+    {
+        rsoSettingsSaved.Value = new();
+
+        rseOnSaveData.Call(saveSettingsName, true);
+
+        StartCoroutine(S_Utils.DelayFrame(() => LoadUI()));
     }
 
     private void LoadUI()
