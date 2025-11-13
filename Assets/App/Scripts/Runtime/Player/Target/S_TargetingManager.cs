@@ -94,7 +94,7 @@ public class S_TargetingManager : MonoBehaviour
     {
         var selection = TargetSelection();
 
-        if (targetsPossible.Count > 0 && selection != null)
+        if (targetsPossible.Count > 0 && selection != null || currentTarget != null)
         {
             if (currentTarget == null)
             {
@@ -112,7 +112,7 @@ public class S_TargetingManager : MonoBehaviour
 
                 _previewGO.transform.position = _previewTargetTransform.position;
             }
-            else
+            else if (currentTarget != null)
             {
                 if (currentTarget.TryGetComponent(out ITargetable targetable))
                 {
