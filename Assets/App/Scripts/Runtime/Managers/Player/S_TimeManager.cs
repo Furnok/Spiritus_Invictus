@@ -4,13 +4,13 @@ using UnityEngine;
 public class S_TimeManager : MonoBehaviour
 {
     [Header("Settings")]
-    [Header("Dodge Perfect Configuration")]
-    [SerializeField, Range(0f, 1f)] private float _slowScale = 0.25f;
-    [SerializeField] private float _hitStop = 0.06f;
-    [SerializeField] private float _slowDuration = 0.5f;
-    [SerializeField] private float _blendOut = 0.35f;
-    [SerializeField] private bool _scaleFixedDelta = true;
+    [SerializeField, Range(0f, 1f)] private float _slowScaleDodge = 0.25f;
+    [SerializeField] private float _hitStopDodge = 0.06f;
+    [SerializeField] private float _slowDurationDodge = 0.5f;
+    [SerializeField] private float _blendOutDodge = 0.35f;
 
+    [Header("Parry Configuration")]
+    [SerializeField] private float _hitStopParry = 0.1f;
 
 
     [Header("References")]
@@ -40,13 +40,15 @@ public class S_TimeManager : MonoBehaviour
     {
         _rseOnDodgePerfect.action += StartPerfectDodgeSlowMotion;
         _rseOnGamePause.action += PauseValueChange;
+        _rseOnParrySuccess.action += TriggerOnParryCoroutine;
+
     }
 
     void OnDisable()
     {
         _rseOnDodgePerfect.action -= StartPerfectDodgeSlowMotion;
         _rseOnGamePause.action -= PauseValueChange;
-
+        _rseOnParrySuccess.action -= TriggerOnParryCoroutine;
         _rsoGameInPause.Value = false;
         ApplyTimeScale();
     }
@@ -72,11 +74,26 @@ public class S_TimeManager : MonoBehaviour
 
     IEnumerator CoroutineSlowMotion()
     {
-        _gameTimeScale = _slowScale;
+        if (_hitStopDodge > 0f)
+        {
+            _gameTimeScale = 0f;
+            ApplyTimeScale();
+
+            float hsElapsed = 0f;
+            while (hsElapsed < _hitStopDodge)
+            {
+                if (!_rsoGameInPause.Value)
+                    hsElapsed += Time.unscaledDeltaTime;
+
+                yield return null;
+            }
+        }
+
+        _gameTimeScale = _slowScaleDodge;
         ApplyTimeScale();
 
         float elapsed = 0f;
-        while (elapsed < _slowDuration)
+        while (elapsed < _slowDurationDodge)
         {
             if (!_rsoGameInPause.Value)
                 elapsed += Time.unscaledDeltaTime;
@@ -85,13 +102,13 @@ public class S_TimeManager : MonoBehaviour
         }
 
         float t = 0f;
-        while (t < _blendOut)
+        while (t < _blendOutDodge)
         {
             if (!_rsoGameInPause.Value)
             {
                 t += Time.unscaledDeltaTime;
-                float k = t / _blendOut;
-                _gameTimeScale = Mathf.Lerp(_slowScale, 1f, k);
+                float k = t / _blendOutDodge;
+                _gameTimeScale = Mathf.Lerp(_slowScaleDodge, 1f, k);
                 ApplyTimeScale();
             }
             yield return null;
@@ -102,5 +119,26 @@ public class S_TimeManager : MonoBehaviour
         _slowMoCo = null;
     }
 
-   
+    void TriggerOnParryCoroutine (AttackContact contact) =>  StartCoroutine(CoroutineOnParry());
+    IEnumerator CoroutineOnParry()
+    {
+        if (_hitStopParry <= 0f) yield break;
+
+        float previousGameScale = _gameTimeScale;
+
+        _gameTimeScale = 0f;
+        ApplyTimeScale();
+
+        float elapsed = 0f;
+        while (elapsed < _hitStopParry)
+        {
+            if (!_rsoGameInPause.Value)
+                elapsed += Time.unscaledDeltaTime;
+
+            yield return null;
+        }
+
+        _gameTimeScale = previousGameScale;
+        ApplyTimeScale();
+    }
 }
