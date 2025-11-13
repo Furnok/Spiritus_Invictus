@@ -1354,7 +1354,7 @@ MonoBehaviour:
           m_Value0: 1
           m_Value1: 0
         Name: Self
-        m_Value: {fileID: 5658497749865926140}
+        m_Value: {fileID: 4965557393169002088}
 --- !u!114 &8135101824023998828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1367,6 +1367,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc751dbedfb64459b833b746e0ac5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bossDifficultyLevel: 5
+  maxDifficultyLevel: 10
+  difficultyGainPerSecond: 0.1
+  difficultyLoseWhenPlayerHit: 1
   moveParam: isMoving
   deathParam: Death
   attackParam: isAttacking
@@ -1376,7 +1380,15 @@ MonoBehaviour:
   detectionCollider: {fileID: 1502100001938416099}
   animator: {fileID: 5646047771318058197}
   bossDetectionRange: {fileID: 2409691922618655963}
+  bossHurt: {fileID: 4648933286139395769}
+  rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   ssoBossData: {fileID: 11400000, guid: 7f12320b15c2bc44fbce9266a95cfb08, type: 2}
+  onUpdateBossHealth:
+    m_PersistentCalls:
+      m_Calls: []
+  onGetHit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!195 &6995298667369009460
 NavMeshAgent:
   m_ObjectHideFlags: 0

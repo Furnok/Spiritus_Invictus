@@ -1,14 +1,16 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Events;
 
-public struct AttackOwned
+public class AttackOwned
 {
     public S_ClassBossAttack bossAttack;
     public float frequency;
+    public float score;
 }
 public class S_Boss : MonoBehaviour
 {
@@ -24,6 +26,15 @@ public class S_Boss : MonoBehaviour
 
     [TabGroup("Settings")]
     [SerializeField] float difficultyLoseWhenPlayerHit;
+
+    [TabGroup("Settings")]
+    [SerializeField] float difficultyScore;
+
+    [TabGroup("Settings")]
+    [SerializeField] float frequencyScore;
+
+    [TabGroup("Settings")]
+    [SerializeField] float synergieScore;
 
     [TabGroup("Settings")]
     [Title("Animations Parameters")]
@@ -76,7 +87,9 @@ public class S_Boss : MonoBehaviour
     private float maxHealth;
     private GameObject target = null;
     private bool isDead = false;
-    float lastValueHealth;
+    private float lastValueHealth;
+    private AttackOwned lastAttack;
+    private AttackOwned currentAttack;
     private void Awake()
     {
         lastValueHealth = 101f;
@@ -101,6 +114,7 @@ public class S_Boss : MonoBehaviour
             {
                 bossAttack = bossAttack,
                 frequency = 0,
+                score = 0,
             };
             listAttackOwneds.Add(attackData);
         }
@@ -109,7 +123,7 @@ public class S_Boss : MonoBehaviour
 
         foreach (var name in listAttackOwnedPossibilities)
         {
-            Debug.Log(name.bossAttack.attackName);
+            Debug.Log("List"+name.bossAttack.attackName);
         }
     }
     private void OnEnable()
@@ -123,6 +137,10 @@ public class S_Boss : MonoBehaviour
         bossDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         bossHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         rseOnPlayerGettingHit.action -= LoseDifficultyLevel;
+    }
+    private void Start()
+    {
+        ChooseAttack();
     }
     void SetTarget(GameObject newTarget)
     {
@@ -214,8 +232,51 @@ public class S_Boss : MonoBehaviour
 
         StartCoroutine(GainDifficultyLevel());
     }
-    void ChooseAttack()
+    public void ChooseAttack()
     {
+        var minAttackFrequency = listAttackOwnedPossibilities.Min(a => a.frequency);
+        int roundDifficulty = Mathf.RoundToInt(bossDifficultyLevel);
 
+        foreach(var attack in listAttackOwnedPossibilities)
+        {
+            if(attack.bossAttack.difficultyLevel == roundDifficulty)
+            {
+                attack.score+= difficultyScore;
+            }
+
+            if (attack.frequency == minAttackFrequency)
+            {
+                attack.score += frequencyScore;
+            }
+
+            if (lastAttack == null) continue;
+
+            if (attack.bossAttack.listComboData[0].attackType != lastAttack.bossAttack.listComboData[^1].attackType)
+            {
+                attack.score+= synergieScore;
+            }
+        }
+
+        var maxScore = listAttackOwnedPossibilities.Max(a => a.score);
+
+        var bestAttacks = listAttackOwnedPossibilities
+            .Where(a => a.score == maxScore)
+            .ToList();
+
+        var chosenAttack = bestAttacks[Random.Range(0, bestAttacks.Count)];
+
+        currentAttack = chosenAttack;
+        foreach(var attack in listAttackOwnedPossibilities)
+        {
+            attack.score = 0;
+        }
+        ExecuteAttack(currentAttack);
+    }
+
+    void ExecuteAttack(AttackOwned attack)
+    {
+        lastAttack = attack;
+        attack.frequency++;
+        Debug.Log(attack.bossAttack.attackName);
     }
 }
