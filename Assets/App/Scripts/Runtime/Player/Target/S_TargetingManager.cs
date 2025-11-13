@@ -208,7 +208,7 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnPlayerCancelTargetingInput()
     {
-        if(rsoSettingsSaved.Value.holdLockTarget == false) return;
+        if(rsoSettingsSaved.Value.holdLockTarget == false || !rsoPlayerIsTargeting.Value) return;
         
         CancelTargeting();
         

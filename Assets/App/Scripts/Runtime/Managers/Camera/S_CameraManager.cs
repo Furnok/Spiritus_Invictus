@@ -191,12 +191,15 @@ public class S_CameraManager : MonoBehaviour
     {
         if (target != null)
         {
-            currentTarget = target.transform;
+            if (currentTarget == target.transform)
+            {
+                currentTarget = null;
+            }
+            else
+            {
+                currentTarget = target.transform;
+            }
         }
-        else
-        {
-            currentTarget = null;
-        }  
     }
 
     private void SwitchCameraMode()
