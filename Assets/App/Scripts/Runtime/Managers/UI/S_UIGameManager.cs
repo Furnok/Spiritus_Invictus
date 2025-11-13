@@ -271,7 +271,7 @@ public class S_UIGameManager : MonoBehaviour
 
     private void Console()
     {
-        if (consoleWindow.activeInHierarchy)
+        if (!consoleWindow.activeInHierarchy)
         {
             rseOnUIInputEnabled.Call();
             rseOnOpenWindow.Call(consoleWindow);
