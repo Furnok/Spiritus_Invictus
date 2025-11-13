@@ -622,12 +622,12 @@ public class S_Enemy : MonoBehaviour
 
             yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length / 2);
 
-            float distance = Vector3.Distance(body.transform.position, target.transform.position);
+            /*float distance = Vector3.Distance(body.transform.position, target.transform.position);
             if (distance > combo.distanceToLoseAttack)
             {
                 enemyAttackData.DisableWeaponCollider();
                 break;
-            }
+            }*/
         }
 
         isAttacking.Value = false;
