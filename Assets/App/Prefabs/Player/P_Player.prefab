@@ -571,6 +571,7 @@ GameObject:
   - component: {fileID: 7456726237346523989}
   - component: {fileID: 3585106378241585558}
   - component: {fileID: 3509033284553825911}
+  - component: {fileID: 4845800258510134550}
   m_Layer: 10
   m_Name: P_Player
   m_TagString: Player
@@ -887,6 +888,25 @@ MonoBehaviour:
   _playerCurrentState: {fileID: 11400000, guid: 16388ffed06f1314f8caba9f9a324afe, type: 2}
   _onPlayerAddState: {fileID: 11400000, guid: 38569afc7ffff0c4eb66c76bc8a6146e, type: 2}
   _onPlayerRemoveState: {fileID: 11400000, guid: cb78c64edfe6921469bbc881aa0bf1be, type: 2}
+--- !u!114 &4845800258510134550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8313228278302547986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49837e7558a8b542908aee7df318bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footstepsSound:
+    Guid:
+      Data1: -1762557771
+      Data2: 1322911718
+      Data3: -209132875
+      Data4: -1763382828
+    Path: event:/Player/Environment/Footsteps
 --- !u!1001 &3034787275973355302
 PrefabInstance:
   m_ObjectHideFlags: 0
