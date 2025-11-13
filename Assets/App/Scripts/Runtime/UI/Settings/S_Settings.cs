@@ -13,6 +13,10 @@ public class S_Settings : MonoBehaviour
     [Title("Save")]
     [SerializeField, S_SaveName] private string saveSettingsName;
 
+    [TabGroup("References")]
+    [Title("Script")]
+    [SerializeField] private S_LoadUISettings loadUISettings;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSaveData rseOnSaveData;
 
@@ -20,7 +24,10 @@ public class S_Settings : MonoBehaviour
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     private bool isLoaded = false;
+    private bool isSave = false;
     private List<TextMeshProUGUI> listTextAudios = new();
+
+    private RSO_SettingsSaved rsoSettingsSavedOld;
 
     private Bus audioMaster;
     private Bus audioMusic;
@@ -37,7 +44,11 @@ public class S_Settings : MonoBehaviour
 
     private void OnEnable()
     {
+        rsoSettingsSavedOld = ScriptableObject.CreateInstance<RSO_SettingsSaved>();
+        rsoSettingsSavedOld.Value = rsoSettingsSaved.Value.Clone();
+
         isLoaded = false;
+        isSave = false;
     }
 
     public void Setup(List<TextMeshProUGUI> listTextVolumes)
@@ -111,6 +122,8 @@ public class S_Settings : MonoBehaviour
             rsoSettingsSaved.Value.listVolumes[0].volume = value;
 
             listTextAudios[0].text = $"{value}%";
+
+            audioMaster.setVolume(rsoSettingsSaved.Value.listVolumes[0].volume / 100);
         }
     }
 
@@ -121,6 +134,8 @@ public class S_Settings : MonoBehaviour
             rsoSettingsSaved.Value.listVolumes[1].volume = value;
 
             listTextAudios[1].text = $"{value}%";
+
+            audioMusic.setVolume(rsoSettingsSaved.Value.listVolumes[1].volume / 100);
         }
     }
 
@@ -131,6 +146,8 @@ public class S_Settings : MonoBehaviour
             rsoSettingsSaved.Value.listVolumes[2].volume = value;
 
             listTextAudios[2].text = $"{value}%";
+
+            audioSounds.setVolume(rsoSettingsSaved.Value.listVolumes[2].volume / 100);
         }
     }
 
@@ -141,11 +158,15 @@ public class S_Settings : MonoBehaviour
             rsoSettingsSaved.Value.listVolumes[3].volume = value;
 
             listTextAudios[3].text = $"{value}%";
+
+            audioUI.setVolume(rsoSettingsSaved.Value.listVolumes[3].volume / 100);
         }
     }
 
     public void SaveSettings()
     {
+        isSave = true;
+
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[rsoSettingsSaved.Value.languageIndex];
 
         Resolution resolution = GetResolutions(rsoSettingsSaved.Value.resolutionIndex);
@@ -163,11 +184,21 @@ public class S_Settings : MonoBehaviour
 
         Screen.fullScreen = rsoSettingsSaved.Value.fullScreen;
 
-        audioMaster.setVolume(rsoSettingsSaved.Value.listVolumes[0].volume / 100);
-        audioMusic.setVolume(rsoSettingsSaved.Value.listVolumes[1].volume / 100);
-        audioSounds.setVolume(rsoSettingsSaved.Value.listVolumes[2].volume / 100);
-        audioUI.setVolume(rsoSettingsSaved.Value.listVolumes[3].volume / 100);
-
         rseOnSaveData.Call(saveSettingsName, true);
+    }
+
+    public void Close()
+    {
+        if (!isSave)
+        {
+            rsoSettingsSaved.Value = rsoSettingsSavedOld.Value.Clone();
+
+            audioMaster.setVolume(rsoSettingsSaved.Value.listVolumes[0].volume / 100);
+            audioMusic.setVolume(rsoSettingsSaved.Value.listVolumes[1].volume / 100);
+            audioSounds.setVolume(rsoSettingsSaved.Value.listVolumes[2].volume / 100);
+            audioUI.setVolume(rsoSettingsSaved.Value.listVolumes[3].volume / 100);
+
+            loadUISettings.LoadUI();
+        }
     }
 }

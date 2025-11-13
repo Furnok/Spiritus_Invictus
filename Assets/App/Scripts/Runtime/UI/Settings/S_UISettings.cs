@@ -37,6 +37,10 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private Button buttonReturn;
 
     [TabGroup("References")]
+    [Title("Script")]
+    [SerializeField] private S_Settings settings;
+
+    [TabGroup("References")]
     [Title("Text")]
     [SerializeField] private TextMeshProUGUI textGameplay;
 
@@ -163,6 +167,7 @@ public class S_UISettings : MonoBehaviour
         if (!isClosing)
         {
             isClosing = true;
+            settings.Close();
 
             rseOnCloseWindow.Call(gameObject);
 

@@ -50,12 +50,10 @@ public class S_LoadUISettings : MonoBehaviour
     {
         rsoSettingsSaved.Value = new();
 
-        rseOnSaveData.Call(saveSettingsName, true);
-
         StartCoroutine(S_Utils.DelayFrame(() => LoadUI()));
     }
 
-    private void LoadUI()
+    public void LoadUI()
     {
         LoadLanguages();
 
