@@ -14,7 +14,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] LayerMask obstacleMask;
     float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
     float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
-    [SerializeField] float edgeProbeDistance = 0.6f;
+    //[SerializeField] float edgeProbeDistance = 0.6f;
     [SerializeField] float edgeProbeHeight = 0.5f;
     [SerializeField] float stopFromWall = 0.03f;
 

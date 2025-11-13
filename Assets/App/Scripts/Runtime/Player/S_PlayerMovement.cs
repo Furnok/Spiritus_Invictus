@@ -62,7 +62,7 @@ public class S_PlayerMovement : MonoBehaviour
     private bool inputCanceledOrNoInput = true;
     private Quaternion camRotInInputPerformed = Quaternion.identity;
     private Transform target = null;
-    bool _isInputCanceled = false;
+    //bool _isInputCanceled = false;
 
     bool isGrounded;
     Vector3 groundNormal = Vector3.up;
@@ -136,7 +136,7 @@ public class S_PlayerMovement : MonoBehaviour
 
     void OnCancelInput()
     {
-        _isInputCanceled = true;
+        //_isInputCanceled = true;
     }
 
 
@@ -261,12 +261,12 @@ public class S_PlayerMovement : MonoBehaviour
                 }
                 else if (_playerCurrentState.Value == PlayerState.Running && moveInput.sqrMagnitude > 0.0001f)
                 {
-                    _isInputCanceled = false;
+                    //_isInputCanceled = false;
                 }
                 else
                 {
                     _onPlayerAddState.Call(PlayerState.None);
-                    _isInputCanceled = false;
+                    //_isInputCanceled = false;
                 }
 
                 rsoPlayerPosition.Value = transform.position;
