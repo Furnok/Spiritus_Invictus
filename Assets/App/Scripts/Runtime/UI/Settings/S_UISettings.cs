@@ -100,6 +100,20 @@ public class S_UISettings : MonoBehaviour
 
             buttonGameplay.navigation = nav;
 
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownLanguages;
+
+            buttonGraphics.navigation = nav;
+
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownLanguages;
+
+            buttonAudio.navigation = nav;
+
             nav = buttonApply.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
@@ -229,6 +243,20 @@ public class S_UISettings : MonoBehaviour
 
             buttonGameplay.navigation = nav;
 
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownLanguages;
+
+            buttonGraphics.navigation = nav;
+
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownLanguages;
+
+            buttonAudio.navigation = nav;
+
             nav = buttonApply.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
@@ -271,12 +299,26 @@ public class S_UISettings : MonoBehaviour
 
             currentPanelSet = panelSet;
 
-            Navigation nav = buttonGraphics.navigation;
+            Navigation nav = buttonGameplay.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownResolutions;
+
+            buttonGameplay.navigation = nav;
+
+            nav = buttonGraphics.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
             nav.selectOnDown = dropDownResolutions;
 
             buttonGraphics.navigation = nav;
+
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownResolutions;
+
+            buttonAudio.navigation = nav;
 
             nav = buttonApply.navigation;
             nav.mode = Navigation.Mode.Explicit;
@@ -320,7 +362,21 @@ public class S_UISettings : MonoBehaviour
 
             currentPanelSet = panelSet;
 
-            Navigation nav = buttonAudio.navigation;
+            Navigation nav = buttonGameplay.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = sliderMainVolume;
+
+            buttonGameplay.navigation = nav;
+
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = sliderMainVolume;
+
+            buttonGraphics.navigation = nav;
+
+            nav = buttonAudio.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
             nav.selectOnDown = sliderMainVolume;
