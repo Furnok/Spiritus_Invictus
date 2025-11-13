@@ -7,7 +7,11 @@ public class S_TargetingManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private bool drawGizmos;
-    
+
+    [Header("Reference")]
+    [SerializeField] GameObject _previewIndicatorPrefab;
+    [SerializeField] GameObject _lockedIndicatorPrefab;
+
     [Header("Input")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
     [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
@@ -35,9 +39,20 @@ public class S_TargetingManager : MonoBehaviour
     private float obstacleTimer = 0f;
     private Transform _playerCenterTransform;
 
+    private GameObject _previewGO;
+    private GameObject _lockedGO;
+    private Transform _previewTargetTransform;
+    private Transform _lockedTargetTransfrom;
+
     private void Awake()
     {
         rsoPlayerIsTargeting.Value = false;
+
+        _previewGO = Instantiate(_previewIndicatorPrefab, gameObject.transform);
+        _lockedGO = Instantiate(_lockedIndicatorPrefab, gameObject.transform);
+
+        _previewGO.SetActive(false);
+        _lockedGO.SetActive(false);
     }
 
     private void OnEnable()
@@ -73,6 +88,55 @@ public class S_TargetingManager : MonoBehaviour
     void GetPlayerCenterTransform(Transform playerCenter)
     {
         _playerCenterTransform = playerCenter;
+    }
+
+    private void Update()
+    {
+        var selection = TargetSelection();
+
+        if (targetsPossible.Count > 0 && selection != null)
+        {
+            if (currentTarget == null)
+            {
+                if (selection.TryGetComponent(out ITargetable targetable))
+                {
+                    _previewTargetTransform = targetable.GetTargetLockOnAnchorTransform();
+                }
+                else
+                {
+                    _previewTargetTransform = selection.transform;
+                }
+
+                _previewGO.SetActive(true);
+                _lockedGO.SetActive(false);
+
+                _previewGO.transform.position = _previewTargetTransform.position;
+            }
+            else
+            {
+                if (currentTarget.TryGetComponent(out ITargetable targetable))
+                {
+                    _lockedTargetTransfrom = targetable.GetTargetLockOnAnchorTransform();
+                }
+                else
+                {
+                    _lockedTargetTransfrom = currentTarget.transform;
+                }
+
+                _previewGO.SetActive(false);
+                _lockedGO.SetActive(true);
+
+                _lockedGO.transform.position = _lockedTargetTransfrom.position;
+            }
+        }
+        else
+        {
+            if (_previewGO.activeInHierarchy || _lockedGO.activeInHierarchy)
+            {
+                _previewGO.SetActive(false);
+                _lockedGO.SetActive(false);
+            }
+        }
     }
 
     private void FixedUpdate()
