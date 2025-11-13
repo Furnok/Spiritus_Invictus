@@ -13,11 +13,21 @@ public class S_EnemyMaxTravelZone : MonoBehaviour
     [SerializeField] private BoxCollider box;
 
     [HideInInspector] public UnityEvent<GameObject> onTargetDetected;
+    [HideInInspector] public UnityEvent<GameObject> onTarget;
     private GameObject targetDetected = null;
 
     public void Setup(SSO_EnemyData enemyData)
     {
         box.size = new Vector3(enemyData.Value.detectionAggroRangeMax, enemyData.Value.detectionAggroRangeMax, enemyData.Value.detectionAggroRangeMax);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(playerTag))
+        {
+            targetDetected = other.gameObject;
+            onTarget.Invoke(targetDetected);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -26,6 +36,7 @@ public class S_EnemyMaxTravelZone : MonoBehaviour
         {
             targetDetected = null;
             onTargetDetected.Invoke(targetDetected);
+            onTarget.Invoke(targetDetected);
         }
     }
 }

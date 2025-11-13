@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TestEnemyDetectionPlayer : MonoBehaviour
 {
@@ -21,7 +21,7 @@ public class TestEnemyDetectionPlayer : MonoBehaviour
     {
         if (other.CompareTag(_playerTag))
         {
-            other.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            other.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             _aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : other.transform;
             ShootPlayer();
         }

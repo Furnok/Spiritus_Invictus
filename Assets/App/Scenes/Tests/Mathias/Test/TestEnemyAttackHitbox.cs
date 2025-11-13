@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class TestEnemyAttackHitbox : MonoBehaviour, IAttackProvider
+public class TestEnemyAttackHitbox : MonoBehaviour, I_AttackProvider
 {
     [Header("Settings")]
     //[SerializeField] EnemyAttackType _attackType;

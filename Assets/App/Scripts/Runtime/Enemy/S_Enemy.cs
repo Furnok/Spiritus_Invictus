@@ -121,6 +121,7 @@ public class S_Enemy : MonoBehaviour
     private S_EnumEnemyState? pendingState = null;
     private GameObject pendingTarget = null;
     private bool isPlayerDead = false;
+    private GameObject targetInZone = null;
     private GameObject target = null;
     private bool isChase = false;
     private bool isPatrolling = false;
@@ -151,6 +152,7 @@ public class S_Enemy : MonoBehaviour
 
         health = ssoEnemyData.Value.health;
         maxhealth = ssoEnemyData.Value.health;
+        navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
         behaviorAgent.SetVariableValue<float>("Health", ssoEnemyData.Value.health);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMin", ssoEnemyData.Value.startPatrolWaitMin);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMax", ssoEnemyData.Value.startPatrolWaitMax);
@@ -175,6 +177,7 @@ public class S_Enemy : MonoBehaviour
         enemyDetectionRange.onTargetDetected.AddListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.AddListener(SetTarget);
+        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action += PlayerDied;
 
@@ -201,6 +204,7 @@ public class S_Enemy : MonoBehaviour
         enemyDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.RemoveListener(SetTarget);
+        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action -= PlayerDied;
 
@@ -304,6 +308,11 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
+    private void SetInsideBox(GameObject newTarget)
+    {
+        targetInZone = newTarget;
+    }
+
     private void SetTarget(GameObject newTarget)
     {
         if (newTarget == target || isDead)
@@ -324,7 +333,7 @@ public class S_Enemy : MonoBehaviour
 
         if (newTarget != null)
         {
-            newTarget.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
 
             float distance = Vector3.Distance(transform.position, newTarget.transform.position);
@@ -336,6 +345,11 @@ public class S_Enemy : MonoBehaviour
 
                 if (hit.collider.gameObject != newTarget)
                 {
+                    health = maxhealth;
+                    onUpdateEnemyHealth.Invoke(health);
+
+                    behaviorAgent.SetVariableValue<float>("Health", health);
+
                     behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
                 }
                 else
@@ -350,6 +364,11 @@ public class S_Enemy : MonoBehaviour
         }
         else
         {
+            health = maxhealth;
+            onUpdateEnemyHealth.Invoke(health);
+
+            behaviorAgent.SetVariableValue<float>("Health", health);
+
             aimPoint = null;
 
             DetectionCollider.enabled = false;
@@ -363,7 +382,7 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.Restart();
     }
 
-    private void UpdateHealth(float damage)
+    private void SetHealth(float damage)
     {
         health = Mathf.Max(health - damage, 0);
         onUpdateEnemyHealth.Invoke(health);
@@ -410,10 +429,25 @@ public class S_Enemy : MonoBehaviour
 
             rseOnEnemyTargetDied.Call(body);
         }
-        else if (target == null)
+    }
+
+    private void UpdateHealth(float damage)
+    {
+        if (target == null)
         {
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
-            behaviorAgent.Restart();
+            if (targetInZone != null)
+            {
+                SetTarget(targetInZone);
+
+                SetHealth(damage);
+
+                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
+                behaviorAgent.Restart();
+            }
+        }
+        else
+        {
+            SetHealth(damage);
         }
     }
 
@@ -474,7 +508,6 @@ public class S_Enemy : MonoBehaviour
                 patrolCoroutine = null;
             }
 
-            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
             patrolCoroutine = StartCoroutine(PatrolRoutine());
         }
         else
@@ -505,6 +538,7 @@ public class S_Enemy : MonoBehaviour
                 yield return null;
             }
 
+            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
             DetectionCollider.enabled = true;
 
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
@@ -577,13 +611,15 @@ public class S_Enemy : MonoBehaviour
             enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
+            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length / 2);
+
             if (combo.listAnimationsCombos[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
                 S_EnemyProjectile projectileInstance = Instantiate(enemyProjectile, spawnProjectilePoint.transform.position, Quaternion.identity);
                 projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo.listAnimationsCombos[i].attackData);
             }
 
-            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length);
+            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length / 2);
         }
 
         isAttacking.Value = false;

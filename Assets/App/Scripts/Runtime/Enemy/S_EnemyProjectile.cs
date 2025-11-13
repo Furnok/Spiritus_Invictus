@@ -1,11 +1,14 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableProjectile
+public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
 {
     [TabGroup("Settings")]
     [Title("Layer")]
     [SerializeField] private string playerLayer;
+
+    [TabGroup("Settings")]
+    [SerializeField] private LayerMask blockLayer;
 
     [TabGroup("Settings")]
     [Title("Projectile")]
@@ -71,7 +74,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         this.owner = owner;
         origin = target.position;
 
-        owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+        owner.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
         startAimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : null;
 
         CalculateControlPoint();
@@ -123,29 +126,29 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
             endPos = target != null ? target.position : startPos + transform.forward * 10f;
         }
 
-        Vector3 a = Vector3.Lerp(startPos, controlPoint, t);
-        Vector3 b = Vector3.Lerp(controlPoint, endPos, t);
-        Vector3 newPos = Vector3.Lerp(a, b, t);
+        Vector3 a = Vector3.Lerp(startPos, controlPoint, Mathf.Clamp01(t));
+        Vector3 b = Vector3.Lerp(controlPoint, endPos, Mathf.Clamp01(t));
+        Vector3 newPos = Vector3.Lerp(a, b, Mathf.Clamp01(t));
         Vector3 tangent = (b - a).normalized;
 
-        if (target != null && target.gameObject.activeInHierarchy && t <= 1f)
+        if (t <= 1f)
         {
             transform.position = newPos;
             transform.forward = tangent;
-
             direction = tangent;
         }
         else
         {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.1f))
+            if (Physics.Raycast(transform.position, Vector3.down, 0.01f, blockLayer))
             {
                 Destroy(gameObject);
                 return;
             }
 
-            direction = Vector3.Lerp(direction, Vector3.down, Time.deltaTime * 2f).normalized;
-            transform.position += direction * speed * Time.deltaTime;
-            transform.forward = direction;
+            float curveSpeed = (b - a).magnitude / (travelTime * 0.5f);
+            transform.position += tangent * curveSpeed * Time.deltaTime;
+            transform.forward = tangent;
+            direction = tangent;
         }
     }
 
@@ -160,7 +163,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
 
         if (owner != null && owner.gameObject.activeInHierarchy)
         {
-            owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            owner.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             target = aimPointProvider != null ? aimPointProvider.GetAimPoint() : owner;
 
             CalculateControlPoint();
@@ -203,7 +206,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hurtbox" && other.TryGetComponent(out IDamageable damageable))
+        if (other.tag == "Hurtbox" && other.TryGetComponent(out I_Damageable damageable))
         {
             if (damageable != null)
             {

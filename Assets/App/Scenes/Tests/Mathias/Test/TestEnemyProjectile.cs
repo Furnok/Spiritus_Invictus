@@ -1,7 +1,7 @@
 ﻿using DG.Tweening.Plugins.Core.PathCore;
 using UnityEngine;
 
-public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableProjectile
+public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
 {
     [Header("Settings")]
     [SerializeField] private float _speed = 5f;
@@ -142,7 +142,7 @@ public class TestEnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableP
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hurtbox" && other.TryGetComponent(out IDamageable damageable))
+        if (other.tag == "Hurtbox" && other.TryGetComponent(out I_Damageable damageable))
         {
             if (damageable != null)
             {

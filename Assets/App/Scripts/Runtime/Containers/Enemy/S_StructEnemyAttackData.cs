@@ -1,22 +1,49 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
 using System;
+using UnityEngine;
 
 [Serializable]
 public struct S_StructEnemyAttackData
 {
-    public int attackId;
-    [HideInInspector]public int goSourceId;
+    [HideInInspector] public int attackId;
+    [HideInInspector] public int goSourceId;
+
+    [Title("Type")]
     public S_EnumEnemyAttackType attackType;
+
+    [Title("Damage")]
+    [ShowIf("isTyped")]
     public float damage;
-    public float knockbackHitDuration; //maybe remove it if hit stun is same as knockback duration who make sense 
+
+    [Title("KnockBack")]
+    [ShowIf("isTyped")]
+    [SuffixLabel("s", Overlay = true)]
+    public float knockbackHitDuration;
+    [ShowIf("isTyped")]
     public float knockbackHitDistance;
+    [ShowIf("isTyped")]
+    [SuffixLabel("s", Overlay = true)]
     public float knockbackOnParryDuration;
+    [ShowIf("isTyped")]
     public float knockbackOnParrryDistance;
+
+    [Title("Parry Tolerance")]
+    [ShowIf("isTyped")]
     public float parryToleranceBeforeHit;
+    [ShowIf("isTyped")]
     public float parryToleranceAfterHit;
-    //public float hitStunDuration;
+
+    [Title("Invicibility")]
+    [ShowIf("isTyped")]
+    [SuffixLabel("s", Overlay = true)]
     public float invicibilityDuration;
+
+    [Title("Conviction")]
+    [ShowIf("isTyped")]
     public float convictionReduction;
+
     [HideInInspector] public Vector3 attackDirection;
     [HideInInspector] public Vector3 contactPoint;
+
+    private bool isTyped => attackType != S_EnumEnemyAttackType.None;
 }
