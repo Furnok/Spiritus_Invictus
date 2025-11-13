@@ -181,6 +181,15 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""58d1c602-8c6c-4d82-b088-a1c43a9998c0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -513,6 +522,61 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Heal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ce7d79a2-328c-493b-8ca4-c5df6f0fdf98"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Controller"",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e39b78b-7994-4740-8b73-09eec6656210"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Controller"",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""04811f16-d862-4eb2-aa8c-8e657f0f26e5"",
+                    ""path"": ""OneModifier(overrideModifiersNeedToBePressedFirst=true,modifiersOrder=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Console"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""92714345-999c-475e-8212-e1725efefc98"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard and mouse"",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""e445e985-8ebc-403c-a0eb-2f82289ef794"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard and mouse"",
+                    ""action"": ""Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -734,6 +798,7 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
         m_Game_Targeting = m_Game.FindAction("Targeting", throwIfNotFound: true);
         m_Game_SwapTarget = m_Game.FindAction("Swap Target", throwIfNotFound: true);
         m_Game_Heal = m_Game.FindAction("Heal", throwIfNotFound: true);
+        m_Game_Console = m_Game.FindAction("Console", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
@@ -833,6 +898,7 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Targeting;
     private readonly InputAction m_Game_SwapTarget;
     private readonly InputAction m_Game_Heal;
+    private readonly InputAction m_Game_Console;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -884,6 +950,10 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/Heal".
         /// </summary>
         public InputAction @Heal => m_Wrapper.m_Game_Heal;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/Console".
+        /// </summary>
+        public InputAction @Console => m_Wrapper.m_Game_Console;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -940,6 +1010,9 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
             @Heal.started += instance.OnHeal;
             @Heal.performed += instance.OnHeal;
             @Heal.canceled += instance.OnHeal;
+            @Console.started += instance.OnConsole;
+            @Console.performed += instance.OnConsole;
+            @Console.canceled += instance.OnConsole;
         }
 
         /// <summary>
@@ -981,6 +1054,9 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
             @Heal.started -= instance.OnHeal;
             @Heal.performed -= instance.OnHeal;
             @Heal.canceled -= instance.OnHeal;
+            @Console.started -= instance.OnConsole;
+            @Console.performed -= instance.OnConsole;
+            @Console.canceled -= instance.OnConsole;
         }
 
         /// <summary>
@@ -1320,6 +1396,13 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHeal(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Console" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnConsole(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

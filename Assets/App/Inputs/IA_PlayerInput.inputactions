@@ -95,6 +95,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Console",
+                    "type": "Button",
+                    "id": "58d1c602-8c6c-4d82-b088-a1c43a9998c0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -427,6 +436,61 @@
                     "action": "Heal",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce7d79a2-328c-493b-8ca4-c5df6f0fdf98",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e39b78b-7994-4740-8b73-09eec6656210",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "04811f16-d862-4eb2-aa8c-8e657f0f26e5",
+                    "path": "OneModifier(overrideModifiersNeedToBePressedFirst=true,modifiersOrder=1)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Console",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "92714345-999c-475e-8212-e1725efefc98",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "e445e985-8ebc-403c-a0eb-2f82289ef794",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

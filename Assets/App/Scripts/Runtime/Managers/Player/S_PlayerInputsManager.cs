@@ -163,6 +163,11 @@ public class S_PlayerInputsManager : MonoBehaviour
     {
         rseOnPlayerHeal.Call();
     }
+
+    private void OnConsoleInput(InputAction.CallbackContext ctx)
+    {
+        rseOnConsole.Call();
+    }
     #endregion
 
     #region UI Input Callback Methods
@@ -210,6 +215,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         game.Targeting.canceled += OnTargetingCancelInput;
         game.SwapTarget.performed += OnSwapTargetInput;
         game.Heal.performed += OnHealInput;
+        game.Console.performed += OnConsoleInput;
     }
 
     private void DisableGameInputs()
@@ -232,6 +238,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         game.Targeting.canceled -= OnTargetingCancelInput;
         game.SwapTarget.performed -= OnSwapTargetInput;
         game.Heal.performed -= OnHealInput;
+        game.Console.performed -= OnConsoleInput;
     }
 
     private void EnableUIInputs()

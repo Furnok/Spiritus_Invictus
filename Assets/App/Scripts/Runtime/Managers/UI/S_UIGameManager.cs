@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -83,6 +84,9 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnConsole rseOnConsole;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
 
     [TabGroup("Outputs")]
@@ -130,6 +134,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplaySkip.action += DisplaySkip;
         rseOnSkipHold.action += SetSkipHoldValue;
         rseOnOpenExtractWindow.action += DiplayExtract;
+        rseOnConsole.action += Console;
     }
 
     private void OnDisable()
@@ -141,6 +146,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplaySkip.action -= DisplaySkip;
         rseOnSkipHold.action -= SetSkipHoldValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
+        rseOnConsole.action -= Console;
 
         healthTween?.Kill();
         convictionTween?.Kill();
@@ -261,5 +267,14 @@ public class S_UIGameManager : MonoBehaviour
         rseOnUIInputEnabled.Call();
         rseOnOpenWindow.Call(extractWindow);
         rseOnDisplayExtract.Call(ssoExtractText.Value[index]);
+    }
+
+    private void Console()
+    {
+        if (consoleWindow.activeInHierarchy)
+        {
+            rseOnUIInputEnabled.Call();
+            rseOnOpenWindow.Call(consoleWindow);
+        }
     }
 }
