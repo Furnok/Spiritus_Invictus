@@ -92,8 +92,8 @@
 		<property name="length">
 			<value>2</value>
 		</property>
-		<property name="playlistMode">
-			<value>1</value>
+		<property name="pitch">
+			<value>-6.5</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{30a3e217-82f1-4ee9-ab1c-7db2591ff702}</destination>
@@ -124,6 +124,7 @@
 	<object class="MixerBusEffectChain" id="{efe5552d-3212-40b2-a873-193cb9217aad}">
 		<relationship name="effects">
 			<destination>{5aefe91c-1a80-400a-aa42-438f45152b14}</destination>
+			<destination>{7dfabe82-b66e-4bb3-81a5-39b128de7fbf}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{cb5c76ab-3aa4-43ee-8f4b-8e3aea2d1f88}" />
@@ -165,5 +166,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{d619d111-5ae9-4a07-95ac-6021537598e0}" />
 	<object class="MixerBusFader" id="{5aefe91c-1a80-400a-aa42-438f45152b14}" />
+	<object class="SFXReverbEffect" id="{7dfabe82-b66e-4bb3-81a5-39b128de7fbf}" />
 	<object class="MixerBusFader" id="{738b9649-230a-41c2-b215-2fdf9efd66e1}" />
 </objects>
