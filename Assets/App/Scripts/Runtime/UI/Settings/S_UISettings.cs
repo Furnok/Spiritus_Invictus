@@ -89,7 +89,7 @@ public class S_UISettings : MonoBehaviour
 
             defaultPanelSet.SetActive(true);
             defaultPanelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            defaultPanelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            defaultPanelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = defaultPanelSet;
 
@@ -178,7 +178,7 @@ public class S_UISettings : MonoBehaviour
             GameObject oldpanel = currentPanelSet;
 
             currentPanelSet.GetComponent<CanvasGroup>().alpha = 1f;
-            currentPanelSet.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).OnComplete(() =>
+            currentPanelSet.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 oldpanel.SetActive(false);
             });
@@ -218,7 +218,7 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
             panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -267,7 +267,7 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
             panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -316,7 +316,7 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
             panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 

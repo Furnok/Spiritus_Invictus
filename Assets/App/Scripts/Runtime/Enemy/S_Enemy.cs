@@ -1,5 +1,4 @@
 ﻿using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Behavior;
@@ -97,9 +96,6 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
-    [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnGamePause rseOnGamePause;
-
     [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
 
@@ -108,7 +104,6 @@ public class S_Enemy : MonoBehaviour
 
     private float health = 0;
     private float maxhealth = 0;
-    private bool isPaused = false;
     private int currentPatrolIndex = 0;
     private Transform aimPoint = null;
     private BlackboardVariable<bool> isPatroling = null;
@@ -173,8 +168,6 @@ public class S_Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        rseOnGamePause.action += Pause;
-
         enemyDetectionRange.onTargetDetected.AddListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.AddListener(SetTarget);
@@ -200,8 +193,6 @@ public class S_Enemy : MonoBehaviour
 
     private void OnDisable()
     {
-        rseOnGamePause.action -= Pause;
-
         enemyDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.RemoveListener(SetTarget);
@@ -238,16 +229,9 @@ public class S_Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isPaused)
-        {
-            bool isMoving = navMeshAgent.velocity.magnitude > 0.2f;
-            lastMoveState = isMoving;
-            animator.SetBool(moveParam, isMoving);
-        }
-        else
-        {
-            animator.SetBool(moveParam, lastMoveState);
-        }
+        bool isMoving = navMeshAgent.velocity.magnitude > 0.1f;
+        lastMoveState = isMoving;
+        animator.SetBool(moveParam, isMoving);
     }
 
     [TabGroup("Settings")]
@@ -285,27 +269,6 @@ public class S_Enemy : MonoBehaviour
             navMeshAgent.velocity = Vector3.zero;
             behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
             behaviorAgent.Restart();
-        }
-    }
-
-    private void Pause(bool value)
-    {
-        if (value)
-        {
-            isPaused = true;
-
-            animator.speed = 0f;
-            behaviorAgent.enabled = false;
-            navMeshAgent.isStopped = true;
-            navMeshAgent.velocity = Vector3.zero;
-        }
-        else
-        {
-            StartCoroutine(S_Utils.Delay(0.05f, () => isPaused = false));
-
-            animator.speed = 1f;
-            behaviorAgent.enabled = true;
-            navMeshAgent.isStopped = false;
         }
     }
 
@@ -544,7 +507,7 @@ public class S_Enemy : MonoBehaviour
 
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
 
-            yield return WaitForSecondsWhileUnpaused(waitTime);
+            yield return new WaitForSeconds(waitTime);
 
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPointsList.Count;
         }
@@ -587,17 +550,6 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitForSecondsWhileUnpaused(float duration)
-    {
-        float timer = 0f;
-        while (timer < duration)
-        {
-            if (!isPaused)
-                timer += Time.deltaTime;
-            yield return null;
-        }
-    }
-
     private IEnumerator PlayComboSequence()
     {
         yield return new WaitForSeconds(0.4f);
@@ -612,7 +564,7 @@ public class S_Enemy : MonoBehaviour
             enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
-            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length / 2);
+            yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length / 2);
 
             if (combo.listAnimationsCombos[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
@@ -620,7 +572,7 @@ public class S_Enemy : MonoBehaviour
                 projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo.listAnimationsCombos[i].attackData);
             }
 
-            yield return WaitForSecondsWhileUnpaused(combo.listAnimationsCombos[i].animation.length / 2);
+            yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length / 2);
 
             /*float distance = Vector3.Distance(body.transform.position, target.transform.position);
             if (distance > combo.distanceToLoseAttack)
@@ -660,7 +612,7 @@ public class S_Enemy : MonoBehaviour
 
     private IEnumerator ResetAttack()
     {
-        yield return WaitForSecondsWhileUnpaused(ssoEnemyData.Value.attackCooldown);
+        yield return new WaitForSeconds(ssoEnemyData.Value.attackCooldown);
 
         behaviorAgent.SetVariableValue<bool>("CanAttack", true);
     }
