@@ -94,7 +94,7 @@ public class S_UIMenu : MonoBehaviour
             isTransit = true;
             rseOnFadeOut.Call();
 
-            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
                 rseOnCloseAllWindows.Call();
                 rsoNavigation.Value.selectableFocus = null;
@@ -116,7 +116,7 @@ public class S_UIMenu : MonoBehaviour
 
             rseOnFadeOut.Call();
 
-            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
                 rseOnQuitGame.Call();
                 rsoNavigation.Value.selectableFocus = null;
