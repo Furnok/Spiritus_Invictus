@@ -23,7 +23,7 @@ public class S_PlayerProjectile : MonoBehaviour
     private Vector3 _startPos;
     private Vector3 _controlPoint;
 
-    private ProjectileData _projectileData;
+    private S_StructDataProjectile _projectileData;
 
     private float _arcHeightMultiplier => _projectileData.arcHeightMultiplier;
     private float _arcDirection => _projectileData.arcDirection;
@@ -158,7 +158,7 @@ public class S_PlayerProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hurtbox" && other.TryGetComponent(out IDamageable damageable))
+        if (other.tag == "Hurtbox" && other.TryGetComponent(out I_Damageable damageable))
         {
             if (damageable != null)
             {

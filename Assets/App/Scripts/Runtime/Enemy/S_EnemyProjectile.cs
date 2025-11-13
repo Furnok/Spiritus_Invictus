@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectableProjectile
+public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
 {
     [TabGroup("Settings")]
     [Title("Layer")]
@@ -74,7 +74,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
         this.owner = owner;
         origin = target.position;
 
-        owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+        owner.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
         startAimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : null;
 
         CalculateControlPoint();
@@ -115,7 +115,16 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
             return;
         }
 
-        Vector3 endPos = target != null ? origin : startPos + transform.forward * 10f;
+        Vector3 endPos = Vector3.zero;
+
+        if (owner != target && startAimPoint != target)
+        {
+            endPos = target != null ? origin : startPos + transform.forward * 10f;
+        }
+        else
+        {
+            endPos = target != null ? target.position : startPos + transform.forward * 10f;
+        }
 
         Vector3 a = Vector3.Lerp(startPos, controlPoint, Mathf.Clamp01(t));
         Vector3 b = Vector3.Lerp(controlPoint, endPos, Mathf.Clamp01(t));
@@ -154,7 +163,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
 
         if (owner != null && owner.gameObject.activeInHierarchy)
         {
-            owner.gameObject.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            owner.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             target = aimPointProvider != null ? aimPointProvider.GetAimPoint() : owner;
 
             CalculateControlPoint();
@@ -197,7 +206,7 @@ public class S_EnemyProjectile : MonoBehaviour, IAttackProvider, IReflectablePro
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hurtbox" && other.TryGetComponent(out IDamageable damageable))
+        if (other.tag == "Hurtbox" && other.TryGetComponent(out I_Damageable damageable))
         {
             if (damageable != null)
             {

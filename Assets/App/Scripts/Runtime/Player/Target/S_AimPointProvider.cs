@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class S_AimPointProvider : MonoBehaviour, IAimPointProvider
+public class S_AimPointProvider : MonoBehaviour, I_AimPointProvider
 {
     //[Header("Settings")]
 

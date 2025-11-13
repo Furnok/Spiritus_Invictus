@@ -435,10 +435,10 @@ GameObject:
   - component: {fileID: 1915771199470057537}
   - component: {fileID: 8667935775571001258}
   - component: {fileID: 7857911177230045509}
-  - component: {fileID: 447099353383380861}
+  - component: {fileID: 1984007831572579136}
   - component: {fileID: 3709603383220802508}
   m_Layer: 17
-  m_Name: SM_Wep_Sword_03
+  m_Name: FBX_Sword
   m_TagString: Hitbox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -466,7 +466,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347601129787763232}
-  m_Mesh: {fileID: -6789378856369965004, guid: 26c42448df278484aa99a6a2ccea347f, type: 3}
+  m_Mesh: {fileID: -6789378856369965004, guid: b613137ace6b01a4cba4603638413707, type: 3}
 --- !u!23 &7857911177230045509
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -490,7 +490,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e9e43f7f18e02bb40a6993e7f1cf4a53, type: 2}
+  - {fileID: 2100000, guid: 4df14069e6cba824585cf956b73a1a32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -512,8 +512,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &447099353383380861
-MeshCollider:
+--- !u!136 &1984007831572579136
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -529,11 +529,12 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1758886370944893619, guid: 2524b385c9ea68448b02ed6885acc0f8, type: 2}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 1.252232
+  m_Direction: 1
+  m_Center: {x: -0.0000022991596, y: 0.4362814, z: 0.00000022477067}
 --- !u!114 &3709603383220802508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2273,8 +2274,8 @@ PrefabInstance:
       propertyPath: m_WarningMessage
       value: "\nBinding warning: Some generic clip(s) animate transforms that are
         already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyLAttack3_Copy'\n\tFrom
-        animation clip 'A_EnemyLAttack2_Copy'\n\tFrom animation clip 'A_EnemyLAttack1_Copy'"
+        by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyLAttack1_D3'\n\tFrom
+        animation clip 'A_EnemyLAttack2_D3'\n\tFrom animation clip 'A_EnemyLAttack3_D3'"
       objectReference: {fileID: 0}
     - target: {fileID: 7384311513534882751, guid: 5d4f05f5ea5eefd4b88eed29797b79bc, type: 3}
       propertyPath: m_Name
@@ -2331,7 +2332,7 @@ PrefabInstance:
     - target: {fileID: 9183690598147176708, guid: 5d4f05f5ea5eefd4b88eed29797b79bc, type: 3}
       propertyPath: weaponCollider
       value: 
-      objectReference: {fileID: 447099353383380861}
+      objectReference: {fileID: 1984007831572579136}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

@@ -122,13 +122,13 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         if (source == null) return;
 
-        if (source.TryGetComponent<IReflectableProjectile>(out var proj))
+        if (source.TryGetComponent<I_ReflectableProjectile>(out var proj))
         {
             proj.Reflect(_playerMotorGO.transform);
         }
         else
         {
-            var p = source.GetComponentInParent<IReflectableProjectile>();
+            var p = source.GetComponentInParent<I_ReflectableProjectile>();
             if (p != null) p.Reflect(_playerMotorGO.transform);
         }
     }

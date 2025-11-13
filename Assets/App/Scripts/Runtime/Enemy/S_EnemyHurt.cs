@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class S_EnemyHurt : MonoBehaviour, IDamageable
+public class S_EnemyHurt : MonoBehaviour, I_Damageable
 {
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth;
 

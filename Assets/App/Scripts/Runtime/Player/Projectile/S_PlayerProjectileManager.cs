@@ -69,7 +69,7 @@ public class S_PlayerProjectileManager : MonoBehaviour
 
         if (target != null)
         {
-            target.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            target.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : target;
         }
 

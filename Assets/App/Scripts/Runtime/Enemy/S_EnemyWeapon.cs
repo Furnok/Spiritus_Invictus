@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_EnemyWeapon : MonoBehaviour, IAttackProvider
+public class S_EnemyWeapon : MonoBehaviour, I_AttackProvider
 {
     [TabGroup("References")]
     [Title("Enemy")]

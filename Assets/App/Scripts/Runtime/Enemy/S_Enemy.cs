@@ -333,7 +333,7 @@ public class S_Enemy : MonoBehaviour
 
         if (newTarget != null)
         {
-            newTarget.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
 
             float distance = Vector3.Distance(transform.position, newTarget.transform.position);
