@@ -52,7 +52,11 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Extract")]
-    [SerializeField] private GameObject extractCanvas;
+    [SerializeField] private GameObject extractWindow;
+
+    [TabGroup("References")]
+    [Title("Console")]
+    [SerializeField] private GameObject consoleWindow;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
@@ -255,7 +259,7 @@ public class S_UIGameManager : MonoBehaviour
     private void DiplayExtract(int index)
     {
         rseOnUIInputEnabled.Call();
-        rseOnOpenWindow.Call(extractCanvas);
+        rseOnOpenWindow.Call(extractWindow);
         rseOnDisplayExtract.Call(ssoExtractText.Value[index]);
     }
 }
