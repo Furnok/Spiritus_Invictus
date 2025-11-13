@@ -124,7 +124,7 @@ public class S_UIMainMenu : MonoBehaviour
             gameObject.GetComponent<CanvasGroup>()?.DOKill();
 
             gameObject.GetComponent<CanvasGroup>().alpha = 1f;
-            gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).OnComplete(() =>
+            gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 gameObject.SetActive(false);
                 rsoNavigation.Value.selectableFocus = null;
@@ -142,7 +142,7 @@ public class S_UIMainMenu : MonoBehaviour
 
             rseOnFadeOut.Call();
 
-            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
                 rseOnCloseAllWindows.Call();
                 rsoNavigation.Value.selectableFocus = null;
@@ -172,7 +172,7 @@ public class S_UIMainMenu : MonoBehaviour
 
             rseOnFadeOut.Call();
 
-            StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+            StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
                 rseOnQuitGame.Call();
                 rsoNavigation.Value.selectableFocus = null;

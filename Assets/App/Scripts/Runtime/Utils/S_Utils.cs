@@ -19,6 +19,13 @@ public static class S_Utils
 
         onComplete?.Invoke();
     }
+
+    public static IEnumerator DelayRealTime(float delay, Action onComplete = null)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        onComplete?.Invoke();
+    }
     #endregion
 
     #region SCENE

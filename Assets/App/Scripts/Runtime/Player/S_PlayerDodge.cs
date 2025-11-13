@@ -44,6 +44,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
     [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
+    [SerializeField] RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
 
     Vector2 _moveInput;
     Transform _target = null;
@@ -52,6 +53,8 @@ public class S_PlayerDodge : MonoBehaviour
     float _linearDamping;
     bool _canRunAfterDodge = false;
     bool _dodgeUp = true;
+
+    
 
     private void OnEnable()
     {
@@ -111,6 +114,7 @@ public class S_PlayerDodge : MonoBehaviour
         { 
             Debug.Log("Dodge perfect");
             _onPlayerGainConviction.Call(_playerConvictionData.Value.dodgeSuccessGain);
+            _rseOnDodgePerfect.Call();
 
             foreach (var attackData in _attackDataInDodgeableArea.Value)
             {

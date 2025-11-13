@@ -158,7 +158,7 @@ public class S_WindowManager : MonoBehaviour
         window.SetActive(true);
 
         window.GetComponent<CanvasGroup>().alpha = 0f;
-        window.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
+        window.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear).SetUpdate(true);
 
         rsoCurrentWindows.Value.Add(window);
     }
@@ -170,7 +170,7 @@ public class S_WindowManager : MonoBehaviour
             window.GetComponent<CanvasGroup>()?.DOKill();
 
             window.GetComponent<CanvasGroup>().alpha = 1f;
-            window.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            window.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 window.SetActive(false);
             });
@@ -193,13 +193,13 @@ public class S_WindowManager : MonoBehaviour
     {
         imageFade?.DOKill();
 
-        imageFade.DOFade(0f, ssoFadeTime.Value).SetEase(Ease.Linear);
+        imageFade.DOFade(0f, ssoFadeTime.Value).SetEase(Ease.Linear).SetUpdate(true);
     }
 
     private void FadeOut()
     {
         imageFade?.DOKill();
 
-        imageFade.DOFade(1f, ssoFadeTime.Value).SetEase(Ease.Linear);
+        imageFade.DOFade(1f, ssoFadeTime.Value).SetEase(Ease.Linear).SetUpdate(true);
     }
 }
