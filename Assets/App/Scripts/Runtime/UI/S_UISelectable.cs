@@ -147,11 +147,11 @@ public class S_UISelectable : MonoBehaviour
         colorTween?.Kill();
         colorTween2?.Kill();
 
-        colorTween = image.DOColor(targetColor, transition).SetEase(Ease.Linear);
+        colorTween = image.DOColor(targetColor, transition).SetEase(Ease.Linear).SetUpdate(true);
 
         if (image2 != null)
         {
-            colorTween2 = image2.DOColor(targetColor2, transition).SetEase(Ease.Linear);
+            colorTween2 = image2.DOColor(targetColor2, transition).SetEase(Ease.Linear).SetUpdate(true);
         }
     }
 }
