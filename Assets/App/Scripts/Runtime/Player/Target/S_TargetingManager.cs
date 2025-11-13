@@ -22,9 +22,11 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
 
     [Header("Output")]
+    [SerializeField] private RSE_OnStartTargeting rseOnStartTargeting;
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+    [SerializeField] private RSE_OnStopTargeting rseOnStopTargeting;
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
     [SerializeField] private RSO_TargetPosition rsoTargetPosition;
     [SerializeField] private SSO_PlayerMaxDistanceTargeting ssoPlayerMaxDistanceTargeting;
@@ -199,6 +201,8 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnNewTargeting.Call(currentTarget);
             rsoPlayerIsTargeting.Value = true;
+
+            rseOnStartTargeting.Call();
         }
     }
 
@@ -220,6 +224,8 @@ public class S_TargetingManager : MonoBehaviour
             rsoTargetPosition.Value = Vector3.zero;
             rseOnAnimationBoolValueChange.Call("TargetLock", false);
         }
+
+        rseOnStopTargeting.Call();
 
         currentTarget = null;
         obstacleTimer = 0f;

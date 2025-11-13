@@ -42,10 +42,16 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
 
     [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnStartTargeting rseOnStartTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnStopTargeting rseOnStopTargeting;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCameraIntro rseOnCameraIntro;
@@ -138,8 +144,10 @@ public class S_CameraManager : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerCenter.action += PlayerPos;
-        rseOnNewTargeting.action += SwitchCameraMode;
-        rseOnPlayerCancelTargeting.action += SwitchCameraMode;
+        rseOnStartTargeting.action += SwitchCameraMode;
+        rseOnNewTargeting.action += SetTarget;
+        rseOnPlayerCancelTargeting.action += SetTarget;
+        rseOnStopTargeting.action += SwitchCameraMode;
         rseOnCameraIntro.action += CameraIntro;
         rseOnCameraCinematic.action += SwitchCinematicCamera;
         rseOnCameraShake.action += CameraShake;
@@ -152,8 +160,10 @@ public class S_CameraManager : MonoBehaviour
     private void OnDisable()
     {
         rseOnPlayerCenter.action -= PlayerPos;
-        rseOnNewTargeting.action -= SwitchCameraMode;
-        rseOnPlayerCancelTargeting.action -= SwitchCameraMode;
+        rseOnStartTargeting.action -= SwitchCameraMode;
+        rseOnNewTargeting.action -= SetTarget;
+        rseOnPlayerCancelTargeting.action -= SetTarget;
+        rseOnStopTargeting.action -= SwitchCameraMode;
         rseOnCameraIntro.action -= CameraIntro;
         rseOnCameraCinematic.action -= SwitchCinematicCamera;
         rseOnCameraShake.action -= CameraShake;
@@ -177,7 +187,19 @@ public class S_CameraManager : MonoBehaviour
         HandleSkipHold();
     }
 
-    private void SwitchCameraMode(GameObject target)
+    private void SetTarget(GameObject target)
+    {
+        if (target != null)
+        {
+            currentTarget = target.transform;
+        }
+        else
+        {
+            currentTarget = null;
+        }  
+    }
+
+    private void SwitchCameraMode()
     {
         shoulderTween?.Kill();
         transitionSequence?.Kill();
@@ -187,14 +209,12 @@ public class S_CameraManager : MonoBehaviour
         switch (currentMode)
         {
             case ModeCamera.Player:
-                currentTarget = null;
                 cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
                 cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
                 Transition(cinemachineCameraPlayer, cinemachineCameraRail, ModeCamera.Rail, playerPoint);
                 break;
 
             case ModeCamera.Rail:
-                currentTarget = target.transform;
                 cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
                 cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
                 lastDirection = 0f;
@@ -211,13 +231,11 @@ public class S_CameraManager : MonoBehaviour
                 {
                     oldMode = ModeCamera.Rail;
                     newMode = ModeCamera.Player;
-                    currentTarget = target.transform;
                 }
                 else
                 {
                     oldMode = ModeCamera.Player;
                     newMode = ModeCamera.Rail;
-                    currentTarget = null;
                 }
 
                 if (targetCam == oldCam)
