@@ -94,7 +94,7 @@ public class S_TargetingManager : MonoBehaviour
 
     private void Update()
     {
-        var selection = TargetSelection();
+        var selection = TargetSelectionExist();
 
         if (targetsPossible.Count > 0 && selection != null || currentTarget != null)
         {
@@ -433,5 +433,53 @@ public class S_TargetingManager : MonoBehaviour
             Gizmos.DrawLine(origin, origin + leftDir * radius);
             Gizmos.DrawLine(origin, origin + rightDir * radius);
         }
+    }
+
+    private GameObject TargetSelectionExist()
+    {
+        GameObject selectedTarget = null;
+
+        float bestScore = float.MaxValue;
+
+        foreach (var target in targetsPossible)
+        {
+            if (target == null) continue;
+
+            Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value);
+            float distance = toTarget.magnitude;
+
+            if (_playerCenterTransform == null) return null;
+            float angle = Vector3.Angle(_playerCenterTransform.forward, toTarget);
+
+            bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
+
+            //Priority for the taget in the front cone
+            float score = inFrontCone ? distance : distance + 1000f;
+
+            if (score < bestScore && target != currentTarget)
+            {
+                float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
+
+                Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
+                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+                {
+                    continue;
+                }
+                else
+                {
+                    bestScore = score;
+                    selectedTarget = target;
+                }
+            }
+        }
+
+        //if (selectedTarget != null)
+        //{
+        //    rsoTargetPosition.Value = selectedTarget.transform.position;
+
+        //    rseOnAnimationBoolValueChange.Call("TargetLock", true);
+        //}
+
+        return selectedTarget;
     }
 }
