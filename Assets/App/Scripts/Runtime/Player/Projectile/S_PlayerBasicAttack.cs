@@ -108,6 +108,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     void OnAttackReleased()
     {
         _isHolding = false;
+        rseOnAnimationBoolValueChange.Call(_attackParam, false);
     }
 
     //private void StartStepDuration()
