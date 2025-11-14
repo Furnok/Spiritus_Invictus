@@ -95,6 +95,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Console",
+                    "type": "Button",
+                    "id": "58d1c602-8c6c-4d82-b088-a1c43a9998c0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -427,6 +436,61 @@
                     "action": "Heal",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce7d79a2-328c-493b-8ca4-c5df6f0fdf98",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e39b78b-7994-4740-8b73-09eec6656210",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "04811f16-d862-4eb2-aa8c-8e657f0f26e5",
+                    "path": "OneModifier(overrideModifiersNeedToBePressedFirst=true,modifiersOrder=1)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Console",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "92714345-999c-475e-8212-e1725efefc98",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "e445e985-8ebc-403c-a0eb-2f82289ef794",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },
@@ -438,6 +502,15 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "2344f0d3-9e82-40d5-a39a-9314240ac6c9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Console",
+                    "type": "Button",
+                    "id": "25f39b0d-63fe-446b-94ec-f5447f7099a2",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -480,14 +553,58 @@
                 },
                 {
                     "name": "",
-                    "id": "4a427bf6-91b2-4756-a5a1-6e1702f85d9a",
-                    "path": "<Keyboard>/p",
+                    "id": "ad7d3599-fb09-48ef-a9a9-1dbe5880e130",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2a06bf8c-ed87-4a3d-aaf9-2cdb00f78c44",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Controller",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "d40c2ec2-2cf5-42f8-9ab3-5146f03a9b7c",
+                    "path": "OneModifier(overrideModifiersNeedToBePressedFirst=true,modifiersOrder=1)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Console",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "76c6b4ac-3668-4613-b65f-be12d690b3c5",
+                    "path": "<Keyboard>/ctrl",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard and mouse",
-                    "action": "Pause",
+                    "action": "Console",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "305af06a-4cdc-4d45-b12c-58402636247e",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard and mouse",
+                    "action": "Console",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

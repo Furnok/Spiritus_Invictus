@@ -29,6 +29,7 @@ public class S_PlayerInputsManager : MonoBehaviour
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameActionInputEnabled;
     [SerializeField] private RSE_OnUIInputEnabled rseOnUiActionInputEnabled;
     [SerializeField] private RSE_OnPlayerDodgeInputCancel rseOnPlayerDodgeInputCancel;
+    [SerializeField] private RSE_OnConsole rseOnConsole;
     [SerializeField] private RSE_OnSkipInput rseOnSkipInput;
     [SerializeField] private RSE_OnSkipCancelInput rseOnSkipCancelInput;
 
@@ -162,12 +163,22 @@ public class S_PlayerInputsManager : MonoBehaviour
     {
         rseOnPlayerHeal.Call();
     }
+
+    private void OnConsoleInput(InputAction.CallbackContext ctx)
+    {
+        rseOnConsole.Call();
+    }
     #endregion
 
     #region UI Input Callback Methods
     private void OnPauseUIInput(InputAction.CallbackContext ctx)
     {
         rseOnPlayerPause.Call();
+    }
+
+    private void OnConsoleUIInput(InputAction.CallbackContext ctx)
+    {
+        rseOnConsole.Call();
     }
     #endregion
 
@@ -204,6 +215,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         game.Targeting.canceled += OnTargetingCancelInput;
         game.SwapTarget.performed += OnSwapTargetInput;
         game.Heal.performed += OnHealInput;
+        game.Console.performed += OnConsoleInput;
     }
 
     private void DisableGameInputs()
@@ -226,6 +238,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         game.Targeting.canceled -= OnTargetingCancelInput;
         game.SwapTarget.performed -= OnSwapTargetInput;
         game.Heal.performed -= OnHealInput;
+        game.Console.performed -= OnConsoleInput;
     }
 
     private void EnableUIInputs()
@@ -233,6 +246,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         var ui = iaPlayerInput.UI;
 
         ui.Pause.performed += OnPauseUIInput;
+        ui.Console.performed += OnConsoleUIInput;
     }
 
     private void DisableUIInputs()
@@ -240,6 +254,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         var ui = iaPlayerInput.UI;
 
         ui.Pause.performed -= OnPauseUIInput;
+        ui.Console.performed -= OnConsoleUIInput;
     }
 
     private void EnableCinematicInputs()

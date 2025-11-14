@@ -23,7 +23,7 @@ public class S_DodgeableAreaDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Hitbox") && other.TryGetComponent(out IAttackProvider attack))
+        if (other.CompareTag("Hitbox") && other.TryGetComponent(out I_AttackProvider attack))
         {
             var goId = other.gameObject.GetInstanceID();
             ref var attackData = ref attack.GetAttackData();
@@ -42,7 +42,7 @@ public class S_DodgeableAreaDetector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Hitbox") && other.TryGetComponent(out IAttackProvider attack))
+        if (other.CompareTag("Hitbox") && other.TryGetComponent(out I_AttackProvider attack))
         {
 
             var goId = other.gameObject.GetInstanceID();

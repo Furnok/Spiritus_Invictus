@@ -24,7 +24,7 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Hitbox") && other.TryGetComponent(out IAttackProvider attack))
+        if (other.CompareTag("Hitbox") && other.TryGetComponent(out I_AttackProvider attack))
         {
             var attackData = attack.GetAttackData();
             //var goId = other.gameObject.GetInstanceID();

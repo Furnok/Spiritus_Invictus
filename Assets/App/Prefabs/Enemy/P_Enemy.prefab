@@ -1,80 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &44021525626503424
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3459565775765356399}
-  - component: {fileID: 37614967721712398}
-  - component: {fileID: 3885679095651551579}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3459565775765356399
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 44021525626503424}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8277117638326835260}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 50, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &37614967721712398
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 44021525626503424}
-  m_CullTransparentMesh: 1
---- !u!114 &3885679095651551579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 44021525626503424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &119529009528442440
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,6 +171,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3632286962636762960}
   - {fileID: 3598879104776386137}
   - {fileID: 8382064584298650195}
   - {fileID: 4234250431613318041}
@@ -397,7 +323,6 @@ MonoBehaviour:
   patrolPoints: {fileID: 2395496571129997540}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
-  rseOnGamePause: {fileID: 11400000, guid: ae0312c6248bf454a8f047511417352d, type: 2}
   ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
   onUpdateEnemyHealth:
     m_PersistentCalls:
@@ -417,11 +342,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8c5f9195c9f834191542017619bd51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeDisplay: 0.4
+  timeDisplay: 0.2
   weaponCollider: {fileID: 0}
-  content: {fileID: 8409904360791870988}
-  warning: {fileID: 3885679095651551579}
-  rseOnGamePause: {fileID: 11400000, guid: ae0312c6248bf454a8f047511417352d, type: 2}
+  content: {fileID: 0}
+  warning: {fileID: 0}
   onChangeAttackData:
     m_PersistentCalls:
       m_Calls: []
@@ -786,6 +710,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   detectionCollider: {fileID: 1536210782470915829}
+  maxTravelZone: {fileID: 1081287201517365919}
   enemy: {fileID: 445208566684554611}
   onTargetDetected:
     m_PersistentCalls:
@@ -923,6 +848,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5276679289733621114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5805032252416003313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3632286962636762960}
+  m_Layer: 0
+  m_Name: LockOnAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3632286962636762960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5805032252416003313}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5276679289733621114}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6905421159853868602
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,6 +890,7 @@ GameObject:
   - component: {fileID: 7389261747006536606}
   - component: {fileID: 6217138946037749130}
   - component: {fileID: 5681955892619754416}
+  - component: {fileID: 18717677894203869}
   m_Layer: 11
   m_Name: Body
   m_TagString: Enemy
@@ -992,6 +949,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _aimPointObject: {fileID: 5421673960955687534}
+--- !u!114 &18717677894203869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6905421159853868602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b9c40fb37c595b48a0d9c56359921cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lockOnAnchor: {fileID: 3632286962636762960}
 --- !u!1 &6992590529645992291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,7 +1027,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7c4a404484babaf40aabd222478bd810, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 76278ba93ec817047b3092a4d5c50074, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1176,42 +1146,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &8409904360791870988
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8277117638326835260}
-  m_Layer: 5
-  m_Name: Content
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &8277117638326835260
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8409904360791870988}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3459565775765356399}
-  m_Father: {fileID: 4234250431613318041}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8606146197858537738
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,7 +1179,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2493246550919936720}
-  - {fileID: 8277117638326835260}
   m_Father: {fileID: 5276679289733621114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1385,7 +1318,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 30, y: 30, z: 30}
+  m_Size: {x: 50, y: 50, z: 50}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5830951658339230131
 MonoBehaviour:
@@ -1400,7 +1333,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
+  box: {fileID: 7837490951314405229}
   onTargetDetected:
+    m_PersistentCalls:
+      m_Calls: []
+  onTarget:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &9149232510415803103

@@ -19,6 +19,9 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private CinemachineCamera cinemachineCameraRail;
 
     [TabGroup("References")]
+    [SerializeField] private CinemachineCamera cinemachineCameraBridge;
+
+    [TabGroup("References")]
     [SerializeField] private CinemachineCamera cinemachineCameraPlayer;
 
     [TabGroup("References")]
@@ -39,10 +42,16 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
 
     [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnStartTargeting rseOnStartTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnStopTargeting rseOnStopTargeting;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCameraIntro rseOnCameraIntro;
@@ -92,26 +101,39 @@ public class S_CameraManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
 
-    private Coroutine shake = null;
-    private CinemachineCamera currentCamera = null;
-    private float currentAlpha = 1f;
-    private Tween shoulderOffsetTween;
-    private float lastDirection = 0f;
-    private Transform playerPos = null;
-    private Transform currentTargetPos = null;
     private ModeCamera currentMode = ModeCamera.None;
-    private int focus = 2;
-    private int focusCinematic = 100;
-    private int unFocus = 1;
-    private Tween playerRotationTween = null;
-    private Coroutine skip = null;
+    private ModeCamera oldMode = ModeCamera.None;
+    private ModeCamera newMode = ModeCamera.None;
+    private CinemachineCamera currentCam = null;
+    private CinemachineCamera oldCam = null;
+    private CinemachineCamera newCam = null;
+    private CinemachineCamera targetCam = null;
+    private Transform playerPos = null;
+    private Transform currentTarget = null;
+
+    private Sequence transitionSequence = null;
+    Tweener moveTween = null;
+    Tweener rotateTween = null;
+    private Tween shoulderTween = null;
+    private Tween rotationTween = null;
+    private float currentAlpha = 1f;
+    private float lastDirection = 0f;
+
+    private Coroutine shakeRoutine = null;
+    private Coroutine skipRoutine = null;
+
     private bool isSkipping = false;
-    private float currentHold = 0f;
+    private float skipHold = 0;
+
+    private const int Focus = 2;
+    private const int FocusCinematic = 100;
+    private const int Unfocus = 1;
 
     private void Awake()
     {
-        currentCamera = cinemachineCameraRail;
+        currentCam = cinemachineCameraRail;
         currentMode = ModeCamera.Rail;
+        cinemachineCameraBridge.Target.TrackingTarget = playerPoint;
 
         if (cinemachineThirdPersonFollow != null)
         {
@@ -122,29 +144,33 @@ public class S_CameraManager : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerCenter.action += PlayerPos;
-        rseOnNewTargeting.action += SwitchCameraMode;
-        rseOnPlayerCancelTargeting.action += SwitchCameraMode;
+        rseOnStartTargeting.action += SwitchCameraMode;
+        rseOnNewTargeting.action += SetTarget;
+        rseOnPlayerCancelTargeting.action += SetTarget;
+        rseOnStopTargeting.action += SwitchCameraMode;
         rseOnCameraIntro.action += CameraIntro;
         rseOnCameraCinematic.action += SwitchCinematicCamera;
         rseOnCameraShake.action += CameraShake;
         rseOnPlayerMove.action += InputsMove;
         rseOnCinematicFinish.action += FinishCinematic;
-        rseOnSkipInput.action += Skip;
-        rseOnSkipCancelInput.action += SkipCancel;
+        rseOnSkipInput.action += StartSkip;
+        rseOnSkipCancelInput.action += StopSkip;
     }
 
     private void OnDisable()
     {
         rseOnPlayerCenter.action -= PlayerPos;
-        rseOnNewTargeting.action -= SwitchCameraMode;
-        rseOnPlayerCancelTargeting.action -= SwitchCameraMode;
+        rseOnStartTargeting.action -= SwitchCameraMode;
+        rseOnNewTargeting.action -= SetTarget;
+        rseOnPlayerCancelTargeting.action -= SetTarget;
+        rseOnStopTargeting.action -= SwitchCameraMode;
         rseOnCameraIntro.action -= CameraIntro;
         rseOnCameraCinematic.action -= SwitchCinematicCamera;
         rseOnCameraShake.action -= CameraShake;
         rseOnPlayerMove.action -= InputsMove;
         rseOnCinematicFinish.action -= FinishCinematic;
-        rseOnSkipInput.action -= Skip;
-        rseOnSkipCancelInput.action -= SkipCancel;
+        rseOnSkipInput.action -= StartSkip;
+        rseOnSkipCancelInput.action -= StopSkip;
 
         Color color = materialPlayer.color;
         color.a = 1;
@@ -153,71 +179,182 @@ public class S_CameraManager : MonoBehaviour
 
     private void Update()
     {
-        playerPoint.transform.position = playerPos.position;
+        if (playerPos == null) return;
 
-        CamPlayerRotate();
+        playerPoint.position = playerPos.position;
+        HandleCameraRotation();
+        HandlePlayerFade();
+        HandleSkipHold();
+    }
 
-        PlayerHide();
-
-        if (isSkipping)
+    private void SetTarget(GameObject target)
+    {
+        if (target != null)
         {
-            currentHold += Time.deltaTime;
-
-            rseOnSkipHold.Call(currentHold);
-
-            if (currentHold >= ssoCameraData.Value.holdSkipTime + 0.35f)
+            if (currentTarget == target.transform)
             {
-                SkipCinematic();  
+                currentTarget = null;
+            }
+            else
+            {
+                currentTarget = target.transform;
             }
         }
     }
 
-    private void Skip()
+    private void SwitchCameraMode()
     {
-        isSkipping = true;
-        currentHold = 0f;
+        shoulderTween?.Kill();
+        transitionSequence?.Kill();
+        moveTween?.Kill();
+        rotateTween?.Kill();
 
-        rseOnDisplaySkip.Call(true);
-        rseOnSkipHold.Call(currentHold);
+        switch (currentMode)
+        {
+            case ModeCamera.Player:
+                cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
+                cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
+                Transition(cinemachineCameraPlayer, cinemachineCameraRail, ModeCamera.Rail, playerPoint);
+                break;
+
+            case ModeCamera.Rail:
+                cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
+                cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
+                lastDirection = 0f;
+
+                Vector3 dir = (currentTarget.position - playerPos.position).normalized;
+                dir.y = 0f;
+                playerPoint.rotation = Quaternion.LookRotation(dir, Vector3.up);
+
+                Transition(cinemachineCameraRail, cinemachineCameraPlayer, ModeCamera.Player, currentTarget);
+                break;
+
+            case ModeCamera.Bridge:
+                if (oldMode == ModeCamera.Player)
+                {
+                    oldMode = ModeCamera.Rail;
+                    newMode = ModeCamera.Player;
+                }
+                else
+                {
+                    oldMode = ModeCamera.Player;
+                    newMode = ModeCamera.Rail;
+                }
+
+                if (targetCam == oldCam)
+                {
+                    targetCam = newCam;
+                }
+                else
+                {
+                    targetCam = oldCam;
+                }
+
+                if (targetCam == null) return;
+
+                moveTween?.Kill();
+                rotateTween?.Kill();
+                rotationTween?.Kill();
+                transitionSequence?.Kill();
+
+                moveTween = cinemachineCameraBridge.transform.DOMove(targetCam.transform.position, 0.4f).SetEase(Ease.Linear);
+                rotateTween = cinemachineCameraBridge.transform.DORotateQuaternion(targetCam.transform.rotation, 0.4f).SetEase(Ease.Linear);
+
+                transitionSequence = DOTween.Sequence().Join(moveTween).Join(rotateTween).OnComplete(() =>
+                {
+                    cinemachineCameraBridge.Priority = Unfocus;
+                    targetCam.Priority = Focus;
+
+                    currentCam = targetCam;
+                    currentMode = newMode;
+                    targetCam = null;
+                });
+                break;
+        }
     }
 
-    private void SkipCancel()
+    private void Transition(CinemachineCamera from, CinemachineCamera to, ModeCamera nextMode, Transform newTarget)
     {
-        isSkipping = false;
-        currentHold = 0f;
+        transitionSequence?.Kill();
+        moveTween?.Kill();
+        rotateTween?.Kill();
 
-        rseOnSkipHold.Call(currentHold);
+        cinemachineCameraBridge.transform.SetPositionAndRotation(from.transform.position, from.transform.rotation);
+
+        from.Priority = Unfocus;
+        cinemachineCameraBridge.Priority = Focus;
+
+        oldCam = from;
+        newCam = to;
+        currentCam = cinemachineCameraBridge;
+        oldMode = currentMode;
+        newMode = nextMode;
+        currentMode = ModeCamera.Bridge;
+
+        bool moveDone = false;
+        bool rotateDone = false;
+
+        moveTween = DOVirtual.Float(0f, 1f, 0.4f, t =>
+        {
+            Vector3 start = from.transform.position;
+            Vector3 current = to.transform.position;
+            cinemachineCameraBridge.transform.position = Vector3.Lerp(start, current, t);
+
+            float distance = Vector3.Distance(cinemachineCameraBridge.transform.position, current);
+            if (!moveDone && distance <= 0.1f) 
+            { 
+                moveDone = true;
+                cinemachineCameraBridge.transform.position = current;
+                if (rotateDone) OnTransitionComplete(to); 
+            }
+        }).SetEase(Ease.Linear);
+
+        rotateTween = DOVirtual.Float(0f, 1f, 0.4f, t =>
+        {
+            Quaternion start = from.transform.rotation;
+            Quaternion current = to.transform.rotation;
+            cinemachineCameraBridge.transform.rotation = Quaternion.Slerp(start, current, t);
+
+            float angle = Quaternion.Angle(cinemachineCameraBridge.transform.rotation, current);
+            if (!rotateDone && angle <= 0.1f)
+            {
+                rotateDone = true;
+                cinemachineCameraBridge.transform.rotation = current;
+                if (moveDone) OnTransitionComplete(to);
+            }
+        }).SetEase(Ease.Linear);
     }
 
-    private void SkipCinematic()
+    private void OnTransitionComplete(CinemachineCamera to)
     {
-        StartCoroutine(InstantBlendlessSwitch());
-        FinishCinematic();
-    }
+        cinemachineCameraBridge.Priority = Unfocus;
+        to.Priority = Focus;
 
-    private void PlayerPos(Transform player)
-    {
-        playerPos = player;
-        cinemachineCameraRail.Target.TrackingTarget = player;
+        currentCam = to;
+        currentMode = newMode;
     }
 
     private void CameraIntro()
     {
         if (cinemachineCameraIntro.transform.parent.gameObject.activeInHierarchy)
         {
-            skip = StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
+            StartSkipTimer();
 
             rseOnDisplayUIGame.Call(false);
             rseOnCinematicStart.Call();
             rseOnCinematicInputEnabled.Call();
 
-            currentCamera = cinemachineCameraIntro;
-            cinemachineCameraIntro.GetComponent<Animator>().Rebind();
-            cinemachineCameraIntro.GetComponent<Animator>().Update(0f);
-            cinemachineCameraIntro.GetComponent<Animator>().enabled = true;
-            cinemachineCameraIntro.GetComponent<Animator>().SetTrigger("Play");
-
+            currentCam = cinemachineCameraIntro;
             currentMode = ModeCamera.Cinematic;
+
+            var anim = currentCam.GetComponent<Animator>();
+            if (anim)
+            {
+                anim.Rebind();
+                anim.Update(0f);
+                anim.enabled = true;
+                anim.SetTrigger("Play");
+            }
         }
         else
         {
@@ -226,126 +363,228 @@ public class S_CameraManager : MonoBehaviour
         }
     }
 
-    private void SwitchCameraMode(GameObject target)
-    {
-        if (currentTargetPos != null)
-        {
-            currentTargetPos = null;
-
-            cinemachineCameraPlayer.Priority = unFocus;
-            cinemachineCameraRail.Priority = focus;
-
-            currentCamera = cinemachineCameraRail;
-            currentMode = ModeCamera.Rail;
-        }
-        else
-        {
-            currentTargetPos = target.transform;
-            cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
-            lastDirection = 0;
-
-            cinemachineCameraRail.Priority = unFocus;
-            cinemachineCameraPlayer.Priority = focus;
-
-            currentCamera = cinemachineCameraPlayer;
-            currentMode = ModeCamera.Player;
-        }
-    }
-
     private void SwitchCinematicCamera(int index)
     {
-        if (index < 0 || index >= cinemachineCameraCinematic.Count)
-        {
-            return;
-        }
+        if (index < 0 || index >= cinemachineCameraCinematic.Count) return;
 
-        rseOnCancelTargeting.Call();
-        skip = StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () => rseOnDisplaySkip.Call(true)));
+        shoulderTween?.Kill();
+        transitionSequence?.Kill();
+        moveTween?.Kill();
+        rotateTween?.Kill();
+
+        StartSkipTimer();
 
         rseOnDisplayUIGame.Call(false);
         rseOnCinematicStart.Call();
         rseOnCinematicInputEnabled.Call();
 
-        currentTargetPos = null;
+        currentTarget = null;
 
-        cinemachineCameraRail.Priority = unFocus;
-        cinemachineCameraPlayer.Priority = unFocus;
-        cinemachineCameraCinematic[index].Priority = focusCinematic;
-        currentCamera = cinemachineCameraCinematic[index];
-
-        currentCamera.GetComponent<Animator>().Rebind();
-        currentCamera.GetComponent<Animator>().Update(0f);
-        currentCamera.GetComponent<Animator>().enabled = true;
-        currentCamera.GetComponent<Animator>().SetTrigger("Play");
-
+        cinemachineCameraRail.Priority = Unfocus;
+        cinemachineCameraPlayer.Priority = Unfocus;
+        cinemachineCameraCinematic[index].Priority = FocusCinematic;
+        currentCam = cinemachineCameraCinematic[index];
         currentMode = ModeCamera.Cinematic;
-    }
 
-    private IEnumerator InstantBlendlessSwitch()
-    {
-        var brain = cameraMain.GetComponent<CinemachineBrain>();
+        rseOnCancelTargeting.Call();
 
-        if (brain != null)
+        var anim = currentCam.GetComponent<Animator>();
+        if (anim)
         {
-            brain.enabled = false;
-            yield return null;
-            brain.enabled = true;
+            anim.Rebind();
+            anim.Update(0f);
+            anim.enabled = true;
+            anim.SetTrigger("Play");
         }
     }
 
     private void FinishCinematic()
     {
-        currentHold = 0f;
-        rseOnSkipHold.Call(currentHold);
+        StopSkip();
+
         rseOnDisplaySkip.Call(false);
-        
-        if (skip != null)
-        {
-            StopCoroutine(skip);
-            skip = null;
-        }
 
-        currentCamera.GetComponent<Animator>().enabled = false;
+        var anim = currentCam.GetComponent<Animator>();
+        if (anim) anim.enabled = false;
 
-        currentCamera.Priority = unFocus;
-
-        cinemachineCameraRail.Priority = focus;
-        currentCamera = cinemachineCameraRail;
-
+        currentCam.Priority = Unfocus;
+        cinemachineCameraRail.Priority = Focus;
+        currentCam = cinemachineCameraRail;
         currentMode = ModeCamera.Rail;
 
         isSkipping = false;
+
         rseOnDisplayUIGame.Call(true);
         rseOnGameInputEnabled.Call();
     }
 
-    private void CameraShake(S_ClassCameraShake classCameraShake)
+    private void CameraShake(S_ClassCameraShake data)
     {
-        CinemachineBasicMultiChannelPerlin cam = currentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+        var perlin = currentCam.GetComponent<CinemachineBasicMultiChannelPerlin>();
+        if (perlin == null) return;
 
-        if (cam != null)
+        if (shakeRoutine != null)
         {
-            if (shake != null)
-            {
-                StopCoroutine(shake);
+            StopCoroutine(shakeRoutine);
+            perlin.AmplitudeGain = perlin.FrequencyGain = 0;
+        }
 
-                cam.AmplitudeGain = 0;
-                cam.FrequencyGain = 0;
-                shake = null;
+        perlin.AmplitudeGain = data.amplitude;
+        perlin.FrequencyGain = data.frequency;
+
+        shakeRoutine = StartCoroutine(S_Utils.Delay(data.duration, () =>
+        {
+            perlin.AmplitudeGain = perlin.FrequencyGain = 0;
+        }));
+    }
+
+    private void HandleCameraRotation()
+    {
+        if (currentMode == ModeCamera.Rail)
+        {
+            cinemachineCameraBridge.transform.position = cinemachineCameraRail.transform.position;
+        }
+
+        if (currentMode == ModeCamera.Rail)
+        {
+            playerPoint.rotation = playerPos.rotation;
+            return;
+        }
+
+        if (currentMode == ModeCamera.Player)
+        {
+            Vector3 dir = (currentTarget.position - playerPos.position).normalized;
+
+            Quaternion targetRot = Quaternion.LookRotation(dir, Vector3.up);
+
+            Vector3 euler = targetRot.eulerAngles;
+
+            if (euler.x > 180f) euler.x -= 360f;
+
+            euler.x = Mathf.Clamp(euler.x, ssoCameraData.Value.minVerticalCameraPlayer, ssoCameraData.Value.maxVerticalCameraPlayer);
+
+            targetRot = Quaternion.Euler(euler);
+
+            float angle = Quaternion.Angle(playerPoint.transform.rotation, targetRot);
+
+            if (angle > 0.1f)
+            {
+                float duration = rsoPlayerIsDodging.Value || currentMode == ModeCamera.Bridge ? ssoCameraData.Value.rotationCameraPlayerDodgeDuration : ssoCameraData.Value.rotationCameraPlayerDuration;
+                rotationTween?.Kill();
+                rotationTween = playerPoint.DORotateQuaternion(targetRot, duration).SetEase(Ease.Linear);
             }
-
-            cam.AmplitudeGain = classCameraShake.amplitude;
-            cam.FrequencyGain = classCameraShake.frequency;
-
-            shake = StartCoroutine(S_Utils.Delay(classCameraShake.duration, () =>
-            {
-                cam.AmplitudeGain = 0;
-                cam.FrequencyGain = 0;
-            }));
         }
     }
 
-    private void InputsMove(Vector2 move)
+    private void HandlePlayerFade()
+    {
+        float distance = Vector3.Distance(cameraMain.transform.position, playerPos.position);
+        bool hide = distance <= ssoCameraData.Value.cameraDistanceMinPlayer;
+
+        float targetAlpha = hide ? 0f : 1f;
+        currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, ssoCameraData.Value.fadeSpeedPlayer * Time.deltaTime);
+
+        var color = materialPlayer.color;
+        color.a = currentAlpha;
+        materialPlayer.color = color;
+    }
+
+    private void HandleSkipHold()
+    {
+        if (!isSkipping) return;
+
+        skipHold += Time.deltaTime;
+
+        rseOnSkipHold.Call(skipHold);
+
+        if (skipHold >= ssoCameraData.Value.holdSkipTime + 0.35f)
+        {
+            SkipCinematic();
+        }
+    }
+
+    private void StartSkipTimer()
+    {
+        skipRoutine = StartCoroutine(S_Utils.Delay(ssoCameraData.Value.StartDisplaySkipTime, () =>
+        {
+            skipHold = 0f;
+
+            rseOnDisplaySkip.Call(true);
+            rseOnSkipHold.Call(skipHold);
+        }));
+    }
+
+    private void StartSkip()
+    {
+        if (skipRoutine != null)
+        {
+            StopCoroutine(skipRoutine);
+            skipRoutine = null;
+        }
+
+        skipHold = 0f;
+        isSkipping = true;
+
+        rseOnDisplaySkip.Call(true);
+        rseOnSkipHold.Call(skipHold);
+    }
+
+    private void StopSkip()
+    {
+        if (skipRoutine != null)
+        {
+            StopCoroutine(skipRoutine);
+            skipRoutine = null;
+        }
+
+        skipHold = 0f;
+        isSkipping = false;
+
+        rseOnSkipHold.Call(skipHold);
+    }
+
+    private void SkipCinematic()
+    {
+        if (skipRoutine != null)
+        {
+            StopCoroutine(skipRoutine);
+            skipRoutine = null;
+        }
+
+        StartCoroutine(InstantBlendlessSwitch());
+        FinishCinematic();
+    }
+
+    private IEnumerator InstantBlendlessSwitch()
+    {
+        var brain = cameraMain.GetComponent<CinemachineBrain>();
+        if (brain == null) yield break;
+
+        brain.enabled = false;
+        yield return null;
+        brain.enabled = true;
+    }
+
+    private void ChangeShoulderOffset(Vector3 target)
+    {
+        if (cinemachineThirdPersonFollow == null) return;
+
+        shoulderTween?.Kill();
+        shoulderTween = DOTween.To(
+            () => cinemachineThirdPersonFollow.ShoulderOffset,
+            x => cinemachineThirdPersonFollow.ShoulderOffset = x,
+            target,
+            ssoCameraData.Value.switchDurationCamera
+        ).SetEase(Ease.Linear);
+    }
+
+    public void PlayerPos(Transform player)
+    {
+        playerPos = player;
+        cinemachineCameraRail.Target.TrackingTarget = player;
+    }
+
+    public void InputsMove(Vector2 move)
     {
         if (currentMode == ModeCamera.Player)
         {
@@ -362,90 +601,7 @@ public class S_CameraManager : MonoBehaviour
         }
         else
         {
-            shoulderOffsetTween?.Kill();
+            shoulderTween?.Kill();
         }
     }
-
-    private void ChangeShoulderOffset(Vector3 targetOffset)
-    {
-        if (cinemachineThirdPersonFollow == null)
-            return;
-
-        shoulderOffsetTween?.Kill();
-
-        shoulderOffsetTween = DOTween.To(
-            () => cinemachineThirdPersonFollow.ShoulderOffset,
-            x => cinemachineThirdPersonFollow.ShoulderOffset = x,
-            targetOffset,
-            ssoCameraData.Value.switchDurationCamera
-        ).SetEase(Ease.Linear);
-    }
-
-    private void CamPlayerRotate()
-    {
-        if (currentMode != ModeCamera.Player)
-        {
-            playerRotationTween?.Kill();
-            return;
-        }
-
-        playerRotationTween?.Kill();
-
-        Vector3 directionToTarget = currentTargetPos.position - playerPos.position;
-        directionToTarget.y = 0;
-        directionToTarget.Normalize();
-
-        Quaternion targetRotation = Quaternion.LookRotation(directionToTarget, Vector3.up);
-
-        float angle = Quaternion.Angle(playerPoint.transform.rotation, targetRotation);
-
-        if (angle > 0.5f)
-        {
-            float duration = rsoPlayerIsDodging.Value ? ssoCameraData.Value.rotationCameraPlayerDodgeDuration : ssoCameraData.Value.rotationCameraPlayerDuration;
-
-            playerRotationTween = playerPoint.transform.DORotateQuaternion(targetRotation, duration).SetEase(Ease.Linear);
-        }
-    }
-
-    private void PlayerHide()
-    {
-        float distance = Vector3.Distance(cameraMain.transform.position, playerPos.position);
-        bool shouldHide = distance <= ssoCameraData.Value.cameraDistanceMinPlayer;
-
-        float targetAlpha = shouldHide ? 0f : 1f;
-
-        currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, ssoCameraData.Value.fadeSpeedPlayer * Time.deltaTime);
-
-        Color color = materialPlayer.color;
-        color.a = currentAlpha;
-        materialPlayer.color = color;
-    }
-    
-    /*
-    private void OnDrawGizmos()
-    {
-        if (cinemachineCameraRail == null || cinemachineCameraPlayer == null) return;
-
-        // Draw line between cameras
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(cinemachineCameraRail.transform.position, cinemachineCameraPlayer.transform.position);
-
-        // Draw bridge position
-        Vector3 bridgePos = Vector3.Lerp(cinemachineCameraRail.transform.position, cinemachineCameraPlayer.transform.position, 0.5f);
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(bridgePos, 0.2f);
-
-        // Draw arrow toward target if assigned
-        if (currentTargetPos != null)
-        {
-            Handles.color = Color.green;
-            Handles.ArrowHandleCap(
-                0,
-                bridgePos,
-                Quaternion.LookRotation(currentTargetPos.position - bridgePos),
-                1f,
-                EventType.Repaint
-            );
-        }
-    }*/
 }

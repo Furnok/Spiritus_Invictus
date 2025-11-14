@@ -1,5 +1,5 @@
-﻿using Sirenix.OdinInspector;
-using System.Collections;
+﻿using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -23,35 +23,10 @@ public class S_EnemyAttackData : MonoBehaviour
     [Title("Image")]
     [SerializeField] private Image warning;
 
-    [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnGamePause rseOnGamePause;
-
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
 
     private S_StructEnemyAttackData attackData;
-    private bool isPaused = false;
-
-    private void OnEnable()
-    {
-        rseOnGamePause.action += Pause;
-    }
-
-    private void OnDisable()
-    {
-        rseOnGamePause.action -= Pause;
-    }
-
-    private void Pause(bool value)
-    {
-        if (value)
-        {
-            isPaused = true;
-        }
-        else
-        {
-            isPaused = false;
-        }
-    }
+    private Tween fadeTween;
 
     public void SetAttackMode(S_StructEnemyAttackData enemyAttackData)
     {
@@ -74,10 +49,13 @@ public class S_EnemyAttackData : MonoBehaviour
             weaponCollider.enabled = false;
         }
     }
+
     public void DisplayTriggerWarning()
     {
         if (warning != null)
         {
+            fadeTween?.Kill();
+
             if (attackData.attackType == S_EnumEnemyAttackType.Parryable || attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
                 warning.color = Color.yellow;
@@ -87,25 +65,21 @@ public class S_EnemyAttackData : MonoBehaviour
                 warning.color = Color.red;
             }
 
-            StartCoroutine(DisplayWarning());
+            content.gameObject.gameObject.SetActive(true);
+
+            content.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
+            fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeDisplay).SetEase(Ease.Linear);
         }
     }
 
-    private IEnumerator WaitForSecondsWhileUnpaused(float duration)
+    public void UnDisplayTriggerWarning()
     {
-        float timer = 0f;
-        while (timer < duration)
+        fadeTween?.Kill();
+
+        content.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
+        fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeDisplay).SetEase(Ease.Linear).OnComplete(() =>
         {
-            if (!isPaused)
-                timer += Time.deltaTime;
-            yield return null;
-        }
-    }
-
-    private IEnumerator DisplayWarning()
-    {
-        content.gameObject.SetActive(true);
-        yield return WaitForSecondsWhileUnpaused(timeDisplay);
-        content.gameObject.SetActive(false);
+            content.gameObject.SetActive(false);
+        });
     }
 }

@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMOD.Studio;
+using FMODUnity;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +8,6 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.Localization.Settings;
 
 public class S_DataManagement : MonoBehaviour
@@ -17,10 +18,6 @@ public class S_DataManagement : MonoBehaviour
 
     [TabGroup("Settings")]
     [SerializeField, S_SaveName] private string saveNames;
-
-    [TabGroup("References")]
-    [Title("Mixer")]
-    [SerializeField] private AudioMixer audioMixer;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnLoadData rseOnLoadData;
@@ -47,8 +44,18 @@ public class S_DataManagement : MonoBehaviour
     private static readonly string SaveDirectory = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Saves");
     private static readonly bool fileCrypted = true;
 
+    private Bus audioMaster;
+    private Bus audioMusic;
+    private Bus audioSounds;
+    private Bus audioUI;
+
     private void Awake()
     {
+        audioMaster = RuntimeManager.GetBus("bus:/");
+        audioMusic = RuntimeManager.GetBus("bus:/Music");
+        audioSounds = RuntimeManager.GetBus("bus:/Sounds");
+        audioUI = RuntimeManager.GetBus("bus:/UI");
+
         rsoSettingsSaved.Value = new();
         rsoDataSaved.Value = new();
         rsoDataTempSaved.Value = new();
@@ -318,10 +325,10 @@ public class S_DataManagement : MonoBehaviour
 
         Screen.fullScreen = rsoSettingsSaved.Value.fullScreen;
 
-        for (int i = 0; i < rsoSettingsSaved.Value.listVolumes.Count; i++)
-        {
-            audioMixer.SetFloat(rsoSettingsSaved.Value.listVolumes[i].name, 40 * Mathf.Log10(Mathf.Max(rsoSettingsSaved.Value.listVolumes[i].volume, 1) / 100));
-        }
+        audioMaster.setVolume(rsoSettingsSaved.Value.listVolumes[0].volume / 100);
+        audioMusic.setVolume(rsoSettingsSaved.Value.listVolumes[1].volume / 100);
+        audioSounds.setVolume(rsoSettingsSaved.Value.listVolumes[2].volume / 100);
+        audioUI.setVolume(rsoSettingsSaved.Value.listVolumes[3].volume / 100);
     }
 
     private IEnumerator LangueSetup()

@@ -14,7 +14,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] LayerMask obstacleMask;
     float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
     float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
-    [SerializeField] float edgeProbeDistance = 0.6f;
+    //[SerializeField] float edgeProbeDistance = 0.6f;
     [SerializeField] float edgeProbeHeight = 0.5f;
     [SerializeField] float stopFromWall = 0.03f;
 
@@ -44,6 +44,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
     [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
+    [SerializeField] RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
 
     Vector2 _moveInput;
     Transform _target = null;
@@ -51,6 +52,9 @@ public class S_PlayerDodge : MonoBehaviour
     Coroutine _prepareRunCoroutine;
     float _linearDamping;
     bool _canRunAfterDodge = false;
+    bool _dodgeUp = true;
+
+    
 
     private void OnEnable()
     {
@@ -94,8 +98,15 @@ public class S_PlayerDodge : MonoBehaviour
     }
     private void TryDodge()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false) return;
+        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false || _dodgeUp == false) return;
         _onPlayerAddState.Call(PlayerState.Dodging);
+
+        _dodgeUp = false;
+        StartCoroutine(S_Utils.Delay(_playerStats.Value.dodgeCooldown, () =>
+        {
+            _dodgeUp = true;
+        }));
+
 
         //Test triggerDodgePerfect
         var isDodgePrefect = _attackDataInDodgeableArea.Value.Count > 0;
@@ -103,6 +114,7 @@ public class S_PlayerDodge : MonoBehaviour
         { 
             Debug.Log("Dodge perfect");
             _onPlayerGainConviction.Call(_playerConvictionData.Value.dodgeSuccessGain);
+            _rseOnDodgePerfect.Call();
 
             foreach (var attackData in _attackDataInDodgeableArea.Value)
             {

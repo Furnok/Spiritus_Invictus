@@ -208,6 +208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8153173563361757933}
   - component: {fileID: 4236493625650689256}
+  - component: {fileID: 8454201312215265849}
   m_Layer: 10
   m_Name: VFX
   m_TagString: Untagged
@@ -229,6 +230,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6828950947144670064}
+  - {fileID: 8456373266874895494}
   m_Father: {fileID: 3473314807466382836}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4236493625650689256
@@ -244,10 +246,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _forwardOffset: 0.5
-  _upwardOffset: 0.2
+  _upwardOffset: 0.5
   _particleEffectParent: {fileID: 6828950947144670064}
   _prefabParryEffect: {fileID: 7037283364390755613, guid: f671b5c181719594aaad66529f73ace8, type: 3}
   _onParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
+--- !u!114 &8454201312215265849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3486870078301174081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335238bef8d960245986058008c88a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ghostLifetime: 0.3
+  _spawnInterval: 0.07
+  _ghostCount: 7
+  _skinnedMeshes:
+  - {fileID: 6025199268170193021}
+  _ghostMaterial: {fileID: 2100000, guid: 10143c9d825b21f42b99717bf2230f9f, type: 2}
+  _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
+  _onPerfectDodge: {fileID: 11400000, guid: 1c5a008ba8b4091499ebda621df96bc9, type: 2}
 --- !u!1 &3630292079689624107
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +473,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}
   _attackCanHitPlayer: {fileID: 11400000, guid: a2911e0025cdad94891abd994425effc, type: 2}
+--- !u!1 &5475699745089235847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8456373266874895494}
+  m_Layer: 10
+  m_Name: AfterImageEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8456373266874895494
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5475699745089235847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8153173563361757933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7802207246985257632
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,6 +624,7 @@ GameObject:
   - component: {fileID: 7456726237346523989}
   - component: {fileID: 3585106378241585558}
   - component: {fileID: 3509033284553825911}
+  - component: {fileID: 4845800258510134550}
   m_Layer: 10
   m_Name: P_Player
   m_TagString: Player
@@ -725,7 +779,8 @@ Animator:
   m_AnimatePhysics: 0
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'Jaw'\n\tFrom animation clip 'A_Attack_LightCombo01A_Sword'"
+    by Humanoid clips.\n\tTransform 'Jaw'\n\tFrom animation clip 'A_Attack_Prep'\n\tFrom
+    animation clip 'A_Attack_Cast'\n\tFrom animation clip 'A_Attack_AfterCast'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -814,7 +869,6 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4096
-  edgeProbeDistance: 0.6
   edgeProbeHeight: 0.5
   stopFromWall: 0.03
   _ssoPlayerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
@@ -838,6 +892,7 @@ MonoBehaviour:
   rseOnAnimationBoolValueChange: {fileID: 11400000, guid: f3b68030aacb033438a094c87c0e44ca, type: 2}
   rseOnAnimationFloatValueChange: {fileID: 11400000, guid: 647c462e77eded84f8317681638362bb, type: 2}
   _onPlayerGainConviction: {fileID: 11400000, guid: c3ba1e97cce4a3d4e929f7197f47a3c1, type: 2}
+  _rseOnDodgePerfect: {fileID: 11400000, guid: 1c5a008ba8b4091499ebda621df96bc9, type: 2}
 --- !u!114 &3585106378241585558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -885,6 +940,25 @@ MonoBehaviour:
   _playerCurrentState: {fileID: 11400000, guid: 16388ffed06f1314f8caba9f9a324afe, type: 2}
   _onPlayerAddState: {fileID: 11400000, guid: 38569afc7ffff0c4eb66c76bc8a6146e, type: 2}
   _onPlayerRemoveState: {fileID: 11400000, guid: cb78c64edfe6921469bbc881aa0bf1be, type: 2}
+--- !u!114 &4845800258510134550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8313228278302547986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49837e7558a8b542908aee7df318bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footstepsSound:
+    Guid:
+      Data1: -1762557771
+      Data2: 1322911718
+      Data3: -209132875
+      Data4: -1763382828
+    Path: event:/Player/Environment/Footsteps
 --- !u!1001 &3034787275973355302
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1165,5 +1239,10 @@ PrefabInstance:
 --- !u!4 &3285098368857604301 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9a825d103323f5d4693c8085a0dc3c18, type: 3}
+  m_PrefabInstance: {fileID: 3034787275973355302}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6025199268170193021 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -468246555611218085, guid: 9a825d103323f5d4693c8085a0dc3c18, type: 3}
   m_PrefabInstance: {fileID: 3034787275973355302}
   m_PrefabAsset: {fileID: 0}

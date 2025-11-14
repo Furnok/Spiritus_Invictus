@@ -96,9 +96,6 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
-    [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnGamePause rseOnGamePause;
-
     [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
 
@@ -107,7 +104,6 @@ public class S_Enemy : MonoBehaviour
 
     private float health = 0;
     private float maxhealth = 0;
-    private bool isPaused = false;
     private int currentPatrolIndex = 0;
     private Transform aimPoint = null;
     private BlackboardVariable<bool> isPatroling = null;
@@ -121,11 +117,13 @@ public class S_Enemy : MonoBehaviour
     private S_EnumEnemyState? pendingState = null;
     private GameObject pendingTarget = null;
     private bool isPlayerDead = false;
+    private GameObject targetInZone = null;
     private GameObject target = null;
     private bool isChase = false;
     private bool isPatrolling = false;
     private bool lastMoveState = false;
     private bool isDead = false;
+    private S_ClassAnimationsCombos combo;
 
     private void Awake()
     {
@@ -150,10 +148,8 @@ public class S_Enemy : MonoBehaviour
 
         health = ssoEnemyData.Value.health;
         maxhealth = ssoEnemyData.Value.health;
+        navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
         behaviorAgent.SetVariableValue<float>("Health", ssoEnemyData.Value.health);
-        behaviorAgent.SetVariableValue<float>("DistanceToChase", ssoEnemyData.Value.distanceToChase);
-        behaviorAgent.SetVariableValue<float>("DistanceToLoseAttack", ssoEnemyData.Value.distanceToLoseAttack);
-        behaviorAgent.SetVariableValue<float>("TimeDespawn", ssoEnemyData.Value.timeDespawn);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMin", ssoEnemyData.Value.startPatrolWaitMin);
         behaviorAgent.SetVariableValue<float>("StartPatrolWaitMax", ssoEnemyData.Value.startPatrolWaitMax);
         behaviorAgent.SetVariableValue<float>("TimeBeforeChaseMin", ssoEnemyData.Value.timeBeforeChaseMin);
@@ -167,15 +163,15 @@ public class S_Enemy : MonoBehaviour
 
         enemyDetectionRange.Setup(ssoEnemyData);
         enemyUI.Setup(ssoEnemyData);
+        enemyMaxTravelZone.Setup(ssoEnemyData);
     }
 
     private void OnEnable()
     {
-        rseOnGamePause.action += Pause;
-
         enemyDetectionRange.onTargetDetected.AddListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.AddListener(SetTarget);
+        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action += PlayerDied;
 
@@ -197,11 +193,10 @@ public class S_Enemy : MonoBehaviour
 
     private void OnDisable()
     {
-        rseOnGamePause.action -= Pause;
-
         enemyDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         enemyHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         enemyMaxTravelZone.onTargetDetected.RemoveListener(SetTarget);
+        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action -= PlayerDied;
 
@@ -234,16 +229,9 @@ public class S_Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isPaused)
-        {
-            bool isMoving = navMeshAgent.velocity.magnitude > 0.2f;
-            lastMoveState = isMoving;
-            animator.SetBool(moveParam, isMoving);
-        }
-        else
-        {
-            animator.SetBool(moveParam, lastMoveState);
-        }
+        bool isMoving = navMeshAgent.velocity.magnitude > 0.1f;
+        lastMoveState = isMoving;
+        animator.SetBool(moveParam, isMoving);
     }
 
     [TabGroup("Settings")]
@@ -267,7 +255,7 @@ public class S_Enemy : MonoBehaviour
     {
         float distance = Vector3.Distance(body.transform.position, target.transform.position);
 
-        bool destinationReached = distance <= (ssoEnemyData.Value.distanceToChase);
+        bool destinationReached = distance <= (combo.distanceToChase);
 
         if (!destinationReached)
         {
@@ -284,27 +272,9 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
-    private void Pause(bool value)
+    private void SetInsideBox(GameObject newTarget)
     {
-        if (value)
-        {
-            isPaused = true;
-
-            animator.speed = 0f;
-            behaviorAgent.enabled = false;
-            navMeshAgent.isStopped = true;
-            navMeshAgent.velocity = Vector3.zero;
-            navMeshAgent.speed = 0;
-        }
-        else
-        {
-            StartCoroutine(S_Utils.Delay(0.05f, () => isPaused = false));
-
-            animator.speed = 1f;
-            behaviorAgent.enabled = true;
-            navMeshAgent.isStopped = false;
-            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
-        }
+        targetInZone = newTarget;
     }
 
     private void SetTarget(GameObject newTarget)
@@ -327,7 +297,7 @@ public class S_Enemy : MonoBehaviour
 
         if (newTarget != null)
         {
-            newTarget.TryGetComponent<IAimPointProvider>(out IAimPointProvider aimPointProvider);
+            newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
 
             float distance = Vector3.Distance(transform.position, newTarget.transform.position);
@@ -339,6 +309,11 @@ public class S_Enemy : MonoBehaviour
 
                 if (hit.collider.gameObject != newTarget)
                 {
+                    health = maxhealth;
+                    onUpdateEnemyHealth.Invoke(health);
+
+                    behaviorAgent.SetVariableValue<float>("Health", health);
+
                     behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
                 }
                 else
@@ -353,7 +328,14 @@ public class S_Enemy : MonoBehaviour
         }
         else
         {
+            health = maxhealth;
+            onUpdateEnemyHealth.Invoke(health);
+
+            behaviorAgent.SetVariableValue<float>("Health", health);
+
             aimPoint = null;
+
+            DetectionCollider.enabled = false;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
         }
@@ -364,33 +346,13 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.Restart();
     }
 
-    private void UpdateHealth(float damage)
+    private void SetHealth(float damage)
     {
         health = Mathf.Max(health - damage, 0);
         onUpdateEnemyHealth.Invoke(health);
 
         behaviorAgent.SetVariableValue<float>("Health", health);
         onGetHit.Invoke();
-
-        if (damage >= maxhealth / 2)
-        {
-            enemyAttackData.DisableWeaponCollider();
-
-            StopAllCoroutines();
-            comboCoroutine = null;
-            resetCoroutine = null;
-            patrolCoroutine = null;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-
-            isPerformingCombo = false;
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
-            behaviorAgent.Restart();
-
-            resetCoroutine = StartCoroutine(ResetAttack());
-        }
 
         if (health <= 0)
         {
@@ -411,10 +373,47 @@ public class S_Enemy : MonoBehaviour
 
             rseOnEnemyTargetDied.Call(body);
         }
-        else if (target == null)
+        else if (damage >= maxhealth / 2)
         {
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
+            enemyAttackData.DisableWeaponCollider();
+
+            StopAllCoroutines();
+            comboCoroutine = null;
+            resetCoroutine = null;
+            patrolCoroutine = null;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+
+            isPerformingCombo = false;
+
+            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
             behaviorAgent.Restart();
+
+            resetCoroutine = StartCoroutine(ResetAttack());
+        }
+    }
+
+    private void UpdateHealth(float damage)
+    {
+        if (target == null)
+        {
+            if (targetInZone != null)
+            {
+                SetTarget(targetInZone);
+
+                SetHealth(damage);
+
+                if (!isDead)
+                {
+                    behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
+                    behaviorAgent.Restart();
+                }
+            }
+        }
+        else
+        {
+            SetHealth(damage);
         }
     }
 
@@ -475,7 +474,6 @@ public class S_Enemy : MonoBehaviour
                 patrolCoroutine = null;
             }
 
-            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
             patrolCoroutine = StartCoroutine(PatrolRoutine());
         }
         else
@@ -506,9 +504,12 @@ public class S_Enemy : MonoBehaviour
                 yield return null;
             }
 
+            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
+            DetectionCollider.enabled = true;
+
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
 
-            yield return WaitForSecondsWhileUnpaused(waitTime);
+            yield return new WaitForSeconds(waitTime);
 
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPointsList.Count;
         }
@@ -524,6 +525,7 @@ public class S_Enemy : MonoBehaviour
                 patrolCoroutine = null;
             }
 
+            GetCombo();
             navMeshAgent.speed = ssoEnemyData.Value.speedChase;
             isChase = true;
         }
@@ -531,6 +533,15 @@ public class S_Enemy : MonoBehaviour
         {
             isChase = false;
         }
+    }
+
+    private void GetCombo()
+    {
+        int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
+
+        combo = ssoEnemyData.Value.listCombos[rnd];
+
+        behaviorAgent.SetVariableValue<float>("DistanceToLoseAttack", combo.distanceToLoseAttack);
     }
 
     public void AttackCombo()
@@ -541,42 +552,36 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitForSecondsWhileUnpaused(float duration)
-    {
-        float timer = 0f;
-        while (timer < duration)
-        {
-            if (!isPaused)
-                timer += Time.deltaTime;
-            yield return null;
-        }
-    }
-
     private IEnumerator PlayComboSequence()
     {
         yield return new WaitForSeconds(0.4f);
 
         isPerformingCombo = true;
 
-        int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
-
-        var combo = ssoEnemyData.Value.listCombos[rnd].listAnimationsCombos;
-
-        for (int i = 0; i < combo.Count; i++)
+        for (int i = 0; i < combo.listAnimationsCombos.Count; i++)
         {
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
-            overrideController[overrideKey] = combo[i].animation;
+            overrideController[overrideKey] = combo.listAnimationsCombos[i].animation;
 
-            enemyAttackData.SetAttackMode(combo[i].attackData);
+            enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
-            if (combo[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length / 2);
+
+            if (combo.listAnimationsCombos[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
                 S_EnemyProjectile projectileInstance = Instantiate(enemyProjectile, spawnProjectilePoint.transform.position, Quaternion.identity);
-                projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo[i].attackData);
+                projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo.listAnimationsCombos[i].attackData);
             }
 
-            yield return WaitForSecondsWhileUnpaused(combo[i].animation.length);
+            yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length / 2);
+
+            /*float distance = Vector3.Distance(body.transform.position, target.transform.position);
+            if (distance > combo.distanceToLoseAttack)
+            {
+                enemyAttackData.DisableWeaponCollider();
+                break;
+            }*/
         }
 
         isAttacking.Value = false;
@@ -603,12 +608,13 @@ public class S_Enemy : MonoBehaviour
             pendingTarget = null;
         }
 
+        GetCombo();
         resetCoroutine = StartCoroutine(ResetAttack());
     }
 
     private IEnumerator ResetAttack()
     {
-        yield return WaitForSecondsWhileUnpaused(ssoEnemyData.Value.attackCooldown);
+        yield return new WaitForSeconds(ssoEnemyData.Value.attackCooldown);
 
         behaviorAgent.SetVariableValue<bool>("CanAttack", true);
     }

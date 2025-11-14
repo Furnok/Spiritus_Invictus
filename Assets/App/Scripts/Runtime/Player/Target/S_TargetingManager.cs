@@ -7,7 +7,11 @@ public class S_TargetingManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private bool drawGizmos;
-    
+
+    [Header("Reference")]
+    [SerializeField] GameObject _previewIndicatorPrefab;
+    [SerializeField] GameObject _lockedIndicatorPrefab;
+
     [Header("Input")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
     [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
@@ -18,9 +22,11 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
 
     [Header("Output")]
+    [SerializeField] private RSE_OnStartTargeting rseOnStartTargeting;
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+    [SerializeField] private RSE_OnStopTargeting rseOnStopTargeting;
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
     [SerializeField] private RSO_TargetPosition rsoTargetPosition;
     [SerializeField] private SSO_PlayerMaxDistanceTargeting ssoPlayerMaxDistanceTargeting;
@@ -35,9 +41,20 @@ public class S_TargetingManager : MonoBehaviour
     private float obstacleTimer = 0f;
     private Transform _playerCenterTransform;
 
+    private GameObject _previewGO;
+    private GameObject _lockedGO;
+    private Transform _previewTargetTransform;
+    private Transform _lockedTargetTransfrom;
+
     private void Awake()
     {
         rsoPlayerIsTargeting.Value = false;
+
+        _previewGO = Instantiate(_previewIndicatorPrefab, gameObject.transform);
+        _lockedGO = Instantiate(_lockedIndicatorPrefab, gameObject.transform);
+
+        _previewGO.SetActive(false);
+        _lockedGO.SetActive(false);
     }
 
     private void OnEnable()
@@ -73,6 +90,55 @@ public class S_TargetingManager : MonoBehaviour
     void GetPlayerCenterTransform(Transform playerCenter)
     {
         _playerCenterTransform = playerCenter;
+    }
+
+    private void Update()
+    {
+        var selection = TargetSelectionExist();
+
+        if (targetsPossible.Count > 0 && selection != null || currentTarget != null)
+        {
+            if (currentTarget == null)
+            {
+                if (selection.TryGetComponent(out ITargetable targetable))
+                {
+                    _previewTargetTransform = targetable.GetTargetLockOnAnchorTransform();
+                }
+                else
+                {
+                    _previewTargetTransform = selection.transform;
+                }
+
+                _previewGO.SetActive(true);
+                _lockedGO.SetActive(false);
+
+                _previewGO.transform.position = _previewTargetTransform.position;
+            }
+            else if (currentTarget != null)
+            {
+                if (currentTarget.TryGetComponent(out ITargetable targetable))
+                {
+                    _lockedTargetTransfrom = targetable.GetTargetLockOnAnchorTransform();
+                }
+                else
+                {
+                    _lockedTargetTransfrom = currentTarget.transform;
+                }
+
+                _previewGO.SetActive(false);
+                _lockedGO.SetActive(true);
+
+                _lockedGO.transform.position = _lockedTargetTransfrom.position;
+            }
+        }
+        else
+        {
+            if (_previewGO.activeInHierarchy || _lockedGO.activeInHierarchy)
+            {
+                _previewGO.SetActive(false);
+                _lockedGO.SetActive(false);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -135,6 +201,8 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnNewTargeting.Call(currentTarget);
             rsoPlayerIsTargeting.Value = true;
+
+            rseOnStartTargeting.Call();
         }
     }
 
@@ -155,6 +223,8 @@ public class S_TargetingManager : MonoBehaviour
             rseOnPlayerCancelTargeting.Call(currentTarget);
             rsoTargetPosition.Value = Vector3.zero;
             rseOnAnimationBoolValueChange.Call("TargetLock", false);
+
+            rseOnStopTargeting.Call();
         }
 
         currentTarget = null;
@@ -180,6 +250,8 @@ public class S_TargetingManager : MonoBehaviour
                 else
                 {
                     rseOnAnimationBoolValueChange.Call("TargetLock", false);
+
+                    rseOnStopTargeting.Call();
                 }
             }
         }
@@ -361,5 +433,53 @@ public class S_TargetingManager : MonoBehaviour
             Gizmos.DrawLine(origin, origin + leftDir * radius);
             Gizmos.DrawLine(origin, origin + rightDir * radius);
         }
+    }
+
+    private GameObject TargetSelectionExist()
+    {
+        GameObject selectedTarget = null;
+
+        float bestScore = float.MaxValue;
+
+        foreach (var target in targetsPossible)
+        {
+            if (target == null) continue;
+
+            Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value);
+            float distance = toTarget.magnitude;
+
+            if (_playerCenterTransform == null) return null;
+            float angle = Vector3.Angle(_playerCenterTransform.forward, toTarget);
+
+            bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
+
+            //Priority for the taget in the front cone
+            float score = inFrontCone ? distance : distance + 1000f;
+
+            if (score < bestScore && target != currentTarget)
+            {
+                float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
+
+                Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
+                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+                {
+                    continue;
+                }
+                else
+                {
+                    bestScore = score;
+                    selectedTarget = target;
+                }
+            }
+        }
+
+        //if (selectedTarget != null)
+        //{
+        //    rsoTargetPosition.Value = selectedTarget.transform.position;
+
+        //    rseOnAnimationBoolValueChange.Call("TargetLock", true);
+        //}
+
+        return selectedTarget;
     }
 }

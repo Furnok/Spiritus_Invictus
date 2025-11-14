@@ -28,7 +28,17 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private Button buttonAudio;
 
     [TabGroup("References")]
+    [SerializeField] private Button buttonApply;
+
+    [TabGroup("References")]
+    [SerializeField] private Button buttonReset;
+
+    [TabGroup("References")]
     [SerializeField] private Button buttonReturn;
+
+    [TabGroup("References")]
+    [Title("Script")]
+    [SerializeField] private S_Settings settings;
 
     [TabGroup("References")]
     [Title("Text")]
@@ -83,7 +93,7 @@ public class S_UISettings : MonoBehaviour
 
             defaultPanelSet.SetActive(true);
             defaultPanelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            defaultPanelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            defaultPanelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = defaultPanelSet;
 
@@ -94,13 +104,43 @@ public class S_UISettings : MonoBehaviour
 
             buttonGameplay.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = toggleHoldLockTarget;
-            nav2.selectOnDown = buttonGameplay;
+            nav.selectOnDown = dropDownLanguages;
 
-            buttonReturn.navigation = nav2;
+            buttonGraphics.navigation = nav;
+
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownLanguages;
+
+            buttonAudio.navigation = nav;
+
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReturn.navigation = nav;
         }
 
         isClosing = false;
@@ -127,6 +167,7 @@ public class S_UISettings : MonoBehaviour
         if (!isClosing)
         {
             isClosing = true;
+            settings.Close();
 
             rseOnCloseWindow.Call(gameObject);
 
@@ -156,7 +197,7 @@ public class S_UISettings : MonoBehaviour
             GameObject oldpanel = currentPanelSet;
 
             currentPanelSet.GetComponent<CanvasGroup>().alpha = 1f;
-            currentPanelSet.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).OnComplete(() =>
+            currentPanelSet.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 oldpanel.SetActive(false);
             });
@@ -164,47 +205,23 @@ public class S_UISettings : MonoBehaviour
             Navigation nav = buttonGameplay.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
-            nav.selectOnDown = buttonReturn;
+            nav.selectOnDown = buttonApply;
 
             buttonGameplay.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = buttonGameplay;
-            nav2.selectOnDown = buttonGameplay;
+            nav.selectOnDown = buttonApply;
 
-            buttonReturn.navigation = nav2;
+            buttonGraphics.navigation = nav;
 
-            Navigation nav3 = buttonGraphics.navigation;
-            nav3.mode = Navigation.Mode.Explicit;
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav3.selectOnDown = buttonReturn;
+            nav.selectOnDown = buttonApply;
 
-            buttonGraphics.navigation = nav3;
-
-            Navigation nav4 = buttonReturn.navigation;
-            nav4.mode = Navigation.Mode.Explicit;
-
-            nav4.selectOnUp = buttonGraphics;
-            nav4.selectOnDown = buttonGraphics;
-
-            buttonReturn.navigation = nav4;
-
-            Navigation nav5 = buttonAudio.navigation;
-            nav5.mode = Navigation.Mode.Explicit;
-
-            nav5.selectOnDown = buttonReturn;
-
-            buttonAudio.navigation = nav5;
-
-            Navigation nav6 = buttonReturn.navigation;
-            nav6.mode = Navigation.Mode.Explicit;
-
-            nav6.selectOnUp = buttonAudio;
-            nav6.selectOnDown = buttonAudio;
-
-            buttonReturn.navigation = nav6;
+            buttonAudio.navigation = nav;
         }
     }
 
@@ -220,7 +237,7 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
             panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -231,13 +248,43 @@ public class S_UISettings : MonoBehaviour
 
             buttonGameplay.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = toggleHoldLockTarget;
-            nav2.selectOnDown = buttonGameplay;
+            nav.selectOnDown = dropDownLanguages;
 
-            buttonReturn.navigation = nav2;
+            buttonGraphics.navigation = nav;
+
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownLanguages;
+
+            buttonAudio.navigation = nav;
+
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleHoldLockTarget;
+            nav.selectOnDown = buttonGameplay;
+
+            buttonReturn.navigation = nav;
         }
     }
 
@@ -253,24 +300,54 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
             panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
-            Navigation nav = buttonGraphics.navigation;
+            Navigation nav = buttonGameplay.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = dropDownResolutions;
+
+            buttonGameplay.navigation = nav;
+
+            nav = buttonGraphics.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
             nav.selectOnDown = dropDownResolutions;
 
             buttonGraphics.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonAudio.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = toggleFullscreen;
-            nav2.selectOnDown = buttonGraphics;
+            nav.selectOnDown = dropDownResolutions;
 
-            buttonReturn.navigation = nav2;
+            buttonAudio.navigation = nav;
+
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleFullscreen;
+            nav.selectOnDown = buttonGraphics;
+
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleFullscreen;
+            nav.selectOnDown = buttonGraphics;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = toggleFullscreen;
+            nav.selectOnDown = buttonGraphics;
+
+            buttonReturn.navigation = nav;
         }
     }
 
@@ -286,24 +363,54 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
             panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
-            Navigation nav = buttonAudio.navigation;
+            Navigation nav = buttonGameplay.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = sliderMainVolume;
+
+            buttonGameplay.navigation = nav;
+
+            nav = buttonGraphics.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnDown = sliderMainVolume;
+
+            buttonGraphics.navigation = nav;
+
+            nav = buttonAudio.navigation;
             nav.mode = Navigation.Mode.Explicit;
 
             nav.selectOnDown = sliderMainVolume;
 
             buttonAudio.navigation = nav;
 
-            Navigation nav2 = buttonReturn.navigation;
-            nav2.mode = Navigation.Mode.Explicit;
+            nav = buttonApply.navigation;
+            nav.mode = Navigation.Mode.Explicit;
 
-            nav2.selectOnUp = sliderUIVolume;
-            nav2.selectOnDown = buttonAudio;
+            nav.selectOnUp = sliderUIVolume;
+            nav.selectOnDown = buttonAudio;
 
-            buttonReturn.navigation = nav2;
+            buttonApply.navigation = nav;
+
+            nav = buttonReset.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = sliderUIVolume;
+            nav.selectOnDown = buttonAudio;
+
+            buttonReset.navigation = nav;
+
+            nav = buttonReturn.navigation;
+            nav.mode = Navigation.Mode.Explicit;
+
+            nav.selectOnUp = sliderUIVolume;
+            nav.selectOnDown = buttonAudio;
+
+            buttonReturn.navigation = nav;
         }
     }
 }

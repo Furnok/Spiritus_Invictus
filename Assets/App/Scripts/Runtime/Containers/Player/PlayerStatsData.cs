@@ -22,9 +22,11 @@ public struct PlayerStatsData
     public float dodgeDuration;
     public AnimationCurve _speedDodgeCurve;
     public float dodgeDistance;
+    public float dodgeCooldown;
 
     [Header("Parry values")]
     public float parryDuration;
+    public float parryCooldown;
 
     [Header("Attack values")]
     public float projectileLifeTime;

@@ -23,4 +23,22 @@ public class S_ClassSettingsSaved
         new S_ClassVolume { name = "Sounds", volume = 100f },
         new S_ClassVolume { name = "UI", volume = 100f }
     };
+
+    public S_ClassSettingsSaved Clone()
+    {
+        S_ClassSettingsSaved copy = (S_ClassSettingsSaved)MemberwiseClone();
+
+        copy.listVolumes = new();
+
+        foreach (var vol in listVolumes)
+        {
+            copy.listVolumes.Add(new S_ClassVolume
+            {
+                name = vol.name,
+                volume = vol.volume
+            });
+        }
+
+        return copy;
+    }
 }

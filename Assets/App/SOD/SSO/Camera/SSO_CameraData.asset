@@ -16,8 +16,10 @@ MonoBehaviour:
     cameraDistanceMinPlayer: 1
     rotationCameraPlayerDuration: 0.2
     rotationCameraPlayerDodgeDuration: 0.1
-    targetShoulderOffsetPositive: {x: 1.32, y: -0.21, z: 0.36}
-    targetShoulderOffsetNegative: {x: -1.32, y: -0.21, z: 0.36}
+    minVerticalCameraPlayer: -10
+    maxVerticalCameraPlayer: 10
+    targetShoulderOffsetPositive: {x: 1, y: -0.2, z: 0.2}
+    targetShoulderOffsetNegative: {x: -1, y: -0.2, z: 0.2}
     switchDurationCamera: 1.5
     holdSkipTime: 1
     StartDisplaySkipTime: 2

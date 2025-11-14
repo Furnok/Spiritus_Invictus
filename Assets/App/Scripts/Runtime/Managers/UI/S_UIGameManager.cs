@@ -19,6 +19,10 @@ public class S_UIGameManager : MonoBehaviour
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeSkip;
 
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeConsole;
+
     [TabGroup("References")]
     [Title("Sliders")]
     [SerializeField] private Slider sliderBossHealth;
@@ -52,7 +56,11 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Extract")]
-    [SerializeField] private GameObject extractCanvas;
+    [SerializeField] private GameObject extractWindow;
+
+    [TabGroup("References")]
+    [Title("Console")]
+    [SerializeField] private GameObject consoleWindow;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
@@ -76,7 +84,13 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnConsole rseOnConsole;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
@@ -99,10 +113,12 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
 
-    private Tween healthTween;
-    private Tween convictionTween;
-    private Tween preconvictionTween;
-    private Tween skipTween;
+    private Tween healthTween = null;
+    private Tween convictionTween = null;
+    private Tween preconvictionTween = null;
+    private Tween skipTween = null;
+
+    private bool isInConsole = false;
 
     private void Awake()
     {
@@ -126,6 +142,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplaySkip.action += DisplaySkip;
         rseOnSkipHold.action += SetSkipHoldValue;
         rseOnOpenExtractWindow.action += DiplayExtract;
+        rseOnConsole.action += Console;
     }
 
     private void OnDisable()
@@ -137,6 +154,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnDisplaySkip.action -= DisplaySkip;
         rseOnSkipHold.action -= SetSkipHoldValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
+        rseOnConsole.action -= Console;
 
         healthTween?.Kill();
         convictionTween?.Kill();
@@ -255,7 +273,33 @@ public class S_UIGameManager : MonoBehaviour
     private void DiplayExtract(int index)
     {
         rseOnUIInputEnabled.Call();
-        rseOnOpenWindow.Call(extractCanvas);
+        rseOnOpenWindow.Call(extractWindow);
         rseOnDisplayExtract.Call(ssoExtractText.Value[index]);
+    }
+
+    private void Console()
+    {
+        if (!isInConsole)
+        {
+            isInConsole = true;
+
+            rseOnUIInputEnabled.Call();
+
+            if (!consoleWindow.activeInHierarchy)
+            {
+                consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
+
+                consoleWindow.SetActive(true);
+
+                consoleWindow.GetComponent<CanvasGroup>().alpha = 0f;
+                consoleWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+            }
+        }
+        else
+        {
+            isInConsole = false;
+
+            rseOnGameInputEnabled.Call();
+        }
     }
 }

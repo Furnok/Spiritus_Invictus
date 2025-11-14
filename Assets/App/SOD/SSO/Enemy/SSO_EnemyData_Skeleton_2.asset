@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d80674f408b915d4daca8362d3ea4b06, type: 3}
+  m_Name: SSO_EnemyData_Skeleton_2
+  m_EditorClassIdentifier: 
+  _value:
+    health: 100
+    speedPatrol: 2.5
+    speedChase: 4
+    detectionRange: 5
+    detectionAggroRangeMax: 50
+    attackCooldown: 3
+    chanceForEasterEgg: 1
+    patrolPointWaitMin: 1
+    patrolPointWaitMax: 3
+    startPatrolWaitMin: 1
+    startPatrolWaitMax: 3
+    timeBeforeChaseMin: 0.2
+    timeBeforeChaseMax: 0.5
+    controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
+    listCombos:
+    - listAnimationsCombos:
+      - animation: {fileID: 7400000, guid: 86ad59f9075285244b620a94559a565e, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      - animation: {fileID: 7400000, guid: 63496c3032a7160439aad1fdf1cc4d05, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      - animation: {fileID: 7400000, guid: c8c61b1f3ab4d374c98d9950bddb2e02, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      - animation: {fileID: 7400000, guid: 86ad59f9075285244b620a94559a565e, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      - animation: {fileID: 7400000, guid: 63496c3032a7160439aad1fdf1cc4d05, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      - animation: {fileID: 7400000, guid: 63496c3032a7160439aad1fdf1cc4d05, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      - animation: {fileID: 7400000, guid: 86ad59f9075285244b620a94559a565e, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      - animation: {fileID: 7400000, guid: c8c61b1f3ab4d374c98d9950bddb2e02, type: 2}
+        attackData:
+          attackId: 0
+          goSourceId: 0
+          attackType: 2
+          damage: 5
+          knockbackHitDuration: 0.1
+          knockbackHitDistance: 0.5
+          knockbackOnParryDuration: 0.1
+          knockbackOnParrryDistance: 0.5
+          parryToleranceBeforeHit: 0.05
+          parryToleranceAfterHit: 0.05
+          invicibilityDuration: 0.7
+          convictionReduction: 0
+          attackDirection: {x: 0, y: 0, z: 0}
+          contactPoint: {x: 0, y: 0, z: 0}
+      distanceToChase: 1.2
+      distanceToLoseAttack: 1.5

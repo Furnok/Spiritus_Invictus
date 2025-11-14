@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TestEnemyAttackHutbox : MonoBehaviour, IDamageable
+public class TestEnemyAttackHutbox : MonoBehaviour, I_Damageable
 {
     [Header("Settings")]
     [SerializeField] float _delayToRespawn;
