@@ -118,7 +118,8 @@
 	<object class="MixerBusEffectChain" id="{59971ac2-d829-40c3-9993-20596e9e0657}">
 		<relationship name="effects">
 			<destination>{35f77749-a586-40c1-976b-db806a66ea6d}</destination>
-			<destination>{9bc75efa-f4a8-44f1-b905-64b08fd2749f}</destination>
+			<destination>{f8eeae26-029e-4340-a1c2-6e0fe2de7d63}</destination>
+			<destination>{d280f50c-d143-4114-acdf-636d0d73ee51}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{803c4248-58b0-4413-9be2-9edecf1e8690}" />
@@ -160,6 +161,18 @@
 	</object>
 	<object class="MixerBusPanner" id="{b4a4bff5-7a00-4b3f-8a3b-6256768641a7}" />
 	<object class="MixerBusFader" id="{35f77749-a586-40c1-976b-db806a66ea6d}" />
-	<object class="SFXReverbEffect" id="{9bc75efa-f4a8-44f1-b905-64b08fd2749f}" />
+	<object class="PitchShifterEffect" id="{f8eeae26-029e-4340-a1c2-6e0fe2de7d63}">
+		<property name="pitch">
+			<value>1.02999997</value>
+		</property>
+		<property name="overlap">
+			<value>1</value>
+		</property>
+	</object>
+	<object class="SFXReverbEffect" id="{d280f50c-d143-4114-acdf-636d0d73ee51}">
+		<property name="decayTime">
+			<value>350</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{7471ce5a-0127-4fcb-874f-5de02cfd5f5c}" />
 </objects>
