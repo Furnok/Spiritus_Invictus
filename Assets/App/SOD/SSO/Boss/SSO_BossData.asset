@@ -17,8 +17,11 @@ MonoBehaviour:
     healthPhase2: 500
     walkSpeed: 3
     runSpeed: 5
+    distanceToChase: 1.5
+    distanceToRun: 25
     listAttackPhase1:
     - attackName: Ichimanji
+      isAttackDistance: 1
       pvBossUnlock: 100
       difficultyLevel: 5
       listComboData:
@@ -51,7 +54,8 @@ MonoBehaviour:
         attackDirection: {x: 0, y: 0, z: 0}
         contactPoint: {x: 0, y: 0, z: 0}
     - attackName: Margit
-      pvBossUnlock: 100
+      isAttackDistance: 1
+      pvBossUnlock: 80
       difficultyLevel: 10
       listComboData:
       - attackId: 0
@@ -83,7 +87,8 @@ MonoBehaviour:
         attackDirection: {x: 0, y: 0, z: 0}
         contactPoint: {x: 0, y: 0, z: 0}
     - attackName: Makashi
-      pvBossUnlock: 100
+      isAttackDistance: 1
+      pvBossUnlock: 80
       difficultyLevel: 3
       listComboData:
       - attackId: 0
@@ -130,6 +135,7 @@ MonoBehaviour:
         contactPoint: {x: 0, y: 0, z: 0}
     listAttackPhase2:
     - attackName: 
+      isAttackDistance: 0
       pvBossUnlock: 0
       difficultyLevel: 0
       listComboData: []

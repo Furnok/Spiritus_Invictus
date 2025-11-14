@@ -15,6 +15,10 @@ public class S_ClassBossData
 
     public float runSpeed = 0;
 
+    public float distanceToChase = 0;
+
+    public float distanceToRun = 0;
+
     [Title("Animations")]
     public List<S_ClassBossAttack> listAttackPhase1 = null;
     public List<S_ClassBossAttack> listAttackPhase2 = null;

@@ -1187,7 +1187,7 @@ Transform:
   m_GameObject: {fileID: 4524989919004608228}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1300,8 +1300,8 @@ GameObject:
   - component: {fileID: 47433026332228212}
   - component: {fileID: 2884425564829725366}
   - component: {fileID: 8135101824023998828}
-  - component: {fileID: 6995298667369009460}
   - component: {fileID: 5646047771318058197}
+  - component: {fileID: 2429021575511207179}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -1371,14 +1371,19 @@ MonoBehaviour:
   maxDifficultyLevel: 10
   difficultyGainPerSecond: 0.1
   difficultyLoseWhenPlayerHit: 1
+  difficultyScore: 2
+  frequencyScore: 1
+  synergieScore: 2
   moveParam: isMoving
   deathParam: Death
   attackParam: isAttacking
   stunParam: Stun
   behaviorAgent: {fileID: 2884425564829725366}
+  navMeshAgent: {fileID: 2429021575511207179}
   bodyCollider: {fileID: 3702001950805451078}
   detectionCollider: {fileID: 1502100001938416099}
   animator: {fileID: 5646047771318058197}
+  body: {fileID: 5201943651732942732}
   bossDetectionRange: {fileID: 2409691922618655963}
   bossHurt: {fileID: 4648933286139395769}
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
@@ -1389,28 +1394,6 @@ MonoBehaviour:
   onGetHit:
     m_PersistentCalls:
       m_Calls: []
---- !u!195 &6995298667369009460
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4965557393169002088}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1.8
-  m_BaseOffset: -0.58
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!95 &5646047771318058197
 Animator:
   serializedVersion: 7
@@ -1433,6 +1416,28 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!195 &2429021575511207179
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4965557393169002088}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.75
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 3
+  m_BaseOffset: 0.08
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &5201943651732942732
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,7 +1492,7 @@ CapsuleCollider:
   m_Radius: 0.6
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1 &5305880345597210429
 GameObject:
   m_ObjectHideFlags: 0
@@ -2061,7 +2066,7 @@ CapsuleCollider:
   m_Radius: 0.6
   m_Height: 3
   m_Direction: 1
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!114 &4648933286139395769
 MonoBehaviour:
   m_ObjectHideFlags: 0

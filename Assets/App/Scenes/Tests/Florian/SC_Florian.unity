@@ -3114,70 +3114,6 @@ Light:
   m_LightUnit: 2
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!1 &1460360491
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1460360493}
-  - component: {fileID: 1460360492}
-  m_Layer: 0
-  m_Name: NavMesh Surface_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1460360492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1460360491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SerializedVersion: 0
-  m_AgentTypeID: 0
-  m_CollectObjects: 1
-  m_Size: {x: 30, y: 10, z: 30}
-  m_Center: {x: 0, y: 5, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_UseGeometry: 0
-  m_DefaultArea: 0
-  m_GenerateLinks: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 233b2ef293ae5e04fb2f8b60d93f44a0, type: 2}
-  m_BuildHeightMesh: 0
---- !u!4 &1460360493
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1460360491}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1894627575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3399,6 +3335,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 548077864386808512, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 548077864386808512, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2003289380996012884, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -3454,6 +3398,10 @@ PrefabInstance:
     - target: {fileID: 3172068207793189745, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3720393747565738199, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 5362147396994384125, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3576,7 +3524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 524902392957673428, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1111145439727383093, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3648,7 +3596,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3495865099561543266, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
       propertyPath: m_WarningMessage
-      value: 
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyHAttack1_D1'\n\tFrom
+        animation clip 'A_EnemyHAttack2_D1'\n\tFrom animation clip 'A_EnemyHAttack3_D1'"
       objectReference: {fileID: 0}
     - target: {fileID: 4928943306983433653, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3777,6 +3728,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_BossEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5658497749865926140, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7208576249231040003, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -40
@@ -3817,18 +3772,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
-      propertyPath: synergieScore
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
-      propertyPath: frequencyScore
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8135101824023998828, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
-      propertyPath: difficultyScore
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3862,5 +3805,4 @@ SceneRoots:
   - {fileID: 126592913}
   - {fileID: 734959741}
   - {fileID: 1938371956}
-  - {fileID: 1460360493}
   - {fileID: 2130365908}

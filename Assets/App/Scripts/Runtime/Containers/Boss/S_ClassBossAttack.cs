@@ -9,6 +9,8 @@ public class S_ClassBossAttack
     [Title("Attack Settings")]
     public string attackName;
 
+    public bool isAttackDistance;
+
     public float pvBossUnlock;
 
     public float difficultyLevel;

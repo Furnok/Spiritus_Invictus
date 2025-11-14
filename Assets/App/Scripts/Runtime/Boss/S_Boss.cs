@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Behavior;
+using Unity.Burst.Intrinsics;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
 public class AttackOwned
@@ -54,6 +57,9 @@ public class S_Boss : MonoBehaviour
     [SerializeField] private BehaviorGraphAgent behaviorAgent;
 
     [TabGroup("References")]
+    [SerializeField] private NavMeshAgent navMeshAgent;
+
+    [TabGroup("References")]
     [Title("Colliders")]
     [SerializeField] private Collider bodyCollider;
 
@@ -63,6 +69,10 @@ public class S_Boss : MonoBehaviour
     [TabGroup("References")]
     [Title("Animator")]
     [SerializeField] private Animator animator;
+
+    [TabGroup("References")]
+    [Title("Body")]
+    [SerializeField] private GameObject body;
 
     [TabGroup("References")]
     [Title("Scripts")]
@@ -85,23 +95,29 @@ public class S_Boss : MonoBehaviour
     private S_EnumBossPhaseState currentPhaseState;
     private float health;
     private float maxHealth;
+    float initDistance;
     private GameObject target = null;
+    private BlackboardVariable<bool> isChasing = null;
     private bool isDead = false;
+    private bool isChase = false;
+    private bool lastMoveState = false;
     private float lastValueHealth;
     private AttackOwned lastAttack;
     private AttackOwned currentAttack;
+
     private void Awake()
     {
         lastValueHealth = 101f;
 
         health = ssoBossData.Value.healthPhase1;
         maxHealth = ssoBossData.Value.healthPhase1;
+        navMeshAgent.speed = ssoBossData.Value.walkSpeed;
         currentPhaseState = S_EnumBossPhaseState.Phase1;
         behaviorAgent.SetVariableValue<S_EnumBossPhaseState>("PhaseState", S_EnumBossPhaseState.Phase1);
         behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Idle);
+        behaviorAgent.SetVariableValue<GameObject>("Body", body);
         behaviorAgent.SetVariableValue<Animator>("Animator", animator);
         behaviorAgent.SetVariableValue<float>("Health", health);
-        behaviorAgent.SetVariableValue<float>("MoveSpeed", ssoBossData.Value.walkSpeed);
         behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
         behaviorAgent.SetVariableValue<string>("DeathParam", deathParam);
         behaviorAgent.SetVariableValue<string>("MoveParam", moveParam);
@@ -120,27 +136,45 @@ public class S_Boss : MonoBehaviour
         }
 
         UpdateLastHealthValue();
-
-        foreach (var name in listAttackOwnedPossibilities)
-        {
-            Debug.Log("List"+name.bossAttack.attackName);
-        }
     }
     private void OnEnable()
     {
         bossDetectionRange.onTargetDetected.AddListener(SetTarget);
         bossHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         rseOnPlayerGettingHit.action += LoseDifficultyLevel;
+
+        if (behaviorAgent.GetVariable("IsChasing", out isChasing))
+        {
+            isChasing.OnValueChanged += Chasing;
+        }
     }
     private void OnDisable()
     {
         bossDetectionRange.onTargetDetected.RemoveListener(SetTarget);
         bossHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         rseOnPlayerGettingHit.action -= LoseDifficultyLevel;
+
+        if (isChasing != null)
+        {
+            isChasing.OnValueChanged -= Chasing;
+        }
     }
     private void Start()
     {
-        ChooseAttack();
+
+    }
+    private void Update()
+    {
+        if (isChase && target != null)
+        {
+            Chase();
+        }
+    }
+    private void FixedUpdate()
+    {
+        bool isMoving = navMeshAgent.velocity.magnitude > 0.1f;
+        lastMoveState = isMoving;
+        animator.SetBool(moveParam, isMoving);
     }
     void SetTarget(GameObject newTarget)
     {
@@ -161,11 +195,61 @@ public class S_Boss : MonoBehaviour
             behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Idle);
         }
     }
-    void AddListAttackPossible(AttackOwned bossAttack)
+    #region Chase
+    private void Chase()
     {
-        listAttackOwnedPossibilities.Add(bossAttack);
-    }
+        float distance = Vector3.Distance(body.transform.position, target.transform.position);
+        
+        bool destinationReached = distance <= (ssoBossData.Value.distanceToChase);
 
+        if (!destinationReached)
+        {
+            navMeshAgent.SetDestination(target.transform.position);
+            if (distance <= initDistance * (ssoBossData.Value.distanceToRun / 100))
+            {
+                ChooseAttack();
+                if(currentAttack.bossAttack.isAttackDistance == true)
+                {
+                    navMeshAgent.ResetPath();
+                    navMeshAgent.velocity = Vector3.zero;
+                    behaviorAgent.SetVariableValue("State", S_EnumBossState.Combat);
+                    ExecuteAttack(currentAttack);
+                    behaviorAgent.Restart();
+                }
+                else
+                {
+                    navMeshAgent.speed = ssoBossData.Value.runSpeed;
+                    animator.SetFloat("MoveSpeed", ssoBossData.Value.runSpeed);
+                }
+            }
+        }
+        else if (destinationReached)
+        {
+            isChase = false;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+            behaviorAgent.SetVariableValue("State", S_EnumBossState.Combat);
+            ExecuteAttack(currentAttack);
+            behaviorAgent.Restart();
+        }
+    }
+    public void Chasing()
+    {
+        if (isChasing != null && isChasing.Value)
+        {
+            navMeshAgent.speed = ssoBossData.Value.walkSpeed;
+            animator.SetFloat("MoveSpeed", ssoBossData.Value.walkSpeed);
+            initDistance = Vector3.Distance(body.transform.position, target.transform.position);
+            isChase = true;
+        }
+        else
+        {
+            isChase = false;
+        }
+    }
+    #endregion
+    #region Health
     void UpdateHealth(float damage)
     {
         health = Mathf.Max(health - damage, 0);
@@ -175,10 +259,6 @@ public class S_Boss : MonoBehaviour
         onGetHit.Invoke();
 
         UpdateLastHealthValue();
-        foreach (var name in listAttackOwnedPossibilities)
-        {
-            Debug.Log(name.bossAttack.attackName);
-        }
 
         if (currentPhaseState == S_EnumBossPhaseState.Phase2)
         {
@@ -209,16 +289,8 @@ public class S_Boss : MonoBehaviour
 
         lastValueHealth = minValue;
     }
-    void SetListAttackPossible(float minValue, float maxValue)
-    {
-        foreach (var attack in listAttackOwneds)
-        {
-            if (attack.bossAttack.pvBossUnlock >= minValue && attack.bossAttack.pvBossUnlock < maxValue)
-            {
-                AddListAttackPossible(attack);
-            }
-        }
-    }
+    #endregion
+    #region Difficulty
     void LoseDifficultyLevel()
     {
         bossDifficultyLevel -= difficultyLoseWhenPlayerHit;
@@ -231,6 +303,22 @@ public class S_Boss : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         StartCoroutine(GainDifficultyLevel());
+    }
+    #endregion
+    #region Attack
+    void AddListAttackPossible(AttackOwned bossAttack)
+    {
+        listAttackOwnedPossibilities.Add(bossAttack);
+    }
+    void SetListAttackPossible(float minValue, float maxValue)
+    {
+        foreach (var attack in listAttackOwneds)
+        {
+            if (attack.bossAttack.pvBossUnlock >= minValue && attack.bossAttack.pvBossUnlock < maxValue)
+            {
+                AddListAttackPossible(attack);
+            }
+        }
     }
     public void ChooseAttack()
     {
@@ -270,13 +358,14 @@ public class S_Boss : MonoBehaviour
         {
             attack.score = 0;
         }
-        ExecuteAttack(currentAttack);
     }
 
     void ExecuteAttack(AttackOwned attack)
     {
         lastAttack = attack;
         attack.frequency++;
+        animator.SetTrigger(attack.bossAttack.attackName);
         Debug.Log(attack.bossAttack.attackName);
     }
+    #endregion
 }
