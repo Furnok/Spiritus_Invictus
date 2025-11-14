@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,6 +18,10 @@ public class S_UISelectable : MonoBehaviour
 
     [TabGroup("Settings")]
     [SerializeField] private Color32 colorMouseDown = new(150, 150, 150, 255);
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Images")]
@@ -130,10 +135,15 @@ public class S_UISelectable : MonoBehaviour
 
     public void Clicked(Selectable uiElement)
     {
-        if (uiElement.interactable && Gamepad.current != null)
+        if (uiElement.interactable)
         {
-            rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectablePress;
-            rsoNavigation.Value.selectablePress = uiElement;
+            RuntimeManager.PlayOneShot(uiSound);
+
+            if (Gamepad.current != null)
+            {
+                rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectablePress;
+                rsoNavigation.Value.selectablePress = uiElement;
+            }
         }
     }
 

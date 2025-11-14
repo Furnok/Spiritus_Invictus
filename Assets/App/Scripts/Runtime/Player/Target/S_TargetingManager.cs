@@ -208,7 +208,7 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnPlayerCancelTargetingInput()
     {
-        if(rsoSettingsSaved.Value.holdLockTarget == false || !rsoPlayerIsTargeting.Value) return;
+        if(rsoSettingsSaved.Value.holdLockTarget == false) return;
         
         CancelTargeting();
         
@@ -223,9 +223,9 @@ public class S_TargetingManager : MonoBehaviour
             rseOnPlayerCancelTargeting.Call(currentTarget);
             rsoTargetPosition.Value = Vector3.zero;
             rseOnAnimationBoolValueChange.Call("TargetLock", false);
-        }
 
-        rseOnStopTargeting.Call();
+            rseOnStopTargeting.Call();
+        }
 
         currentTarget = null;
         obstacleTimer = 0f;
@@ -250,6 +250,8 @@ public class S_TargetingManager : MonoBehaviour
                 else
                 {
                     rseOnAnimationBoolValueChange.Call("TargetLock", false);
+
+                    rseOnStopTargeting.Call();
                 }
             }
         }

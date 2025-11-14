@@ -354,26 +354,6 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.SetVariableValue<float>("Health", health);
         onGetHit.Invoke();
 
-        if (damage >= maxhealth / 2)
-        {
-            enemyAttackData.DisableWeaponCollider();
-
-            StopAllCoroutines();
-            comboCoroutine = null;
-            resetCoroutine = null;
-            patrolCoroutine = null;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-
-            isPerformingCombo = false;
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
-            behaviorAgent.Restart();
-
-            resetCoroutine = StartCoroutine(ResetAttack());
-        }
-
         if (health <= 0)
         {
             isDead = true;
@@ -393,6 +373,25 @@ public class S_Enemy : MonoBehaviour
 
             rseOnEnemyTargetDied.Call(body);
         }
+        else if (damage >= maxhealth / 2)
+        {
+            enemyAttackData.DisableWeaponCollider();
+
+            StopAllCoroutines();
+            comboCoroutine = null;
+            resetCoroutine = null;
+            patrolCoroutine = null;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+
+            isPerformingCombo = false;
+
+            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
+            behaviorAgent.Restart();
+
+            resetCoroutine = StartCoroutine(ResetAttack());
+        }
     }
 
     private void UpdateHealth(float damage)
@@ -405,8 +404,11 @@ public class S_Enemy : MonoBehaviour
 
                 SetHealth(damage);
 
-                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
-                behaviorAgent.Restart();
+                if (!isDead)
+                {
+                    behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
+                    behaviorAgent.Restart();
+                }
             }
         }
         else
