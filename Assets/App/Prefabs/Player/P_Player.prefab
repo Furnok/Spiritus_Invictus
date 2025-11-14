@@ -208,6 +208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8153173563361757933}
   - component: {fileID: 4236493625650689256}
+  - component: {fileID: 8454201312215265849}
   m_Layer: 10
   m_Name: VFX
   m_TagString: Untagged
@@ -229,6 +230,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6828950947144670064}
+  - {fileID: 8456373266874895494}
   m_Father: {fileID: 3473314807466382836}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4236493625650689256
@@ -248,6 +250,26 @@ MonoBehaviour:
   _particleEffectParent: {fileID: 6828950947144670064}
   _prefabParryEffect: {fileID: 7037283364390755613, guid: f671b5c181719594aaad66529f73ace8, type: 3}
   _onParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
+--- !u!114 &8454201312215265849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3486870078301174081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 335238bef8d960245986058008c88a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ghostLifetime: 0.3
+  _spawnInterval: 0.07
+  _ghostCount: 7
+  _skinnedMeshes:
+  - {fileID: 6025199268170193021}
+  _ghostMaterial: {fileID: 2100000, guid: 10143c9d825b21f42b99717bf2230f9f, type: 2}
+  _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
+  _onPerfectDodge: {fileID: 11400000, guid: 1c5a008ba8b4091499ebda621df96bc9, type: 2}
 --- !u!1 &3630292079689624107
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +473,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}
   _attackCanHitPlayer: {fileID: 11400000, guid: a2911e0025cdad94891abd994425effc, type: 2}
+--- !u!1 &5475699745089235847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8456373266874895494}
+  m_Layer: 10
+  m_Name: AfterImageEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8456373266874895494
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5475699745089235847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8153173563361757933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7802207246985257632
 GameObject:
   m_ObjectHideFlags: 0
@@ -816,7 +869,6 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4096
-  edgeProbeDistance: 0.6
   edgeProbeHeight: 0.5
   stopFromWall: 0.03
   _ssoPlayerStateTransitions: {fileID: 11400000, guid: d6e9b95c877c8a84291c447bbbc229af, type: 2}
@@ -1187,5 +1239,10 @@ PrefabInstance:
 --- !u!4 &3285098368857604301 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9a825d103323f5d4693c8085a0dc3c18, type: 3}
+  m_PrefabInstance: {fileID: 3034787275973355302}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6025199268170193021 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -468246555611218085, guid: 9a825d103323f5d4693c8085a0dc3c18, type: 3}
   m_PrefabInstance: {fileID: 3034787275973355302}
   m_PrefabAsset: {fileID: 0}
