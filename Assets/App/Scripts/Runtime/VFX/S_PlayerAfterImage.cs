@@ -6,7 +6,7 @@ public class S_PlayerAfterImage : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float _ghostLifetime = 0.3f;
-    [SerializeField] private float _spawnInterval = 0.04f;
+    //[SerializeField] private float _spawnInterval = 0.04f;
     [SerializeField] private int _ghostCount = 6;
 
     [Header("References")]
