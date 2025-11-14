@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
-using System;
 using System.Collections;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +19,10 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeSkip;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeConsole;
 
     [TabGroup("References")]
     [Title("Sliders")]
@@ -81,6 +85,9 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
 
     [TabGroup("Outputs")]
@@ -107,10 +114,12 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
 
-    private Tween healthTween;
-    private Tween convictionTween;
-    private Tween preconvictionTween;
-    private Tween skipTween;
+    private Tween healthTween = null;
+    private Tween convictionTween = null;
+    private Tween preconvictionTween = null;
+    private Tween skipTween = null;
+
+    private bool isInConsole = false;
 
     private void Awake()
     {
@@ -271,10 +280,27 @@ public class S_UIGameManager : MonoBehaviour
 
     private void Console()
     {
-        if (!consoleWindow.activeInHierarchy)
+        if (!isInConsole)
         {
+            isInConsole = true;
+
             rseOnUIInputEnabled.Call();
-            rseOnOpenWindow.Call(consoleWindow);
+
+            if (!consoleWindow.activeInHierarchy)
+            {
+                consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
+
+                consoleWindow.SetActive(true);
+
+                consoleWindow.GetComponent<CanvasGroup>().alpha = 0f;
+                consoleWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+            }
+        }
+        else
+        {
+            isInConsole = false;
+
+            rseOnGameInputEnabled.Call();
         }
     }
 }
