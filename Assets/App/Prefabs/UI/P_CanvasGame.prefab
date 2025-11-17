@@ -1578,6 +1578,8 @@ MonoBehaviour:
   consoleText: {fileID: 2639258578792523826}
   scrollRect: {fileID: 5550413679288304393}
   rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
+  rseOnResetFocus: {fileID: 11400000, guid: 49e933a059aabdf4ab8547deb65c6764, type: 2}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
 --- !u!1 &464415677368092328
 GameObject:
   m_ObjectHideFlags: 0
@@ -1672,7 +1674,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8415899172504107315}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: SliderAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 8413913126154482142}
@@ -1684,7 +1686,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 3677968079688610705}
         m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
-        m_MethodName: UpdateMusicVolume
+        m_MethodName: UpdateUIVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1781,6 +1783,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8415899172504107315}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8413913126154482142}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 3
     callback:
       m_PersistentCalls:
@@ -1788,6 +1802,18 @@ MonoBehaviour:
         - m_Target: {fileID: 8415899172504107315}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
           m_MethodName: MouseUp
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8413913126154482142}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8415899172504107315}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 8413913126154482142}
@@ -2595,7 +2621,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1843591686484481252}
         m_TargetAssemblyTypeName: S_ConsoleManager, Assembly-CSharp
-        m_MethodName: SendInput
+        m_MethodName: InputFieldSendInput
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3255,6 +3281,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeFadeSkip: 0.2
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   defaultWindow: {fileID: 7090280352426310551}
   defaultPanelSet: {fileID: 3378206784432556659}
   buttonGameplay: {fileID: 1096930571029089604}
@@ -3403,6 +3436,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 031f6803e8fe3804fb9acaca0f232c17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   defaultWindow: {fileID: 7090280352426310551}
   rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
   rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
@@ -4227,7 +4267,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1843591686484481252}
         m_TargetAssemblyTypeName: S_ConsoleManager, Assembly-CSharp
-        m_MethodName: SendInput
+        m_MethodName: ButtonSendInput
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5415,7 +5455,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6756185695073707840}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: SliderAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 6335642166347103854}
@@ -5524,6 +5564,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 6756185695073707840}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 6335642166347103854}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 3
     callback:
       m_PersistentCalls:
@@ -5531,6 +5583,18 @@ MonoBehaviour:
         - m_Target: {fileID: 6756185695073707840}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
           m_MethodName: MouseUp
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 6335642166347103854}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 6756185695073707840}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 6335642166347103854}
@@ -7499,18 +7563,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3349139074424034033}
-        m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8159717645729807765}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 3677968079688610705}
         m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
         m_MethodName: UpdateResolutions
@@ -7654,6 +7706,66 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 8159717645729807765}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 16
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3349139074424034033}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8159717645729807765}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3349139074424034033}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8159717645729807765}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3349139074424034033}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: Clicked
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8159717645729807765}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7933088321982871583}
+          m_TargetAssemblyTypeName: S_UISettings, Assembly-CSharp
+          m_MethodName: OnDropdownClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -10848,6 +10960,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b4aed73e3c6210499c8eab87ea9a1a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   timeFade: 0.2
   menuWindow: {fileID: 8445063460506897426}
   gameWindow: {fileID: 6324976944753795977}
@@ -10879,6 +10998,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021bd746fb409c849a4459252f98c99f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   animationSlider: 0.4
   timeFadeBoss: 0.2
   timeFadeSkip: 0.4
@@ -12593,6 +12719,38 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4965135458686096967}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 5912592733868744208}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4965135458686096967}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 5912592733868744208}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &51431853416143655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13073,6 +13231,38 @@ MonoBehaviour:
         - m_Target: {fileID: 3500812679326977385}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
           m_MethodName: Unselected
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 6659875914944821893}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3500812679326977385}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: Clicked
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 6659875914944821893}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3500812679326977385}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 6659875914944821893}
@@ -14239,18 +14429,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7393125018954713934}
-        m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 3643773589439469079}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 3677968079688610705}
         m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
         m_MethodName: UpdateLanguages
@@ -14390,6 +14568,66 @@ MonoBehaviour:
         - m_Target: {fileID: 7393125018954713934}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
           m_MethodName: Unselected
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 3643773589439469079}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7393125018954713934}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: Clicked
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 3643773589439469079}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7933088321982871583}
+          m_TargetAssemblyTypeName: S_UISettings, Assembly-CSharp
+          m_MethodName: OnDropdownClicked
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 3643773589439469079}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 16
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7393125018954713934}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 3643773589439469079}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7393125018954713934}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 3643773589439469079}
@@ -16778,7 +17016,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6062502806204446352}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: SliderAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1141263507511781116}
@@ -16790,7 +17028,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 3677968079688610705}
         m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
-        m_MethodName: UpdateSoundsVolume
+        m_MethodName: UpdateUIVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16887,6 +17125,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 6062502806204446352}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1141263507511781116}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 3
     callback:
       m_PersistentCalls:
@@ -16894,6 +17144,18 @@ MonoBehaviour:
         - m_Target: {fileID: 6062502806204446352}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
           m_MethodName: MouseUp
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1141263507511781116}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 6062502806204446352}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 1141263507511781116}
@@ -19967,7 +20229,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2446151372011696824}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: SliderAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 6043570550392987664}
@@ -20076,6 +20338,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 2446151372011696824}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 6043570550392987664}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 3
     callback:
       m_PersistentCalls:
@@ -20083,6 +20357,18 @@ MonoBehaviour:
         - m_Target: {fileID: 2446151372011696824}
           m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
           m_MethodName: MouseUp
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 6043570550392987664}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 2446151372011696824}
+          m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
+          m_MethodName: PlayAudio
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 6043570550392987664}
@@ -23639,7 +23925,7 @@ GameObject:
   - component: {fileID: 8518115055978870825}
   - component: {fileID: 7551593712522813383}
   m_Layer: 5
-  m_Name: ButtonReset
+  m_Name: ButtonResetDefault
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24527,6 +24813,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 284ed8a9f91f32640b09638b5c93ab84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   settingsWindow: {fileID: 1055139870482316824}
   rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
   rseOnOpenWindow: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
@@ -25005,7 +25298,7 @@ GameObject:
   - component: {fileID: 2010551445957352373}
   - component: {fileID: 8300581834310010945}
   m_Layer: 5
-  m_Name: TextReset
+  m_Name: TextResetDefault
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25058,7 +25351,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Reset
+  m_text: Default
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 30b824733b613a546a2e5ec327a7aee6, type: 2}
   m_sharedMaterial: {fileID: 7114413539391100157, guid: 30b824733b613a546a2e5ec327a7aee6, type: 2}
@@ -25161,10 +25454,10 @@ MonoBehaviour:
         m_VariantData:
         - localeIdentifier:
             m_Code: en
-          value: Reset
+          value: Default
         - localeIdentifier:
             m_Code: fr
-          value: "R\xE9initialiser"
+          value: "Par D\xE9faut"
 --- !u!1 &8677591036929478291
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,8 +1,13 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_UICredits : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("References")]
     [Title("Default")]
     [SerializeField] private GameObject defaultWindow;
@@ -20,16 +25,26 @@ public class S_UICredits : MonoBehaviour
 
     private void OnEnable()
     {
-        rseOnPlayerPause.action += Close;
+        rseOnPlayerPause.action += CloseEscape;
 
         isClosing = false;
     }
 
     private void OnDisable()
     {
-        rseOnPlayerPause.action -= Close;
+        rseOnPlayerPause.action -= CloseEscape;
 
         isClosing = false;
+    }
+
+    private void CloseEscape()
+    {
+        if (!isClosing)
+        {
+            RuntimeManager.PlayOneShot(uiSound);
+
+            Close();
+        }
     }
 
     public void Close()

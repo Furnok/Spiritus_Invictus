@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
@@ -6,6 +7,10 @@ using UnityEngine.UI;
 
 public class S_UIGameManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("Settings")]
     [Title("Time")]
     [SuffixLabel("s", Overlay = true)]
@@ -281,6 +286,8 @@ public class S_UIGameManager : MonoBehaviour
     {
         if (!isInConsole)
         {
+            RuntimeManager.PlayOneShot(uiSound);
+
             isInConsole = true;
 
             rseOnUIInputEnabled.Call();

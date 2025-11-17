@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,10 @@ public class S_UISettings : MonoBehaviour
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeSkip;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Default")]
@@ -80,10 +85,11 @@ public class S_UISettings : MonoBehaviour
 
     private GameObject currentPanelSet = null;
     private bool isClosing = false;
+    private bool isBlocked = false;
 
     private void OnEnable()
     {
-        rseOnPlayerPause.action += Close;
+        rseOnPlayerPause.action += CloseEscape;
 
         if (defaultPanelSet != null)
         {
@@ -148,7 +154,7 @@ public class S_UISettings : MonoBehaviour
 
     private void OnDisable()
     {
-        rseOnPlayerPause.action -= Close;
+        rseOnPlayerPause.action -= CloseEscape;
 
         if (currentPanelSet != null)
         {
@@ -160,6 +166,39 @@ public class S_UISettings : MonoBehaviour
         textGameplay.color = Color.white;
         textGraphics.color = Color.white;
         textAudio.color = Color.white;
+    }
+
+    public void OnDropdownClicked()
+    {
+        GameObject blocker = transform.root.Find("Blocker")?.gameObject;
+        if (blocker != null)
+        {
+            Button button = blocker.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(CloseDropDown);
+            }
+        }
+    }
+
+    private void CloseDropDown()
+    {
+        RuntimeManager.PlayOneShot(uiSound);
+    }
+
+    private void CloseEscape()
+    {
+        if (dropDownLanguages?.GetComponent<TMP_Dropdown>()?.IsExpanded == true || dropDownResolutions?.GetComponent<TMP_Dropdown>()?.IsExpanded == true)
+        {
+            return;
+        }
+
+        if (!isClosing)
+        {
+            RuntimeManager.PlayOneShot(uiSound);
+
+            Close();
+        }
     }
 
     public void Close()

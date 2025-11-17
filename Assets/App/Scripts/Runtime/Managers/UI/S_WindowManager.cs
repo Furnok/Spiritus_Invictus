@@ -1,10 +1,15 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFade;
@@ -128,6 +133,8 @@ public class S_WindowManager : MonoBehaviour
         {
             if (!menuWindow.activeInHierarchy)
             {
+                RuntimeManager.PlayOneShot(uiSound);
+
                 rseOnUIInputEnabled.Call();
                 OpenWindow(menuWindow);
                 rsoGameInPause.Value = true;
