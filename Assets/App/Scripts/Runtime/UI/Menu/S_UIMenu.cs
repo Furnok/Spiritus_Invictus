@@ -73,24 +73,24 @@ public class S_UIMenu : MonoBehaviour
 
     private void CloseEscape()
     {
-        RuntimeManager.PlayOneShot(uiSound);
+        if (rsoCurrentWindows.Value[^1] == gameObject)
+        {
+            RuntimeManager.PlayOneShot(uiSound);
 
-        ResumeGame();
+            ResumeGame();
+        }
     }
 
     public void ResumeGame()
     {
-        if (rsoCurrentWindows.Value.Count < 2)
-        {
-            rseOnGameInputEnabled.Call();
-            rseOnCloseAllWindows.Call();
-            rsoNavigation.Value.selectableDefault = null;
-            rseOnResetFocus.Call();
-            rsoNavigation.Value.selectableFocus = null;
-            rsoInGame.Value = true;
-            rsoGameInPause.Value = false;
-            rseOnGamePause.Call(false);
-        }
+        rseOnGameInputEnabled.Call();
+        rseOnCloseAllWindows.Call();
+        rsoNavigation.Value.selectableDefault = null;
+        rseOnResetFocus.Call();
+        rsoNavigation.Value.selectableFocus = null;
+        rsoInGame.Value = true;
+        rsoGameInPause.Value = false;
+        rseOnGamePause.Call(false);
     }
 
     public void Settings()

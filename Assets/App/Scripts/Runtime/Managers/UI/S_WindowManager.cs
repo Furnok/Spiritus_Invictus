@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
-    [TabGroup("References")]
-    [Title("Audio")]
-    [SerializeField] private EventReference uiSound;
-
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFade;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Windows")]
