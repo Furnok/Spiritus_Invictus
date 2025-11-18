@@ -7,10 +7,6 @@ using UnityEngine.UI;
 
 public class S_UIGameManager : MonoBehaviour
 {
-    [TabGroup("References")]
-    [Title("Audio")]
-    [SerializeField] private EventReference uiSound;
-
     [TabGroup("Settings")]
     [Title("Time")]
     [SuffixLabel("s", Overlay = true)]
@@ -27,6 +23,10 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeConsole;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Sliders")]
@@ -99,6 +99,12 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PreconsumedConviction rsoPreconsumedConviction;
@@ -277,6 +283,8 @@ public class S_UIGameManager : MonoBehaviour
 
     private void DiplayExtract(int index)
     {
+        RuntimeManager.PlayOneShot(uiSound);
+
         rseOnUIInputEnabled.Call();
         rseOnOpenWindow.Call(extractWindow);
         rseOnDisplayExtract.Call(ssoExtractText.Value[index]);
@@ -286,6 +294,8 @@ public class S_UIGameManager : MonoBehaviour
     {
         if (!isInConsole)
         {
+            rseOnShowMouseCursor.Call();
+
             RuntimeManager.PlayOneShot(uiSound);
 
             isInConsole = true;
@@ -304,6 +314,8 @@ public class S_UIGameManager : MonoBehaviour
         }
         else
         {
+            rseOnHideMouseCursor.Call();
+
             isInConsole = false;
 
             rseOnGameInputEnabled.Call();

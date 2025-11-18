@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using FMOD;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -16,6 +18,10 @@ public class S_UIExtract : MonoBehaviour
     [Title("Display")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float startDisplay;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Text")]
@@ -41,7 +47,16 @@ public class S_UIExtract : MonoBehaviour
     [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
     private bool displayText = false;
     private bool userIsScrolling = false;
@@ -52,7 +67,9 @@ public class S_UIExtract : MonoBehaviour
     private void OnEnable()
     {
         rseOnDisplayExtract.action += DisplayTextContent;
-        rseOnPlayerPause.action += Close;
+        rseOnPlayerPause.action += CloseEscape;
+
+        rseOnShowMouseCursor.Call();
 
         scrollRect.verticalNormalizedPosition = 1;
         isClosing = false;
@@ -61,7 +78,7 @@ public class S_UIExtract : MonoBehaviour
     private void OnDisable()
     {
         rseOnDisplayExtract.action -= DisplayTextContent;
-        rseOnPlayerPause.action -= Close;
+        rseOnPlayerPause.action -= CloseEscape;
 
         displayText = false;
         textContent.text = "";
@@ -103,10 +120,25 @@ public class S_UIExtract : MonoBehaviour
         }
     }
 
+    private void CloseEscape()
+    {
+        if (!isClosing)
+        {
+            if (rsoCurrentWindows.Value[^1] == gameObject)
+            {
+                RuntimeManager.PlayOneShot(uiSound);
+
+                Close();
+            }
+        }
+    }
+
     public void Close()
     {
         if (!isClosing)
         {
+            rseOnHideMouseCursor.Call();
+
             isClosing = true;
             rseOnGameInputEnabled.Call();
             rseOnCloseWindow.Call(gameObject);

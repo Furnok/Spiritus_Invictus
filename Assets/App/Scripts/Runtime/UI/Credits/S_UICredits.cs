@@ -21,6 +21,9 @@ public class S_UICredits : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+
     private bool isClosing = false;
 
     private void OnEnable()
@@ -41,9 +44,12 @@ public class S_UICredits : MonoBehaviour
     {
         if (!isClosing)
         {
-            RuntimeManager.PlayOneShot(uiSound);
+            if (rsoCurrentWindows.Value[^1] == gameObject)
+            {
+                RuntimeManager.PlayOneShot(uiSound);
 
-            Close();
+                Close();
+            }
         }
     }
 

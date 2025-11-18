@@ -31,7 +31,6 @@ public class S_UISkip : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Device rsoDevice;
 
-
     private void LateUpdate()
     {
         if (rsoDevice.Value == S_EnumDevice.KeyboardMouse)

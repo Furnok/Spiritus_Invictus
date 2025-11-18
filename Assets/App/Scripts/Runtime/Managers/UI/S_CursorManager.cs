@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 public class S_CursorManager : MonoBehaviour
@@ -45,6 +46,17 @@ public class S_CursorManager : MonoBehaviour
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
         rsoNavigation.Value = new();
         rsoDevice.Value = S_EnumDevice.None;
+
+        HideMouseCursor();
+
+        if (Gamepad.current != null)
+        {
+            Device(Gamepad.current);
+        }
+        else
+        {
+            rsoDevice.Value = S_EnumDevice.KeyboardMouse;
+        }
     }
 
     private void OnEnable()
@@ -69,20 +81,6 @@ public class S_CursorManager : MonoBehaviour
         rseOnResetFocus.action -= ResetFocus;
         rseOnMouseEnterUI.action -= MouseEnter;
         rseOnMouseLeaveUI.action -= MouseLeave;
-    }
-
-    private void Start()
-    {
-        if (Gamepad.current != null)
-        {
-            Device(Gamepad.current);
-            HideMouseCursor();
-        }
-        else
-        {
-            rsoDevice.Value = S_EnumDevice.KeyboardMouse;
-            ShowMouseCursor();
-        }
     }
 
     private void Device(InputDevice device)

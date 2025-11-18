@@ -1,7 +1,9 @@
 ﻿using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class S_UIMenu : MonoBehaviour
 {
@@ -41,6 +43,12 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -60,6 +68,8 @@ public class S_UIMenu : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerPause.action += CloseEscape;
+
+        rseOnShowMouseCursor.Call();
 
         isTransit = false;
     }
@@ -83,6 +93,8 @@ public class S_UIMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        rseOnHideMouseCursor.Call();
+
         rseOnGameInputEnabled.Call();
         rseOnCloseAllWindows.Call();
         rsoNavigation.Value.selectableDefault = null;

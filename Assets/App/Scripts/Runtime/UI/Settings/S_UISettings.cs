@@ -83,9 +83,11 @@ public class S_UISettings : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+
     private GameObject currentPanelSet = null;
     private bool isClosing = false;
-    private bool isBlocked = false;
 
     private void OnEnable()
     {
@@ -195,9 +197,12 @@ public class S_UISettings : MonoBehaviour
 
         if (!isClosing)
         {
-            RuntimeManager.PlayOneShot(uiSound);
+            if (rsoCurrentWindows.Value[^1] == gameObject)
+            {
+                RuntimeManager.PlayOneShot(uiSound);
 
-            Close();
+                Close();
+            }
         }
     }
 

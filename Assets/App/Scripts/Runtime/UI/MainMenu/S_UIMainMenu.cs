@@ -51,6 +51,12 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -67,6 +73,8 @@ public class S_UIMainMenu : MonoBehaviour
     private void OnEnable()
     {
         rseOnDataTemp.action += SetupMenu;
+
+        rseOnShowMouseCursor.Call();
 
         StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
         StartCoroutine(S_Utils.DelayFrame(() => rsoInGame.Value = false));
@@ -119,6 +127,8 @@ public class S_UIMainMenu : MonoBehaviour
         {
             isTransit = true;
 
+            rseOnHideMouseCursor.Call();
+
             rseOnCloseAllWindows.Call();
 
             gameObject.GetComponent<CanvasGroup>()?.DOKill();
@@ -139,6 +149,8 @@ public class S_UIMainMenu : MonoBehaviour
         if (!isTransit)
         {
             isTransit = true;
+
+            rseOnHideMouseCursor.Call();
 
             rseOnFadeOut.Call();
 

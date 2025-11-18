@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using FMOD;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +9,10 @@ using UnityEngine;
 
 public class S_CameraManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("References")]
     [Title("Camera Main")]
     [SerializeField] private Camera cameraMain;
@@ -522,6 +528,8 @@ public class S_CameraManager : MonoBehaviour
             skipRoutine = null;
         }
 
+        RuntimeManager.PlayOneShot(uiSound);
+
         skipHold = 0f;
         isSkipping = true;
 
@@ -536,6 +544,8 @@ public class S_CameraManager : MonoBehaviour
             StopCoroutine(skipRoutine);
             skipRoutine = null;
         }
+
+        RuntimeManager.PlayOneShot(uiSound);
 
         skipHold = 0f;
         isSkipping = false;
