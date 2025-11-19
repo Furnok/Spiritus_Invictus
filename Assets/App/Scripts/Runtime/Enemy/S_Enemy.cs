@@ -53,7 +53,10 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private Collider bodyCollider;
 
     [TabGroup("References")]
-    [SerializeField] private Collider DetectionCollider;
+    [SerializeField] private Collider detectionCollider;
+
+    [TabGroup("References")]
+    [SerializeField] private Collider hurtCollider;
 
     [TabGroup("References")]
     [Title("Animator")]
@@ -95,6 +98,9 @@ public class S_Enemy : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
@@ -143,7 +149,8 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.SetVariableValue<List<GameObject>>("PatrolPoints", patrolPointsList);
         behaviorAgent.SetVariableValue<Animator>("Animator", animator);
         behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
-        behaviorAgent.SetVariableValue<Collider>("DetectionRangeCollider", DetectionCollider);
+        behaviorAgent.SetVariableValue<Collider>("DetectionRangeCollider", detectionCollider);
+        behaviorAgent.SetVariableValue<Collider>("HurtBox", hurtCollider);
 
         health = ssoEnemyData.Value.health;
         maxhealth = ssoEnemyData.Value.health;
@@ -333,7 +340,7 @@ public class S_Enemy : MonoBehaviour
 
             aimPoint = null;
 
-            DetectionCollider.enabled = false;
+            detectionCollider.enabled = false;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
         }
@@ -346,6 +353,8 @@ public class S_Enemy : MonoBehaviour
 
     private void SetHealth(float damage)
     {
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Take " + damage + " Damage!");
+
         health = Mathf.Max(health - damage, 0);
         onUpdateEnemyHealth.Invoke(health);
 
@@ -370,6 +379,8 @@ public class S_Enemy : MonoBehaviour
             behaviorAgent.Restart();
 
             rseOnEnemyTargetDied.Call(body);
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Dead!");
         }
         else if (damage >= maxhealth / 2)
         {
@@ -389,6 +400,8 @@ public class S_Enemy : MonoBehaviour
             behaviorAgent.Restart();
 
             resetCoroutine = StartCoroutine(ResetAttack());
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Stun!");
         }
     }
 
@@ -473,10 +486,14 @@ public class S_Enemy : MonoBehaviour
             }
 
             patrolCoroutine = StartCoroutine(PatrolRoutine());
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Start Patroling!");
         }
         else
         {
             isPatrolling = false;
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Stop Patroling!");
         }
     }
 
@@ -503,7 +520,7 @@ public class S_Enemy : MonoBehaviour
             }
 
             navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
-            DetectionCollider.enabled = true;
+            detectionCollider.enabled = true;
 
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
 
@@ -526,10 +543,14 @@ public class S_Enemy : MonoBehaviour
             GetCombo();
             navMeshAgent.speed = ssoEnemyData.Value.speedChase;
             isChase = true;
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Chasing the Player!");
         }
         else
         {
             isChase = false;
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Stop Chasing the Player!");
         }
     }
 
@@ -553,6 +574,8 @@ public class S_Enemy : MonoBehaviour
     private IEnumerator PlayComboSequence()
     {
         yield return new WaitForSeconds(0.4f);
+
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Attacking with a Combo!");
 
         isPerformingCombo = true;
 

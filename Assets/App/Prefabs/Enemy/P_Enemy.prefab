@@ -310,7 +310,8 @@ MonoBehaviour:
   behaviorAgent: {fileID: 495233547217921218}
   navMeshAgent: {fileID: 1431773725924121066}
   bodyCollider: {fileID: 6217138946037749130}
-  DetectionCollider: {fileID: 1536210782470915829}
+  detectionCollider: {fileID: 1536210782470915829}
+  hurtCollider: {fileID: 6177182004407894465}
   animator: {fileID: 5886562096679836169}
   body: {fileID: 6905421159853868602}
   spawnProjectilePoint: {fileID: 1872526195975783811}
@@ -323,6 +324,7 @@ MonoBehaviour:
   patrolPoints: {fileID: 2395496571129997540}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
+  rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
   ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
   onUpdateEnemyHealth:
     m_PersistentCalls:

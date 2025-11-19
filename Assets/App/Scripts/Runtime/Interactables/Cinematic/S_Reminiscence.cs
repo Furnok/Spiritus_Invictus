@@ -21,6 +21,9 @@ public class S_Reminiscence : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCameraCinematic rseOnCameraCinematic;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
+
     private void OnValidate()
     {
         if (cameraIndex < 0)
@@ -54,6 +57,7 @@ public class S_Reminiscence : MonoBehaviour
 
     private void Interract()
     {
+        rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnCameraCinematic.Call(cameraIndex);
     }
 }

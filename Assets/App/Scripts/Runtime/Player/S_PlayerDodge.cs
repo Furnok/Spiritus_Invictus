@@ -45,6 +45,7 @@ public class S_PlayerDodge : MonoBehaviour
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
     [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
     [SerializeField] RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     Vector2 _moveInput;
     Transform _target = null;
@@ -100,6 +101,8 @@ public class S_PlayerDodge : MonoBehaviour
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false || _dodgeUp == false) return;
         _onPlayerAddState.Call(PlayerState.Dodging);
+
+        rseOnSendConsoleMessage.Call("Player Dodge!");
 
         _dodgeUp = false;
         StartCoroutine(S_Utils.Delay(_playerStats.Value.dodgeCooldown, () =>

@@ -21,6 +21,9 @@ public class S_Extract : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
+
     private void OnDisable()
     {
         rseOnPlayerInteract.action -= ExtractInteract;
@@ -46,6 +49,7 @@ public class S_Extract : MonoBehaviour
 
     private void ExtractInteract()
     {
+        rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnOpenExtractWindow.Call(extractIndex);
     }
 }

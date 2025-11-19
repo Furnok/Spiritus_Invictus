@@ -102,6 +102,9 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
 
     [TabGroup("Outputs")]
@@ -218,12 +221,14 @@ public class S_CameraManager : MonoBehaviour
         switch (currentMode)
         {
             case ModeCamera.Player:
+                rseOnSendConsoleMessage.Call("Player Stop Targeting!");
                 cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
                 cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
                 Transition(cinemachineCameraPlayer, cinemachineCameraRail, ModeCamera.Rail, playerPoint);
                 break;
 
             case ModeCamera.Rail:
+                rseOnSendConsoleMessage.Call("Player is Targeting!");
                 cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
                 cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
                 lastDirection = 0f;
@@ -238,11 +243,13 @@ public class S_CameraManager : MonoBehaviour
             case ModeCamera.Bridge:
                 if (oldMode == ModeCamera.Player)
                 {
+                    rseOnSendConsoleMessage.Call("Player is Targeting!");
                     oldMode = ModeCamera.Rail;
                     newMode = ModeCamera.Player;
                 }
                 else
                 {
+                    rseOnSendConsoleMessage.Call("Player Stop Targeting!");
                     oldMode = ModeCamera.Player;
                     newMode = ModeCamera.Rail;
                 }

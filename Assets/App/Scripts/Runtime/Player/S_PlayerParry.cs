@@ -21,6 +21,7 @@ public class S_PlayerParry : MonoBehaviour
     [Header("Output")]
     [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     float _parryDuration => _playerStats.Value.parryDuration;
 
@@ -52,6 +53,8 @@ public class S_PlayerParry : MonoBehaviour
     {
         if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false || _parryUp == false) return;
         _onPlayerAddState.Call(PlayerState.Parrying);
+
+        rseOnSendConsoleMessage.Call("Player Pary!");
 
         if (_parryCoroutine != null)
         {

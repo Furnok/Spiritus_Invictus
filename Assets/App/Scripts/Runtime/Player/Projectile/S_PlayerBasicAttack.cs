@@ -32,6 +32,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
     [SerializeField] RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
     [SerializeField] RSE_OnAttackStartPerformed _onAttackStartPerformed;
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     Coroutine _attackChargeCoroutine;
 
@@ -103,12 +104,16 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         if (_attackChargeCoroutine != null) StopCoroutine(_attackChargeCoroutine);
         _attackChargeCoroutine = StartCoroutine(ChargeRoutine());
+
+        rseOnSendConsoleMessage.Call("Player Start Attacking!");
     }
 
     void OnAttackReleased()
     {
         _isHolding = false;
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
+
+        rseOnSendConsoleMessage.Call("Player Launch Attack!");
     }
 
     //private void StartStepDuration()
