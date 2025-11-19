@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIMainMenu : MonoBehaviour
@@ -74,7 +75,10 @@ public class S_UIMainMenu : MonoBehaviour
     {
         rseOnDataTemp.action += SetupMenu;
 
-        rseOnShowMouseCursor.Call();
+        if (Gamepad.current == null)
+        {
+            rseOnShowMouseCursor.Call();
+        }
 
         StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
         StartCoroutine(S_Utils.DelayFrame(() => rsoInGame.Value = false));

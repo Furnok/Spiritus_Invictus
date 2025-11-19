@@ -1,7 +1,8 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
-using System;
 
 [CustomPropertyDrawer(typeof(S_AnimationNameAttribute))]
 public class S_AnimationNameAttributeEditor : PropertyDrawer
@@ -17,7 +18,6 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        // Get the target MonoBehaviour
         if (!(property.serializedObject.targetObject is MonoBehaviour mb))
         {
             EditorGUI.LabelField(position, label.text, "Target is not a MonoBehaviour.");
@@ -62,15 +62,25 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
         }
 
         string[] parameterNames = Array.ConvertAll(parameters, p => p.name);
-        int selectedIndex = Array.IndexOf(parameterNames, property.stringValue);
 
+        List<string> namesWithNone = new List<string>();
+        namesWithNone.Add("None");
+        namesWithNone.AddRange(parameterNames);
+
+        int selectedIndex = Array.IndexOf(namesWithNone.ToArray(), property.stringValue);
         if (selectedIndex < 0)
-        {
             selectedIndex = 0;
-        }
 
-        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, parameterNames);
-        property.stringValue = parameterNames[newIndex];
+        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, namesWithNone.ToArray());
+
+        if (newIndex == 0)
+        {
+            property.stringValue = "";
+        }
+        else
+        {
+            property.stringValue = parameterNames[newIndex - 1];
+        }
 
         EditorGUI.EndProperty();
     }

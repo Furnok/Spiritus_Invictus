@@ -3,6 +3,7 @@ using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIGameManager : MonoBehaviour
@@ -294,7 +295,10 @@ public class S_UIGameManager : MonoBehaviour
     {
         if (!isInConsole)
         {
-            rseOnShowMouseCursor.Call();
+            if (Gamepad.current == null)
+            {
+                rseOnShowMouseCursor.Call();
+            }
 
             RuntimeManager.PlayOneShot(uiSound);
 

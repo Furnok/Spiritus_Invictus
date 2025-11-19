@@ -3,6 +3,7 @@ using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UISettings : MonoBehaviour
@@ -81,6 +82,9 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private RSE_OnCloseWindow rseOnCloseWindow;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -92,6 +96,11 @@ public class S_UISettings : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerPause.action += CloseEscape;
+
+        if (Gamepad.current == null)
+        {
+            rseOnShowMouseCursor.Call();
+        }
 
         if (defaultPanelSet != null)
         {
@@ -170,15 +179,18 @@ public class S_UISettings : MonoBehaviour
         textAudio.color = Color.white;
     }
 
-    public void OnDropdownClicked()
+    public void OnDropdownClicked(Selectable uiElement)
     {
-        GameObject blocker = transform.root.Find("Blocker")?.gameObject;
-        if (blocker != null)
+        if (uiElement.interactable)
         {
-            Button button = blocker.GetComponent<Button>();
-            if (button != null)
+            GameObject blocker = transform.root.Find("Blocker")?.gameObject;
+            if (blocker != null)
             {
-                button.onClick.AddListener(CloseDropDown);
+                Button button = blocker.GetComponent<Button>();
+                if (button != null)
+                {
+                    button.onClick.AddListener(CloseDropDown);
+                }
             }
         }
     }

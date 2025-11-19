@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 using UnityEditorInternal;
+using UnityEngine;
 
 [CustomPropertyDrawer(typeof(S_TagNameAttribute))]
 public class S_TagNameAttributeEditor : PropertyDrawer
 {
-    private static string[] allTags;
-
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
@@ -18,21 +17,26 @@ public class S_TagNameAttributeEditor : PropertyDrawer
         }
         else
         {
-            // Get All Unity Tags
-            if (allTags == null || allTags.Length == 0)
-            {
-                allTags = InternalEditorUtility.tags;
-            }
+            string[] allTags = InternalEditorUtility.tags;
 
-            // Find the Index of the Current Tag
-            int selectedIndex = Array.IndexOf(allTags, property.stringValue);
+            List<string> namesWithNone = new List<string>();
+            namesWithNone.Add("None");
+            namesWithNone.AddRange(allTags);
 
+            int selectedIndex = Array.IndexOf(namesWithNone.ToArray(), property.stringValue);
             if (selectedIndex < 0)
-            {
                 selectedIndex = 0;
-            }
 
-            property.stringValue = allTags[EditorGUI.Popup(position, label.text, selectedIndex, allTags)];
+            int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, namesWithNone.ToArray());
+
+            if (newIndex == 0)
+            {
+                property.stringValue = "";
+            }
+            else
+            {
+                property.stringValue = allTags[newIndex - 1];
+            }
         }
 
         EditorGUI.EndProperty();

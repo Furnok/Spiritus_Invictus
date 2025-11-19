@@ -1,6 +1,7 @@
 ﻿using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class S_UICredits : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class S_UICredits : MonoBehaviour
     [SerializeField] private RSE_OnCloseWindow rseOnCloseWindow;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
@@ -29,6 +33,11 @@ public class S_UICredits : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerPause.action += CloseEscape;
+
+        if (Gamepad.current != null)
+        {
+            rseOnShowMouseCursor.Call();
+        }
 
         isClosing = false;
     }

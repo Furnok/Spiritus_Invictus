@@ -1,10 +1,10 @@
 ﻿using DG.Tweening;
-using FMOD;
 using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIExtract : MonoBehaviour
@@ -63,16 +63,21 @@ public class S_UIExtract : MonoBehaviour
     private Tween textDisplay = null;
     private Tween scrollTween = null;
     private bool isClosing = false;
+    private bool isInitialise = false;
+    private int lastSoundFrame = -1;
 
     private void OnEnable()
     {
         rseOnDisplayExtract.action += DisplayTextContent;
         rseOnPlayerPause.action += CloseEscape;
 
-        rseOnShowMouseCursor.Call();
+        if (Gamepad.current == null)
+        {
+            rseOnShowMouseCursor.Call();
+        }
 
         scrollRect.verticalNormalizedPosition = 1;
-        isClosing = false;
+        StartCoroutine(S_Utils.Delay(0.1f, () => isInitialise = true));
     }
 
     private void OnDisable()
@@ -87,6 +92,8 @@ public class S_UIExtract : MonoBehaviour
         scrollTween?.Kill();
         textDisplay = null;
         scrollTween = null;
+        isClosing = false;
+        isInitialise = false;
     }
 
     public void OnScrollChanged()
@@ -109,9 +116,11 @@ public class S_UIExtract : MonoBehaviour
             switch (direction)
             {
                 case MoveDirection.Up:
+                    RuntimeManager.PlayOneShot(uiSound);
                     OnScrollChanged();
                     break;
                 case MoveDirection.Down:
+                    RuntimeManager.PlayOneShot(uiSound);
                     OnScrollChanged();
                     break;
                 default:
@@ -144,6 +153,20 @@ public class S_UIExtract : MonoBehaviour
             rseOnCloseWindow.Call(gameObject);
             rsoNavigation.Value.selectableFocus = null;
             rseOnResetFocus.Call();
+        }
+    }
+
+    public void SliderAudio(Selectable uiElement)
+    {
+        if (uiElement.interactable && Gamepad.current != null && isInitialise && userIsScrolling)
+        {
+
+            if (lastSoundFrame == Time.frameCount)
+                return;
+
+            lastSoundFrame = Time.frameCount;
+
+            RuntimeManager.PlayOneShot(uiSound);
         }
     }
 

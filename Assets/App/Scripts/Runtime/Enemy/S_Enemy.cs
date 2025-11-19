@@ -121,7 +121,6 @@ public class S_Enemy : MonoBehaviour
     private GameObject target = null;
     private bool isChase = false;
     private bool isPatrolling = false;
-    private bool lastMoveState = false;
     private bool isDead = false;
     private S_ClassAnimationsCombos combo;
 
@@ -230,7 +229,6 @@ public class S_Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         bool isMoving = navMeshAgent.velocity.magnitude > 0.1f;
-        lastMoveState = isMoving;
         animator.SetBool(moveParam, isMoving);
     }
 

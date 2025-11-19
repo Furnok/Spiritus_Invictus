@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -69,7 +70,10 @@ public class S_UIMenu : MonoBehaviour
     {
         rseOnPlayerPause.action += CloseEscape;
 
-        rseOnShowMouseCursor.Call();
+        if (Gamepad.current == null)
+        {
+            rseOnShowMouseCursor.Call();
+        }
 
         isTransit = false;
     }
