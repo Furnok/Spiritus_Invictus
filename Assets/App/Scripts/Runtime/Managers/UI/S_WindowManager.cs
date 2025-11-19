@@ -2,6 +2,7 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -73,6 +74,9 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_GameInPause rsoGameInPause;
 
     [TabGroup("Outputs")]
@@ -83,6 +87,9 @@ public class S_WindowManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InConsole rsoInConsole;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
@@ -153,6 +160,21 @@ public class S_WindowManager : MonoBehaviour
 
         if (rsoInConsole.Value)
         {
+            if (rsoNavigation.Value.selectablePressOld != null)
+            {
+                rseOnResetFocus.Call();
+                rsoNavigation.Value.selectableDefault = rsoNavigation.Value.selectablePressOld;
+                rsoNavigation.Value.selectableFocus = rsoNavigation.Value.selectablePressOld;
+                rsoNavigation.Value.selectablePressOld = null;
+                rsoNavigation.Value.selectableDefault.Select();
+            }
+            else
+            {
+                rsoNavigation.Value.selectableDefault = null;
+                rseOnResetFocus.Call();
+                rsoNavigation.Value.selectableFocus = null;
+            }
+
             rseOnHideMouseCursor.Call();
 
             if (rsoGameInPause.Value)

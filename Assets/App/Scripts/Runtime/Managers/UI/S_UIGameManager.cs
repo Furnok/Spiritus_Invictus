@@ -2,6 +2,7 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
+using Unity.Android.Gradle.Manifest;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -72,6 +73,9 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private GameObject consoleBackgroundWindow;
 
+    [TabGroup("References")]
+    [SerializeField] private Selectable buttonSend;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
@@ -112,6 +116,9 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PreconsumedConviction rsoPreconsumedConviction;
 
     [TabGroup("Outputs")]
@@ -122,6 +129,9 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_GameInPause rsoGameInPause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
@@ -309,6 +319,11 @@ public class S_UIGameManager : MonoBehaviour
     {
         if (!rsoConsoleDisplay.Value)
         {
+            rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectableFocus;
+            rsoNavigation.Value.selectableDefault = null;
+            rseOnResetFocus.Call();
+            rsoNavigation.Value.selectableFocus = null;
+
             if (Gamepad.current == null)
             {
                 rseOnShowMouseCursor.Call();
@@ -332,6 +347,14 @@ public class S_UIGameManager : MonoBehaviour
         {
             if (!rsoInConsole.Value)
             {
+                rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectableFocus;
+                rsoNavigation.Value.selectableDefault = null;
+                rseOnResetFocus.Call();
+                rsoNavigation.Value.selectableFocus = null;
+
+                rsoNavigation.Value.selectableDefault = buttonSend;
+                buttonSend?.Select();
+
                 if (Gamepad.current == null)
                 {
                     rseOnShowMouseCursor.Call();
@@ -347,6 +370,21 @@ public class S_UIGameManager : MonoBehaviour
             }
             else
             {
+                if (rsoNavigation.Value.selectablePressOld != null)
+                {
+                    rseOnResetFocus.Call();
+                    rsoNavigation.Value.selectableDefault = rsoNavigation.Value.selectablePressOld;
+                    rsoNavigation.Value.selectableFocus = rsoNavigation.Value.selectablePressOld;
+                    rsoNavigation.Value.selectablePressOld = null;
+                    rsoNavigation.Value.selectableDefault.Select();
+                }
+                else
+                {
+                    rsoNavigation.Value.selectableDefault = null;
+                    rseOnResetFocus.Call();
+                    rsoNavigation.Value.selectableFocus = null;
+                }
+
                 RuntimeManager.PlayOneShot(uiSound);
 
                 consoleWindow.GetComponent<CanvasGroup>()?.DOKill();

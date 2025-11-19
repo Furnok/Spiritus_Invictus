@@ -69,7 +69,7 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
-    private bool isTransit = false;
+    private bool isTransit = true;
 
     private void OnEnable()
     {
