@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_ConsoleManager : MonoBehaviour
@@ -72,8 +73,11 @@ public class S_ConsoleManager : MonoBehaviour
 
     public void ButtonSendInput()
     {
-        rseOnResetFocus.Call();
-        rsoNavigation.Value.selectableFocus = null;
+        if (Gamepad.current == null)
+        {
+            rseOnResetFocus.Call();
+            rsoNavigation.Value.selectableFocus = null;
+        }
 
         string message = inputField.text;
         if (string.IsNullOrWhiteSpace(message))

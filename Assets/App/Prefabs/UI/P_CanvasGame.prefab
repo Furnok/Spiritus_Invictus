@@ -2702,7 +2702,7 @@ MonoBehaviour:
   m_LineLimit: 0
   isAlert: 0
   m_InputValidator: {fileID: 0}
-  m_ShouldActivateOnSelect: 1
+  m_ShouldActivateOnSelect: 0
 --- !u!114 &5653296702802346657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11274,6 +11274,7 @@ MonoBehaviour:
   consoleBackgroundWindow: {fileID: 8577294411756177996}
   fadeWindow: {fileID: 6634289446063718054}
   imageFade: {fileID: 8897202944036720791}
+  inputField: {fileID: 3350546282920948406}
   rseOnOpenWindow: {fileID: 11400000, guid: d0c2337b888b70e458b3529f073d1589, type: 2}
   rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
   rseOnCloseAllWindows: {fileID: 11400000, guid: c88a81ef8edc4ec47964039b13b9935d, type: 2}
@@ -23732,6 +23733,7 @@ GameObject:
   - component: {fileID: 345534774215065711}
   - component: {fileID: 5868850904807209718}
   - component: {fileID: 5166900705749789137}
+  - component: {fileID: 6612586913179549369}
   m_Layer: 5
   m_Name: ContentConsole
   m_TagString: Untagged
@@ -23786,6 +23788,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rseOnShowMouseCursor: {fileID: 11400000, guid: 677eb2460a6811943b20cd8bbfcb572b, type: 2}
   rsoConsoleDisplay: {fileID: 11400000, guid: b2b28a67ee40be44db63f313f51179d5, type: 2}
+--- !u!114 &6612586913179549369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7537740520713092321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50c7431c1acf8de4daf77317d39a40b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultFocusSelectable: {fileID: 1290266760650954846}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
 --- !u!1 &7559096640153837965
 GameObject:
   m_ObjectHideFlags: 0

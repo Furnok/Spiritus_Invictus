@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using FMODUnity;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +31,10 @@ public class S_WindowManager : MonoBehaviour
     [TabGroup("References")]
     [Title("Images")]
     [SerializeField] private Image imageFade;
+
+    [TabGroup("References")]
+    [Title("Console")]
+    [SerializeField] private TMP_InputField inputField;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
@@ -141,6 +146,11 @@ public class S_WindowManager : MonoBehaviour
 
     private void PauseGame()
     {
+        if (inputField.isFocused)
+        {
+            return;
+        }
+
         if (rsoInConsole.Value)
         {
             rseOnHideMouseCursor.Call();

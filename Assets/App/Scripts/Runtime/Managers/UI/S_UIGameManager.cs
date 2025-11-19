@@ -321,15 +321,12 @@ public class S_UIGameManager : MonoBehaviour
 
             rseOnUIInputEnabled.Call();
 
-            if (!consoleWindow.activeInHierarchy)
-            {
-                consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
+            consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
 
-                consoleWindow.SetActive(true);
+            consoleWindow.SetActive(true);
 
-                consoleWindow.GetComponent<CanvasGroup>().alpha = 0f;
-                consoleWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
-            }
+            consoleWindow.GetComponent<CanvasGroup>().alpha = 0f;
+            consoleWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
         }
         else
         {
