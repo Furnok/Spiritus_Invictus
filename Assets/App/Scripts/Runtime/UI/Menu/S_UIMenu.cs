@@ -62,6 +62,9 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     private bool isTransit = false;
@@ -87,7 +90,7 @@ public class S_UIMenu : MonoBehaviour
 
     private void CloseEscape()
     {
-        if (rsoCurrentWindows.Value[^1] == gameObject)
+        if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
         {
             RuntimeManager.PlayOneShot(uiSound);
 

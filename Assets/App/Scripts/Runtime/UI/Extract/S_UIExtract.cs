@@ -58,6 +58,9 @@ public class S_UIExtract : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
     private bool displayText = false;
     private bool userIsScrolling = false;
     private Tween textDisplay = null;
@@ -133,7 +136,7 @@ public class S_UIExtract : MonoBehaviour
     {
         if (!isClosing)
         {
-            if (rsoCurrentWindows.Value[^1] == gameObject)
+            if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
             {
                 RuntimeManager.PlayOneShot(uiSound);
 

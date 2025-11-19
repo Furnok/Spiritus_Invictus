@@ -22,6 +22,9 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private GameObject gameWindow;
 
     [TabGroup("References")]
+    [SerializeField] private GameObject consoleBackgroundWindow;
+
+    [TabGroup("References")]
     [SerializeField] private GameObject fadeWindow;
 
     [TabGroup("References")]
@@ -59,6 +62,12 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private RSE_OnGamePause rseOnGamePause;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_GameInPause rsoGameInPause;
 
     [TabGroup("Outputs")]
@@ -66,6 +75,9 @@ public class S_WindowManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
@@ -129,6 +141,31 @@ public class S_WindowManager : MonoBehaviour
 
     private void PauseGame()
     {
+        if (rsoInConsole.Value)
+        {
+            rseOnHideMouseCursor.Call();
+
+            if (rsoGameInPause.Value)
+            {
+                rseOnUIInputEnabled.Call();
+
+                rseOnShowMouseCursor.Call();
+            }
+            else
+            {
+                rseOnGameInputEnabled.Call();
+            }
+            consoleBackgroundWindow.GetComponent<CanvasGroup>().alpha = 1f;
+            consoleBackgroundWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            {
+                consoleBackgroundWindow.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            });
+
+            StartCoroutine(S_Utils.DelayFrame(() => rsoInConsole.Value = false));
+
+            return;
+        }
+
         if (rsoInGame.Value && rsoCurrentWindows.Value.Count < 1)
         {
             if (!menuWindow.activeInHierarchy)

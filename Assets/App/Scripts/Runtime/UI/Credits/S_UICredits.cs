@@ -28,6 +28,9 @@ public class S_UICredits : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
     private bool isClosing = false;
 
     private void OnEnable()
@@ -53,7 +56,7 @@ public class S_UICredits : MonoBehaviour
     {
         if (!isClosing)
         {
-            if (rsoCurrentWindows.Value[^1] == gameObject)
+            if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
             {
                 RuntimeManager.PlayOneShot(uiSound);
 

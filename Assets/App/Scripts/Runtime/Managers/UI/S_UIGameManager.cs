@@ -2,6 +2,7 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -68,6 +69,9 @@ public class S_UIGameManager : MonoBehaviour
     [Title("Console")]
     [SerializeField] private GameObject consoleWindow;
 
+    [TabGroup("References")]
+    [SerializeField] private GameObject consoleBackgroundWindow;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
@@ -111,6 +115,15 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private RSO_PreconsumedConviction rsoPreconsumedConviction;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_ConsoleDisplay rsoConsoleDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_GameInPause rsoGameInPause;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
 
     [TabGroup("Outputs")]
@@ -130,10 +143,11 @@ public class S_UIGameManager : MonoBehaviour
     private Tween preconvictionTween = null;
     private Tween skipTween = null;
 
-    private bool isInConsole = false;
-
     private void Awake()
     {
+        rsoConsoleDisplay.Value = new();
+        rsoInConsole.Value = new();
+
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
         sliderHealth.value = sliderHealth.maxValue;
 
@@ -293,7 +307,7 @@ public class S_UIGameManager : MonoBehaviour
 
     private void Console()
     {
-        if (!isInConsole)
+        if (!rsoConsoleDisplay.Value)
         {
             if (Gamepad.current == null)
             {
@@ -302,7 +316,8 @@ public class S_UIGameManager : MonoBehaviour
 
             RuntimeManager.PlayOneShot(uiSound);
 
-            isInConsole = true;
+            rsoConsoleDisplay.Value = true;
+            rsoInConsole.Value = true;
 
             rseOnUIInputEnabled.Call();
 
@@ -318,11 +333,49 @@ public class S_UIGameManager : MonoBehaviour
         }
         else
         {
-            rseOnHideMouseCursor.Call();
+            if (!rsoInConsole.Value)
+            {
+                if (Gamepad.current == null)
+                {
+                    rseOnShowMouseCursor.Call();
+                }
 
-            isInConsole = false;
+                rsoInConsole.Value = true;
 
-            rseOnGameInputEnabled.Call();
+                rseOnUIInputEnabled.Call();
+
+                consoleBackgroundWindow.GetComponent<CanvasGroup>().alpha = 0f;
+                consoleBackgroundWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+                consoleBackgroundWindow.GetComponent<CanvasGroup>().blocksRaycasts = true;
+            }
+            else
+            {
+                RuntimeManager.PlayOneShot(uiSound);
+
+                consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
+
+                consoleWindow.GetComponent<CanvasGroup>().alpha = 1f;
+                consoleWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+                {
+                    rseOnHideMouseCursor.Call();
+
+                    rsoConsoleDisplay.Value = false;
+                    rsoInConsole.Value = false;
+
+                    if (rsoGameInPause.Value)
+                    {
+                        rseOnUIInputEnabled.Call();
+
+                        rseOnShowMouseCursor.Call();
+                    }
+                    else
+                    {
+                        rseOnGameInputEnabled.Call();
+                    }
+
+                    consoleWindow.SetActive(false);
+                });
+            }
         }
     }
 }

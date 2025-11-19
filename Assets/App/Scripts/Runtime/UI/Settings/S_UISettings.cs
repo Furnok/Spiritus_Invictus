@@ -90,6 +90,9 @@ public class S_UISettings : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
     private GameObject currentPanelSet = null;
     private bool isClosing = false;
 
@@ -202,7 +205,7 @@ public class S_UISettings : MonoBehaviour
 
     private void CloseEscape()
     {
-        if (dropDownLanguages?.GetComponent<TMP_Dropdown>()?.IsExpanded == true || dropDownResolutions?.GetComponent<TMP_Dropdown>()?.IsExpanded == true)
+        if (rsoInConsole.Value && dropDownLanguages?.GetComponent<TMP_Dropdown>()?.IsExpanded == true || dropDownResolutions?.GetComponent<TMP_Dropdown>()?.IsExpanded == true)
         {
             return;
         }
