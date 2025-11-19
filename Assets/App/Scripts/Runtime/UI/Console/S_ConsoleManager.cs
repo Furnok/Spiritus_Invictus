@@ -1,14 +1,15 @@
-﻿using Sirenix.OdinInspector;
-using System.Collections;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using TMPro;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_ConsoleManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("References")]
     [Title("InputField")]
     [SerializeField] private TMP_InputField inputField;
@@ -29,7 +30,6 @@ public class S_ConsoleManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
-    private bool isButton = false;
     private bool isInputField = false;
 
     private void OnEnable()
@@ -49,21 +49,25 @@ public class S_ConsoleManager : MonoBehaviour
 
     public void InputFieldSendInput()
     {
-        StartCoroutine(S_Utils.Delay(0.1f, () =>
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            if (!isButton)
+            rseOnResetFocus.Call();
+            rsoNavigation.Value.selectableFocus = null;
+
+            string message = inputField.text;
+            if (string.IsNullOrWhiteSpace(message))
             {
-                rseOnResetFocus.Call();
-                rsoNavigation.Value.selectableFocus = null;
-
-                string message = inputField.text;
-                if (string.IsNullOrWhiteSpace(message)) return;
-
-                isButton = false;
-                isInputField = true;
-                Message(message);
+                inputField.text = "";
+                inputField.Select();
+                inputField.caretPosition = 0;
+                return;
             }
-        }));
+
+            RuntimeManager.PlayOneShot(uiSound);
+
+            isInputField = true;
+            Message(message);
+        }
     }
 
     public void ButtonSendInput()
@@ -72,9 +76,13 @@ public class S_ConsoleManager : MonoBehaviour
         rsoNavigation.Value.selectableFocus = null;
 
         string message = inputField.text;
-        if (string.IsNullOrWhiteSpace(message)) return;
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            inputField.text = "";
+            inputField.caretPosition = 0;
+            return;
+        }
 
-        isButton = true;
         isInputField = false;
         Message(message);
     }
@@ -91,7 +99,6 @@ public class S_ConsoleManager : MonoBehaviour
                 inputField.caretPosition = 0;
             }
 
-            isButton = false;
             isInputField = false;
         }));
     }
