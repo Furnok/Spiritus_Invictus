@@ -353,7 +353,11 @@ public class S_UIGameManager : MonoBehaviour
                 rsoNavigation.Value.selectableFocus = null;
 
                 rsoNavigation.Value.selectableDefault = buttonSend;
-                buttonSend?.Select();
+
+                if (Gamepad.current != null)
+                {
+                    buttonSend?.Select();
+                }
 
                 if (Gamepad.current == null)
                 {
@@ -374,9 +378,14 @@ public class S_UIGameManager : MonoBehaviour
                 {
                     rseOnResetFocus.Call();
                     rsoNavigation.Value.selectableDefault = rsoNavigation.Value.selectablePressOld;
-                    rsoNavigation.Value.selectableFocus = rsoNavigation.Value.selectablePressOld;
+
+                    if (Gamepad.current != null)
+                    {
+                        rsoNavigation.Value.selectableFocus = rsoNavigation.Value.selectablePressOld;
+                        rsoNavigation.Value.selectableDefault.Select();
+                    }
+
                     rsoNavigation.Value.selectablePressOld = null;
-                    rsoNavigation.Value.selectableDefault.Select();
                 }
                 else
                 {
@@ -401,7 +410,10 @@ public class S_UIGameManager : MonoBehaviour
                     {
                         rseOnUIInputEnabled.Call();
 
-                        rseOnShowMouseCursor.Call();
+                        if (Gamepad.current == null)
+                        {
+                            rseOnShowMouseCursor.Call();
+                        }
                     }
                     else
                     {

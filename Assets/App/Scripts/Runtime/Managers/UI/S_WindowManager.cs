@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using Unity.Android.Gradle.Manifest;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
@@ -164,9 +165,15 @@ public class S_WindowManager : MonoBehaviour
             {
                 rseOnResetFocus.Call();
                 rsoNavigation.Value.selectableDefault = rsoNavigation.Value.selectablePressOld;
-                rsoNavigation.Value.selectableFocus = rsoNavigation.Value.selectablePressOld;
+
+                if (Gamepad.current != null)
+                {
+                    rsoNavigation.Value.selectableFocus = rsoNavigation.Value.selectablePressOld;
+
+                    rsoNavigation.Value.selectableDefault.Select();
+                }
+
                 rsoNavigation.Value.selectablePressOld = null;
-                rsoNavigation.Value.selectableDefault.Select();
             }
             else
             {
@@ -181,12 +188,16 @@ public class S_WindowManager : MonoBehaviour
             {
                 rseOnUIInputEnabled.Call();
 
-                rseOnShowMouseCursor.Call();
+                if (Gamepad.current == null)
+                {
+                    rseOnShowMouseCursor.Call();
+                }
             }
             else
             {
                 rseOnGameInputEnabled.Call();
             }
+
             consoleBackgroundWindow.GetComponent<CanvasGroup>().alpha = 1f;
             consoleBackgroundWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {

@@ -165,6 +165,7 @@ public class S_CursorManager : MonoBehaviour
         if (uiElement != null && uiElement.interactable && Gamepad.current != null)
         {
             uiElement.Select();
+            rsoNavigation.Value.selectableFocus = uiElement;
         }
     }
 
@@ -176,5 +177,6 @@ public class S_CursorManager : MonoBehaviour
     private void ResetFocus()
     {
         EventSystem.current.SetSelectedGameObject(null);
+        rsoNavigation.Value.selectableFocus = null;
     }
 }
