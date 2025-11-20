@@ -31,6 +31,10 @@ public class S_UIExtract : MonoBehaviour
     [Title("Scroll View")]
     [SerializeField] private ScrollRect scrollRect;
 
+    [TabGroup("References")]
+    [Title("Slider")]
+    [SerializeField] private Scrollbar sliderScroll;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
 
@@ -66,8 +70,8 @@ public class S_UIExtract : MonoBehaviour
     private Tween textDisplay = null;
     private Tween scrollTween = null;
     private bool isClosing = false;
-    private bool isInitialise = false;
     private int lastSoundFrame = -1;
+    private float lastValue = 0;
 
     private void OnEnable()
     {
@@ -80,7 +84,6 @@ public class S_UIExtract : MonoBehaviour
         }
 
         scrollRect.verticalNormalizedPosition = 1;
-        StartCoroutine(S_Utils.Delay(0.1f, () => isInitialise = true));
     }
 
     private void OnDisable()
@@ -96,7 +99,6 @@ public class S_UIExtract : MonoBehaviour
         textDisplay = null;
         scrollTween = null;
         isClosing = false;
-        isInitialise = false;
     }
 
     public void OnScrollChanged()
@@ -106,29 +108,6 @@ public class S_UIExtract : MonoBehaviour
             userIsScrolling = true;
             scrollTween?.Kill();
             scrollTween = null;
-        }
-    }
-
-    public void MoveScroll(BaseEventData eventData)
-    {
-        if (displayText && !userIsScrolling)
-        {
-            AxisEventData axisData = eventData as AxisEventData;
-            MoveDirection direction = axisData.moveDir;
-
-            switch (direction)
-            {
-                case MoveDirection.Up:
-                    RuntimeManager.PlayOneShot(uiSound);
-                    OnScrollChanged();
-                    break;
-                case MoveDirection.Down:
-                    RuntimeManager.PlayOneShot(uiSound);
-                    OnScrollChanged();
-                    break;
-                default:
-                    break;
-            }
         }
     }
 
@@ -159,17 +138,44 @@ public class S_UIExtract : MonoBehaviour
         }
     }
 
-    public void SliderAudio(Selectable uiElement)
+    public void SliderAudio(BaseEventData eventData)
     {
-        if (uiElement.interactable && Gamepad.current != null && isInitialise && userIsScrolling)
+        if (Gamepad.current != null)
         {
-
             if (lastSoundFrame == Time.frameCount)
                 return;
 
-            lastSoundFrame = Time.frameCount;
+            AxisEventData axisData = eventData as AxisEventData;
+            MoveDirection direction = axisData.moveDir;
+            float roundedValue = 0;
 
-            RuntimeManager.PlayOneShot(uiSound);
+            switch (direction)
+            {
+                case MoveDirection.Up:
+                    lastSoundFrame = Time.frameCount;
+
+                    roundedValue = Mathf.Round(sliderScroll.value * 1000f) / 1000f;
+                    if (roundedValue != lastValue && sliderScroll.size < 1)
+                    {
+                        OnScrollChanged();
+                        lastValue = roundedValue;
+                        RuntimeManager.PlayOneShot(uiSound);
+                    }
+                    break;
+                case MoveDirection.Down:
+                    lastSoundFrame = Time.frameCount;
+
+                    roundedValue = Mathf.Round(sliderScroll.value * 1000f) / 1000f;
+                    if (roundedValue != lastValue && sliderScroll.size < 1)
+                    {
+                        OnScrollChanged();
+                        lastValue = roundedValue;
+                        RuntimeManager.PlayOneShot(uiSound);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

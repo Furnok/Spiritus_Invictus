@@ -99,6 +99,7 @@ public class S_ConsoleManager : MonoBehaviour
         {
             if (isInputField)
             {
+                inputField.ActivateInputField();
                 inputField.Select();
                 inputField.caretPosition = 0;
             }

@@ -859,7 +859,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1619570699241150269}
   m_HandleRect: {fileID: 548077864386808512}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1019,6 +1019,22 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 4511556606654488145}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 11
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5166900705749789137}
+          m_TargetAssemblyTypeName: S_UIConsole, Assembly-CSharp
+          m_MethodName: SliderAudio
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -2917,10 +2933,10 @@ RectTransform:
   - {fileID: 3472565491479094710}
   m_Father: {fileID: 8542389634413164000}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -282}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2691734682076169230
 CanvasRenderer:
@@ -8364,10 +8380,10 @@ RectTransform:
   - {fileID: 7291433687742413801}
   m_Father: {fileID: 8542389634413164000}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -200}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2245431103740501840
 CanvasRenderer:
@@ -9342,19 +9358,7 @@ MonoBehaviour:
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4501364209175856146}
-        m_TargetAssemblyTypeName: S_UIExtract, Assembly-CSharp
-        m_MethodName: SliderAudio
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 70967358370191768}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &4041948781120207603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9552,7 +9556,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 4501364209175856146}
           m_TargetAssemblyTypeName: S_UIExtract, Assembly-CSharp
-          m_MethodName: MoveScroll
+          m_MethodName: SliderAudio
           m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -13668,10 +13672,10 @@ RectTransform:
   - {fileID: 6023058666861340183}
   m_Father: {fileID: 8542389634413164000}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -118}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5765002136519820054
 CanvasRenderer:
@@ -16820,6 +16824,7 @@ MonoBehaviour:
     Path: event:/UI/UIButton
   textContent: {fileID: 6625801731289928262}
   scrollRect: {fileID: 5308867416541487960}
+  sliderScroll: {fileID: 70967358370191768}
   rseOnDisplayExtract: {fileID: 11400000, guid: ffb1b1dd68c564749b6eed0965d522d7, type: 2}
   rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
   rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
@@ -17590,10 +17595,10 @@ RectTransform:
   - {fileID: 6078589861463129789}
   m_Father: {fileID: 8542389634413164000}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -36}
-  m_SizeDelta: {x: 500, y: 72}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1434700506423112648
 CanvasRenderer:
@@ -23737,8 +23742,8 @@ GameObject:
   m_Component:
   - component: {fileID: 345534774215065711}
   - component: {fileID: 5868850904807209718}
-  - component: {fileID: 5166900705749789137}
   - component: {fileID: 6612586913179549369}
+  - component: {fileID: 5166900705749789137}
   m_Layer: 5
   m_Name: ContentConsole
   m_TagString: Untagged
@@ -23779,20 +23784,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &5166900705749789137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7537740520713092321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8623e585e7f7c6a4abc54ba716da91e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rseOnShowMouseCursor: {fileID: 11400000, guid: 677eb2460a6811943b20cd8bbfcb572b, type: 2}
-  rsoConsoleDisplay: {fileID: 11400000, guid: b2b28a67ee40be44db63f313f51179d5, type: 2}
 --- !u!114 &6612586913179549369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23808,6 +23799,29 @@ MonoBehaviour:
   defaultFocusSelectable: {fileID: 1290266760650954846}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
   rseOnResetCursor: {fileID: 11400000, guid: d671f675122065244b1591034b07ca5f, type: 2}
+--- !u!114 &5166900705749789137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7537740520713092321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8623e585e7f7c6a4abc54ba716da91e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
+  scrollRect: {fileID: 5550413679288304393}
+  sliderScroll: {fileID: 4511556606654488145}
+  rseOnShowMouseCursor: {fileID: 11400000, guid: 677eb2460a6811943b20cd8bbfcb572b, type: 2}
+  rsoConsoleDisplay: {fileID: 11400000, guid: b2b28a67ee40be44db63f313f51179d5, type: 2}
 --- !u!1 &7559096640153837965
 GameObject:
   m_ObjectHideFlags: 0
