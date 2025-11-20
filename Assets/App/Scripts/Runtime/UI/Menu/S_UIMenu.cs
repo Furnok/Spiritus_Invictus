@@ -106,7 +106,6 @@ public class S_UIMenu : MonoBehaviour
         rseOnCloseAllWindows.Call();
         rsoNavigation.Value.selectableDefault = null;
         rseOnResetFocus.Call();
-        rsoNavigation.Value.selectableFocus = null;
         rsoInGame.Value = true;
         rsoGameInPause.Value = false;
         rseOnGamePause.Call(false);

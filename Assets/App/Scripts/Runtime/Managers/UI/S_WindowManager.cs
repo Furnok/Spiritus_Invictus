@@ -179,7 +179,6 @@ public class S_WindowManager : MonoBehaviour
             {
                 rsoNavigation.Value.selectableDefault = null;
                 rseOnResetFocus.Call();
-                rsoNavigation.Value.selectableFocus = null;
             }
 
             rseOnHideMouseCursor.Call();

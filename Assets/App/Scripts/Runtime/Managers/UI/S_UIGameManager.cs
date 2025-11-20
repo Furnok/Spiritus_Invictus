@@ -322,7 +322,6 @@ public class S_UIGameManager : MonoBehaviour
             rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectableFocus;
             rsoNavigation.Value.selectableDefault = null;
             rseOnResetFocus.Call();
-            rsoNavigation.Value.selectableFocus = null;
 
             if (Gamepad.current == null)
             {
@@ -350,7 +349,6 @@ public class S_UIGameManager : MonoBehaviour
                 rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectableFocus;
                 rsoNavigation.Value.selectableDefault = null;
                 rseOnResetFocus.Call();
-                rsoNavigation.Value.selectableFocus = null;
 
                 rsoNavigation.Value.selectableDefault = buttonSend;
 
@@ -391,7 +389,6 @@ public class S_UIGameManager : MonoBehaviour
                 {
                     rsoNavigation.Value.selectableDefault = null;
                     rseOnResetFocus.Call();
-                    rsoNavigation.Value.selectableFocus = null;
                 }
 
                 RuntimeManager.PlayOneShot(uiSound);
