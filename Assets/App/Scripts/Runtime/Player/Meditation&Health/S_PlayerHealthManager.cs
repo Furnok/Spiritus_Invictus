@@ -11,7 +11,7 @@ public class S_PlayerHealthManager : MonoBehaviour
     [SerializeField] private RSO_PlayerCurrentHealth rsoPlayerCurrentHealth;
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
     [SerializeField] private RSE_OnPlayerHealthUpdate rseOnPlayerHealthUpdate;
-    [SerializeField] SSO_DebugPlayer _debugPlayer;
+    [SerializeField] RSO_ConsoleCheats _debugPlayer;
 
     private float maxHealth => ssoPlayerStats.Value.maxHealth;
 

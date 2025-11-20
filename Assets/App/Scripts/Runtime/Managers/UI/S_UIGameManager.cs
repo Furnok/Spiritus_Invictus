@@ -2,6 +2,7 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
+using TMPro;
 using Unity.Android.Gradle.Manifest;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -75,6 +76,9 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private Selectable buttonSend;
+
+    [TabGroup("References")]
+    [SerializeField] private TMP_InputField inputField;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
@@ -390,6 +394,9 @@ public class S_UIGameManager : MonoBehaviour
                     rsoNavigation.Value.selectableDefault = null;
                     rseOnResetFocus.Call();
                 }
+
+                inputField.text = "";
+                inputField.caretPosition = 0;
 
                 RuntimeManager.PlayOneShot(uiSound);
 

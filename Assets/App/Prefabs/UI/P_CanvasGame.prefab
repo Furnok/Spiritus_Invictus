@@ -1627,6 +1627,8 @@ MonoBehaviour:
   rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
   rseOnResetFocus: {fileID: 11400000, guid: 49e933a059aabdf4ab8547deb65c6764, type: 2}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rsoConsoleCheats: {fileID: 11400000, guid: 687c0d8c74f9fdc41aa6ff08b1c72f77, type: 2}
+  ssoConsoleHelper: {fileID: 11400000, guid: 38b1436cd90f9c049b9029aa5c2e9ac3, type: 2}
 --- !u!1 &464415677368092328
 GameObject:
   m_ObjectHideFlags: 0
@@ -11334,6 +11336,7 @@ MonoBehaviour:
   consoleWindow: {fileID: 7537740520713092321}
   consoleBackgroundWindow: {fileID: 8577294411756177996}
   buttonSend: {fileID: 1290266760650954846}
+  inputField: {fileID: 3350546282920948406}
   rseOnDisplayBossHealth: {fileID: 11400000, guid: 052e4c694acd8a444bcd0135bc6f4cea, type: 2}
   rseOnPlayerHealthUpdate: {fileID: 11400000, guid: fc90d1a9f1ffb214ebdffdb1dfd83fa0, type: 2}
   rseOnPlayerConvictionUpdate: {fileID: 11400000, guid: 0e8aa31157b1a9041a3864e8c4d5c728, type: 2}
@@ -21494,7 +21497,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 24
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0

@@ -1,5 +1,6 @@
 ﻿using FMODUnity;
 using Sirenix.OdinInspector;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,7 +32,18 @@ public class S_ConsoleManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_ConsoleCheats rsoConsoleCheats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_ConsoleHelper ssoConsoleHelper;
+
     private bool isInputField = false;
+
+    private void Awake()
+    {
+        rsoConsoleCheats.Value = new();
+    }
 
     private void OnEnable()
     {
@@ -93,7 +105,7 @@ public class S_ConsoleManager : MonoBehaviour
 
     private void Message(string message)
     {
-        UpdateUI(message, true);
+        CheckCommand(message);
 
         StartCoroutine(S_Utils.Delay(0.1f, () =>
         {
@@ -106,6 +118,67 @@ public class S_ConsoleManager : MonoBehaviour
 
             isInputField = false;
         }));
+    }
+
+    private void CheckCommand(string message)
+    {
+        var cmd = ssoConsoleHelper.Value.FirstOrDefault(x => x.command == message);
+
+        if (cmd != null)
+        {
+            if (cmd.command == "/Help")
+            {
+                UpdateUI("Commands", true);
+
+                for (int i = 0; i < ssoConsoleHelper.Value.Count; i++)
+                {
+                    UpdateUI("- " + ssoConsoleHelper.Value[i].command + " => " + ssoConsoleHelper.Value[i].description.GetLocalizedString(), false);
+                }
+            }
+            else if (cmd.command == "/Immortal")
+            {
+                if (!rsoConsoleCheats.Value.cantDie)
+                {
+                    rsoConsoleCheats.Value.cantDie = true;
+                    UpdateUI("Your are now Immortal!", true);
+                }
+                else
+                {
+                    rsoConsoleCheats.Value.cantDie = false;
+                    UpdateUI("Your are not Immortal!", true);
+                }
+            }
+            else if (cmd.command == "/InfinitConviction")
+            {
+                if (!rsoConsoleCheats.Value.infiniteConviction)
+                {
+                    rsoConsoleCheats.Value.infiniteConviction = true;
+                    UpdateUI("Your Conviction is Infinit!", true);
+                }
+                else
+                {
+                    rsoConsoleCheats.Value.infiniteConviction = false;
+                    UpdateUI("Your Conviction is not Infinit!", true);
+                }   
+            }
+            else if (cmd.command == "/Invincible")
+            {
+                if (!rsoConsoleCheats.Value.cantGetttingHit)
+                {
+                    rsoConsoleCheats.Value.cantGetttingHit = true;
+                    UpdateUI("Your are now Invincible!", true);
+                }
+                else
+                {
+                    rsoConsoleCheats.Value.cantGetttingHit = false;
+                    UpdateUI("Your are not Invincible!", true);
+                }
+            }
+        }
+        else
+        {
+            UpdateUI(message, true);
+        }
     }
 
     private void UpdateUI(string message, bool resetInputField)

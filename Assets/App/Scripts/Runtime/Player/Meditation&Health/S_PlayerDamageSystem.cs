@@ -8,7 +8,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] RSO_IsInvicible _isInvicible;
-    [SerializeField] SSO_DebugPlayer _debugPlayer;
+    [SerializeField] RSO_ConsoleCheats _debugPlayer;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerTakeDamage rseOnPlayerTakeDamage;

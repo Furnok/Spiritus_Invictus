@@ -9,7 +9,7 @@ public class S_ConvictionManager : MonoBehaviour
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
     [SerializeField] SSO_PlayerStats _playerStats;
     [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
-    [SerializeField] SSO_DebugPlayer _debugPlayer;
+    [SerializeField] RSO_ConsoleCheats _debugPlayer;
 
     [Header("Input")]
     [SerializeField] RSE_OnHealStart _onHealStart;
