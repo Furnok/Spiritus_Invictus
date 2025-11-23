@@ -10,6 +10,7 @@ public class S_TargetingManager : MonoBehaviour
 
     [Header("Reference")]
     [SerializeField] GameObject _previewIndicatorPrefab;
+    [SerializeField] GameObject _previewSwapIndicatorPrefab;
     [SerializeField] GameObject _lockedIndicatorPrefab;
 
     [Header("Input")]
@@ -43,8 +44,13 @@ public class S_TargetingManager : MonoBehaviour
 
     private GameObject _previewGO;
     private GameObject _lockedGO;
+    private GameObject _swapLeftGO;
+    private GameObject _swapRightGO;
+
     private Transform _previewTargetTransform;
     private Transform _lockedTargetTransfrom;
+    private Transform _swapLeftTargetTransform;
+    private Transform _swapRightTargetTransform;
 
     private void Awake()
     {
@@ -53,8 +59,13 @@ public class S_TargetingManager : MonoBehaviour
         _previewGO = Instantiate(_previewIndicatorPrefab, gameObject.transform);
         _lockedGO = Instantiate(_lockedIndicatorPrefab, gameObject.transform);
 
+        _swapLeftGO = Instantiate(_previewSwapIndicatorPrefab, transform);
+        _swapRightGO = Instantiate(_previewSwapIndicatorPrefab, transform);
+
         _previewGO.SetActive(false);
         _lockedGO.SetActive(false);
+        _swapLeftGO.SetActive(false);
+        _swapRightGO.SetActive(false);
     }
 
     private void OnEnable()
@@ -113,6 +124,9 @@ public class S_TargetingManager : MonoBehaviour
                 _lockedGO.SetActive(false);
 
                 _previewGO.transform.position = _previewTargetTransform.position;
+
+                _swapLeftGO.SetActive(false);
+                _swapRightGO.SetActive(false);
             }
             else if (currentTarget != null)
             {
@@ -129,14 +143,71 @@ public class S_TargetingManager : MonoBehaviour
                 _lockedGO.SetActive(true);
 
                 _lockedGO.transform.position = _lockedTargetTransfrom.position;
+
+                // Swap indicators  
+                var candidates = BuildSwapCandidates();
+
+                GameObject leftTarget = GetSwapTarget(-1f, candidates);
+                GameObject rightTarget = GetSwapTarget(+1f, candidates);
+
+                if (leftTarget != null && rightTarget != null && leftTarget == rightTarget)
+                {
+                    _swapLeftGO.SetActive(false);
+
+                    if (rightTarget.TryGetComponent(out ITargetable t))
+                        _swapRightTargetTransform = t.GetTargetLockOnAnchorTransform();
+                    else
+                        _swapRightTargetTransform = rightTarget.transform;
+
+                    _swapRightGO.SetActive(true);
+                    _swapRightGO.transform.position = _swapRightTargetTransform.position;
+
+                    return;
+                }
+                // left
+                if (leftTarget != null && leftTarget != currentTarget)
+                {
+                    if (leftTarget.TryGetComponent(out ITargetable leftTargetable))
+                        _swapLeftTargetTransform = leftTargetable.GetTargetLockOnAnchorTransform();
+                    else
+                        _swapLeftTargetTransform = leftTarget.transform;
+
+                    _swapLeftGO.SetActive(true);
+                    _swapLeftGO.transform.position = _swapLeftTargetTransform.position;
+                }
+                else
+                {
+                    _swapLeftGO.SetActive(false);
+                }
+
+                // right
+                if (rightTarget != null && rightTarget != currentTarget)
+                {
+                    if (rightTarget.TryGetComponent(out ITargetable rightTargetable))
+                        _swapRightTargetTransform = rightTargetable.GetTargetLockOnAnchorTransform();
+                    else
+                        _swapRightTargetTransform = rightTarget.transform;
+
+                    _swapRightGO.SetActive(true);
+                    _swapRightGO.transform.position = _swapRightTargetTransform.position;
+                }
+                else
+                {
+                    _swapRightGO.SetActive(false);
+                }
+
+
             }
         }
         else
         {
-            if (_previewGO.activeInHierarchy || _lockedGO.activeInHierarchy)
+            if (_previewGO.activeInHierarchy || _lockedGO.activeInHierarchy ||
+            _swapLeftGO.activeInHierarchy || _swapRightGO.activeInHierarchy)
             {
                 _previewGO.SetActive(false);
                 _lockedGO.SetActive(false);
+                _swapLeftGO.SetActive(false);
+                _swapRightGO.SetActive(false);
             }
         }
     }
@@ -472,14 +543,93 @@ public class S_TargetingManager : MonoBehaviour
                 }
             }
         }
-
-        //if (selectedTarget != null)
-        //{
-        //    rsoTargetPosition.Value = selectedTarget.transform.position;
-
-        //    rseOnAnimationBoolValueChange.Call("TargetLock", true);
-        //}
-
         return selectedTarget;
+    }
+
+    private List<(GameObject go, float angle)> BuildSwapCandidates()
+    {
+        List<(GameObject go, float angle)> candidates = new();
+
+        foreach (var target in targetsPossible)
+        {
+            if (target == null) continue;
+            if (_playerCenterTransform == null) return candidates;
+
+            Debug.Log($"Building candidate for target: {target.name}");
+
+            Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value).normalized;
+            float signedAngle = Vector3.SignedAngle(_playerCenterTransform.forward, toTarget, Vector3.up);
+
+            float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
+            Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
+
+            if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+                continue;
+
+            candidates.Add((target, signedAngle));
+        }
+
+        return candidates;
+
+
+    }
+
+    private GameObject GetSwapTarget(float axis, List<(GameObject go, float angle)> candidates)
+    {
+        if (candidates == null || candidates.Count == 0 || currentTarget == null)
+            return null;
+
+        int index = candidates.FindIndex(c => c.go == currentTarget);
+
+        float currentAngle;
+
+        if (index >= 0)
+        {
+            currentAngle = candidates[index].angle;
+        }
+        else
+        {
+            currentAngle = 0f;
+        }
+
+        GameObject bestTarget = null;
+        float bestDelta = float.MaxValue;
+
+        foreach (var (go, angle) in candidates)
+        {
+            if (go == currentTarget) continue;
+
+            float delta = angle - currentAngle;
+
+            if (delta > 180f) delta -= 360f;
+            if (delta < -180f) delta += 360f;
+
+            if (axis > 0f)
+            {
+                if (delta > 0f && delta < bestDelta)
+                {
+                    bestDelta = delta;
+                    bestTarget = go;
+                }
+            }
+            else if (axis < 0f)
+            {
+                if (delta < 0f && Mathf.Abs(delta) < bestDelta)
+                {
+                    bestDelta = Mathf.Abs(delta);
+                    bestTarget = go;
+                }
+            }
+        }
+
+        if (bestTarget == null && candidates.Count > 1)
+        {
+            if (axis > 0f)
+                bestTarget = candidates.OrderBy(c => c.angle).First().go;
+            else if (axis < 0f)
+                bestTarget = candidates.OrderByDescending(c => c.angle).First().go;
+        }
+
+        return bestTarget;
     }
 }
