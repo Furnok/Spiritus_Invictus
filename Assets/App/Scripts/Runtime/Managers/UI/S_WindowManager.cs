@@ -98,6 +98,7 @@ public class S_WindowManager : MonoBehaviour
     private void Awake()
     {
         rsoInGame.Value = true;
+        rsoGameInPause.Value = false;
         rsoCurrentWindows.Value = new();
         fadeWindow.SetActive(true);
     }
