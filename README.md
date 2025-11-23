@@ -1,4 +1,4 @@
-# The_Indomitable_Human_Spirit
+# Spiritus_Invictus
 
 PREREQUISITES: 
 - Operating System: Windows 10 or Later.
