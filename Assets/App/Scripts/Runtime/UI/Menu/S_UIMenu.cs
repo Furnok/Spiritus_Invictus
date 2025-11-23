@@ -56,9 +56,6 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSO_InGame rsoInGame;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_GameInPause rsoGameInPause;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
     [TabGroup("Outputs")]
@@ -107,7 +104,6 @@ public class S_UIMenu : MonoBehaviour
         rsoNavigation.Value.selectableDefault = null;
         rseOnResetFocus.Call();
         rsoInGame.Value = true;
-        rsoGameInPause.Value = false;
         rseOnGamePause.Call(false);
     }
 
@@ -129,7 +125,6 @@ public class S_UIMenu : MonoBehaviour
                 rseOnCloseAllWindows.Call();
                 rsoNavigation.Value.selectableFocus = null;
 
-                rsoGameInPause.Value = false;
                 rseOnGamePause.Call(false);
 
                 Scene currentScene = SceneManager.GetActiveScene();
