@@ -33,7 +33,9 @@ public class S_TimeManager : MonoBehaviour
     {
         _baseFixedDelta = Time.fixedDeltaTime;
         _gameTimeScale = 1f;
-        ApplyTimeScale(false);
+
+        _gameTimeScale = 1f;
+        PauseValueChange(false);
     }
 
     void OnEnable()
@@ -49,22 +51,34 @@ public class S_TimeManager : MonoBehaviour
         _rseOnDodgePerfect.action -= StartPerfectDodgeSlowMotion;
         _rseOnGamePause.action -= PauseValueChange;
         _rseOnParrySuccess.action -= TriggerOnParryCoroutine;
-        ApplyTimeScale(false);
+
+        if (_slowMoCo != null)
+        {
+            StopCoroutine(_slowMoCo);
+            _slowMoCo = null;
+        }
+
+        _gameTimeScale = 1f;
+        _rsoGameInPause.Value = false;
+        ApplyGameplayTimeScale();
     }
+
 
     void PauseValueChange(bool newPauseState)
     {
-        ApplyTimeScale(newPauseState);
+        _rsoGameInPause.Value = newPauseState;
+        ApplyGameplayTimeScale();
     }
 
+    
 
-    void ApplyTimeScale(bool newPauseState)
+    private void ApplyGameplayTimeScale()
     {
-        _rsoGameInPause.Value = newPauseState ? true : false;
-        float effective = newPauseState ? 0f : _gameTimeScale;
+        float effective = _rsoGameInPause.Value ? 0f : _gameTimeScale;
         Time.timeScale = effective;
         Time.fixedDeltaTime = _baseFixedDelta * Mathf.Max(effective, 0.01f);
     }
+
 
     void StartPerfectDodgeSlowMotion()
     {
@@ -77,7 +91,7 @@ public class S_TimeManager : MonoBehaviour
         if (_hitStopDodge > 0f)
         {
             _gameTimeScale = 0f;
-            ApplyTimeScale(true);
+            ApplyGameplayTimeScale();
 
             float hsElapsed = 0f;
             while (hsElapsed < _hitStopDodge)
@@ -90,7 +104,7 @@ public class S_TimeManager : MonoBehaviour
         }
 
         _gameTimeScale = _slowScaleDodge;
-        ApplyTimeScale(false);
+        ApplyGameplayTimeScale();
 
         float elapsed = 0f;
         while (elapsed < _slowDurationDodge)
@@ -109,13 +123,13 @@ public class S_TimeManager : MonoBehaviour
                 t += Time.unscaledDeltaTime;
                 float k = t / _blendOutDodge;
                 _gameTimeScale = Mathf.Lerp(_slowScaleDodge, 1f, k);
-                ApplyTimeScale(false);
+                ApplyGameplayTimeScale();
             }
             yield return null;
         }
 
         _gameTimeScale = 1f;
-        ApplyTimeScale(false);
+        ApplyGameplayTimeScale();
         _slowMoCo = null;
     }
 
@@ -127,7 +141,7 @@ public class S_TimeManager : MonoBehaviour
         float previousGameScale = _gameTimeScale;
 
         _gameTimeScale = 0f;
-        ApplyTimeScale(true);
+        ApplyGameplayTimeScale();
 
         float elapsed = 0f;
         while (elapsed < _hitStopParry)
@@ -139,6 +153,6 @@ public class S_TimeManager : MonoBehaviour
         }
 
         _gameTimeScale = previousGameScale;
-        ApplyTimeScale(false);
+        ApplyGameplayTimeScale();
     }
 }
