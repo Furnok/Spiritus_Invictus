@@ -139,13 +139,6 @@ public class S_PlayerMovement : MonoBehaviour
         //_isInputCanceled = true;
     }
 
-
-
-    private void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         UpdateGround();
@@ -298,13 +291,6 @@ public class S_PlayerMovement : MonoBehaviour
         }
 
         knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact, true));
-
-        _onPlayerAddState.Call(PlayerState.HitReact);
-
-        StartCoroutine(S_Utils.Delay(attackContact.data.knockbackOnParryDuration, () =>
-        {
-            _onPlayerAddState.Call(PlayerState.None);
-        }));
     }
 
     IEnumerator KnockbackCoroutine(AttackContact contact, bool fromParry)

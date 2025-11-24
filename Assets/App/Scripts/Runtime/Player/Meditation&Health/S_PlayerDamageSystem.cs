@@ -62,7 +62,10 @@ public class S_PlayerDamageSystem : MonoBehaviour
 
             _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackHitDuration, () =>
             {
-                _onPlayerAddState.Call(PlayerState.None);
+                if(_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.None) == true)
+                {
+                    _onPlayerAddState.Call(PlayerState.None);
+                }
             }));
 
             StartCoroutine(S_Utils.Delay(attackData.invicibilityDuration, () =>
@@ -75,4 +78,6 @@ public class S_PlayerDamageSystem : MonoBehaviour
         }
         
     }
+
+    
 }

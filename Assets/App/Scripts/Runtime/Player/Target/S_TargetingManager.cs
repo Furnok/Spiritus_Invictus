@@ -555,8 +555,6 @@ public class S_TargetingManager : MonoBehaviour
             if (target == null) continue;
             if (_playerCenterTransform == null) return candidates;
 
-            Debug.Log($"Building candidate for target: {target.name}");
-
             Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value).normalized;
             float signedAngle = Vector3.SignedAngle(_playerCenterTransform.forward, toTarget, Vector3.up);
 

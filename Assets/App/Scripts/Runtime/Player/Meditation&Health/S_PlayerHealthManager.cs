@@ -12,6 +12,9 @@ public class S_PlayerHealthManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
     [SerializeField] private RSE_OnPlayerHealthUpdate rseOnPlayerHealthUpdate;
     [SerializeField] RSO_ConsoleCheats _debugPlayer;
+    [SerializeField] RSE_OnAnimationBoolValueChange _rseOnAnimationBoolValueChange;
+    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
+
 
     private float maxHealth => ssoPlayerStats.Value.maxHealth;
 
@@ -51,6 +54,8 @@ public class S_PlayerHealthManager : MonoBehaviour
         {
             if (_debugPlayer.Value.cantDie == true) return;
             rseOnPlayerDeath.Call();
+            _rseOnAnimationBoolValueChange.Call("isDead", true);
+            _onPlayerAddState.Call(PlayerState.Dying);
         }
     }
 }
