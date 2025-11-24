@@ -9,6 +9,8 @@ public class S_ClassBossAttack
     [Title("Attack Settings")]
     public string attackName;
 
+    public float attackTime;
+
     public bool isAttackDistance;
 
     public float pvBossUnlock;

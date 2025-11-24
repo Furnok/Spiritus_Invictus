@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Behavior;
+using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -98,10 +99,19 @@ public class S_Boss : MonoBehaviour
     private BlackboardVariable<bool> isChasing = null;
     private bool isDead = false;
     private bool isChase = false;
+    private bool isStrafe = false;
     private bool lastMoveState = false;
     private float lastValueHealth;
     private AttackOwned lastAttack;
     private AttackOwned currentAttack;
+
+    [SerializeField] float strafeChangeInterval = 1.5f;
+    [SerializeField] private float strafeRadius = 5f;
+    [SerializeField] float strafeDistance = 2f;
+    [SerializeField] float rotationSpeed = 6f;
+
+    private float nextChangeTime = 0f;
+    private int strafeDirection = 1;
 
     private void Awake()
     {
@@ -159,13 +169,19 @@ public class S_Boss : MonoBehaviour
     }
     private void Start()
     {
-
+        Debug.Log(listAttackOwnedPossibilities.Count);
     }
     private void Update()
     {
         if (isChase && target != null)
         {
             Chase();
+        }
+
+        if(isStrafe && target != null)
+        {
+            
+            Strafing();
         }
     }
     private void FixedUpdate()
@@ -211,7 +227,7 @@ public class S_Boss : MonoBehaviour
                     navMeshAgent.ResetPath();
                     navMeshAgent.velocity = Vector3.zero;
                     behaviorAgent.SetVariableValue("State", S_EnumBossState.Combat);
-                    ExecuteAttack(currentAttack);
+                    StartCoroutine(CooldownAttack(currentAttack));
                     behaviorAgent.Restart();
                 }
                 else
@@ -228,7 +244,7 @@ public class S_Boss : MonoBehaviour
             navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
             behaviorAgent.SetVariableValue("State", S_EnumBossState.Combat);
-            ExecuteAttack(currentAttack);
+            StartCoroutine(CooldownAttack(currentAttack));
             behaviorAgent.Restart();
         }
     }
@@ -236,6 +252,7 @@ public class S_Boss : MonoBehaviour
     {
         if (isChasing != null && isChasing.Value)
         {
+            isStrafe = false;
             navMeshAgent.speed = ssoBossData.Value.walkSpeed;
             animator.SetFloat("MoveSpeed", ssoBossData.Value.walkSpeed);
             initDistance = Vector3.Distance(body.transform.position, target.transform.position);
@@ -245,6 +262,50 @@ public class S_Boss : MonoBehaviour
         {
             isChase = false;
         }
+    }
+    private void Strafing()
+    {
+        if (target == null) return;
+
+        // changement de direction périodique
+        if (Time.time >= nextChangeTime)
+        {
+            strafeDirection *= -1; // +1 = droite, -1 = gauche
+            nextChangeTime = Time.time + strafeChangeInterval;
+        }
+
+        // vecteur vers le boss
+        Vector3 offsetPlayer = transform.position - target.transform.position;
+        offsetPlayer.y = 0;
+
+        // fallback si trop proche
+        if (offsetPlayer.sqrMagnitude < 0.01f)
+            offsetPlayer = transform.right * 1f;
+
+        // --- on force la distance au joueur ---
+        Vector3 offsetAtRadius = offsetPlayer.normalized * strafeRadius;
+
+        // direction de strafe (cross product)
+        Vector3 dir = Vector3.Cross(offsetAtRadius, Vector3.up).normalized * strafeDirection;
+
+        // destination finale
+        Vector3 finalPos = target.transform.position + offsetAtRadius + dir * strafeDistance;
+
+        // NavMeshAgent
+        navMeshAgent.isStopped = false;
+        navMeshAgent.speed = ssoBossData.Value.walkSpeed;
+        navMeshAgent.SetDestination(finalPos);
+
+        // rotation vers le joueur
+        Vector3 lookPos = target.transform.position - transform.position;
+        lookPos.y = 0;
+        if (lookPos.sqrMagnitude > 0.01f)
+        {
+            Quaternion rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+        }
+
+        animator.SetFloat("MoveSpeed", ssoBossData.Value.walkSpeed);
     }
     #endregion
     #region Health
@@ -320,6 +381,7 @@ public class S_Boss : MonoBehaviour
     }
     public void ChooseAttack()
     {
+        isStrafe = false;
         var minAttackFrequency = listAttackOwnedPossibilities.Min(a => a.frequency);
         int roundDifficulty = Mathf.RoundToInt(bossDifficultyLevel);
 
@@ -364,6 +426,18 @@ public class S_Boss : MonoBehaviour
         attack.frequency++;
         animator.SetTrigger(attack.bossAttack.attackName);
         Debug.Log(attack.bossAttack.attackName);
+    }
+
+    IEnumerator CooldownAttack(AttackOwned attack)
+    {
+        ExecuteAttack(attack);
+        yield return new WaitForSeconds(attack.bossAttack.attackTime);
+
+        navMeshAgent.isStopped = false;
+        navMeshAgent.updatePosition = true;
+        navMeshAgent.updateRotation = true;
+        navMeshAgent.ResetPath();
+        isStrafe = true;
     }
     #endregion
 }

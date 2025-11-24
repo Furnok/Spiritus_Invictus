@@ -21,7 +21,8 @@ MonoBehaviour:
     distanceToRun: 25
     listAttackPhase1:
     - attackName: Ichimanji
-      isAttackDistance: 1
+      attackTime: 5
+      isAttackDistance: 0
       pvBossUnlock: 100
       difficultyLevel: 5
       listComboData:
@@ -54,9 +55,10 @@ MonoBehaviour:
         attackDirection: {x: 0, y: 0, z: 0}
         contactPoint: {x: 0, y: 0, z: 0}
     - attackName: Margit
-      isAttackDistance: 1
-      pvBossUnlock: 80
-      difficultyLevel: 10
+      attackTime: 8
+      isAttackDistance: 0
+      pvBossUnlock: 100
+      difficultyLevel: 5
       listComboData:
       - attackId: 0
         goSourceId: 0
@@ -87,9 +89,10 @@ MonoBehaviour:
         attackDirection: {x: 0, y: 0, z: 0}
         contactPoint: {x: 0, y: 0, z: 0}
     - attackName: Makashi
-      isAttackDistance: 1
-      pvBossUnlock: 80
-      difficultyLevel: 3
+      attackTime: 10
+      isAttackDistance: 0
+      pvBossUnlock: 100
+      difficultyLevel: 5
       listComboData:
       - attackId: 0
         goSourceId: 0
@@ -133,8 +136,15 @@ MonoBehaviour:
         convictionReduction: 0
         attackDirection: {x: 0, y: 0, z: 0}
         contactPoint: {x: 0, y: 0, z: 0}
+    - attackName: Valkyrie
+      attackTime: 10
+      isAttackDistance: 0
+      pvBossUnlock: 100
+      difficultyLevel: 5
+      listComboData: []
     listAttackPhase2:
     - attackName: 
+      attackTime: 0
       isAttackDistance: 0
       pvBossUnlock: 0
       difficultyLevel: 0
