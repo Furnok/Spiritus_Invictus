@@ -75,22 +75,24 @@ public class S_UIMainMenu : MonoBehaviour
     {
         rseOnDataTemp.action += SetupMenu;
 
-        if (Gamepad.current == null)
+        StartCoroutine(S_Utils.DelayFrame(() =>
         {
-            StartCoroutine(S_Utils.DelayFrame(() => rseOnShowMouseCursor.Call()));
-        }
+            if (Gamepad.current == null)
+            {
+               rseOnShowMouseCursor.Call();
+            }
 
-        StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
-        StartCoroutine(S_Utils.DelayFrame(() => rsoInGame.Value = false));
-        StartCoroutine(S_Utils.DelayFrame(() => rseOnDisplayUIGame.Call(false)));
+            rseOnUIInputEnabled.Call();
+            rsoInGame.Value = false;
+            rseOnDisplayUIGame.Call(false);
+        }));
 
-        gameObject.GetComponent<CanvasGroup>()?.DOKill();
+        CanvasGroup cg = gameObject.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
-        gameObject.GetComponent<CanvasGroup>().alpha = 0f;
-
-        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
+        StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
         {
-            gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
         }));
 
         isTransit = false;
@@ -135,10 +137,10 @@ public class S_UIMainMenu : MonoBehaviour
 
             rseOnCloseAllWindows.Call();
 
-            gameObject.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = gameObject.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
-            gameObject.GetComponent<CanvasGroup>().alpha = 1f;
-            gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 gameObject.SetActive(false);
                 rsoNavigation.Value.selectableFocus = null;
@@ -168,16 +170,22 @@ public class S_UIMainMenu : MonoBehaviour
 
     public void Settings()
     {
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnOpenWindow.Call(settingsWindow);
+        if (!isTransit)
+        {
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableFocus = null;
+            rseOnOpenWindow.Call(settingsWindow);
+        }
     }
 
     public void Credits()
     {
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnOpenWindow.Call(creditsWindow);
+        if (!isTransit)
+        {
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableFocus = null;
+            rseOnOpenWindow.Call(creditsWindow);
+        }
     }
 
     public void QuitGame()

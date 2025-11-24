@@ -201,19 +201,18 @@ public class S_UIGameManager : MonoBehaviour
 
     private void DisplayBossHealth(bool value)
     {
-        sliderBossHealth.GetComponent<CanvasGroup>()?.DOKill();
+        CanvasGroup cg = sliderBossHealth.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
         if (value && !sliderBossHealth.gameObject.activeInHierarchy)
         {
-            sliderBossHealth.gameObject.gameObject.SetActive(true);
+            sliderBossHealth.gameObject.SetActive(true);
 
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeFadeBoss).SetEase(Ease.Linear);
+            cg.DOFade(1f, timeFadeBoss).SetEase(Ease.Linear);
         }
         else if (!value)
         {
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeBoss).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, timeFadeBoss).SetEase(Ease.Linear).OnComplete(() =>
             {
                 sliderBossHealth.gameObject.SetActive(false);
             });
@@ -286,14 +285,14 @@ public class S_UIGameManager : MonoBehaviour
 
     private void DisplaySkip(bool value)
     {
-        skipWindow.GetComponent<CanvasGroup>()?.DOKill();
+        CanvasGroup cg = skipWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
         if (value && !skipWindow.activeInHierarchy)
         {
             skipWindow.SetActive(true);
 
-            skipWindow.GetComponent<CanvasGroup>().alpha = 0f;
-            skipWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
         }
         else if (!value)
         {
@@ -337,12 +336,12 @@ public class S_UIGameManager : MonoBehaviour
 
             rseOnUIInputEnabled.Call();
 
-            consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = consoleWindow.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             consoleWindow.SetActive(true);
 
-            consoleWindow.GetComponent<CanvasGroup>().alpha = 0f;
-            consoleWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+            cg.DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
         }
         else
         {
@@ -368,9 +367,11 @@ public class S_UIGameManager : MonoBehaviour
 
                 rseOnUIInputEnabled.Call();
 
-                consoleBackgroundWindow.GetComponent<CanvasGroup>().alpha = 0f;
-                consoleBackgroundWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
-                consoleBackgroundWindow.GetComponent<CanvasGroup>().blocksRaycasts = true;
+                CanvasGroup cg = consoleBackgroundWindow.GetComponent<CanvasGroup>();
+                cg.DOKill();
+
+                cg.DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+                cg.blocksRaycasts = true;
             }
             else
             {
@@ -398,10 +399,10 @@ public class S_UIGameManager : MonoBehaviour
 
                 RuntimeManager.PlayOneShot(uiSound);
 
-                consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
+                CanvasGroup cg = consoleWindow.GetComponent<CanvasGroup>();
+                cg.DOKill();
 
-                consoleWindow.GetComponent<CanvasGroup>().alpha = 1f;
-                consoleWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+                cg.DOFade(0f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
                 {
                     rseOnHideMouseCursor.Call();
 

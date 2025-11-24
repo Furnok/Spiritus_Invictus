@@ -1,10 +1,8 @@
 ﻿using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class S_UIMenu : MonoBehaviour
 {
@@ -97,20 +95,26 @@ public class S_UIMenu : MonoBehaviour
 
     public void ResumeGame()
     {
-        rseOnHideMouseCursor.Call();
+        if (!isTransit)
+        {
+            rseOnHideMouseCursor.Call();
 
-        rseOnGameInputEnabled.Call();
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableDefault = null;
-        rseOnResetFocus.Call();
-        rsoInGame.Value = true;
-        rseOnGamePause.Call(false);
+            rseOnGameInputEnabled.Call();
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableDefault = null;
+            rseOnResetFocus.Call();
+            rsoInGame.Value = true;
+            rseOnGamePause.Call(false);
+        }
     }
 
     public void Settings()
     {
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnOpenWindow.Call(settingsWindow);
+        if (!isTransit)
+        {
+            rsoNavigation.Value.selectableFocus = null;
+            rseOnOpenWindow.Call(settingsWindow);
+        }
     }
 
     public void MainMenu()

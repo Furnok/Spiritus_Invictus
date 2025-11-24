@@ -133,19 +133,18 @@ public class S_WindowManager : MonoBehaviour
 
     private void DisplayUIGame(bool value)
     {
-        gameWindow.GetComponent<CanvasGroup>()?.DOKill();
+        CanvasGroup cg = gameWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
         if (value && !gameWindow.activeInHierarchy)
         {
             gameWindow.gameObject.SetActive(true);
 
-            gameWindow.GetComponent<CanvasGroup>().alpha = 0f;
-            gameWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear);
+            cg.DOFade(1f, timeFade).SetEase(Ease.Linear);
         }
         else if (!value)
         {
-            gameWindow.GetComponent<CanvasGroup>().alpha = 1f;
-            gameWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
             {
                 gameWindow.SetActive(false);
             });
@@ -197,10 +196,12 @@ public class S_WindowManager : MonoBehaviour
                 rseOnGameInputEnabled.Call();
             }
 
-            consoleBackgroundWindow.GetComponent<CanvasGroup>().alpha = 1f;
-            consoleBackgroundWindow.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            CanvasGroup cg = consoleBackgroundWindow.GetComponent<CanvasGroup>();
+            cg.DOKill();
+
+            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
-                consoleBackgroundWindow.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                cg.blocksRaycasts = false;
             });
 
             StartCoroutine(S_Utils.DelayFrame(() => rsoInConsole.Value = false));
@@ -238,12 +239,12 @@ public class S_WindowManager : MonoBehaviour
 
     private void OpenWindow(GameObject window)
     {
-        window.GetComponent<CanvasGroup>()?.DOKill();
+        CanvasGroup cg = window.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
         window.SetActive(true);
 
-        window.GetComponent<CanvasGroup>().alpha = 0f;
-        window.GetComponent<CanvasGroup>().DOFade(1f, timeFade).SetEase(Ease.Linear).SetUpdate(true);
+        cg.DOFade(1f, timeFade).SetEase(Ease.Linear).SetUpdate(true);
 
         rsoCurrentWindows.Value.Add(window);
     }
@@ -252,10 +253,10 @@ public class S_WindowManager : MonoBehaviour
     {
         if (window != null && window.activeInHierarchy)
         {
-            window.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = window.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
-            window.GetComponent<CanvasGroup>().alpha = 1f;
-            window.GetComponent<CanvasGroup>().DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 window.SetActive(false);
             });
