@@ -77,7 +77,7 @@ public class S_UIMainMenu : MonoBehaviour
 
         if (Gamepad.current == null)
         {
-            rseOnShowMouseCursor.Call();
+            StartCoroutine(S_Utils.DelayFrame(() => rseOnShowMouseCursor.Call()));
         }
 
         StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));

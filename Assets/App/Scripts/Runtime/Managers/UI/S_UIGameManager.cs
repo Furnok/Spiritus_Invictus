@@ -3,8 +3,6 @@ using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using TMPro;
-using Unity.Android.Gradle.Manifest;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;

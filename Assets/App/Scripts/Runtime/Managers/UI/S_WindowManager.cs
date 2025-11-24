@@ -2,7 +2,6 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
