@@ -21,7 +21,10 @@ public class S_UISelectable : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Audio")]
-    [SerializeField] private EventReference uiSound;
+    [SerializeField] private EventReference uiClick;
+
+    [TabGroup("References")]
+    [SerializeField] private EventReference uiHover;
 
     [TabGroup("References")]
     [Title("Images")]
@@ -71,6 +74,8 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable)
         {
+            RuntimeManager.PlayOneShot(uiHover);
+
             if (!isPressed)
             {
                 PlayColorTransition(colorMouseEnter, colorMouseEnter);
@@ -84,6 +89,8 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable)
         {
+            RuntimeManager.PlayOneShot(uiHover);
+
             if (!isPressed)
             {
                 PlayColorTransition(colorBase, colorBase2);
@@ -125,6 +132,8 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable && Gamepad.current != null)
         {
+            RuntimeManager.PlayOneShot(uiHover);
+
             PlayColorTransition(colorMouseEnter, colorMouseEnter);
             rsoNavigation.Value.selectableFocus = uiElement;
 
@@ -150,7 +159,7 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable)
         {
-            RuntimeManager.PlayOneShot(uiSound);
+            RuntimeManager.PlayOneShot(uiClick);
 
             if (Gamepad.current != null)
             {
@@ -164,7 +173,7 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable)
         {
-            RuntimeManager.PlayOneShot(uiSound);
+            RuntimeManager.PlayOneShot(uiClick);
         }
     }
 
@@ -172,7 +181,7 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable && Gamepad.current != null)
         {
-            RuntimeManager.PlayOneShot(uiSound);
+            RuntimeManager.PlayOneShot(uiClick);
         }
     }
 
