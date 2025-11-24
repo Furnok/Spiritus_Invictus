@@ -9,6 +9,10 @@ public class S_PlayerInputsManager : MonoBehaviour
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
     [SerializeField] private RSO_LastInputActionMap rsoLastInputActionMap;
 
+    [Header("Input")]
+    [SerializeField] RSE_OnPlayerDeath _onPlayerDeathRse;
+    [SerializeField] RSE_OnPlayerRespawn _onPlayerRespawnRse;
+
     [Header("Output")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
     [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
@@ -72,6 +76,9 @@ public class S_PlayerInputsManager : MonoBehaviour
         rseOnUiActionInputEnabled.action += ActivateUIActionInput;
 
         ActivateGameActionInput();
+
+        _onPlayerDeathRse.action += DeactivateInput;
+        _onPlayerRespawnRse.action += ActivateGameActionInput;
     }
 
     private void OnDisable()
@@ -82,6 +89,9 @@ public class S_PlayerInputsManager : MonoBehaviour
         rseOnCinematicInputEnabled.action -= ActivateCinematicActionInput;
         rseOnGameActionInputEnabled.action -= ActivateGameActionInput;
         rseOnUiActionInputEnabled.action -= ActivateUIActionInput;
+
+        _onPlayerDeathRse.action -= DeactivateInput;
+        _onPlayerRespawnRse.action -= ActivateGameActionInput;
 
         playerInput.actions.Disable();
         DisableGameInputs();
