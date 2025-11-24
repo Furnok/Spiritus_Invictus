@@ -86,6 +86,7 @@ public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_Reflectabl
         {
             transform.position += _direction * _speed * Time.deltaTime;
             transform.forward = _direction;
+            _target = null;
         }
     }
 

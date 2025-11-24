@@ -21,6 +21,8 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
+    [SerializeField] RSE_OnPlayerDeath _onPlayerDeathRse;
+
 
     [Header("Output")]
     [SerializeField] private RSE_OnStartTargeting rseOnStartTargeting;
@@ -81,6 +83,8 @@ public class S_TargetingManager : MonoBehaviour
         rseOnEnemyTargetDied.action += OnEnemyTargetDied;
 
         _rseOnPlayerCenter.action += GetPlayerCenterTransform;
+
+        _onPlayerDeathRse.action += CancelTargeting;
     }
 
     private void OnDisable()
@@ -92,8 +96,9 @@ public class S_TargetingManager : MonoBehaviour
         rseOnPlayerSwapTarget.action -= OnSwapTargetInput;
 
         rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
-
         _rseOnPlayerCenter.action -= GetPlayerCenterTransform;
+
+        _onPlayerDeathRse.action -= CancelTargeting;
 
         rsoPlayerIsTargeting.Value = false;
     }

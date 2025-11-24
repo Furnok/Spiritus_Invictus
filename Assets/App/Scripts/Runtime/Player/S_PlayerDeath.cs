@@ -10,31 +10,32 @@ public class S_PlayerDeath : MonoBehaviour
 
     [Header("Inputs")]
     [SerializeField] RSE_OnPlayerDeath _onPlayerDeathRse;
+
+    [Header("Outputs")]
     [SerializeField] RSE_OnPlayerRespawn _onPlayerRespawnRse;
 
-    //[Header("Outputs")]
 
     private void OnEnable()
     {
         _onPlayerDeathRse.action += HandlePlayerDeath;
-        _onPlayerRespawnRse.action += HandlePlayerRespawn;
     }
 
     void OnDisable()
     {
         _onPlayerDeathRse.action -= HandlePlayerDeath;
-        _onPlayerRespawnRse.action -= HandlePlayerRespawn;
     }
 
     private void HandlePlayerDeath()
     {
         _playerHurtBoxCollider.SetActive(false);
         _aimPointObject.SetActive(false);
+
+        //StartCoroutine(S_Utils.Delay(2f, RespawnPlayer)); //testing
     }
 
-    private void HandlePlayerRespawn()
+    //Testing
+    void RespawnPlayer()
     {
-        _playerHurtBoxCollider.SetActive(true);
-        _aimPointObject.SetActive(true);
+        _onPlayerRespawnRse.Call();
     }
 }
