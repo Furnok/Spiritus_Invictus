@@ -169,6 +169,18 @@ public class S_UISelectable : MonoBehaviour
         }
     }
 
+    public void ClickedNotAudio(Selectable uiElement)
+    {
+        if (uiElement.interactable)
+        {
+            if (Gamepad.current != null)
+            {
+                rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectablePress;
+                rsoNavigation.Value.selectablePress = uiElement;
+            }
+        }
+    }
+
     public void PlayAudio(Selectable uiElement)
     {
         if (uiElement.interactable)

@@ -14,7 +14,10 @@ public class S_UISettings : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Audio")]
-    [SerializeField] private EventReference uiSound;
+    [SerializeField] private EventReference uiSoundClick;
+
+    [TabGroup("References")]
+    [SerializeField] private EventReference uiSoundClose;
 
     [TabGroup("References")]
     [Title("Default")]
@@ -201,7 +204,7 @@ public class S_UISettings : MonoBehaviour
 
     private void CloseDropDown()
     {
-        RuntimeManager.PlayOneShot(uiSound);
+        RuntimeManager.PlayOneShot(uiSoundClick);
     }
 
     private void CloseEscape()
@@ -215,8 +218,6 @@ public class S_UISettings : MonoBehaviour
         {
             if (rsoCurrentWindows.Value[^1] == gameObject)
             {
-                RuntimeManager.PlayOneShot(uiSound);
-
                 Close();
             }
         }
@@ -228,6 +229,8 @@ public class S_UISettings : MonoBehaviour
         {
             isClosing = true;
             settings.Close();
+
+            RuntimeManager.PlayOneShot(uiSoundClose);
 
             rseOnCloseWindow.Call(gameObject);
 

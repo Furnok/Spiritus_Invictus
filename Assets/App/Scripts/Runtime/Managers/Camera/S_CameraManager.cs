@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using FMOD;
 using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;

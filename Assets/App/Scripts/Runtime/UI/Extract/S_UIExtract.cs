@@ -117,8 +117,6 @@ public class S_UIExtract : MonoBehaviour
         {
             if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
             {
-                RuntimeManager.PlayOneShot(uiSound);
-
                 Close();
             }
         }
@@ -129,6 +127,8 @@ public class S_UIExtract : MonoBehaviour
         if (!isClosing)
         {
             rseOnHideMouseCursor.Call();
+
+            RuntimeManager.PlayOneShot(uiSound);
 
             isClosing = true;
             rseOnGameInputEnabled.Call();

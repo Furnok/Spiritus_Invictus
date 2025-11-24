@@ -58,8 +58,6 @@ public class S_UICredits : MonoBehaviour
         {
             if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
             {
-                RuntimeManager.PlayOneShot(uiSound);
-
                 Close();
             }
         }
@@ -71,6 +69,8 @@ public class S_UICredits : MonoBehaviour
         {
             isClosing = true;
             rseOnCloseWindow.Call(gameObject);
+
+            RuntimeManager.PlayOneShot(uiSound);
 
             if (rsoNavigation.Value.selectablePressOldWindow == null)
             {

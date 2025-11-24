@@ -87,8 +87,6 @@ public class S_UIMenu : MonoBehaviour
     {
         if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
         {
-            RuntimeManager.PlayOneShot(uiSound);
-
             ResumeGame();
         }
     }
@@ -97,6 +95,8 @@ public class S_UIMenu : MonoBehaviour
     {
         if (!isTransit)
         {
+            RuntimeManager.PlayOneShot(uiSound);
+
             rseOnHideMouseCursor.Call();
 
             rseOnGameInputEnabled.Call();

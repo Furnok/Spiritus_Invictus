@@ -377,7 +377,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3173770586472626187}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: ClickedNotAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 6172652148230981850}
@@ -555,18 +555,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 556655280902103875}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -1082,18 +1082,18 @@ MonoBehaviour:
     rgba: 4284769380
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 1619570699241150269}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -1749,7 +1749,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 3677968079688610705}
         m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
-        m_MethodName: UpdateUIVolume
+        m_MethodName: UpdateMusicVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1939,18 +1939,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 888124767579011007}
   image2: {fileID: 2001190029325686242}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -2912,18 +2912,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 2627255085940352451}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -3230,18 +3230,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 660865831065342216}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -3545,13 +3545,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeFadeSkip: 0.2
-  uiSound:
+  uiSoundClick:
     Guid:
       Data1: 690468075
       Data2: 1303567561
       Data3: -2072532850
       Data4: -1986356939
     Path: event:/UI/UIButton
+  uiSoundClose:
+    Guid:
+      Data1: 847927044
+      Data2: 1220418712
+      Data3: -1299920972
+      Data4: -166857736
+    Path: event:/UI/UIClosed
   defaultWindow: {fileID: 7090280352426310551}
   defaultPanelSet: {fileID: 3378206784432556659}
   buttonGameplay: {fileID: 1096930571029089604}
@@ -3705,11 +3712,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiSound:
     Guid:
-      Data1: 690468075
-      Data2: 1303567561
-      Data3: -2072532850
-      Data4: -1986356939
-    Path: event:/UI/UIButton
+      Data1: 847927044
+      Data2: 1220418712
+      Data3: -1299920972
+      Data4: -166857736
+    Path: event:/UI/UIClosed
   defaultWindow: {fileID: 7090280352426310551}
   rseOnPlayerPause: {fileID: 11400000, guid: f80136b766e3907448f7a7a39ac46b1d, type: 2}
   rseOnCloseWindow: {fileID: 11400000, guid: 7c496add6a1307c4eac99429ef69ee09, type: 2}
@@ -4131,18 +4138,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 6709931373696564746}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -4710,18 +4717,18 @@ MonoBehaviour:
     rgba: 3362022500
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 8496925642032862591}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -5941,18 +5948,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 1975414808949531672}
   image2: {fileID: 7333441797887718309}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -6816,18 +6823,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 2203211481851389783}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -8090,18 +8097,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 4584435268124745954}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -8230,7 +8237,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 9041706371034552165}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: ClickedNotAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 3620066095168830334}
@@ -8408,18 +8415,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 4727215765314455697}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -8738,18 +8745,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 4682516617025427476}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -9308,18 +9315,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 8685594084712335532}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -9694,18 +9701,18 @@ MonoBehaviour:
     rgba: 4284769380
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 9001243110194577262}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -10000,18 +10007,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 1879990808660235907}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -10727,18 +10734,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 2592604333640069514}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -12924,18 +12931,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 4958623284819857426}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -13243,18 +13250,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 8667539758915092667}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -13771,18 +13778,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 3476301166014664228}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -14101,18 +14108,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 5078283513604907845}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -14419,18 +14426,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 1427025538009170800}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -15143,18 +15150,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 6735069401940900900}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -16230,18 +16237,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 3464887076459630793}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -16995,11 +17002,11 @@ MonoBehaviour:
   startDisplay: 0.4
   uiSound:
     Guid:
-      Data1: 690468075
-      Data2: 1303567561
-      Data3: -2072532850
-      Data4: -1986356939
-    Path: event:/UI/UIButton
+      Data1: 847927044
+      Data2: 1220418712
+      Data3: -1299920972
+      Data4: -166857736
+    Path: event:/UI/UIClosed
   textContent: {fileID: 6625801731289928262}
   scrollRect: {fileID: 5308867416541487960}
   sliderScroll: {fileID: 70967358370191768}
@@ -17539,7 +17546,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 3677968079688610705}
         m_TargetAssemblyTypeName: S_Settings, Assembly-CSharp
-        m_MethodName: UpdateUIVolume
+        m_MethodName: UpdateSoundsVolume
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -17729,18 +17736,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 3364461379233870507}
   image2: {fileID: 5038342956576412686}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -17869,7 +17876,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4920991117927322588}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: ClickedNotAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 5599488742029719898}
@@ -18047,18 +18054,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 847927044
+      Data2: 1220418712
+      Data3: -1299920972
+      Data4: -166857736
+    Path: event:/UI/UIClosed
   image: {fileID: 5413569894864333333}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -20481,7 +20488,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3437217075545255646}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: ClickedNotAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 6145332841819897374}
@@ -20970,18 +20977,18 @@ MonoBehaviour:
     rgba: 4288059030
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 4370262826059482749}
   image2: {fileID: 6162836612981965054}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -21708,7 +21715,7 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4294967295
   m_fontSize: 24
-  m_fontSizeBase: 36
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -21890,7 +21897,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4766918537346710472}
         m_TargetAssemblyTypeName: S_UISelectable, Assembly-CSharp
-        m_MethodName: Clicked
+        m_MethodName: ClickedNotAudio
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 9045909740706241615}
@@ -22068,18 +22075,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 758919459892509035}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -23292,6 +23299,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeFadeSkip: 0.2
+  uiSound:
+    Guid:
+      Data1: 847927044
+      Data2: 1220418712
+      Data3: -1299920972
+      Data4: -166857736
+    Path: event:/UI/UIClosed
   buttonStart: {fileID: 5599488742029719898}
   buttonContinue: {fileID: 6769405791822966820}
   buttonSettings: {fileID: 8847822647306883821}
@@ -24796,18 +24810,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 8135422270153254803}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
@@ -25730,18 +25744,18 @@ MonoBehaviour:
     rgba: 3372220415
   uiClick:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   uiHover:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1471683081
+      Data2: 1091786651
+      Data3: -1535177856
+      Data4: 497834968
+    Path: event:/UI/UIHover
   image: {fileID: 6867590230112859424}
   image2: {fileID: 0}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}

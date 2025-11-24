@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,10 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeSkip;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Buttons")]
@@ -132,6 +137,8 @@ public class S_UIMainMenu : MonoBehaviour
         if (!isTransit)
         {
             isTransit = true;
+
+            RuntimeManager.PlayOneShot(uiSound);
 
             rseOnHideMouseCursor.Call();
 
