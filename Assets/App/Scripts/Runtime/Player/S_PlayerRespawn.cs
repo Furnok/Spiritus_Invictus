@@ -12,7 +12,6 @@ public class S_PlayerRespawn : MonoBehaviour
     [SerializeField] RSO_PlayerCurrentHealth _playerCurrentHealth;
     [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
     [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
-    [SerializeField] Rigidbody _playerRigidbody;
 
     [Header("Inputs")]
     [SerializeField] RSE_OnPlayerRespawn _onPlayerRespawnRse;
@@ -39,8 +38,6 @@ public class S_PlayerRespawn : MonoBehaviour
     {
         _playerHurtBoxCollider.SetActive(true);
         _aimPointObject.SetActive(true);
-
-        _playerRigidbody.linearVelocity = Vector3.zero;
 
         transform.position = _playerRespawnPosition.Value;
 
