@@ -17,12 +17,15 @@ public class S_UIContent : MonoBehaviour
 
     private void OnEnable()
     {
-        StartCoroutine(S_Utils.DelayFrame(() => rsoNavigation.Value.selectableDefault = defaultFocusSelectable));
-
-        if (Gamepad.current != null && rsoNavigation.Value.selectableFocus == null)
+        StartCoroutine(S_Utils.DelayFrame(() =>
         {
-            StartCoroutine(S_Utils.DelayFrame(() => defaultFocusSelectable?.Select()));
-        }
+            rsoNavigation.Value.selectableDefault = defaultFocusSelectable;
+
+            if (Gamepad.current != null && rsoNavigation.Value.selectableFocus == null)
+            {
+                defaultFocusSelectable?.Select();
+            }
+        }));
     }
 
     private void OnDisable()

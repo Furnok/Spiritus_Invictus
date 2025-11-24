@@ -109,11 +109,12 @@ public class S_UISettings : MonoBehaviour
         {
             textGameplay.color = Color.red;
 
-            defaultPanelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = defaultPanelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             defaultPanelSet.SetActive(true);
-            defaultPanelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            defaultPanelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = defaultPanelSet;
 
@@ -251,12 +252,12 @@ public class S_UISettings : MonoBehaviour
             textGraphics.color = Color.white;
             textAudio.color = Color.white;
 
-            currentPanelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = currentPanelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             GameObject oldpanel = currentPanelSet;
 
-            currentPanelSet.GetComponent<CanvasGroup>().alpha = 1f;
-            currentPanelSet.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 oldpanel.SetActive(false);
             });
@@ -292,11 +293,12 @@ public class S_UISettings : MonoBehaviour
 
             textGameplay.color = Color.red;
 
-            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = panelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             panelSet.SetActive(true);
-            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -355,11 +357,12 @@ public class S_UISettings : MonoBehaviour
 
             textGraphics.color = Color.red;
 
-            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = panelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             panelSet.SetActive(true);
-            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -418,11 +421,12 @@ public class S_UISettings : MonoBehaviour
 
             textAudio.color = Color.red;
 
-            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = panelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             panelSet.SetActive(true);
-            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
