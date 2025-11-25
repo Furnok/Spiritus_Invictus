@@ -31,6 +31,10 @@ public class S_PlayerRespawn : MonoBehaviour
     void OnDisable()
     {
         _onPlayerRespawnRse.action -= HandlePlayerRespawn;
+
+        // Reset respawn position for now change it afterwards
+        _playerRespawnPosition.Value.position = Vector3.zero;
+        _playerRespawnPosition.Value.rotation = Quaternion.identity;
     }
 
 
@@ -39,7 +43,7 @@ public class S_PlayerRespawn : MonoBehaviour
         _playerHurtBoxCollider.SetActive(true);
         _aimPointObject.SetActive(true);
 
-        transform.position = _playerRespawnPosition.Value;
+        transform.SetPositionAndRotation(_playerRespawnPosition.Value.position, _playerRespawnPosition.Value.rotation);
 
         _onAnimationBoolValueChange.Call("isDead", false);
         _onPlayerAddStateRse.Call(PlayerState.None);
