@@ -269,7 +269,13 @@ public class S_WindowManager : MonoBehaviour
     {
         foreach (var window in rsoCurrentWindows.Value)
         {
-            window.SetActive(false);
+            CanvasGroup cg = window.GetComponent<CanvasGroup>();
+            cg.DOKill();
+
+            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            {
+                window.SetActive(false);
+            });
         }
 
         rsoCurrentWindows.Value.Clear();

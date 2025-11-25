@@ -26,6 +26,14 @@ public class S_UIGameManager : MonoBehaviour
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeConsole;
 
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeGameOver;
+
+    [TabGroup("Settings")]
+    [Title("Game Over")]
+    [SerializeField] private bool haveGameOver;
+
     [TabGroup("References")]
     [Title("Audio")]
     [SerializeField] private EventReference uiSound;
@@ -78,6 +86,10 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private TMP_InputField inputField;
 
+    [TabGroup("References")]
+    [Title("Game Over")]
+    [SerializeField] private GameObject gameOverWindow;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
@@ -119,6 +131,15 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerRespawn rseOnPlayerRespawn;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PreconsumedConviction rsoPreconsumedConviction;
@@ -181,6 +202,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnSkipHold.action += SetSkipHoldValue;
         rseOnOpenExtractWindow.action += DiplayExtract;
         rseOnConsole.action += Console;
+        rseOnPlayerDeath.action += GameOver;
     }
 
     private void OnDisable()
@@ -193,6 +215,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnSkipHold.action -= SetSkipHoldValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
         rseOnConsole.action -= Console;
+        rseOnPlayerDeath.action -= GameOver;
 
         healthTween?.Kill();
         convictionTween?.Kill();
@@ -427,5 +450,28 @@ public class S_UIGameManager : MonoBehaviour
                 });
             }
         }
+    }
+
+    private void GameOver()
+    {
+        StartCoroutine(S_Utils.Delay(3f, () =>
+        {
+            if (haveGameOver)
+            {
+                rseOnUIInputEnabled.Call();
+                rseOnGamePause.Call(true);
+
+                CanvasGroup cg = gameOverWindow.GetComponent<CanvasGroup>();
+                cg.DOKill();
+
+                gameOverWindow.SetActive(true);
+
+                cg.DOFade(1f, timeFadeGameOver).SetEase(Ease.Linear).SetUpdate(true);
+            }
+            else
+            {
+                rseOnPlayerRespawn.Call();
+            }
+        }));
     }
 }
