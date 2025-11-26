@@ -129,6 +129,11 @@ public class S_WindowManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(S_Utils.DelayFrame(() => FadeIn()));
+
+        if (rsoInGame.Value)
+        {
+            DisplayUIGame(true);
+        }
     }
 
     private void DisplayUIGame(bool value)
