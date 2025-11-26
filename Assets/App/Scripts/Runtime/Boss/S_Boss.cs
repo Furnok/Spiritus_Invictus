@@ -85,6 +85,9 @@ public class S_Boss : MonoBehaviour
     [SerializeField] private Collider detectionCollider;
 
     [TabGroup("References")]
+    [SerializeField] private Collider hurtCollider;
+
+    [TabGroup("References")]
     [Title("Animator")]
     [SerializeField] private Animator animator;
 
@@ -101,6 +104,12 @@ public class S_Boss : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_BossData ssoBossData;
@@ -148,6 +157,8 @@ public class S_Boss : MonoBehaviour
         behaviorAgent.SetVariableValue<Animator>("Animator", animator);
         behaviorAgent.SetVariableValue<float>("Health", health);
         behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
+        behaviorAgent.SetVariableValue<Collider>("DetectionCollider", detectionCollider);
+        behaviorAgent.SetVariableValue<Collider>("HurtBox", hurtCollider);
         behaviorAgent.SetVariableValue<string>("DeathParam", deathParam);
         behaviorAgent.SetVariableValue<string>("MoveParam", moveParam);
         behaviorAgent.SetVariableValue<string>("StunParam", stunParam);
@@ -235,6 +246,7 @@ public class S_Boss : MonoBehaviour
     #region Chase
     private void Chase()
     {
+        Debug.Log("Chase");
         float distance = Vector3.Distance(body.transform.position, target.transform.position);
         
         bool destinationReached = distance <= (ssoBossData.Value.distanceToChase);
@@ -365,25 +377,62 @@ public class S_Boss : MonoBehaviour
 
         UpdateLastHealthValue();
 
-        if (currentPhaseState == S_EnumBossPhaseState.Phase2)
+        if(health <= 0)
         {
-            if(health <= 0)
+            if(currentPhaseState == S_EnumBossPhaseState.Phase1)
             {
-                isDead = true;
+                Debug.Log("Phase 1 Finish");
+                isStrafe = false;
+                canChooseAttack = false;
+                listAttackOwneds.Clear();
+                listAttackOwnedPossibilities.Clear();
 
-                behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Death);
-            }
-        }
-        else
-        {
-            if(health <= 0)
-            {
-                Debug.Log("Phase as Change");
+                StopAllCoroutines();
+                cooldowAttackCoroutine = null;
+                timeChooseAttackCoroutine = null;
+
+                navMeshAgent.ResetPath();
+                navMeshAgent.velocity = Vector3.zero;
+
+                behaviorAgent.SetVariableValue<S_EnumBossPhaseState>("PhaseState", S_EnumBossPhaseState.Phase2);
                 currentPhaseState = S_EnumBossPhaseState.Phase2;
+                behaviorAgent.Restart();
+
                 health = ssoBossData.Value.healthPhase2;
                 maxHealth = ssoBossData.Value.healthPhase2;
                 behaviorAgent.SetVariableValue<float>("Health", health);
-                behaviorAgent.SetVariableValue<S_EnumBossPhaseState>("PhaseState", S_EnumBossPhaseState.Phase2);
+                lastValueHealth = 101f;
+                foreach (var bossAttack in ssoBossData.Value.listAttackPhase2)
+                {
+                    var attackData = new AttackOwned
+                    {
+                        bossAttack = bossAttack,
+                        frequency = 0,
+                        score = 0,
+                    };
+                    listAttackOwneds.Add(attackData);
+                }
+                UpdateLastHealthValue();
+                behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
+            }
+            else
+            {
+                Debug.Log("Phase 2 Finish: Boss Dead");
+                isDead = true;
+                isStrafe = false;
+                canChooseAttack = false;
+                StopAllCoroutines();
+                cooldowAttackCoroutine = null;
+                timeChooseAttackCoroutine = null;
+
+                navMeshAgent.ResetPath();
+                navMeshAgent.velocity = Vector3.zero;
+
+                behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Death);
+                animator.SetTrigger(deathParam);
+                behaviorAgent.Restart();
+
+                rseOnEnemyTargetDied.Call(body);
             }
         }
     }

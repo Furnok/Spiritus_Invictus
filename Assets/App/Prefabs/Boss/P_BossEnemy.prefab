@@ -1452,11 +1452,14 @@ MonoBehaviour:
   navMeshAgent: {fileID: 2429021575511207179}
   bodyCollider: {fileID: 3702001950805451078}
   detectionCollider: {fileID: 1502100001938416099}
+  hurtCollider: {fileID: 8566467838276575292}
   animator: {fileID: 5646047771318058197}
   body: {fileID: 5201943651732942732}
   bossDetectionRange: {fileID: 2409691922618655963}
   bossHurt: {fileID: 4648933286139395769}
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
+  rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
+  rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   ssoBossData: {fileID: 11400000, guid: 7f12320b15c2bc44fbce9266a95cfb08, type: 2}
   onUpdateBossHealth:
     m_PersistentCalls:
