@@ -18,6 +18,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
     [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
     [SerializeField] RSO_PreconsumedConviction _preconsumedConviction;
+    [SerializeField] RSO_GameInPause _rsoGameInPause;
 
     [Header("Input")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
@@ -71,6 +72,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnPlayerAttack.action += OnPlayerAttackInput;
         _rseOnPlayerGettingHit.action += OnHitCancel;
         _onPlayerAttackInputCancel.action += OnAttackReleased;
+
+        _rsoGameInPause.onValueChanged += OnGamePause;
     }
 
     private void OnDisable()
@@ -78,6 +81,16 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnPlayerAttack.action -= OnPlayerAttackInput;
         _rseOnPlayerGettingHit.action -= OnHitCancel;
         _onPlayerAttackInputCancel.action -= OnAttackReleased;
+
+        _rsoGameInPause.onValueChanged -= OnGamePause;
+    }
+
+    void OnGamePause(bool newPauseValue)
+    {
+        if (newPauseValue == true)
+        {
+            OnAttackReleased();
+        }
     }
 
     private void OnPlayerAttackInput()

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -38,6 +39,8 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
     [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
     [SerializeField] SSO_PlayerStats _playerStats;
+    [SerializeField] RSO_GameInPause _rsoGameInPause;
+
 
     [Header("Input")]
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
@@ -97,6 +100,14 @@ public class S_PlayerMovement : MonoBehaviour
 
         _rseOnParrySuccess.action += DoKnockbackOnParry;
         _rseOnPlayerHit.action += DoKnockbackOnHit;
+
+        _rsoGameInPause.onValueChanged += OnPauseChange;
+    }
+
+    private void OnPauseChange(bool pauseValue)
+    {
+        if (pauseValue == true)
+            Move(Vector2.zero);
     }
 
     private void OnDisable()
@@ -108,6 +119,8 @@ public class S_PlayerMovement : MonoBehaviour
 
         _rseOnParrySuccess.action -= DoKnockbackOnParry;
         _rseOnPlayerHit.action -= DoKnockbackOnHit;
+
+        _rsoGameInPause.onValueChanged -= OnPauseChange;
     }
 
     private void ChangeNewTarget(GameObject newTarget)
