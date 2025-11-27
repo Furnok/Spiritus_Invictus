@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -7,36 +6,36 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(S_TagNameAttribute))]
 public class S_TagNameAttributeEditor : PropertyDrawer
 {
+    private static readonly string[] tags;
+
+    static S_TagNameAttributeEditor()
+    {
+        var allTags = InternalEditorUtility.tags;
+        tags = new string[allTags.Length + 1];
+        tags[0] = "None";
+        Array.Copy(allTags, 0, tags, 1, allTags.Length);
+    }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
 
+        /// String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [TagName] with a String.");
+            EditorGUI.LabelField(position, label.text, "Use [TagName] with a string field.");
         }
         else
         {
-            string[] allTags = InternalEditorUtility.tags;
+            // Find Current Index
+            int selectedIndex = Array.IndexOf(tags, property.stringValue);
+            if (selectedIndex < 0) selectedIndex = 0;
 
-            List<string> namesWithNone = new List<string>();
-            namesWithNone.Add("None");
-            namesWithNone.AddRange(allTags);
+            // Popup
+            int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, tags);
 
-            int selectedIndex = Array.IndexOf(namesWithNone.ToArray(), property.stringValue);
-            if (selectedIndex < 0)
-                selectedIndex = 0;
-
-            int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, namesWithNone.ToArray());
-
-            if (newIndex == 0)
-            {
-                property.stringValue = "";
-            }
-            else
-            {
-                property.stringValue = allTags[newIndex - 1];
-            }
+            // Apply Result
+            property.stringValue = (newIndex == 0) ? string.Empty : tags[newIndex];
         }
 
         EditorGUI.EndProperty();

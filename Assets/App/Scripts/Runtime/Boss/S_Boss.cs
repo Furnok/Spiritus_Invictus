@@ -59,16 +59,16 @@ public class S_Boss : MonoBehaviour
 
     [TabGroup("Settings")]
     [Title("Animations Parameters")]
-    [SerializeField, S_AnimationName] private string moveParam;
+    [SerializeField, S_AnimationName("animator")] private string moveParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string deathParam;
+    [SerializeField, S_AnimationName("animator")] private string deathParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string attackParam;
+    [SerializeField, S_AnimationName("animator")] private string attackParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string stunParam;
+    [SerializeField, S_AnimationName("animator")] private string stunParam;
 
     [TabGroup("References")]
     [Title("Agent")]

@@ -1,56 +1,63 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 public static class S_ProjectInitializer
 {
+    private const string RootFolder = "App";
+
+    private static readonly string[] SubFolders = new[]
+    {
+        "Animations",
+        "Arts",
+        Path.Combine("Arts", "Sprites"),
+        "Audio",
+        Path.Combine("Audio", "Musics"),
+        Path.Combine("Audio", "SFX"),
+        Path.Combine("Audio", "UI"),
+        "Inputs",
+        "Prefabs",
+        Path.Combine("Prefabs", "Managers"),
+        Path.Combine("Prefabs", "UI"),
+        "Scenes",
+        Path.Combine("Scenes", "Tests"),
+        "Scripts",
+        Path.Combine("Scripts", "Editor"),
+        Path.Combine("Scripts", "Runtime"),
+        Path.Combine("Scripts", "Runtime", "Containers"),
+        Path.Combine("Scripts", "Runtime", "Inputs"),
+        Path.Combine("Scripts", "Runtime", "Managers"),
+        Path.Combine("Scripts", "Runtime", "UI"),
+        Path.Combine("Scripts", "Runtime", "Utils"),
+        Path.Combine("Scripts", "Runtime", "Wrapper"),
+        Path.Combine("Scripts", "Runtime", "Wrapper", "RSE"),
+        Path.Combine("Scripts", "Runtime", "Wrapper", "RSO"),
+        Path.Combine("Scripts", "Runtime", "Wrapper", "SSO"),
+        "SOD",
+        Path.Combine("SOD", "RSE"),
+        Path.Combine("SOD", "RSO"),
+        Path.Combine("SOD", "SSO"),
+        "Plugins",
+        "Resources",
+        "ScriptTemplates",
+        "Settings"
+     };
+
     [MenuItem("Tools/Initialize Project Folders")]
     public static void CreateProjectFolders()
     {
-        string rootFolder = "App";
-
-        string[] folders = new[]
+        foreach (string folder in SubFolders.Prepend(RootFolder))
         {
-            rootFolder,
-            $"{rootFolder}/Animations",
-            $"{rootFolder}/Arts",
-            $"{rootFolder}/Arts/Sprites",
-            $"{rootFolder}/Audio",
-            $"{rootFolder}/Audio/Musics",
-            $"{rootFolder}/Audio/SFX",
-            $"{rootFolder}/Audio/UI",
-            $"{rootFolder}/Inputs",
-            $"{rootFolder}/Prefabs",
-            $"{rootFolder}/Prefabs/Managers",
-            $"{rootFolder}/Prefabs/UI",
-            $"{rootFolder}/Scenes",
-            $"{rootFolder}/Scenes/Tests",
-            $"{rootFolder}/Scripts",
-            $"{rootFolder}/Scripts/Editor",
-            $"{rootFolder}/Scripts/Runtime",
-            $"{rootFolder}/Scripts/Runtime/Containers",
-            $"{rootFolder}/Scripts/Runtime/Inputs",
-            $"{rootFolder}/Scripts/Runtime/Managers",
-            $"{rootFolder}/Scripts/Runtime/UI",
-            $"{rootFolder}/Scripts/Runtime/Utils",
-            $"{rootFolder}/Scripts/Runtime/Wrapper",
-            $"{rootFolder}/Scripts/Runtime/Wrapper/RSE",
-            $"{rootFolder}/Scripts/Runtime/Wrapper/RSO",
-            $"{rootFolder}/Scripts/Runtime/Wrapper/SSO",
-            $"{rootFolder}/SOD",
-            $"{rootFolder}/SOD/RSE",
-            $"{rootFolder}/SOD/RSO",
-            $"{rootFolder}/SOD/SSO",
-            "Plugins",
-            "Resources",
-            "ScriptTemplates",
-            "Settings"
-        };
-
-        foreach (string folder in folders)
-        {
-            string path = Path.Combine(Application.dataPath, folder);
-            Directory.CreateDirectory(path); // safe even if folder exists
+            string fullPath = Path.Combine(Application.dataPath, folder);
+            try
+            {
+                Directory.CreateDirectory(fullPath);
+            }
+            catch (IOException e)
+            {
+                Debug.LogError($"Failed to create folder '{fullPath}': {e.Message}");
+            }
         }
 
         AssetDatabase.Refresh();

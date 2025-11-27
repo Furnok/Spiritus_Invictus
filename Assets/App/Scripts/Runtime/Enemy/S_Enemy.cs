@@ -10,28 +10,28 @@ public class S_Enemy : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Animations Parameters")]
-    [SerializeField, S_AnimationName] private string moveParam;
+    [SerializeField, S_AnimationName("animator")] private string moveParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string deathParam;
+    [SerializeField, S_AnimationName("animator")] private string deathParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string idleAttack;
+    [SerializeField, S_AnimationName("animator")] private string idleAttack;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string attackParam;
+    [SerializeField, S_AnimationName("animator")] private string attackParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string comboParam;
+    [SerializeField, S_AnimationName("animator")] private string comboParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string stopAttackParam;
+    [SerializeField, S_AnimationName("animator")] private string stopAttackParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string hitHeavyParam;
+    [SerializeField, S_AnimationName("animator")] private string hitHeavyParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string tBagParam;
+    [SerializeField, S_AnimationName("animator")] private string tBagParam;
 
     [TabGroup("Settings")]
     [Title("Mask")]
