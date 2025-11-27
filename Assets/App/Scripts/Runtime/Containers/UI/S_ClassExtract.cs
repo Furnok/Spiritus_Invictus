@@ -6,7 +6,7 @@ using UnityEngine.Localization;
 public class S_ClassExtract
 {
     [Title("Dialogue")]
-    public LocalizedString text;
+    public LocalizedString text = null;
 
     [Title("Time")]
     [SuffixLabel("s", Overlay = true)]

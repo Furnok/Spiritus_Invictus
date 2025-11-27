@@ -40,7 +40,6 @@ public class S_InterractibleUI : MonoBehaviour
             {
                 image.sprite = imageKeyboardMouse;
                 text.text = "E";
-
             }
             else if (rsoDevice.Value == S_EnumDevice.PlastationController)
             {
@@ -53,9 +52,7 @@ public class S_InterractibleUI : MonoBehaviour
                 text.text = "";
             }
 
-            var lookPos = Camera.main.transform;
-
-            content.LookAt(content.position + lookPos.rotation * Vector3.forward, lookPos.rotation * Vector3.up);
+            content.LookAt(content.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
         }
     }
 }

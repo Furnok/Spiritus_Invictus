@@ -1,21 +1,22 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class S_ClassBossAttack
 {
     [Title("Attack Settings")]
-    public string attackName;
+    public string attackName = "";
 
-    public float attackTime;
+    [SuffixLabel("s", Overlay = true)]
+    public float attackTime = 0;
 
-    public bool isAttackDistance;
+    public bool isAttackDistance = false;
 
-    public float pvBossUnlock;
+    public float pvBossUnlock = 0;
 
-    public float difficultyLevel;
+    public float difficultyLevel = 0;
 
-    public List<S_StructEnemyAttackData> listComboData;
+    [Title("Combo Settings")]
+    public List<S_StructEnemyAttackData> listComboData = new();
 }

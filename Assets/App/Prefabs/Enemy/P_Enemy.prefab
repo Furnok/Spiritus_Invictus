@@ -431,6 +431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2493246550919936720}
+  - component: {fileID: 6910113154253423696}
   m_Layer: 5
   m_Name: ContentHealth
   m_TagString: Untagged
@@ -458,6 +459,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &6910113154253423696
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861027275683421439}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1872526195975783811
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,11 +721,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  playerLayerMask:
-    serializedVersion: 2
-    m_Bits: 1024
   detectionCollider: {fileID: 1536210782470915829}
-  maxTravelZone: {fileID: 1081287201517365919}
   enemy: {fileID: 445208566684554611}
   onTargetDetected:
     m_PersistentCalls:
@@ -1263,6 +1272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ea4abc89a559048b3a6537ee91a02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeFade: 0.4
   timeDisplayHealthBar: 3
   animationSlider: 0.4
   content: {fileID: 1861027275683421439}

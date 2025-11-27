@@ -40,7 +40,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     bool _isHolding;
     bool _wasCanceled;
 
-    List<PlayerAttackStep> _steps;
+    List<S_StructPlayerAttackStep> _steps;
     private List<float> _stepTimes = new List<float>();
     private List<float> _stepConvThresholds = new List<float>();
     float _reservedConviction;
@@ -50,7 +50,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     {
         _preconsumedConviction.Value = 0;
 
-        _steps = _playerAttackSteps.Value?.OrderBy(s => s.step).ToList() ?? new List<PlayerAttackStep>();
+        _steps = _playerAttackSteps.Value?.OrderBy(s => s.step).ToList() ?? new List<S_StructPlayerAttackStep>();
         if (_steps.Count == 0)
         {
             Debug.LogWarning("No attack steps configured");

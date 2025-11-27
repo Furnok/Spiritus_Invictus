@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-public interface ITargetable
+public interface I_Targetable
 {
     public Transform GetTargetLockOnAnchorTransform();
 }

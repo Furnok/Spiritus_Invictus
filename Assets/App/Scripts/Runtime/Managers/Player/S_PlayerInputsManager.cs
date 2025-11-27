@@ -60,8 +60,8 @@ public class S_PlayerInputsManager : MonoBehaviour
         uiMapName = iaPlayerInput.UI.Get().name;
         cinematicMapName = iaPlayerInput.Cinematic.Get().name;
 
-        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.None;
-        rsoLastInputActionMap.Value = EnumPlayerInputActionMap.None;
+        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
+        rsoLastInputActionMap.Value = S_EnumPlayerInputActionMap.None;
     }
 
     private void OnEnable()
@@ -290,7 +290,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.actions.Disable();
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.None;
+        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
     }
 
     private void ActivateGameActionInput()
@@ -306,7 +306,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.currentActionMap.Enable();
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.Game;
+        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Game;
     }
 
     private void ActivateUIActionInput()
@@ -322,7 +322,7 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.currentActionMap.Enable();
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.UI;
+        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.UI;
     }
 
     private void ActivateCinematicActionInput()
@@ -338,6 +338,6 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.currentActionMap.Enable();
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = EnumPlayerInputActionMap.Cinematic;
+        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Cinematic;
     }
 }

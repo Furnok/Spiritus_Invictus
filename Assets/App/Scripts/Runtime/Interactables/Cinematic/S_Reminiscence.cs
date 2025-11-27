@@ -5,7 +5,7 @@ public class S_Reminiscence : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Filter")]
-    [SerializeField] [S_TagName] private string tagName;
+    [SerializeField, S_TagName] private string tagName;
 
     [TabGroup("Settings")]
     [Title("Camera Cinematic")]

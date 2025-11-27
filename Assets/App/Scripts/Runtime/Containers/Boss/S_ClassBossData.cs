@@ -1,4 +1,3 @@
-using UnityEngine;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using System;
@@ -17,9 +16,10 @@ public class S_ClassBossData
 
     public float distanceToChase = 0;
 
+    [SuffixLabel("%", Overlay = true)]
     public float distanceToRun = 0;
 
     [Title("Animations")]
-    public List<S_ClassBossAttack> listAttackPhase1 = null;
-    public List<S_ClassBossAttack> listAttackPhase2 = null;
+    public List<S_ClassBossAttack> listAttackPhase1 = new();
+    public List<S_ClassBossAttack> listAttackPhase2 = new();
 }

@@ -171,7 +171,7 @@ public class S_PlayerMovement : MonoBehaviour
 
 
 
-        if (rsoCurrentInputActionMap.Value == EnumPlayerInputActionMap.Game)
+        if (rsoCurrentInputActionMap.Value == S_EnumPlayerInputActionMap.Game)
         {
             if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == true ||
                 _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == true)

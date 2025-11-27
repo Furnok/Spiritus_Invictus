@@ -2,7 +2,7 @@
 using System;
 
 [Serializable]
-public struct PlayerAttackStep
+public struct S_StructPlayerAttackStep
 {
     public int step;
     public int multipliers;

@@ -1,8 +1,7 @@
-using UnityEngine;
 using System;
 
 [Serializable]
-public struct ConvictionData
+public struct S_StructConvictionData
 {
     public float maxConviction;
     public float startConviction;

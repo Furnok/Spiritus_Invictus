@@ -1,15 +1,10 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_EnemyTargetable : MonoBehaviour, ITargetable
+public class S_EnemyTargetable : MonoBehaviour, I_Targetable
 {
-    //[Header("Settings")]
-
-    [Header("References")]
-    [SerializeField] Transform _lockOnAnchor;
-
-    //[Header("Inputs")]
-
-    //[Header("Outputs")]
+    [TabGroup("References")]
+    [SerializeField] private Transform _lockOnAnchor;
 
     public Transform GetTargetLockOnAnchorTransform()
     {

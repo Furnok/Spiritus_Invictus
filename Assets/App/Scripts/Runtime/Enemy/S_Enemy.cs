@@ -110,31 +110,41 @@ public class S_Enemy : MonoBehaviour
 
     private float health = 0;
     private float maxhealth = 0;
+
     private int currentPatrolIndex = 0;
+
     private Transform aimPoint = null;
+
     private BlackboardVariable<bool> isPatroling = null;
     private BlackboardVariable<bool> isChasing = null;
     private BlackboardVariable<bool> isAttacking = null;
+
     private AnimatorOverrideController overrideController = null;
+
     private Coroutine comboCoroutine = null;
     private Coroutine resetCoroutine = null;
     private Coroutine patrolCoroutine = null;
+
     private bool isPerformingCombo = false;
     private S_EnumEnemyState? pendingState = null;
     private GameObject pendingTarget = null;
+
     private bool isPlayerDead = false;
+
     private GameObject targetInZone = null;
     private GameObject target = null;
+
     private bool isChase = false;
     private bool isPatrolling = false;
     private bool isDead = false;
-    private S_ClassAnimationsCombos combo;
+
+    private S_ClassAnimationsCombos combo = null;
 
     private void Awake()
     {
         Refresh();
 
-        Animator anim = GetComponent<Animator>();
+        Animator anim = animator;
         AnimatorOverrideController instance = new AnimatorOverrideController(ssoEnemyData.Value.controllerOverride);
 
         var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
@@ -256,27 +266,6 @@ public class S_Enemy : MonoBehaviour
         }
     }
 
-    private void Chase()
-    {
-        float distance = Vector3.Distance(body.transform.position, target.transform.position);
-
-        bool destinationReached = distance <= (combo.distanceToChase);
-
-        if (!destinationReached)
-        {
-            navMeshAgent.SetDestination(target.transform.position);
-        }
-        else if (destinationReached)
-        {
-            isChase = false;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-            behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
-            behaviorAgent.Restart();
-        }
-    }
-
     private void SetInsideBox(GameObject newTarget)
     {
         targetInZone = newTarget;
@@ -351,6 +340,7 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.Restart();
     }
 
+    #region Health System
     private void SetHealth(float damage)
     {
         rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Take " + damage + " Damage!");
@@ -427,7 +417,9 @@ public class S_Enemy : MonoBehaviour
             SetHealth(damage);
         }
     }
+    #endregion
 
+    #region Player Death
     private void TBag()
     {
         if (isPlayerDead)
@@ -471,7 +463,9 @@ public class S_Enemy : MonoBehaviour
 
         TBag();
     }
+    #endregion
 
+    #region Patrol System
     public void Patroling()
     {
         if (isPatroling != null && isPatroling.Value)
@@ -529,6 +523,29 @@ public class S_Enemy : MonoBehaviour
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPointsList.Count;
         }
     }
+    #endregion
+
+    #region Chase System
+    private void Chase()
+    {
+        float distance = Vector3.Distance(body.transform.position, target.transform.position);
+
+        bool destinationReached = distance <= (combo.distanceToChase);
+
+        if (!destinationReached)
+        {
+            navMeshAgent.SetDestination(target.transform.position);
+        }
+        else if (destinationReached)
+        {
+            isChase = false;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+            behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
+            behaviorAgent.Restart();
+        }
+    }
 
     public void Chasing()
     {
@@ -553,7 +570,9 @@ public class S_Enemy : MonoBehaviour
             rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Stop Chasing the Player!");
         }
     }
+    #endregion
 
+    #region Combo System
     private void GetCombo()
     {
         int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
@@ -639,6 +658,7 @@ public class S_Enemy : MonoBehaviour
 
         behaviorAgent.SetVariableValue<bool>("CanAttack", true);
     }
+    #endregion
 
     private void OnDrawGizmos()
     {

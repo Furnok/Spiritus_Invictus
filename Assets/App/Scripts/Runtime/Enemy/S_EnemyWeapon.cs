@@ -5,7 +5,7 @@ public class S_EnemyWeapon : MonoBehaviour, I_AttackProvider
 {
     [TabGroup("References")]
     [Title("Enemy")]
-    [SerializeField] S_EnemyAttackData S_EnemyAttackData;
+    [SerializeField] private S_EnemyAttackData S_EnemyAttackData;
 
     private S_StructEnemyAttackData AttackData;
 

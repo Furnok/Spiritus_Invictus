@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class S_ClassAnimationsCombos
 {
     [Title("Combos")]
-    public List<S_ClassAnimation> listAnimationsCombos = null;
+    public List<S_ClassAnimation> listAnimationsCombos = new();
 
     [Title("Distances")]
     public float distanceToChase = 0;

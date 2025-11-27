@@ -9,5 +9,5 @@ public class S_ClassConsoleHelper
     public string command = "";
 
     [Title("Description")]
-    public LocalizedString description;
+    public LocalizedString description = null;
 }

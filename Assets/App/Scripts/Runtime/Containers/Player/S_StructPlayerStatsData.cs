@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public struct PlayerStatsData
+public struct S_StructPlayerStatsData
 {
     [Header("Player values")]
     public float maxHealth;

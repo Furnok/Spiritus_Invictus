@@ -9,5 +9,6 @@ public class S_ClassCameraShake
     public float frequency = 0;
 
     [Title("Time")]
+    [SuffixLabel("s", Overlay = true)]
     public float duration = 0;
 }

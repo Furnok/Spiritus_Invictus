@@ -116,7 +116,7 @@ public class S_TargetingManager : MonoBehaviour
         {
             if (currentTarget == null)
             {
-                if (selection.TryGetComponent(out ITargetable targetable))
+                if (selection.TryGetComponent(out I_Targetable targetable))
                 {
                     _previewTargetTransform = targetable.GetTargetLockOnAnchorTransform();
                 }
@@ -135,7 +135,7 @@ public class S_TargetingManager : MonoBehaviour
             }
             else if (currentTarget != null)
             {
-                if (currentTarget.TryGetComponent(out ITargetable targetable))
+                if (currentTarget.TryGetComponent(out I_Targetable targetable))
                 {
                     _lockedTargetTransfrom = targetable.GetTargetLockOnAnchorTransform();
                 }
@@ -159,7 +159,7 @@ public class S_TargetingManager : MonoBehaviour
                 {
                     _swapLeftGO.SetActive(false);
 
-                    if (rightTarget.TryGetComponent(out ITargetable t))
+                    if (rightTarget.TryGetComponent(out I_Targetable t))
                         _swapRightTargetTransform = t.GetTargetLockOnAnchorTransform();
                     else
                         _swapRightTargetTransform = rightTarget.transform;
@@ -172,7 +172,7 @@ public class S_TargetingManager : MonoBehaviour
                 // left
                 if (leftTarget != null && leftTarget != currentTarget)
                 {
-                    if (leftTarget.TryGetComponent(out ITargetable leftTargetable))
+                    if (leftTarget.TryGetComponent(out I_Targetable leftTargetable))
                         _swapLeftTargetTransform = leftTargetable.GetTargetLockOnAnchorTransform();
                     else
                         _swapLeftTargetTransform = leftTarget.transform;
@@ -188,7 +188,7 @@ public class S_TargetingManager : MonoBehaviour
                 // right
                 if (rightTarget != null && rightTarget != currentTarget)
                 {
-                    if (rightTarget.TryGetComponent(out ITargetable rightTargetable))
+                    if (rightTarget.TryGetComponent(out I_Targetable rightTargetable))
                         _swapRightTargetTransform = rightTargetable.GetTargetLockOnAnchorTransform();
                     else
                         _swapRightTargetTransform = rightTarget.transform;

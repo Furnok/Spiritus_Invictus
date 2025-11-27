@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public struct AnimationTransitionDelays
+public struct S_StructAnimationTransitionDelays
 {
     [Header("Startup delay")]
     public float dodgeStartupDelay;

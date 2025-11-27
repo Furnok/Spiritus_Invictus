@@ -5,7 +5,7 @@ public class S_Extract : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Filter")]
-    [SerializeField] [S_TagName] private string tagPlayer;
+    [SerializeField, S_TagName] private string tagPlayer;
 
     [TabGroup("Settings")]
     [Title("Extract")]
