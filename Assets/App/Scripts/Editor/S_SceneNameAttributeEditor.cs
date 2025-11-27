@@ -52,6 +52,11 @@ public class S_SceneNameAttributeEditor : PropertyDrawer
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        if (sceneAssets == null || sceneNames == null)
+        {
+            RefreshScenes();
+        }
+
         /// Get Properties
         SerializedProperty nameProp = property.FindPropertyRelative("sceneName");
         SerializedProperty guidProp = property.FindPropertyRelative("sceneGUID");
