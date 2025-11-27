@@ -210,6 +210,34 @@ public class S_CameraManager : MonoBehaviour
         }
     }
 
+    private void PlayerPos(Transform player)
+    {
+        playerPos = player;
+        cinemachineCameraRail.Target.TrackingTarget = player;
+    }
+
+    private void InputsMove(Vector2 move)
+    {
+        if (currentMode == ModeCamera.Player)
+        {
+            if (move.x > 0 && lastDirection <= 0)
+            {
+                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetNegative);
+                lastDirection = move.x;
+            }
+            else if (move.x < 0 && lastDirection >= 0)
+            {
+                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetPositive);
+                lastDirection = move.x;
+            }
+        }
+        else
+        {
+            shoulderTween?.Kill();
+        }
+    }
+
+    #region Camera System
     private void SwitchCameraMode()
     {
         shoulderTween?.Kill();
@@ -345,7 +373,9 @@ public class S_CameraManager : MonoBehaviour
         currentCam = to;
         currentMode = newMode;
     }
+    #endregion
 
+    #region Cinematic System
     private void CameraIntro()
     {
         if (cinemachineCameraIntro.transform.parent.gameObject.activeInHierarchy)
@@ -429,7 +459,9 @@ public class S_CameraManager : MonoBehaviour
         rseOnDisplayUIGame.Call(true);
         rseOnGameInputEnabled.Call();
     }
+    #endregion
 
+    #region Camera Shake
     private void CameraShake(S_ClassCameraShake data)
     {
         var perlin = currentCam.GetComponent<CinemachineBasicMultiChannelPerlin>();
@@ -449,7 +481,9 @@ public class S_CameraManager : MonoBehaviour
             perlin.AmplitudeGain = perlin.FrequencyGain = 0;
         }));
     }
+    #endregion
 
+    #region Handle Systems
     private void HandleCameraRotation()
     {
         if (currentMode == ModeCamera.Rail)
@@ -593,31 +627,5 @@ public class S_CameraManager : MonoBehaviour
             ssoCameraData.Value.switchDurationCamera
         ).SetEase(Ease.Linear);
     }
-
-    public void PlayerPos(Transform player)
-    {
-        playerPos = player;
-        cinemachineCameraRail.Target.TrackingTarget = player;
-    }
-
-    public void InputsMove(Vector2 move)
-    {
-        if (currentMode == ModeCamera.Player)
-        {
-            if (move.x > 0 && lastDirection <= 0)
-            {
-                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetNegative);
-                lastDirection = move.x;
-            }
-            else if (move.x < 0 && lastDirection >= 0)
-            {
-                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetPositive);
-                lastDirection = move.x;
-            }
-        }
-        else
-        {
-            shoulderTween?.Kill();
-        }
-    }
+    #endregion
 }

@@ -1,33 +1,46 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 
 public class S_TimeManager : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("General")]
     [SerializeField, Range(0f, 1f)] private float _slowScaleDodge = 0.25f;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float _hitStopDodge = 0.06f;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float _slowDurationDodge = 0.5f;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float _blendOutDodge = 0.35f;
 
-    [Header("Parry Configuration")]
+    [TabGroup("Settings")]
+    [Title("Parry Configuration")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float _hitStopParry = 0.1f;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
 
-    [Header("References")]
-    [SerializeField] RSO_GameInPause _rsoGameInPause;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnGamePause _rseOnGamePause;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnParrySuccess _rseOnParrySuccess;
 
-    [Header("Inputs")]
-    [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
-    [SerializeField] RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
-    [SerializeField] RSE_OnGamePause _rseOnGamePause;
-    //[Header("Outputs")]
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_GameInPause _rsoGameInPause;
 
+    private float _baseFixedDelta = 0;
+    private float _gameTimeScale = 1f;
 
-    float _baseFixedDelta;
-    float _gameTimeScale = 1f;
-    Coroutine _slowMoCo;
-
+    private Coroutine _slowMoCo = null;
 
     private void Awake()
     {
@@ -38,15 +51,14 @@ public class S_TimeManager : MonoBehaviour
         PauseValueChange(false);
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         _rseOnDodgePerfect.action += StartPerfectDodgeSlowMotion;
         _rseOnGamePause.action += PauseValueChange;
         _rseOnParrySuccess.action += TriggerOnParryCoroutine;
-
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         _rseOnDodgePerfect.action -= StartPerfectDodgeSlowMotion;
         _rseOnGamePause.action -= PauseValueChange;
@@ -63,14 +75,11 @@ public class S_TimeManager : MonoBehaviour
         ApplyGameplayTimeScale();
     }
 
-
-    void PauseValueChange(bool newPauseState)
+    private void PauseValueChange(bool newPauseState)
     {
         _rsoGameInPause.Value = newPauseState;
         ApplyGameplayTimeScale();
     }
-
-    
 
     private void ApplyGameplayTimeScale()
     {
@@ -79,14 +88,13 @@ public class S_TimeManager : MonoBehaviour
         Time.fixedDeltaTime = _baseFixedDelta * Mathf.Max(effective, 0.01f);
     }
 
-
-    void StartPerfectDodgeSlowMotion()
+    private void StartPerfectDodgeSlowMotion()
     {
         if (_slowMoCo != null) StopCoroutine(_slowMoCo);
         _slowMoCo = StartCoroutine(CoroutineSlowMotion());
     }
 
-    IEnumerator CoroutineSlowMotion()
+    private IEnumerator CoroutineSlowMotion()
     {
         if (_hitStopDodge > 0f)
         {
@@ -133,8 +141,9 @@ public class S_TimeManager : MonoBehaviour
         _slowMoCo = null;
     }
 
-    void TriggerOnParryCoroutine (AttackContact contact) =>  StartCoroutine(CoroutineOnParry());
-    IEnumerator CoroutineOnParry()
+    private void TriggerOnParryCoroutine (AttackContact contact) =>  StartCoroutine(CoroutineOnParry());
+
+    private IEnumerator CoroutineOnParry()
     {
         if (_hitStopParry <= 0f) yield break;
 

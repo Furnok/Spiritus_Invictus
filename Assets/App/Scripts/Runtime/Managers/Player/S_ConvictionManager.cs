@@ -1,28 +1,43 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_ConvictionManager : MonoBehaviour
 {
-    //[Header("Settings")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnHealStart _onHealStart;
 
-    [Header("References")]
-    [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
-    [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
-    [SerializeField] RSO_ConsoleCheats _debugPlayer;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
 
-    [Header("Input")]
-    [SerializeField] RSE_OnHealStart _onHealStart;
-    [SerializeField] RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
-    [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
-    [SerializeField] RSE_OnSpawnProjectile _onSpawnProjectile;
-    [SerializeField] RSE_OnAttackStartPerformed _onAttackStartPerformed;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerGainConviction _onPlayerGainConviction;
 
-    [Header("Output")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnSpawnProjectile _onSpawnProjectile;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnAttackStartPerformed _onAttackStartPerformed;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
 
-    Coroutine _convictionConsumptionCoroutine;
-    Coroutine _convictionGainOrLossCoroutine;
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentConviction _playerCurrentConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_ConsoleCheats _debugPlayer;
+
+    private Coroutine _convictionConsumptionCoroutine = null;
+    private Coroutine _convictionGainOrLossCoroutine = null;
 
     private void Awake()
     {
@@ -48,7 +63,7 @@ public class S_ConvictionManager : MonoBehaviour
         _onAttackStartPerformed.action -= StopComsuptioncoroutine;
     }
 
-    void ReduceConvictionOnHealPerformed()
+    private void ReduceConvictionOnHealPerformed()
     {
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - _playerConvictionData.Value.healCost, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = newAmmount;
@@ -68,7 +83,7 @@ public class S_ConvictionManager : MonoBehaviour
         DelayWhenConvictionLoss();
     }
 
-    void ReduceConvictionOnAttackCancel(int stepCancel)
+    private void ReduceConvictionOnAttackCancel(int stepCancel)
     {
         if (_debugPlayer.Value.infiniteConviction == true) return;
         if (stepCancel == 0) return;
@@ -97,29 +112,30 @@ public class S_ConvictionManager : MonoBehaviour
         DelayWhenConvictionLoss();
     }
 
-    //void ReduceConvitionOnAttackPerform(int attaqueStep)
-    //{
-    //    var step = _playerAttackSteps.Value.Find(x => x.step == attaqueStep);
+    /*
+    private void ReduceConvitionOnAttackPerform(int attaqueStep)
+    {
+        var step = _playerAttackSteps.Value.Find(x => x.step == attaqueStep);
 
-    //    var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - step.ammountConvitionNeeded, 0, _playerConvictionData.Value.maxConviction);
+        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - step.ammountConvitionNeeded, 0, _playerConvictionData.Value.maxConviction);
 
-    //    if (step.ammountConvitionNeeded != 0)
-    //    {
-    //        _playerCurrentConviction.Value = newAmmount;
-    //        rseOnPlayerConvictionUpdate.Call(newAmmount);
+        if (step.ammountConvitionNeeded != 0)
+        {
+            _playerCurrentConviction.Value = newAmmount;
+            rseOnPlayerConvictionUpdate.Call(newAmmount);
 
-    //        DelayWhenConvictionLoss();
-    //    }
-    //    else
-    //    {
-    //        StartConvitionConsumption();
-    //    }
+            DelayWhenConvictionLoss();
+        }
+        else
+        {
+            StartConvitionConsumption();
+        }
 
-    //    DelayWhenConvictionLoss();
+        DelayWhenConvictionLoss();
+    }
+    */
 
-    //}
-
-    void OnPlayerGainConviction(float ammountGain)
+    private void OnPlayerGainConviction(float ammountGain)
     {
         var ammount = Mathf.Clamp(ammountGain + _playerCurrentConviction.Value, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = ammount;
@@ -128,7 +144,7 @@ public class S_ConvictionManager : MonoBehaviour
         DelayWhenConvictionGain();
     }
 
-    void StartConvitionConsumption()
+    private void StartConvitionConsumption()
     {
         if (_debugPlayer.Value.infiniteConviction == true) return;
         StopComsuptioncoroutine();
@@ -140,7 +156,7 @@ public class S_ConvictionManager : MonoBehaviour
         }));
     }
 
-    void ReductionConviction(float ammount)
+    private void ReductionConviction(float ammount)
     {
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = newAmmount;
@@ -167,14 +183,14 @@ public class S_ConvictionManager : MonoBehaviour
         }
     }
 
-    void ReductionConsumptionOnConsuption(float ammount)
+    private void ReductionConsumptionOnConsuption(float ammount)
     {
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
     }
 
-    void DelayWhenConvictionLoss()
+    private void DelayWhenConvictionLoss()
     {
         StopComsuptioncoroutine();
         if(_convictionGainOrLossCoroutine != null) StopCoroutine(_convictionGainOrLossCoroutine);
@@ -188,7 +204,7 @@ public class S_ConvictionManager : MonoBehaviour
         }));
     }
 
-    void DelayWhenConvictionGain()
+    private void DelayWhenConvictionGain()
     {
         StopComsuptioncoroutine();
         if(_convictionGainOrLossCoroutine != null) StopCoroutine(_convictionGainOrLossCoroutine);
@@ -199,7 +215,7 @@ public class S_ConvictionManager : MonoBehaviour
         }));
     }
 
-    void StopComsuptioncoroutine()
+    private void StopComsuptioncoroutine()
     {
         if (_convictionConsumptionCoroutine != null)
         {

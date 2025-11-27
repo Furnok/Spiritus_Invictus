@@ -222,6 +222,7 @@ public class S_UIGameManager : MonoBehaviour
         preconvictionTween?.Kill();
     }
 
+    #region UI Game
     private void DisplayBossHealth(bool value)
     {
         CanvasGroup cg = sliderBossHealth.GetComponent<CanvasGroup>();
@@ -305,7 +306,9 @@ public class S_UIGameManager : MonoBehaviour
             rt.anchoredPosition = Vector2.zero;
         }
     }
+    #endregion
 
+    #region Skip
     private void DisplaySkip(bool value)
     {
         CanvasGroup cg = skipWindow.GetComponent<CanvasGroup>();
@@ -329,7 +332,9 @@ public class S_UIGameManager : MonoBehaviour
 
         skipTween = imageSkip.DOFillAmount(value / ssoCameraData.Value.holdSkipTime, animationSlider).SetEase(Ease.OutCubic);
     }
+    #endregion
 
+    #region Extract
     private void DiplayExtract(int index)
     {
         RuntimeManager.PlayOneShot(uiSound);
@@ -338,7 +343,9 @@ public class S_UIGameManager : MonoBehaviour
         rseOnOpenWindow.Call(extractWindow);
         rseOnDisplayExtract.Call(ssoExtractText.Value[index]);
     }
+    #endregion
 
+    #region Console
     private void Console()
     {
         if (!rsoConsoleDisplay.Value)
@@ -451,7 +458,9 @@ public class S_UIGameManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Game Over
     private void GameOver()
     {
         StartCoroutine(S_Utils.Delay(3f, () =>
@@ -474,4 +483,5 @@ public class S_UIGameManager : MonoBehaviour
             }
         }));
     }
+    #endregion
 }

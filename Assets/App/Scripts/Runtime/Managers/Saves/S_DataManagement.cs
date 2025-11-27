@@ -95,17 +95,13 @@ public class S_DataManagement : MonoBehaviour
             }
         }
 
-        LoadDataTemp();
-    }
-
-    private void LoadDataTemp()
-    {
         if (FileAlreadyExist(saveNames))
         {
             LoadTempFromJson(saveNames);
         }
     }
 
+    #region Encryption
     private static string Encrypt(string plainText)
     {
         using Aes aes = Aes.Create();
@@ -143,7 +139,9 @@ public class S_DataManagement : MonoBehaviour
             throw;
         }
     }
+    #endregion
 
+    #region File Management
     private string GetFilePath(string name)
     {
         return Path.Combine(SaveDirectory, $"{name}.json");
@@ -153,7 +151,9 @@ public class S_DataManagement : MonoBehaviour
     {
         return File.Exists(GetFilePath(name));
     }
+    #endregion
 
+    #region Save & Load & Delete
     private void SaveToJson(string name, bool isSetting)
     {
         if (name == null) return;
@@ -278,6 +278,18 @@ public class S_DataManagement : MonoBehaviour
         }
     }
 
+    private void DeleteData(string name)
+    {
+        if (FileAlreadyExist(name))
+        {
+            string filePath = GetFilePath(name);
+
+            File.Delete(filePath);
+        }
+    }
+    #endregion
+
+    #region Load Settings
     private Resolution GetResolutions(int index)
     {
         List<Resolution> resolutionsPC = new(Screen.resolutions);
@@ -338,14 +350,5 @@ public class S_DataManagement : MonoBehaviour
 
         LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[rsoSettingsSaved.Value.languageIndex];
     }
-
-    private void DeleteData(string name)
-    {
-        if (FileAlreadyExist(name))
-        {
-            string filePath = GetFilePath(name);
-
-            File.Delete(filePath);
-        }
-    }
+    #endregion
 }

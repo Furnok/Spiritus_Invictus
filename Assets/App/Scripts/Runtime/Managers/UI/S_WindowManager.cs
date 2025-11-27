@@ -136,6 +136,7 @@ public class S_WindowManager : MonoBehaviour
         }
     }
 
+    #region UI Game
     private void DisplayUIGame(bool value)
     {
         CanvasGroup cg = gameWindow.GetComponent<CanvasGroup>();
@@ -155,7 +156,9 @@ public class S_WindowManager : MonoBehaviour
             });
         }
     }
+    #endregion
 
+    #region Pause Game
     private void PauseGame()
     {
         if (inputField.isFocused)
@@ -226,7 +229,9 @@ public class S_WindowManager : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Window Management
     private void AlreadyOpen(GameObject window)
     {
         if (window != null)
@@ -285,7 +290,9 @@ public class S_WindowManager : MonoBehaviour
 
         rsoCurrentWindows.Value.Clear();
     }
+    #endregion
 
+    #region Fade Management
     private void FadeIn()
     {
         imageFade?.DOKill();
@@ -299,4 +306,5 @@ public class S_WindowManager : MonoBehaviour
 
         imageFade.DOFade(1f, ssoFadeTime.Value).SetEase(Ease.Linear).SetUpdate(true);
     }
+    #endregion
 }

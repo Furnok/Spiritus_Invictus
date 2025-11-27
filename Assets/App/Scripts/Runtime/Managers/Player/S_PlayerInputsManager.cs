@@ -1,44 +1,96 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 public class S_PlayerInputsManager : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Player Input")]
     [SerializeField] private PlayerInput playerInput;
-    [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
-    [SerializeField] private RSO_LastInputActionMap rsoLastInputActionMap;
 
-    [Header("Input")]
-    [SerializeField] RSE_OnPlayerDeath _onPlayerDeathRse;
-    [SerializeField] RSE_OnPlayerRespawn _onPlayerRespawnRse;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDeath _onPlayerDeathRse;
 
-    [Header("Output")]
-    [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
-    [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
-    [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
-    [SerializeField] private RSE_OnPlayerAttackInputCancel rseOnPlayerAttackInputCancel;
-    [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
-    [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
-    [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
-    [SerializeField] private RSE_OnPlayerMeditationInput rseOnPlayerMeditation;
-    [SerializeField] private RSE_OnPlayerMeditationCancelInput rseOnPlayerMeditationCancel;
-    [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
-    [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
-    [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
-    [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
-    [SerializeField] private RSE_OnPlayerHealInput rseOnPlayerHeal;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnInputDisabled rseOnInputDisabled;
-    [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
-    [SerializeField] private RSE_OnGameInputEnabled rseOnGameActionInputEnabled;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUiActionInputEnabled;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameActionInputEnabled;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAttackInputCancel rseOnPlayerAttackInputCancel;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerMeditationInput rseOnPlayerMeditation;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerMeditationCancelInput rseOnPlayerMeditationCancel;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerHealInput rseOnPlayerHeal;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerDodgeInputCancel rseOnPlayerDodgeInputCancel;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnConsole rseOnConsole;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSkipInput rseOnSkipInput;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSkipCancelInput rseOnSkipCancelInput;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_LastInputActionMap rsoLastInputActionMap;
+
     private IA_PlayerInput iaPlayerInput = null;
+
     private bool initialized = false;
+
     private string gameMapName = "";
     private string uiMapName = "";
     private string cinematicMapName = "";
@@ -96,6 +148,16 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.actions.Disable();
         DisableGameInputs();
         DisableUIInputs();
+    }
+
+    private void DeactivateInput()
+    {
+        if (!initialized) return;
+
+        playerInput.actions.Disable();
+
+        rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
+        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
     }
 
     #region Game Input Callback Methods
@@ -193,7 +255,6 @@ public class S_PlayerInputsManager : MonoBehaviour
     #endregion
 
     #region Cinematic Input Callback Methods
-
     private void OnSkipInput(InputAction.CallbackContext ctx)
     {
         rseOnSkipInput.Call();
@@ -205,6 +266,7 @@ public class S_PlayerInputsManager : MonoBehaviour
     }
     #endregion
 
+    #region Enable/Disable Game Inputs
     private void EnableGameInputs()
     {
         var game = iaPlayerInput.Game;
@@ -251,48 +313,6 @@ public class S_PlayerInputsManager : MonoBehaviour
         game.Console.performed -= OnConsoleInput;
     }
 
-    private void EnableUIInputs()
-    {
-        var ui = iaPlayerInput.UI;
-
-        ui.Pause.performed += OnPauseUIInput;
-        ui.Console.performed += OnConsoleUIInput;
-    }
-
-    private void DisableUIInputs()
-    {
-        var ui = iaPlayerInput.UI;
-
-        ui.Pause.performed -= OnPauseUIInput;
-        ui.Console.performed -= OnConsoleUIInput;
-    }
-
-    private void EnableCinematicInputs()
-    {
-        var cinematic = iaPlayerInput.Cinematic;
-
-        cinematic.Skip.performed += OnSkipInput;
-        cinematic.Skip.canceled += OnSkipCancelInput;
-    }
-
-    private void DisableCinematicInputs()
-    {
-        var cinematic = iaPlayerInput.Cinematic;
-
-        cinematic.Skip.performed -= OnSkipInput;
-        cinematic.Skip.canceled -= OnSkipCancelInput;
-    }
-
-    private void DeactivateInput()
-    {
-        if (!initialized) return;
-
-        playerInput.actions.Disable();
-
-        rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
-        rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
-    }
-
     private void ActivateGameActionInput()
     {
         if (!initialized) return;
@@ -307,6 +327,24 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Game;
+    }
+    #endregion
+
+    #region Enable/Disable UI Inputs
+    private void EnableUIInputs()
+    {
+        var ui = iaPlayerInput.UI;
+
+        ui.Pause.performed += OnPauseUIInput;
+        ui.Console.performed += OnConsoleUIInput;
+    }
+
+    private void DisableUIInputs()
+    {
+        var ui = iaPlayerInput.UI;
+
+        ui.Pause.performed -= OnPauseUIInput;
+        ui.Console.performed -= OnConsoleUIInput;
     }
 
     private void ActivateUIActionInput()
@@ -324,6 +362,24 @@ public class S_PlayerInputsManager : MonoBehaviour
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.UI;
     }
+    #endregion
+
+    #region Enable/Disable Cinemactic Inputs
+    private void EnableCinematicInputs()
+    {
+        var cinematic = iaPlayerInput.Cinematic;
+
+        cinematic.Skip.performed += OnSkipInput;
+        cinematic.Skip.canceled += OnSkipCancelInput;
+    }
+
+    private void DisableCinematicInputs()
+    {
+        var cinematic = iaPlayerInput.Cinematic;
+
+        cinematic.Skip.performed -= OnSkipInput;
+        cinematic.Skip.canceled -= OnSkipCancelInput;
+    }
 
     private void ActivateCinematicActionInput()
     {
@@ -340,4 +396,5 @@ public class S_PlayerInputsManager : MonoBehaviour
         rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Cinematic;
     }
+    #endregion
 }
