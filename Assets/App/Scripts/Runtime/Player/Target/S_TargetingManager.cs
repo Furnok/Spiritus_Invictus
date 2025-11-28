@@ -68,9 +68,6 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_TargetPosition rsoTargetPosition;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     [TabGroup("Outputs")]
@@ -338,7 +335,6 @@ public class S_TargetingManager : MonoBehaviour
         if (currentTarget != null)
         {
             rseOnPlayerCancelTargeting.Call(currentTarget);
-            rsoTargetPosition.Value = Vector3.zero;
             rseOnAnimationBoolValueChange.Call("TargetLock", false);
 
             rseOnStopTargeting.Call();
@@ -454,7 +450,6 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnPlayerCancelTargeting.Call(currentTarget);
             currentTarget = bestTarget;
-            rsoTargetPosition.Value = currentTarget.transform.position;
             rseOnNewTargeting.Call(bestTarget);
         }
     }
@@ -499,8 +494,6 @@ public class S_TargetingManager : MonoBehaviour
 
         if (selectedTarget != null)
         {
-            rsoTargetPosition.Value = selectedTarget.transform.position;
-
             rseOnAnimationBoolValueChange.Call("TargetLock", true);
         }
 

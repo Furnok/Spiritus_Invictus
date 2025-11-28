@@ -66,7 +66,7 @@ public class S_PlayerRespawn : MonoBehaviour
         transform.SetPositionAndRotation(_playerRespawnPosition.Value.position, _playerRespawnPosition.Value.rotation);
 
         _onAnimationBoolValueChange.Call(_deadParam, false);
-        _onPlayerAddStateRse.Call(PlayerState.None);
+        _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
 
         _playerCurrentHealth.Value = _playerStats.Value.maxHealth;
         _onPlayerHealthUpdate.Call(_playerCurrentHealth.Value);

@@ -1,11 +1,4 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RSO_PlayerRespawnPosition", menuName = "Data/RSO/Player/PlayerRespawnPosition")]
-public class RSO_PlayerRespawnPosition : BT.ScriptablesObject.RuntimeScriptableObject<PositionAndRotation> {}
-
-[System.Serializable]
-public class PositionAndRotation
-{
-    public Vector3 position;
-    public Quaternion rotation;
-}
+public class RSO_PlayerRespawnPosition : BT.ScriptablesObject.RuntimeScriptableObject<S_ClassPositionAndRotation> {}

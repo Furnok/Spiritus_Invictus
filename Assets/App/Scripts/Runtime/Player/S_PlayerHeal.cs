@@ -62,11 +62,11 @@ public class S_PlayerHeal : MonoBehaviour
 
     private void TryHeal()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Healing) == false) return;
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Healing) == false) return;
 
         if (_playerCurrentHealth.Value >= ssoPlayerStats.Value.maxHealth || _playerCurrentConviction.Value < _playerConvictionData.Value.healCost) return;
 
-        _onPlayerAddState.Call(PlayerState.Healing);
+        _onPlayerAddState.Call(S_EnumPlayerState.Healing);
         rseOnAnimationBoolValueChange.Call(_healParam, true);
         _onHealStart.Call();
 
@@ -78,7 +78,7 @@ public class S_PlayerHeal : MonoBehaviour
 
                 healCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.healRecoveryDelay, () =>
                 {
-                    _onPlayerAddState.Call(PlayerState.None);
+                    _onPlayerAddState.Call(S_EnumPlayerState.None);
                     rseOnAnimationBoolValueChange.Call(_healParam, false);
                 }));
             }));

@@ -22,9 +22,6 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_IsInvicible _isInvicible;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSO_ConsoleCheats _debugPlayer;
 
     [TabGroup("Outputs")]
@@ -35,10 +32,10 @@ public class S_PlayerDamageSystem : MonoBehaviour
 
     private Coroutine _hitReactCoroutine = null;
 
+    private bool _isInvicible = false;
+
     private void OnEnable()
     {
-        _isInvicible.Value = false;
-
         _rseOnPlayerHit.action += TakeDamage;
     }
     
@@ -49,7 +46,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
 
     private void TakeDamage(S_StructAttackContact attackContact)
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true && _isInvicible.Value == false && _debugPlayer.Value.cantGetttingHit == false)
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.HitReact) == true && _isInvicible == false && _debugPlayer.Value.cantGetttingHit == false)
         {
             var attackData = attackContact.data;
 
@@ -59,20 +56,20 @@ public class S_PlayerDamageSystem : MonoBehaviour
             }
 
             rseOnAnimationTriggerValueChange.Call("isHit");
-            _onPlayerAddState.Call(PlayerState.HitReact);
-            _isInvicible.Value = true;
+            _onPlayerAddState.Call(S_EnumPlayerState.HitReact);
+            _isInvicible = true;
 
             _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackHitDuration, () =>
             {
-                if(_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.None) == true)
+                if(_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.None) == true)
                 {
-                    _onPlayerAddState.Call(PlayerState.None);
+                    _onPlayerAddState.Call(S_EnumPlayerState.None);
                 }
             }));
 
             StartCoroutine(S_Utils.Delay(attackData.invicibilityDuration, () =>
             {
-                _isInvicible.Value = false;
+                _isInvicible = false;
             }));
 
             rseOnPlayerHealthReduced.Call(attackData.damage);

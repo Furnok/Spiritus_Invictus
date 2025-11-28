@@ -6,9 +6,6 @@ public class S_PlayerStatesManager : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
-    [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnPlayerRemoveState _onPlayerRemoveState;
-
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
 
@@ -17,27 +14,20 @@ public class S_PlayerStatesManager : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerCurrentState.Value = PlayerState.None;
+        _playerCurrentState.Value = S_EnumPlayerState.None;
 
         _onPlayerAddState.action += AddState;
-        _onPlayerRemoveState.action += RemoveState;
     }
 
     private void OnDisable()
     {
         _onPlayerAddState.action -= AddState;
-        _onPlayerRemoveState.action -= RemoveState;
     }
 
-    private void AddState(PlayerState state)
+    private void AddState(S_EnumPlayerState state)
     {
         if (state == _playerCurrentState.Value) return;
 
         _playerCurrentState.Value = state;
-    }
-
-    private void RemoveState(PlayerState state)
-    {
-        _playerCurrentState.Value -= state;
     }
 }

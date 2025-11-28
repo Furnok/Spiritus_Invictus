@@ -67,7 +67,7 @@ public class S_PlayerHealthManager : MonoBehaviour
             if (_debugPlayer.Value.cantDie == true) return;
             rseOnPlayerDeath.Call();
             _rseOnAnimationBoolValueChange.Call("isDead", true);
-            _onPlayerAddState.Call(PlayerState.Dying);
+            _onPlayerAddState.Call(S_EnumPlayerState.Dying);
         }
     }
 }

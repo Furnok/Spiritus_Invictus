@@ -131,9 +131,9 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     private void OnPlayerAttackInput()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Attacking) == false ||_playerCurrentConviction.Value < 2) return;
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Attacking) == false ||_playerCurrentConviction.Value < 2) return;
 
-        _onPlayerAddState.Call(PlayerState.Attacking);
+        _onPlayerAddState.Call(S_EnumPlayerState.Attacking);
         _onAttackStartPerformed.Call();
         rseOnAnimationBoolValueChange.Call(_attackParam, true);
 
@@ -300,7 +300,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
             _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.attackRecoveryDelay, () =>
             {
-                _onPlayerAddState.Call(PlayerState.None);
+                _onPlayerAddState.Call(S_EnumPlayerState.None);
                 if (_attackChargeCoroutine == null) return;
                 _attackChargeCoroutine = null;
             }));

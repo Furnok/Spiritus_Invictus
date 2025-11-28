@@ -154,8 +154,8 @@ public class S_PlayerDodge : MonoBehaviour
 
     private void TryDodge()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false || _dodgeUp == false) return;
-        _onPlayerAddState.Call(PlayerState.Dodging);
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Dodging) == false || _dodgeUp == false) return;
+        _onPlayerAddState.Call(S_EnumPlayerState.Dodging);
 
         rseOnSendConsoleMessage.Call("Player Dodge!");
 
@@ -290,12 +290,12 @@ public class S_PlayerDodge : MonoBehaviour
             yield return new WaitForSeconds(rec);
         }
 
-        _onPlayerAddState.Call(PlayerState.None);
+        _onPlayerAddState.Call(S_EnumPlayerState.None);
 
         yield return new WaitForSeconds(_playerStats.Value.delayBeforeRunningAfterDodge);
-        if (_canRunAfterDodge && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running))
+        if (_canRunAfterDodge && _playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Running))
         {
-            _onPlayerAddState.Call(PlayerState.Running);
+            _onPlayerAddState.Call(S_EnumPlayerState.Running);
         }
 
         _dodgeCoroutine = null;
@@ -332,9 +332,9 @@ public class S_PlayerDodge : MonoBehaviour
         }
         */
         
-        if(_playerCurrentState.Value == PlayerState.Running /*&& _dodgeCoroutine != null*/)
+        if(_playerCurrentState.Value == S_EnumPlayerState.Running /*&& _dodgeCoroutine != null*/)
         {
-            _onPlayerAddState.Call(PlayerState.None);
+            _onPlayerAddState.Call(S_EnumPlayerState.None);
         }
     }
 

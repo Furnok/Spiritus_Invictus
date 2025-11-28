@@ -63,8 +63,8 @@ public class S_PlayerParry : MonoBehaviour
 
     private void TryParry()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false || _parryUp == false) return;
-        _onPlayerAddState.Call(PlayerState.Parrying);
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Parrying) == false || _parryUp == false) return;
+        _onPlayerAddState.Call(S_EnumPlayerState.Parrying);
 
         rseOnSendConsoleMessage.Call("Player Pary!");
 
@@ -97,7 +97,7 @@ public class S_PlayerParry : MonoBehaviour
                 {
                     if (_parryCoroutine != null) StopCoroutine(_parryCoroutine);
 
-                    _onPlayerAddState.Call(PlayerState.None);
+                    _onPlayerAddState.Call(S_EnumPlayerState.None);
                 }));
             }));
         }));

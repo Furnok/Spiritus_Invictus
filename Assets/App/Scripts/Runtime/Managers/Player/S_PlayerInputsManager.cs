@@ -16,9 +16,6 @@ public class S_PlayerInputsManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnInputDisabled rseOnInputDisabled;
-
-    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUiActionInputEnabled;
 
     [TabGroup("Inputs")]
@@ -29,9 +26,6 @@ public class S_PlayerInputsManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
@@ -47,12 +41,6 @@ public class S_PlayerInputsManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerPause rseOnPlayerPause;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnPlayerMeditationInput rseOnPlayerMeditation;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnPlayerMeditationCancelInput rseOnPlayerMeditationCancel;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
@@ -84,9 +72,6 @@ public class S_PlayerInputsManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
 
-    [TabGroup("Outputs")]
-    [SerializeField] private RSO_LastInputActionMap rsoLastInputActionMap;
-
     private IA_PlayerInput iaPlayerInput = null;
 
     private bool initialized = false;
@@ -113,7 +98,6 @@ public class S_PlayerInputsManager : MonoBehaviour
         cinematicMapName = iaPlayerInput.Cinematic.Get().name;
 
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
-        rsoLastInputActionMap.Value = S_EnumPlayerInputActionMap.None;
     }
 
     private void OnEnable()
@@ -122,7 +106,6 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         playerInput.actions.Enable();
 
-        rseOnInputDisabled.action += DeactivateInput;
         rseOnCinematicInputEnabled.action += ActivateCinematicActionInput;
         rseOnGameActionInputEnabled.action += ActivateGameActionInput;
         rseOnUiActionInputEnabled.action += ActivateUIActionInput;
@@ -137,7 +120,6 @@ public class S_PlayerInputsManager : MonoBehaviour
     {
         if (!initialized) return;
 
-        rseOnInputDisabled.action -= DeactivateInput;
         rseOnCinematicInputEnabled.action -= ActivateCinematicActionInput;
         rseOnGameActionInputEnabled.action -= ActivateGameActionInput;
         rseOnUiActionInputEnabled.action -= ActivateUIActionInput;
@@ -156,7 +138,6 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         playerInput.actions.Disable();
 
-        rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.None;
     }
 
@@ -164,11 +145,6 @@ public class S_PlayerInputsManager : MonoBehaviour
     private void OnMoveChanged(InputAction.CallbackContext ctx)
     {
         rseOnPlayerMove.Call(ctx.ReadValue<Vector2>());
-    }
-
-    private void OnMoveInputCancel(InputAction.CallbackContext ctx)
-    {
-        _onPlayerMoveInputCancel.Call();
     }
 
     private void OnTargetingInput(InputAction.CallbackContext ctx)
@@ -214,16 +190,6 @@ public class S_PlayerInputsManager : MonoBehaviour
     private void OnPauseGameInput(InputAction.CallbackContext ctx)
     {
         rseOnPlayerPause.Call();
-    }
-
-    private void OnMeditationInput(InputAction.CallbackContext ctx)
-    {
-        rseOnPlayerMeditation.Call();
-    }
-
-    private void OnMeditationCancelInput(InputAction.CallbackContext ctx)
-    {
-        rseOnPlayerMeditationCancel.Call();
     }
 
     private void OnParryInput(InputAction.CallbackContext ctx)
@@ -273,14 +239,11 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         game.Move.performed += OnMoveChanged;
         game.Move.canceled += OnMoveChanged;
-        game.Move.canceled += OnMoveInputCancel;
         game.Attack.performed += OnAttackInput;
         game.Attack.canceled += OnAttackInputCancel;
         game.Dodge.performed += OnDodgeInput;
         game.Dodge.canceled += OnDodgeInputCancel;
         game.Interact.performed += OnInteractInput;
-        game.Meditation.performed += OnMeditationInput;
-        game.Meditation.canceled += OnMeditationCancelInput;
         game.Parry.performed += OnParryInput;
         game.Pause.performed += OnPauseGameInput;
         game.Targeting.performed += OnTargetingInput;
@@ -296,14 +259,11 @@ public class S_PlayerInputsManager : MonoBehaviour
 
         game.Move.performed -= OnMoveChanged;
         game.Move.canceled -= OnMoveChanged;
-        game.Move.canceled -= OnMoveInputCancel;
         game.Attack.performed -= OnAttackInput;
         game.Attack.canceled -= OnAttackInputCancel;
         game.Dodge.performed -= OnDodgeInput;
         game.Dodge.canceled -= OnDodgeInputCancel;
         game.Interact.performed -= OnInteractInput;
-        game.Meditation.performed -= OnMeditationInput;
-        game.Meditation.canceled -= OnMeditationCancelInput;
         game.Parry.performed -= OnParryInput;
         game.Pause.performed -= OnPauseGameInput;
         game.Targeting.performed -= OnTargetingInput;
@@ -325,7 +285,6 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.SwitchCurrentActionMap(gameMapName);
         playerInput.currentActionMap.Enable();
 
-        rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Game;
     }
     #endregion
@@ -359,7 +318,6 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.SwitchCurrentActionMap(uiMapName);
         playerInput.currentActionMap.Enable();
 
-        rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.UI;
     }
     #endregion
@@ -393,7 +351,6 @@ public class S_PlayerInputsManager : MonoBehaviour
         playerInput.SwitchCurrentActionMap(cinematicMapName);
         playerInput.currentActionMap.Enable();
 
-        rsoLastInputActionMap.Value = rsoCurrentInputActionMap.Value;
         rsoCurrentInputActionMap.Value = S_EnumPlayerInputActionMap.Cinematic;
     }
     #endregion

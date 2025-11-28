@@ -176,14 +176,14 @@ public class S_PlayerMovement : MonoBehaviour
     {
         UpdateGround();
 
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == false)
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Moving) == false)
         {
             rseOnAnimationFloatValueChange.Call(speedParam, 0);
             rseOnAnimationFloatValueChange.Call(_strafXParam, 0f);
             rseOnAnimationFloatValueChange.Call(_strafYParam, 0f);
             rseOnAnimationBoolValueChange.Call(moveParam, false);
 
-            if (_playerCurrentState.Value != PlayerState.Dodging) // Allow movement after dodging
+            if (_playerCurrentState.Value != S_EnumPlayerState.Dodging) // Allow movement after dodging
             {
                 rigidbodyPlayer.linearVelocity = Vector3.zero;
             }
@@ -191,8 +191,8 @@ public class S_PlayerMovement : MonoBehaviour
 
         if (rsoCurrentInputActionMap.Value == S_EnumPlayerInputActionMap.Game)
         {
-            if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Moving) == true ||
-                _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running) == true)
+            if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Moving) == true ||
+                _playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Running) == true)
             {
                 BuildDesiredDirection(out Vector3 desiredDir, out float baseSpeed);
 
@@ -279,13 +279,13 @@ public class S_PlayerMovement : MonoBehaviour
                 bool targetMode = rsoPlayerIsTargeting.Value && target != null;
                 PushMovementAnims(targetMode, horizSpeed, moveInput);
 
-                if (moveInput.sqrMagnitude > 0.0001f && _playerCurrentState.Value != PlayerState.Running)
+                if (moveInput.sqrMagnitude > 0.0001f && _playerCurrentState.Value != S_EnumPlayerState.Running)
                 {
-                    _onPlayerAddState.Call(PlayerState.Moving);
+                    _onPlayerAddState.Call(S_EnumPlayerState.Moving);
                 }
                 else
                 {
-                    _onPlayerAddState.Call(PlayerState.None);
+                    _onPlayerAddState.Call(S_EnumPlayerState.None);
                 }
 
                 rsoPlayerPosition.Value = transform.position;
@@ -485,7 +485,7 @@ public class S_PlayerMovement : MonoBehaviour
     private void BuildDesiredDirection(out Vector3 desiredDir, out float baseSpeed)
     {
         float inputMag = Mathf.Clamp01(moveInput.magnitude);
-        bool running = (_playerCurrentState.Value == PlayerState.Running);
+        bool running = (_playerCurrentState.Value == S_EnumPlayerState.Running);
 
         if (rsoPlayerIsTargeting.Value && target != null)// If targeting mode
         {

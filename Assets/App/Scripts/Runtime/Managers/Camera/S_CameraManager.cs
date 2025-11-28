@@ -83,9 +83,6 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnCinematicStart rseOnCinematicStart;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
     [TabGroup("Outputs")]
@@ -383,7 +380,6 @@ public class S_CameraManager : MonoBehaviour
             StartSkipTimer();
 
             rseOnDisplayUIGame.Call(false);
-            rseOnCinematicStart.Call();
             rseOnCinematicInputEnabled.Call();
 
             currentCam = cinemachineCameraIntro;
@@ -417,7 +413,6 @@ public class S_CameraManager : MonoBehaviour
         StartSkipTimer();
 
         rseOnDisplayUIGame.Call(false);
-        rseOnCinematicStart.Call();
         rseOnCinematicInputEnabled.Call();
 
         currentTarget = null;
