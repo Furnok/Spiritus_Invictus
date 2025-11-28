@@ -1,42 +1,62 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerRespawn : MonoBehaviour
 {
-    //[Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Animation")]
+    [SerializeField, S_AnimationName] private string _deadParam;
 
-    [Header("References")]
-    [SerializeField] GameObject _playerHurtBoxCollider;
-    [SerializeField] GameObject _aimPointObject;
-    [SerializeField] RSO_PlayerRespawnPosition _playerRespawnPosition;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] RSO_PlayerCurrentHealth _playerCurrentHealth;
-    [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-    [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
+    [TabGroup("References")]
+    [Title("Collider")]
+    [SerializeField] private GameObject _playerHurtBoxCollider;
 
-    [Header("Inputs")]
-    [SerializeField] RSE_OnPlayerRespawn _onPlayerRespawnRse;
+    [TabGroup("References")]
+    [Title("Aim Point")]
+    [SerializeField] private GameObject _aimPointObject;
 
-    [Header("Outputs")]
-    [SerializeField] RSE_OnPlayerAddState _onPlayerAddStateRse;
-    [SerializeField] RSE_OnAnimationBoolValueChange _onAnimationBoolValueChange;
-    [SerializeField] RSE_OnPlayerHealthUpdate _onPlayerHealthUpdate;
-    [SerializeField] RSE_OnPlayerConvictionUpdate _onPlayerConvictionUpdate;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddStateRse;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnAnimationBoolValueChange _onAnimationBoolValueChange;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerHealthUpdate _onPlayerHealthUpdate;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerConvictionUpdate _onPlayerConvictionUpdate;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerRespawnPosition _playerRespawnPosition;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentHealth _playerCurrentHealth;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentConviction _playerCurrentConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
+   
     private void OnEnable()
     {
         _onPlayerRespawnRse.action += HandlePlayerRespawn;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         _onPlayerRespawnRse.action -= HandlePlayerRespawn;
 
         // Reset respawn position for now change it afterwards
-        _playerRespawnPosition.Value.position = Vector3.zero;
         _playerRespawnPosition.Value.rotation = Quaternion.identity;
     }
-
 
     private void HandlePlayerRespawn()
     {
@@ -45,7 +65,7 @@ public class S_PlayerRespawn : MonoBehaviour
 
         transform.SetPositionAndRotation(_playerRespawnPosition.Value.position, _playerRespawnPosition.Value.rotation);
 
-        _onAnimationBoolValueChange.Call("isDead", false);
+        _onAnimationBoolValueChange.Call(_deadParam, false);
         _onPlayerAddStateRse.Call(PlayerState.None);
 
         _playerCurrentHealth.Value = _playerStats.Value.maxHealth;

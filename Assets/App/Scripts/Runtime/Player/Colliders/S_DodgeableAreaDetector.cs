@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_DodgeableAreaDetector : MonoBehaviour
 {
-    //[Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Filter")]
+    [SerializeField, S_TagName] private string tagHit;
 
-    [Header("References")]
-    [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
-    [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
 
-    //[Header("Input")]
-
-    //[Header("Output")]
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_AttackCanHitPlayer _attackCanHitPlayer;
 
     private void Awake()
     {
@@ -23,7 +24,7 @@ public class S_DodgeableAreaDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Hitbox") && other.TryGetComponent(out I_AttackProvider attack))
+        if (other.CompareTag(tagHit) && other.TryGetComponent(out I_AttackProvider attack))
         {
             var goId = other.gameObject.GetInstanceID();
             ref var attackData = ref attack.GetAttackData();
@@ -36,22 +37,21 @@ public class S_DodgeableAreaDetector : MonoBehaviour
             if (_attackCanHitPlayer.Value == null || _attackCanHitPlayer.Value.ContainsKey(goId) || attackData.attackType != S_EnumEnemyAttackType.Dodgeable) return;
 
             _attackCanHitPlayer.Value.Add(goId, attack.GetAttackData());
-
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Hitbox") && other.TryGetComponent(out I_AttackProvider attack))
+        if (other.CompareTag(tagHit) && other.TryGetComponent(out I_AttackProvider attack))
         {
-
             var goId = other.gameObject.GetInstanceID();
             if (_attackDataInDodgeableArea.Value.ContainsKey(goId) == false) return;
+
             _attackDataInDodgeableArea.Value.Remove(goId);
 
             if (_attackCanHitPlayer.Value.ContainsKey(goId) == false) return;
+
             _attackCanHitPlayer.Value.Remove(goId);
         }
     }
-
 }

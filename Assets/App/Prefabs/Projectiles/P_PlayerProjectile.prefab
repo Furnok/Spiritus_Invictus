@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3567516255329880525}
-  - component: {fileID: 4885561947737550249}
   - component: {fileID: 4956157772788545160}
   - component: {fileID: 4960141287862395083}
+  - component: {fileID: 4885561947737550249}
   m_Layer: 8
   m_Name: P_PlayerProjectile
   m_TagString: Hitbox
@@ -35,28 +35,6 @@ Transform:
   - {fileID: 1990833724267097}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4885561947737550249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 907149789642734567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95716277bf04e354cb678379bb525e17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerAttackSteps: {fileID: 11400000, guid: ffc4fd5ee4fc81442b745bb06394e7be, type: 2}
-  _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
-  _onEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
-  _arcHeightMultiplier: 2
-  _arcDirection: 1
-  _randomizeArc: 1
-  _arcRandomDirectionMin: -3
-  _arcRandomDirectionMax: 3
-  _travelTime: 0.7
-  rseOnDespawnProjectile: {fileID: 11400000, guid: 0860b649b049fd047bee6936d640a06d, type: 2}
 --- !u!54 &4956157772788545160
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -105,6 +83,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4885561947737550249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907149789642734567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95716277bf04e354cb678379bb525e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagHurt: Hurtbox
+  _onEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
+  rseOnDespawnProjectile: {fileID: 11400000, guid: 0860b649b049fd047bee6936d640a06d, type: 2}
+  _playerAttackSteps: {fileID: 11400000, guid: ffc4fd5ee4fc81442b745bb06394e7be, type: 2}
+  _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
 --- !u!1 &7077784668367723756
 GameObject:
   m_ObjectHideFlags: 0

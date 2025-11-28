@@ -1,26 +1,28 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerDeath : MonoBehaviour
 {
-    //[Header("Settings")]
+    [TabGroup("References")]
+    [Title("Collider")]
+    [SerializeField] private GameObject _playerHurtBoxCollider;
 
-    [Header("References")]
-    [SerializeField] GameObject _playerHurtBoxCollider;
-    [SerializeField] GameObject _aimPointObject;
+    [TabGroup("References")]
+    [Title("Aim Point")]
+    [SerializeField] private GameObject _aimPointObject;
 
-    [Header("Inputs")]
-    [SerializeField] RSE_OnPlayerDeath _onPlayerDeathRse;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDeath _onPlayerDeathRse;
 
-    [Header("Outputs")]
-    [SerializeField] RSE_OnPlayerRespawn _onPlayerRespawnRse;
-
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
 
     private void OnEnable()
     {
         _onPlayerDeathRse.action += HandlePlayerDeath;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         _onPlayerDeathRse.action -= HandlePlayerDeath;
     }
@@ -29,13 +31,5 @@ public class S_PlayerDeath : MonoBehaviour
     {
         _playerHurtBoxCollider.SetActive(false);
         _aimPointObject.SetActive(false);
-
-        //StartCoroutine(S_Utils.Delay(2f, RespawnPlayer)); //testing
-    }
-
-    //Testing
-    void RespawnPlayer()
-    {
-        _onPlayerRespawnRse.Call();
     }
 }

@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class S_WindowManager : MonoBehaviour
 {
     [TabGroup("Settings")]
+    [Title("Times")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFade;
 

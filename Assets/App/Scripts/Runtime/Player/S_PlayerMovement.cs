@@ -1,77 +1,136 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class S_PlayerMovement : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField][S_AnimationName] private string moveParam;
-    [SerializeField][S_AnimationName] private string speedParam;
-    [SerializeField, S_AnimationName] string _strafXParam;
-    [SerializeField, S_AnimationName] string _strafYParam;
+    [TabGroup("Settings")]
+    [Title("Animations")]
+    [SerializeField, S_AnimationName] private string moveParam;
 
-    [Header("Grounding")]
+    [TabGroup("Settings")]
+    [SerializeField, S_AnimationName] private string speedParam;
+
+    [TabGroup("Settings")]
+    [SerializeField, S_AnimationName] private string _strafXParam;
+
+    [TabGroup("Settings")]
+    [SerializeField, S_AnimationName] private string _strafYParam;
+
+    [TabGroup("Settings")]
+    [Title("Grounding")]
     [SerializeField] private CapsuleCollider capsule;
+
+    [TabGroup("Settings")]
     [SerializeField] private LayerMask groundMask;
+
+    [TabGroup("Settings")]
     [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("Settings")]
     [SerializeField] private float groundCheckDist = 0.5f;
-    private float maxSlopeAngle =>_playerStats.Value.maxSlopeAngle;
+
+    /*
+    [TabGroup("Settings")]
     [SerializeField] private float skin = 0.02f;
 
-    [Header("Stick To Ground")]
+    [TabGroup("Settings")]
+    [Title("Stick To Ground")]
     [SerializeField] private float stickToGroundForce = 12f;
+    */
 
-    [Header("Edge Guard")]
+    [TabGroup("Settings")]
+    [Title("Edge Guard")]
     [SerializeField] private bool preventFallFromEdges = true;
-    [SerializeField] private float edgeProbeDistance = 0.6f;
-    [SerializeField] private float edgeProbeHeight = 0.5f;
-    private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
 
-    [Header("Slope Slowdown")]
+    [TabGroup("Settings")]
+    [SerializeField] private float edgeProbeDistance = 0.6f;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float edgeProbeHeight = 0.5f;
+
+    [TabGroup("Settings")]
+    [Title("Slope Slowdown")]
     [SerializeField, Range(0f, 60f)] private float slopeSlowStart = 5f;
+
+    [TabGroup("Settings")]
     [SerializeField, Range(0f, 60f)] private float slopeSlowMax = 45f;
+
+    [TabGroup("Settings")]
     [SerializeField, Range(0f, 0.9f)] private float slopeSlowAtMax = 0.10f;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Rigidbody")]
     [SerializeField] private Rigidbody rigidbodyPlayer;
-    [SerializeField] RSO_PlayerIsDodging _playerIsDodging;
-    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
-    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] RSO_GameInPause _rsoGameInPause;
 
-
-    [Header("Input")]
-    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
-    [SerializeField] RSO_PlayerRotation rsoPlayerRotation;
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
-    [SerializeField] private RSE_OnPlayerMoveInputCancel _onPlayerMoveInputCancel;
 
-    [SerializeField] RSE_OnParrySuccess _rseOnParrySuccess;
-    [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnParrySuccess _rseOnParrySuccess;
 
-    [Header("Output")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSO_GameInPause _rsoGameInPause;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
-    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerIsDodging _playerIsDodging;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerRotation rsoPlayerRotation;
+
+    private float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
+    private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
 
     private Vector2 moveInput = Vector2.zero;
     private bool inputCanceledOrNoInput = true;
     private Quaternion camRotInInputPerformed = Quaternion.identity;
     private Transform target = null;
-    //bool _isInputCanceled = false;
 
-    bool isGrounded;
-    Vector3 groundNormal = Vector3.up;
-    float groundAngle;
+    private bool isGrounded = false;
+    private Vector3 groundNormal = Vector3.up;
+    private float groundAngle = 0;
 
-    Coroutine knockbackCoroutine;
+    private Coroutine knockbackCoroutine = null;
 
     private void Awake()
     {
@@ -83,9 +142,7 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void OnDestroy()
     {
-        //rsoPlayerPosition.Value = Vector3.zero;
         rsoPlayerRotation.Value = Quaternion.identity;
-
     }
 
     private void OnEnable()
@@ -96,7 +153,6 @@ public class S_PlayerMovement : MonoBehaviour
         rseOnPlayerMove.action += Move;
         rseOnNewTargeting.action += ChangeNewTarget;
         rseOnPlayerCancelTargeting.action += CancelTarget;
-        _onPlayerMoveInputCancel.action += OnCancelInput;
 
         _rseOnParrySuccess.action += DoKnockbackOnParry;
         _rseOnPlayerHit.action += DoKnockbackOnHit;
@@ -104,52 +160,16 @@ public class S_PlayerMovement : MonoBehaviour
         _rsoGameInPause.onValueChanged += OnPauseChange;
     }
 
-    private void OnPauseChange(bool pauseValue)
-    {
-        if (pauseValue == true)
-            Move(Vector2.zero);
-    }
-
     private void OnDisable()
     {
         rseOnPlayerMove.action -= Move;
         rseOnNewTargeting.action -= ChangeNewTarget;
         rseOnPlayerCancelTargeting.action -= CancelTarget;
-        _onPlayerMoveInputCancel.action -= OnCancelInput;
 
         _rseOnParrySuccess.action -= DoKnockbackOnParry;
         _rseOnPlayerHit.action -= DoKnockbackOnHit;
 
         _rsoGameInPause.onValueChanged -= OnPauseChange;
-    }
-
-    private void ChangeNewTarget(GameObject newTarget)
-    {
-        target = newTarget.transform;
-    }
-
-    private void CancelTarget(GameObject oldTarget)
-    {
-        target = null;
-    }
-
-    private void Move(Vector2 input)
-    {
-        moveInput = input;
-
-        if (moveInput != Vector2.zero)
-        {
-            inputCanceledOrNoInput = false;
-        }
-        else
-        {
-            inputCanceledOrNoInput = true;
-        }
-    }
-
-    void OnCancelInput()
-    {
-        //_isInputCanceled = true;
     }
 
     private void FixedUpdate()
@@ -168,8 +188,6 @@ public class S_PlayerMovement : MonoBehaviour
                 rigidbodyPlayer.linearVelocity = Vector3.zero;
             }
         }
-
-
 
         if (rsoCurrentInputActionMap.Value == S_EnumPlayerInputActionMap.Game)
         {
@@ -265,14 +283,9 @@ public class S_PlayerMovement : MonoBehaviour
                 {
                     _onPlayerAddState.Call(PlayerState.Moving);
                 }
-                else if (_playerCurrentState.Value == PlayerState.Running && moveInput.sqrMagnitude > 0.0001f)
-                {
-                    //_isInputCanceled = false;
-                }
                 else
                 {
                     _onPlayerAddState.Call(PlayerState.None);
-                    //_isInputCanceled = false;
                 }
 
                 rsoPlayerPosition.Value = transform.position;
@@ -286,7 +299,37 @@ public class S_PlayerMovement : MonoBehaviour
         }
     }
 
-    void DoKnockbackOnHit(AttackContact attackContact)
+    private void OnPauseChange(bool pauseValue)
+    {
+        if (pauseValue == true)
+            Move(Vector2.zero);
+    }
+
+    private void ChangeNewTarget(GameObject newTarget)
+    {
+        target = newTarget.transform;
+    }
+
+    private void CancelTarget(GameObject oldTarget)
+    {
+        target = null;
+    }
+
+    private void Move(Vector2 input)
+    {
+        moveInput = input;
+
+        if (moveInput != Vector2.zero)
+        {
+            inputCanceledOrNoInput = false;
+        }
+        else
+        {
+            inputCanceledOrNoInput = true;
+        }
+    }
+
+    private void DoKnockbackOnHit(S_StructAttackContact attackContact)
     {
         if (knockbackCoroutine != null)
         {
@@ -296,7 +339,7 @@ public class S_PlayerMovement : MonoBehaviour
         knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact, false));
     }
 
-    void DoKnockbackOnParry(AttackContact attackContact)
+    private void DoKnockbackOnParry(S_StructAttackContact attackContact)
     {
         if (knockbackCoroutine != null)
         {
@@ -306,7 +349,7 @@ public class S_PlayerMovement : MonoBehaviour
         knockbackCoroutine = StartCoroutine(KnockbackCoroutine(attackContact, true));
     }
 
-    IEnumerator KnockbackCoroutine(AttackContact contact, bool fromParry)
+    private IEnumerator KnockbackCoroutine(S_StructAttackContact contact, bool fromParry)
     {
         var data = contact.data;
         float duration = fromParry ? data.knockbackOnParryDuration : data.knockbackHitDuration;
@@ -352,7 +395,7 @@ public class S_PlayerMovement : MonoBehaviour
         rigidbodyPlayer.MovePosition(endPos);
     }
 
-    void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
+    private void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
     {
         float height = Mathf.Max(capsule.height * Mathf.Abs(transform.lossyScale.y), capsule.radius * 2f);
         radius = capsule.radius * Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));
@@ -362,7 +405,7 @@ public class S_PlayerMovement : MonoBehaviour
         bottom = center - up * (height * 0.5f - radius);
     }
 
-    bool CheckGround(out RaycastHit hit)
+    private bool CheckGround(out RaycastHit hit)
     {
         GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
 
@@ -382,7 +425,7 @@ public class S_PlayerMovement : MonoBehaviour
         return ok;
     }
 
-    void UpdateGround()
+    private void UpdateGround()
     {
         if (CheckGround(out var hit))
         {
@@ -398,7 +441,8 @@ public class S_PlayerMovement : MonoBehaviour
         }
     }
 
-    void ApplyGroundStick(ref Vector3 vel)
+    /*
+    private void ApplyGroundStick(ref Vector3 vel)
     {
         if (!isGrounded) return;
 
@@ -414,8 +458,9 @@ public class S_PlayerMovement : MonoBehaviour
             }
         }
     }
+    */
 
-    Vector3 LimitSteepDescend(Vector3 along)
+    private Vector3 LimitSteepDescend(Vector3 along)
     {
         if (!isGrounded) return along;
         if (groundAngle <= maxSlopeAngle) return along;
@@ -426,7 +471,7 @@ public class S_PlayerMovement : MonoBehaviour
         return along.normalized;
     }
 
-    bool HasGroundAhead(Vector3 currentPos, Vector3 horizontalStep, out RaycastHit hit)
+    private bool HasGroundAhead(Vector3 currentPos, Vector3 horizontalStep, out RaycastHit hit)
     {
         Vector3 probeOrigin = currentPos + horizontalStep + Vector3.up * edgeProbeHeight;
         if (Physics.Raycast(probeOrigin, Vector3.down, out hit, edgeProbeHeight * 2f, groundMask, QueryTriggerInteraction.Ignore))
@@ -437,7 +482,7 @@ public class S_PlayerMovement : MonoBehaviour
         return false;
     }
 
-    void BuildDesiredDirection(out Vector3 desiredDir, out float baseSpeed)
+    private void BuildDesiredDirection(out Vector3 desiredDir, out float baseSpeed)
     {
         float inputMag = Mathf.Clamp01(moveInput.magnitude);
         bool running = (_playerCurrentState.Value == PlayerState.Running);
@@ -476,7 +521,7 @@ public class S_PlayerMovement : MonoBehaviour
         if (desiredDir.sqrMagnitude > 1e-6f) desiredDir.Normalize();
     }
 
-    void PushMovementAnims(bool isTargetMode, float horizSpeed, Vector2 rawInput)
+    private void PushMovementAnims(bool isTargetMode, float horizSpeed, Vector2 rawInput)
     {
         rseOnAnimationFloatValueChange.Call(speedParam, horizSpeed);
 
@@ -504,7 +549,7 @@ public class S_PlayerMovement : MonoBehaviour
         }
     }
 
-    float ProbeObstacle(Vector3 dir, float maxDist)
+    private float ProbeObstacle(Vector3 dir, float maxDist)
     {
         GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
 
@@ -515,7 +560,7 @@ public class S_PlayerMovement : MonoBehaviour
         return maxDist;
     }
 
-    float ProbeGroundAhead(Vector3 dir, float maxDist)
+    private float ProbeGroundAhead(Vector3 dir, float maxDist)
     {
         if (!preventFallFromEdges) return maxDist;
 
@@ -531,7 +576,4 @@ public class S_PlayerMovement : MonoBehaviour
         }
         return 0f;
     }
-
-
 }
-

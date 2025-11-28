@@ -31,7 +31,7 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         _onParrySuccess.action -= ActiveParryEffect;
     }
 
-    private void ActiveParryEffect(AttackContact contact)
+    private void ActiveParryEffect(S_StructAttackContact contact)
     {
         Vector3 offset = transform.forward * _forwardOffset + transform.up * _upwardOffset;
 

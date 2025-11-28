@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_PlayerCenter : MonoBehaviour
 {
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerCenter rseOnPlayerCenter;
 
     private void Start()

@@ -1,14 +1,11 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_AimPointProvider : MonoBehaviour, I_AimPointProvider
 {
-    //[Header("Settings")]
-
-    [Header("References")]
-    [SerializeField] GameObject _aimPointObject;
-    //[Header("Inputs")]
-
-    //[Header("Outputs")]
+    [TabGroup("References")]
+    [Title("Aim Point")]
+    [SerializeField] private GameObject _aimPointObject;
 
     public Transform GetAimPoint()
     {

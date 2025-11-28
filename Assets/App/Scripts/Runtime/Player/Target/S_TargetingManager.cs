@@ -1,58 +1,104 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("General")]
     [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("Settings")]
     [SerializeField] private bool drawGizmos;
 
-    [Header("Reference")]
-    [SerializeField] GameObject _previewIndicatorPrefab;
-    [SerializeField] GameObject _previewSwapIndicatorPrefab;
-    [SerializeField] GameObject _lockedIndicatorPrefab;
+    [TabGroup("References")]
+    [Title("Indicators")]
+    [SerializeField] private GameObject _previewIndicatorPrefab;
 
-    [Header("Input")]
+    [TabGroup("References")]
+    [SerializeField] private GameObject _previewSwapIndicatorPrefab;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject _lockedIndicatorPrefab;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
-    [SerializeField] RSE_OnPlayerDeath _onPlayerDeathRse;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDeath _onPlayerDeathRse;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnStartTargeting rseOnStartTargeting;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
-    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnStopTargeting rseOnStopTargeting;
-    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
-    [SerializeField] private RSO_TargetPosition rsoTargetPosition;
-    [SerializeField] private SSO_PlayerMaxDistanceTargeting ssoPlayerMaxDistanceTargeting;
-    [SerializeField] private SSO_PlayerTargetRangeRadius ssoPlayerTargetRangeRadius;
-    [SerializeField] private SSO_TargetObstacleBreakDelay ssoPargetObstacleBreakDelay;
-    [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_TargetPosition rsoTargetPosition;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerMaxDistanceTargeting ssoPlayerMaxDistanceTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerTargetRangeRadius ssoPlayerTargetRangeRadius;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_TargetObstacleBreakDelay ssoPargetObstacleBreakDelay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
 
     private GameObject currentTarget = null;
     private HashSet<GameObject> targetsPossible = new();
     private float obstacleTimer = 0f;
-    private Transform _playerCenterTransform;
+    private Transform _playerCenterTransform = null;
 
-    private GameObject _previewGO;
-    private GameObject _lockedGO;
-    private GameObject _swapLeftGO;
-    private GameObject _swapRightGO;
+    private GameObject _previewGO = null;
+    private GameObject _lockedGO = null;
+    private GameObject _swapLeftGO = null;
+    private GameObject _swapRightGO = null;
 
-    private Transform _previewTargetTransform;
-    private Transform _lockedTargetTransfrom;
-    private Transform _swapLeftTargetTransform;
-    private Transform _swapRightTargetTransform;
+    private Transform _previewTargetTransform = null;
+    private Transform _lockedTargetTransfrom = null;
+    private Transform _swapLeftTargetTransform = null;
+    private Transform _swapRightTargetTransform = null;
 
     private void Awake()
     {
@@ -99,13 +145,6 @@ public class S_TargetingManager : MonoBehaviour
         _rseOnPlayerCenter.action -= GetPlayerCenterTransform;
 
         _onPlayerDeathRse.action -= CancelTargeting;
-
-        rsoPlayerIsTargeting.Value = false;
-    }
-
-    void GetPlayerCenterTransform(Transform playerCenter)
-    {
-        _playerCenterTransform = playerCenter;
     }
 
     private void Update()
@@ -169,7 +208,7 @@ public class S_TargetingManager : MonoBehaviour
 
                     return;
                 }
-                // left
+                // Left
                 if (leftTarget != null && leftTarget != currentTarget)
                 {
                     if (leftTarget.TryGetComponent(out I_Targetable leftTargetable))
@@ -185,7 +224,7 @@ public class S_TargetingManager : MonoBehaviour
                     _swapLeftGO.SetActive(false);
                 }
 
-                // right
+                // Right
                 if (rightTarget != null && rightTarget != currentTarget)
                 {
                     if (rightTarget.TryGetComponent(out I_Targetable rightTargetable))
@@ -200,8 +239,6 @@ public class S_TargetingManager : MonoBehaviour
                 {
                     _swapRightGO.SetActive(false);
                 }
-
-
             }
         }
         else
@@ -256,6 +293,11 @@ public class S_TargetingManager : MonoBehaviour
         }
     }
 
+    private void GetPlayerCenterTransform(Transform playerCenter)
+    {
+        _playerCenterTransform = playerCenter;
+    }
+
     private void OnChangeTargetsPosible(HashSet<GameObject> targetsList)
     {
         targetsPossible = targetsList;
@@ -287,7 +329,6 @@ public class S_TargetingManager : MonoBehaviour
         if(rsoSettingsSaved.Value.holdLockTarget == false) return;
         
         CancelTargeting();
-        
     }
 
     private void CancelTargeting()
@@ -348,7 +389,6 @@ public class S_TargetingManager : MonoBehaviour
             if (_playerCenterTransform == null) return;
             float signedAngle = Vector3.SignedAngle(_playerCenterTransform.forward, toTarget, Vector3.up);
 
-
             float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
 
             Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
@@ -383,8 +423,8 @@ public class S_TargetingManager : MonoBehaviour
                 delta += 360;
             }
 
-            // if axis > 0 ? right ? look for the smallest positive delta
-            // if axis < 0 ? left ? look for the largest negative delta (the closest to 0)
+            // If axis > 0 ? right ? look for the smallest positive delta
+            // If axis < 0 ? left ? look for the largest negative delta (the closest to 0)
             if (axis > 0 && delta > 0 && delta < bestDelta)
             {
                 bestDelta = delta;
@@ -397,7 +437,7 @@ public class S_TargetingManager : MonoBehaviour
             }
         }
 
-        // if nothing found
+        // If nothing found
         if (bestTarget == null)
         {
             if (axis > 0)
@@ -437,7 +477,7 @@ public class S_TargetingManager : MonoBehaviour
 
             bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
 
-            //Priority for the taget in the front cone
+            // Priority for the taget in the front cone
             float score = inFrontCone ? distance : distance + 1000f;
 
             if (score < bestScore && target != currentTarget)
@@ -467,50 +507,6 @@ public class S_TargetingManager : MonoBehaviour
         return selectedTarget;
     }
 
-    private void OnDrawGizmos()
-    {
-        if (currentTarget != null && rsoPlayerIsTargeting != null && rsoPlayerIsTargeting.Value && drawGizmos == true)
-        {
-            var playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
-
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(playerPos, currentTarget.transform.position);
-
-            Vector3 dir = (currentTarget.transform.position - playerPos).normalized;
-            float distance = Vector3.Distance(playerPos, currentTarget.transform.position);
-            if (Physics.Raycast(playerPos, dir, out RaycastHit hit, distance, obstacleMask))
-            {
-                if (hit.collider.gameObject != currentTarget)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawLine(playerPos, hit.point);
-                }
-            }
-        }
-
-        if (drawGizmos == true)
-        {
-            var playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
-            if (rsoPlayerPosition == null || ssoPlayerTargetRangeRadius == null) return;
-
-            Vector3 origin = playerPos;
-            float radius = ssoPlayerTargetRangeRadius.Value;
-
-            float halfAngle = ssoFrontConeAngle.Value * 0.5f;
-
-            Quaternion leftRot = Quaternion.AngleAxis(-halfAngle, Vector3.up);
-            Quaternion rightRot = Quaternion.AngleAxis(halfAngle, Vector3.up);
-
-            if (_playerCenterTransform == null) return;
-            Vector3 leftDir = leftRot * _playerCenterTransform.forward;
-            Vector3 rightDir = rightRot * _playerCenterTransform.forward;
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(origin, origin + leftDir * radius);
-            Gizmos.DrawLine(origin, origin + rightDir * radius);
-        }
-    }
-
     private GameObject TargetSelectionExist()
     {
         GameObject selectedTarget = null;
@@ -529,7 +525,7 @@ public class S_TargetingManager : MonoBehaviour
 
             bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
 
-            //Priority for the taget in the front cone
+            // Priority for the taget in the front cone
             float score = inFrontCone ? distance : distance + 1000f;
 
             if (score < bestScore && target != currentTarget)
@@ -548,6 +544,7 @@ public class S_TargetingManager : MonoBehaviour
                 }
             }
         }
+
         return selectedTarget;
     }
 
@@ -573,14 +570,11 @@ public class S_TargetingManager : MonoBehaviour
         }
 
         return candidates;
-
-
     }
 
     private GameObject GetSwapTarget(float axis, List<(GameObject go, float angle)> candidates)
     {
-        if (candidates == null || candidates.Count == 0 || currentTarget == null)
-            return null;
+        if (candidates == null || candidates.Count == 0 || currentTarget == null) return null;
 
         int index = candidates.FindIndex(c => c.go == currentTarget);
 
@@ -634,5 +628,49 @@ public class S_TargetingManager : MonoBehaviour
         }
 
         return bestTarget;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (currentTarget != null && rsoPlayerIsTargeting != null && rsoPlayerIsTargeting.Value && drawGizmos == true)
+        {
+            var playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(playerPos, currentTarget.transform.position);
+
+            Vector3 dir = (currentTarget.transform.position - playerPos).normalized;
+            float distance = Vector3.Distance(playerPos, currentTarget.transform.position);
+            if (Physics.Raycast(playerPos, dir, out RaycastHit hit, distance, obstacleMask))
+            {
+                if (hit.collider.gameObject != currentTarget)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawLine(playerPos, hit.point);
+                }
+            }
+        }
+
+        if (drawGizmos == true)
+        {
+            var playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
+            if (rsoPlayerPosition == null || ssoPlayerTargetRangeRadius == null) return;
+
+            Vector3 origin = playerPos;
+            float radius = ssoPlayerTargetRangeRadius.Value;
+
+            float halfAngle = ssoFrontConeAngle.Value * 0.5f;
+
+            Quaternion leftRot = Quaternion.AngleAxis(-halfAngle, Vector3.up);
+            Quaternion rightRot = Quaternion.AngleAxis(halfAngle, Vector3.up);
+
+            if (_playerCenterTransform == null) return;
+            Vector3 leftDir = leftRot * _playerCenterTransform.forward;
+            Vector3 rightDir = rightRot * _playerCenterTransform.forward;
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(origin, origin + leftDir * radius);
+            Gizmos.DrawLine(origin, origin + rightDir * radius);
+        }
     }
 }

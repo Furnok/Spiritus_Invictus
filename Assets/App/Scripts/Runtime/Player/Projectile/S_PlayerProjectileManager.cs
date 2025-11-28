@@ -1,23 +1,41 @@
-﻿using System.Linq;
+﻿using Sirenix.OdinInspector;
+using System.Linq;
 using UnityEngine;
 
 public class S_PlayerProjectileManager : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Size")]
     [SerializeField] private int initialPoolSize;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Spawn Point")]
     [SerializeField] private Transform spawnProjectileParent;
-    [SerializeField] private S_PlayerProjectile projectilePrefab;
-    [SerializeField] RSO_PlayerPosition _playerPosition;
-    [SerializeField] RSO_PlayerRotation _playerRotation;
-    [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
 
-    [Header("Input")]
+    [TabGroup("References")]
+    [Title("Prefab")]
+    [SerializeField] private S_PlayerProjectile projectilePrefab;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDespawnProjectile rseOnDespawnProjectile;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerPosition _playerPosition;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerRotation _playerRotation;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
 
     private S_ObjectPool<S_PlayerProjectile> projectilePool = null;
     private Transform target = null;
@@ -29,7 +47,7 @@ public class S_PlayerProjectileManager : MonoBehaviour
 
     private void OnEnable()
     {
-        rseOnNewTargeting.action += ChangeNewTargt;
+        rseOnNewTargeting.action += ChangeNewTarget;
         rseOnPlayerCancelTargeting.action += CancelTarget;
         rseOnDespawnProjectile.action += ReturnProjectileToPool;
         rseOnSpawnProjectile.action += GetProjectileFromPool;
@@ -37,13 +55,13 @@ public class S_PlayerProjectileManager : MonoBehaviour
 
     private void OnDisable()
     {
-        rseOnNewTargeting.action -= ChangeNewTargt;
+        rseOnNewTargeting.action -= ChangeNewTarget;
         rseOnPlayerCancelTargeting.action -= CancelTarget;
         rseOnDespawnProjectile.action -= ReturnProjectileToPool;
         rseOnSpawnProjectile.action -= GetProjectileFromPool;
     }
 
-    private void ChangeNewTargt(GameObject newTarget)
+    private void ChangeNewTarget(GameObject newTarget)
     {
         target = newTarget.transform;
     }
@@ -52,7 +70,6 @@ public class S_PlayerProjectileManager : MonoBehaviour
     {
         target = null;
     }
-
 
     private void GetProjectileFromPool(float attackconviction)
     {

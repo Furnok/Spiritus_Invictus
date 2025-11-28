@@ -141,7 +141,7 @@ public class S_TimeManager : MonoBehaviour
         _slowMoCo = null;
     }
 
-    private void TriggerOnParryCoroutine (AttackContact contact) =>  StartCoroutine(CoroutineOnParry());
+    private void TriggerOnParryCoroutine (S_StructAttackContact contact) =>  StartCoroutine(CoroutineOnParry());
 
     private IEnumerator CoroutineOnParry()
     {

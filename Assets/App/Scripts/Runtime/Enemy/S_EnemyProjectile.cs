@@ -4,6 +4,10 @@ using UnityEngine;
 public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
 {
     [TabGroup("Settings")]
+    [Title("Filter")]
+    [SerializeField, S_TagName] private string tagHurt;
+
+    [TabGroup("Settings")]
     [Title("Layer")]
     [SerializeField] private string playerLayer;
 
@@ -184,7 +188,7 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hurtbox" && other.TryGetComponent(out I_Damageable damageable))
+        if (other.CompareTag(tagHurt) && other.TryGetComponent(out I_Damageable damageable))
         {
             if (damageable != null)
             {

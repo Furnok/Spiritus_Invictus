@@ -5,18 +5,15 @@ public class S_CheckPoint : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Filter")]
-    [SerializeField][S_TagName] private string tagPlayer;
-
-    //[TabGroup("Settings")]
+    [SerializeField, S_TagName] private string tagPlayer;
 
     [TabGroup("References")]
     [Title("Content")]
     [SerializeField] private GameObject content;
-    [SerializeField] private GameObject _newSpawnPositionAndRotation;
 
-    [Title("RSO")]
-    [SerializeField] RSO_PlayerRespawnPosition _playerRespawnPosition;
-
+    [TabGroup("References")]
+    [Title("Spawn")]
+    [SerializeField] private GameObject newSpawnPositionAndRotation;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
@@ -27,8 +24,10 @@ public class S_CheckPoint : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerRespawnPosition rsoplayerRespawnPosition;
 
-    bool isActivated = false;
+    private bool isActivated = false;
 
     private void OnDisable()
     {
@@ -60,9 +59,9 @@ public class S_CheckPoint : MonoBehaviour
 
         rseOnPlayerInteract.action -= SaveInteract;
         content.SetActive(false);
-        _playerRespawnPosition.Value.position = _newSpawnPositionAndRotation.transform.position;
-        _playerRespawnPosition.Value.rotation = _newSpawnPositionAndRotation.transform.rotation;
+        rsoplayerRespawnPosition.Value.position = newSpawnPositionAndRotation.transform.position;
+        rsoplayerRespawnPosition.Value.rotation = newSpawnPositionAndRotation.transform.rotation;
         rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
-        rseOnSendConsoleMessage.Call("Checkpoint activated, new pose respawn: " + _newSpawnPositionAndRotation.transform.position + "!");
+        rseOnSendConsoleMessage.Call("Checkpoint activated, new pose respawn: " + newSpawnPositionAndRotation.transform.position + "!");
     }
 }

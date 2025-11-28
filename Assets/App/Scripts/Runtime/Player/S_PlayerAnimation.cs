@@ -1,14 +1,20 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_PlayerAnimation : MonoBehaviour
 {
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Animator")]
     [SerializeField] private Animator playerAnimator;
 
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
-    [SerializeField] RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
 
     private void OnEnable()
     {
