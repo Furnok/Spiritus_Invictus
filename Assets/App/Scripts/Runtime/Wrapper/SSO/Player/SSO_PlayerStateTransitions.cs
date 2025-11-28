@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SSO_PlayerStateTransitions", menuName = "Data/SSO/Player/State/PlayerStateTransitions")]
+[CreateAssetMenu(fileName = "SSO_PlayerStateTransitions", menuName = "Data/SSO/Player/PlayerStateTransitions")]
 public class SSO_PlayerStateTransitions : ScriptableObject
 {
     [System.Serializable]
