@@ -4,7 +4,6 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class S_WindowManager : MonoBehaviour
 {
@@ -12,26 +11,36 @@ public class S_WindowManager : MonoBehaviour
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFade;
 
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeSkip;
+
     [TabGroup("References")]
     [Title("Audio")]
     [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
+    [Title("Default Window")]
+    [SerializeField] private GameObject defaultWindow;
+
+    [TabGroup("References")]
     [Title("Windows")]
+    [SerializeField] private GameObject mainMenuWindow;
+
+    [TabGroup("References")]
     [SerializeField] private GameObject menuWindow;
 
     [TabGroup("References")]
     [SerializeField] private GameObject gameWindow;
 
     [TabGroup("References")]
+    [SerializeField] private GameObject settingsWindow;
+
+    [TabGroup("References")]
     [SerializeField] private GameObject consoleBackgroundWindow;
 
     [TabGroup("References")]
     [SerializeField] private GameObject fadeWindow;
-
-    [TabGroup("References")]
-    [Title("Images")]
-    [SerializeField] private Image imageFade;
 
     [TabGroup("References")]
     [Title("Console")]
@@ -96,9 +105,8 @@ public class S_WindowManager : MonoBehaviour
 
     private void Awake()
     {
-        rsoInGame.Value = true;
-        rsoGameInPause.Value = false;
         rsoCurrentWindows.Value = new();
+
         fadeWindow.SetActive(true);
     }
 
@@ -122,16 +130,46 @@ public class S_WindowManager : MonoBehaviour
         rseOnFadeIn.action -= FadeIn;
         rsOnFadeOut.action -= FadeOut;
         rseOnDisplayUIGame.action -= DisplayUIGame;
-
-        imageFade?.DOKill();
     }
 
     private void Start()
     {
-        StartCoroutine(S_Utils.DelayFrame(() => FadeIn()));
+        StartCoroutine(S_Utils.DelayRealTime(1, () => FadeIn()));
 
-        if (rsoInGame.Value)
+        if (defaultWindow == menuWindow)
         {
+            if (Gamepad.current == null)
+            {
+                rseOnShowMouseCursor.Call();
+            }
+
+            rseOnUIInputEnabled.Call();
+            rseOnOpenWindow.Call(menuWindow);
+            rseOnGamePause.Call(true);
+        }
+        else if (defaultWindow == mainMenuWindow)
+        {
+            if (Gamepad.current == null)
+            {
+                rseOnShowMouseCursor.Call();
+            }
+
+            rseOnUIInputEnabled.Call();
+            rsoInGame.Value = false;
+            rseOnDisplayUIGame.Call(false);
+            mainMenuWindow.SetActive(true);
+
+            CanvasGroup cg = mainMenuWindow.GetComponent<CanvasGroup>();
+            cg.DOKill();
+
+            StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
+            {
+                cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            }));
+        }
+        else
+        {
+            rsoInGame.Value = true;
             DisplayUIGame(true);
         }
     }
@@ -223,6 +261,11 @@ public class S_WindowManager : MonoBehaviour
             {
                 RuntimeManager.PlayOneShot(uiSound);
 
+                if (Gamepad.current == null)
+                {
+                    rseOnShowMouseCursor.Call();
+                }
+
                 rseOnUIInputEnabled.Call();
                 OpenWindow(menuWindow);
                 rseOnGamePause.Call(true);
@@ -295,16 +338,23 @@ public class S_WindowManager : MonoBehaviour
     #region Fade Management
     private void FadeIn()
     {
-        imageFade?.DOKill();
+        CanvasGroup cg = fadeWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
-        imageFade.DOFade(0f, ssoFadeTime.Value).SetEase(Ease.Linear).SetUpdate(true);
+        cg.DOFade(0f, ssoFadeTime.Value).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+        {
+            fadeWindow.SetActive(false);
+        });
     }
 
     private void FadeOut()
     {
-        imageFade?.DOKill();
+        CanvasGroup cg = fadeWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
-        imageFade.DOFade(1f, ssoFadeTime.Value).SetEase(Ease.Linear).SetUpdate(true);
+        fadeWindow.SetActive(true);
+
+        cg.DOFade(1f, ssoFadeTime.Value).SetEase(Ease.Linear).SetUpdate(true);
     }
     #endregion
 }

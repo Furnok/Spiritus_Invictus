@@ -83,7 +83,7 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void OnDestroy()
     {
-        rsoPlayerPosition.Value = Vector3.zero;
+        //rsoPlayerPosition.Value = Vector3.zero;
         rsoPlayerRotation.Value = Quaternion.identity;
 
     }

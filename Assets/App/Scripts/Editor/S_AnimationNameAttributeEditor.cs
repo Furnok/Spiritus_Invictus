@@ -16,17 +16,17 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        /// MonoBehaviour Check
+        // MonoBehaviour Check
         if (!(property.serializedObject.targetObject is MonoBehaviour mb))
         {
             DrawError(position, label, "Target must be a MonoBehaviour.");
             return;
         }
 
-        /// Animator Field Check
+        // Animator Field Check
         Animator animator = GetAnimatorFromField(property);
 
-        /// Animator GameObject Check
+        // Animator GameObject Check
         if (animator == null)
         {
             animator = mb.GetComponent<Animator>();
@@ -38,7 +38,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        /// AnimatorController Check
+        // AnimatorController Check
         AnimatorController controller = GetAnimatorController(animator);
         if (controller == null)
         {
@@ -46,7 +46,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        /// Parameters Check
+        // Parameters Check
         AnimatorControllerParameter[] parameters = controller.parameters;
         if (parameters == null || parameters.Length == 0)
         {

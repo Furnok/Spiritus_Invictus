@@ -28,8 +28,11 @@ public class S_DropDownAutoScroll : MonoBehaviour
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     private bool init = false;
+
     private int number = 0;
+
     private Tween moveTween = null;
+
     private S_SerializableDictionary<Selectable, int> selectables = new();
 
     private void OnEnable()

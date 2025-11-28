@@ -38,9 +38,11 @@ public class S_UISelectable : MonoBehaviour
 
     private Color32 colorBase = new();
     private Color32 colorBase2 = new();
+
     private bool mouseOver = false;
     private bool isPressed = false;
     private bool isSelected = false;
+
     private Tween colorTween = null;
     private Tween colorTween2 = null;
 

@@ -84,23 +84,23 @@ public class S_DynamicSceneSwitcher : EditorWindow
 
     private void OnGUI()
     {
-        /// Setup Styles
+        // Setup Styles
         SetupStyles();
 
-        /// Title
+        // Title
         EditorGUILayout.Space(5);
         EditorGUILayout.LabelField("Search Scenes:", EditorStyles.boldLabel);
         EditorGUILayout.Space(5);
 
-        /// Dummy Focus Control
+        // Dummy Focus Control
         GUI.SetNextControlName("DummyFocus");
         GUILayout.Box("", GUIStyle.none, GUILayout.Width(0), GUILayout.Height(0));
 
-        /// Search Field
+        // Search Field
         GUI.SetNextControlName("SearchField");
         string newQuery = EditorGUILayout.TextField(searchQuery, searchFieldStyle);
 
-        /// Event Handling
+        // Event Handling
         if (Event.current.type == EventType.MouseDown)
         {
             if (GUI.GetNameOfFocusedControl() == "SearchField")
@@ -120,7 +120,7 @@ public class S_DynamicSceneSwitcher : EditorWindow
             Repaint();
         }
 
-        /// Update Filtered Scenes
+        // Update Filtered Scenes
         if (newQuery != searchQuery)
         {
             searchQuery = newQuery;
@@ -130,7 +130,7 @@ public class S_DynamicSceneSwitcher : EditorWindow
 
         EditorGUILayout.Space(15);
 
-        /// Scene Buttons
+        // Scene Buttons
         if (filteredScenes.Length == 0)
         {
             EditorGUILayout.LabelField("No Scenes Found!", EditorStyles.centeredGreyMiniLabel);
@@ -153,7 +153,7 @@ public class S_DynamicSceneSwitcher : EditorWindow
 
         EditorGUILayout.Space(5);
 
-        /// Refresh Button
+        // Refresh Button
         if (GUILayout.Button("Refresh Scenes", buttonRefreshStyle))
         {
             RefreshSceneList();

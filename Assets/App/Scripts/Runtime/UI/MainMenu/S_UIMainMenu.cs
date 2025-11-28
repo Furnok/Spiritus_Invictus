@@ -2,7 +2,6 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIMainMenu : MonoBehaviour
@@ -36,9 +35,6 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnDataTemp rseOnDataTemp;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCameraIntro rseOnCameraIntro;
 
     [TabGroup("Outputs")]
@@ -51,13 +47,7 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
@@ -79,26 +69,6 @@ public class S_UIMainMenu : MonoBehaviour
     private void OnEnable()
     {
         rseOnDataTemp.action += SetupMenu;
-
-        StartCoroutine(S_Utils.DelayFrame(() =>
-        {
-            if (Gamepad.current == null)
-            {
-               rseOnShowMouseCursor.Call();
-            }
-
-            rseOnUIInputEnabled.Call();
-            rsoInGame.Value = false;
-            rseOnDisplayUIGame.Call(false);
-        }));
-
-        CanvasGroup cg = gameObject.GetComponent<CanvasGroup>();
-        cg.DOKill();
-
-        StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
-        {
-            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
-        }));
 
         isTransit = false;
     }

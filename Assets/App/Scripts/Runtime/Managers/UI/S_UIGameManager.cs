@@ -178,9 +178,6 @@ public class S_UIGameManager : MonoBehaviour
 
     private void Awake()
     {
-        rsoConsoleDisplay.Value = new();
-        rsoInConsole.Value = new();
-
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
         sliderHealth.value = sliderHealth.maxValue;
 

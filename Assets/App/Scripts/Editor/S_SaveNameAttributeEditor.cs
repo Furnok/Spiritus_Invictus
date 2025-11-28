@@ -43,7 +43,7 @@ public class S_SaveNameAttributeEditor : PropertyDrawer
     {
         EditorGUI.BeginProperty(position, label, property);
 
-        /// String Field Check
+        // String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
             EditorGUI.LabelField(position, label.text, "Use [SaveName] with a string field.");
@@ -51,7 +51,7 @@ public class S_SaveNameAttributeEditor : PropertyDrawer
             return;
         }
 
-        /// Saves Disabled Check
+        // Saves Disabled Check
         if (!haveSettings && !haveSaves)
         {
             EditorGUI.LabelField(position, label.text, "Saves Disabled");

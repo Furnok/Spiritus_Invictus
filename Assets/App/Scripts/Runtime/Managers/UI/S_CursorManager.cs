@@ -43,8 +43,6 @@ public class S_CursorManager : MonoBehaviour
     private void Awake()
     {
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
-        rsoNavigation.Value = new();
-        rsoDevice.Value = S_EnumDevice.None;
 
         HideMouseCursor();
 
@@ -72,6 +70,8 @@ public class S_CursorManager : MonoBehaviour
 
     private void OnDisable() 
     {
+        rsoNavigation.Value = new();
+
         InputSystem.onDeviceChange -= OnDeviceChange;
         rseOnShowMouseCursor.action -= ShowMouseCursor;
         rseOnHideMouseCursor.action -= HideMouseCursor;

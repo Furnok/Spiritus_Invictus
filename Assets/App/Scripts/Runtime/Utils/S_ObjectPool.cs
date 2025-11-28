@@ -6,9 +6,13 @@ public class S_ObjectPool<T> where T : MonoBehaviour
     private readonly T prefab;
     private readonly Transform parentTransform;
     private readonly Queue<T> pool = new();
+    private readonly HashSet<T> poolSet = new();
 
     public int Count => pool.Count;
     public bool AllowExpand { get; set; } = true;
+
+    public System.Action<T> OnGet { get; set; }
+    public System.Action<T> OnRelease { get; set; }
 
     public S_ObjectPool(T prefab, int initialSize, Transform parentTransform = null)
     {
@@ -20,62 +24,71 @@ public class S_ObjectPool<T> where T : MonoBehaviour
         this.prefab = prefab;
         this.parentTransform = parentTransform;
 
-        for (int i = 0; i < initialSize; i++)
-        {
-            T instance = Object.Instantiate(prefab, parentTransform);
-            instance.gameObject.SetActive(false);
-            pool.Enqueue(instance);
-        }
+        Prewarm(initialSize);
+    }
+
+    private T CreateInstance(bool active = false)
+    {
+        T instance = Object.Instantiate(prefab, parentTransform);
+        instance.gameObject.SetActive(active);
+        return instance;
     }
 
     public T Get()
     {
+        if (prefab == null)
+            return null;
+
+        T instance;
+
         if (pool.Count == 0)
         {
             if (!AllowExpand)
-            {
                 return null;
-            }
 
-            T extra = Object.Instantiate(prefab, parentTransform);
-            extra.gameObject.SetActive(true);
-            return extra;
+            instance = CreateInstance(true);
         }
-
-        T instance = pool.Dequeue();
-
-        if (instance == null)
+        else
         {
-            return Object.Instantiate(prefab, parentTransform);
+            instance = pool.Dequeue();
+            poolSet.Remove(instance);
+
+            if (instance == null)
+                instance = CreateInstance(true);
+            else
+                instance.gameObject.SetActive(true);
         }
 
-        instance.gameObject.SetActive(true);
+        if (instance.transform.parent != parentTransform)
+            instance.transform.SetParent(parentTransform);
+
+        OnGet?.Invoke(instance);
         return instance;
     }
 
     public void ReturnToPool(T instance)
     {
-        if (instance == null)
-        {
+        if (instance == null || poolSet.Contains(instance))
             return;
-        }
 
-        if (pool.Contains(instance))
-        {
-            return;
-        }
+        OnRelease?.Invoke(instance);
 
         instance.gameObject.SetActive(false);
+        instance.transform.SetParent(parentTransform);
+
         pool.Enqueue(instance);
+        poolSet.Add(instance);
     }
 
     public void Prewarm(int count)
     {
+        if (prefab == null) return;
+
         for (int i = 0; i < count; i++)
         {
-            T instance = Object.Instantiate(prefab, parentTransform);
-            instance.gameObject.SetActive(false);
+            T instance = CreateInstance(false);
             pool.Enqueue(instance);
+            poolSet.Add(instance);
         }
     }
 
@@ -90,5 +103,6 @@ public class S_ObjectPool<T> where T : MonoBehaviour
         }
 
         pool.Clear();
+        poolSet.Clear();
     }
 }

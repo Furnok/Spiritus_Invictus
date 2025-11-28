@@ -25,6 +25,7 @@ public class S_Settings : MonoBehaviour
 
     private bool isLoaded = false;
     private bool isSave = false;
+
     private List<TextMeshProUGUI> listTextAudios = new();
 
     private RSO_SettingsSaved rsoSettingsSavedOld;

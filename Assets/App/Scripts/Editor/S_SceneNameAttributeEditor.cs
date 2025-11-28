@@ -57,19 +57,19 @@ public class S_SceneNameAttributeEditor : PropertyDrawer
             RefreshScenes();
         }
 
-        /// Get Properties
+        // Get Properties
         SerializedProperty nameProp = property.FindPropertyRelative("sceneName");
         SerializedProperty guidProp = property.FindPropertyRelative("sceneGUID");
         SerializedProperty pathProp = property.FindPropertyRelative("scenePath");
 
         EditorGUI.BeginProperty(position, label, property);
 
-        /// Resolve Scene GUID
+        // Resolve Scene GUID
         string guid = guidProp.stringValue;
         string absolutePath = AssetDatabase.GUIDToAssetPath(guid);
         SceneAsset currentScene = string.IsNullOrEmpty(absolutePath) ? null : AssetDatabase.LoadAssetAtPath<SceneAsset>(absolutePath);
 
-        /// Keep Name & Path Updated
+        // Keep Name & Path Updated
         pathProp.stringValue = currentScene ? AssetDatabase.GetAssetPath(currentScene) : "";
         nameProp.stringValue = currentScene ? currentScene.name : "";
 

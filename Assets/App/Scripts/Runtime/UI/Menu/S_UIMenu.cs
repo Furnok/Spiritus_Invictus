@@ -42,9 +42,6 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
 
     [TabGroup("Outputs")]
@@ -60,6 +57,9 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSO_InConsole rsoInConsole;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_GameInPause rsoGameInPause;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     private bool isTransit = false;
@@ -67,11 +67,6 @@ public class S_UIMenu : MonoBehaviour
     private void OnEnable()
     {
         rseOnPlayerPause.action += CloseEscape;
-
-        if (Gamepad.current == null)
-        {
-            rseOnShowMouseCursor.Call();
-        }
 
         isTransit = false;
     }

@@ -67,9 +67,12 @@ public class S_UIExtract : MonoBehaviour
 
     private bool displayText = false;
     private bool userIsScrolling = false;
+
     private Tween textDisplay = null;
     private Tween scrollTween = null;
+
     private bool isClosing = false;
+
     private int lastSoundFrame = -1;
     private float lastValue = 0;
 

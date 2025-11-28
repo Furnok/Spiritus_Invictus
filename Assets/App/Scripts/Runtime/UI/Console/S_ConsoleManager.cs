@@ -40,11 +40,6 @@ public class S_ConsoleManager : MonoBehaviour
 
     private bool isInputField = false;
 
-    private void Awake()
-    {
-        rsoConsoleCheats.Value = new();
-    }
-
     private void OnEnable()
     {
         rseOnSendConsoleMessage.action += SendMessageConsole;
@@ -52,6 +47,8 @@ public class S_ConsoleManager : MonoBehaviour
 
     private void OnDisable()
     {
+        rsoConsoleCheats.Value = new();
+
         rseOnSendConsoleMessage.action -= SendMessageConsole;
     }
 

@@ -8,7 +8,8 @@ public static class S_Utils
     #region COROUTINE
     public static IEnumerator Delay(float delay, Action onComplete = null)
     {
-        yield return new WaitForSeconds(delay);
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
 
         onComplete?.Invoke();
     }
@@ -22,7 +23,8 @@ public static class S_Utils
 
     public static IEnumerator DelayRealTime(float delay, Action onComplete = null)
     {
-        yield return new WaitForSecondsRealtime(delay);
+        if (delay > 0f)
+            yield return new WaitForSecondsRealtime(delay);
 
         onComplete?.Invoke();
     }
@@ -33,6 +35,9 @@ public static class S_Utils
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex, loadMode);
 
+        if (asyncLoad == null)
+            yield break;
+
         yield return new WaitUntil(() => asyncLoad.isDone);
 
         onComplete?.Invoke();
@@ -41,6 +46,9 @@ public static class S_Utils
     public static IEnumerator LoadSceneAsync(string sceneName, LoadSceneMode loadMode, Action onComplete = null)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, loadMode);
+
+        if (asyncLoad == null)
+            yield break;
 
         yield return new WaitUntil(() => asyncLoad.isDone);
 
@@ -51,6 +59,9 @@ public static class S_Utils
     {
         AsyncOperation asyncLoad = SceneManager.UnloadSceneAsync(sceneName);
 
+        if (asyncLoad == null)
+            yield break;
+
         yield return new WaitUntil(() => asyncLoad.isDone);
 
         onComplete?.Invoke();
@@ -59,6 +70,9 @@ public static class S_Utils
     public static IEnumerator UnloadSceneAsync(int sceneIndex, Action onComplete = null)
     {
         AsyncOperation asyncLoad = SceneManager.UnloadSceneAsync(sceneIndex);
+
+        if (asyncLoad == null)
+            yield break;
 
         yield return new WaitUntil(() => asyncLoad.isDone);
 

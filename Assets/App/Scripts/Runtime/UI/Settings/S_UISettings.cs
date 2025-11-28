@@ -21,9 +21,6 @@ public class S_UISettings : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Default")]
-    [SerializeField] private GameObject defaultWindow;
-
-    [TabGroup("References")]
     [SerializeField] private GameObject defaultPanelSet;
 
     [TabGroup("References")]
@@ -97,16 +94,12 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private RSO_InConsole rsoInConsole;
 
     private GameObject currentPanelSet = null;
+
     private bool isClosing = false;
 
     private void OnEnable()
     {
         rseOnPlayerPause.action += CloseEscape;
-
-        if (Gamepad.current == null)
-        {
-            rseOnShowMouseCursor.Call();
-        }
 
         if (defaultPanelSet != null)
         {
@@ -237,7 +230,6 @@ public class S_UISettings : MonoBehaviour
             if (rsoNavigation.Value.selectablePressOldWindow == null)
             {
                 rsoNavigation.Value.selectableFocus = null;
-                defaultWindow.SetActive(true);
             }
             else
             {
@@ -247,6 +239,7 @@ public class S_UISettings : MonoBehaviour
         }
     }
 
+    #region Panels Management
     private void ClosePanel()
     {
         if (currentPanelSet != null)
@@ -479,4 +472,5 @@ public class S_UISettings : MonoBehaviour
             buttonReturn.navigation = nav;
         }
     }
+    #endregion
 }

@@ -1,16 +1,11 @@
-using NUnit.Framework;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_ParticleBeam : MonoBehaviour
 {
-    //[Header("Settings")]
-
-    [Header("References")]
-    [SerializeField] Transform _beamsParent;
-
-    //[Header("Inputs")]
-
-    //[Header("Outputs")]
+    [TabGroup("References")]
+    [Title("Parent")]
+    [SerializeField] private Transform _beamsParent;
 
     private void Update()
     {
