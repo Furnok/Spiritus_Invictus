@@ -7,9 +7,13 @@ public struct S_StructDataProjectile
 {
     [Title("Arc Settings")]
     public float arcHeightMultiplier;
+
     public float arcDirection;
+
     public bool randomizeArc;
+
     [Range(-5, 5)] public float arcRandomDirectionMin;
+
     [Range(-5, 5)] public float arcRandomDirectionMax;
 
     [Title("Time")]
@@ -21,6 +25,8 @@ public struct S_StructDataProjectile
 
     [Title("Projectile Visual")]
     public float trailTime;
+
     public float trailSize;
+
     public Color trailColor;
 }

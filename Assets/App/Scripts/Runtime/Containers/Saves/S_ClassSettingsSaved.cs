@@ -13,6 +13,7 @@ public class S_ClassSettingsSaved
 
     [Title("Screen")]
     public bool fullScreen = true;
+
     public int resolutionIndex = -1;
 
     [Title("Audio")]

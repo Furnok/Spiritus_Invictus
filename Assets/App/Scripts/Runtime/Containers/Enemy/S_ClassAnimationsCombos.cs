@@ -10,5 +10,6 @@ public class S_ClassAnimationsCombos
 
     [Title("Distances")]
     public float distanceToChase = 0;
+
     public float distanceToLoseAttack = 0;
 }

@@ -6,5 +6,6 @@ public class S_ClassVolume
 {
     [Title("Volume")]
     public string name = "";
+
 	public float volume = 0;
 }

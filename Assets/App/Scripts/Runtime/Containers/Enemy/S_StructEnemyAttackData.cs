@@ -6,6 +6,7 @@ using UnityEngine;
 public struct S_StructEnemyAttackData
 {
     [HideInInspector] public int attackId;
+
     [HideInInspector] public int goSourceId;
 
     [Title("Type")]
@@ -19,17 +20,21 @@ public struct S_StructEnemyAttackData
     [ShowIf("isTyped")]
     [SuffixLabel("s", Overlay = true)]
     public float knockbackHitDuration;
+
     [ShowIf("isTyped")]
     public float knockbackHitDistance;
+
     [ShowIf("isTyped")]
     [SuffixLabel("s", Overlay = true)]
     public float knockbackOnParryDuration;
+
     [ShowIf("isTyped")]
     public float knockbackOnParrryDistance;
 
     [Title("Parry Tolerance")]
     [ShowIf("isTyped")]
     public float parryToleranceBeforeHit;
+
     [ShowIf("isTyped")]
     public float parryToleranceAfterHit;
 
@@ -43,6 +48,7 @@ public struct S_StructEnemyAttackData
     public float convictionReduction;
 
     [HideInInspector] public Vector3 attackDirection;
+
     [HideInInspector] public Vector3 contactPoint;
 
     private bool isTyped => attackType != S_EnumEnemyAttackType.None;
