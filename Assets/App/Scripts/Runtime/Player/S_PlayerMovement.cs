@@ -283,6 +283,10 @@ public class S_PlayerMovement : MonoBehaviour
                 {
                     _onPlayerAddState.Call(S_EnumPlayerState.Moving);
                 }
+                else if (_playerCurrentState.Value == S_EnumPlayerState.Running && moveInput.sqrMagnitude > 0.0001f)
+                {
+                    //_isInputCanceled = false;
+                }
                 else
                 {
                     _onPlayerAddState.Call(S_EnumPlayerState.None);
