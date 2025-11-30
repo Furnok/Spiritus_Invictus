@@ -8,6 +8,7 @@ public class S_DynamicSceneSwitcher : EditorWindow
 {
     private Vector2 scrollPosition = Vector2.zero;
     private string[] scenePaths = new string[0];
+    private string[] filteredScenes = new string[0];
     private string searchQuery = "";
 
     private GUIStyle searchFieldStyle = null;
@@ -29,16 +30,21 @@ public class S_DynamicSceneSwitcher : EditorWindow
         RefreshSceneList();
     }
 
-    private void OnInspectorUpdate()
-    {
-        Repaint();
-    }
-
     private void RefreshSceneList()
     {
         scenePaths = AssetDatabase.FindAssets("t:Scene")
             .Select(AssetDatabase.GUIDToAssetPath)
             .Where(path => path.StartsWith("Assets/App/Scenes/"))
+            .ToArray();
+
+        UpdateFilteredScenes();
+    }
+
+    private void UpdateFilteredScenes()
+    {
+        filteredScenes = string.IsNullOrWhiteSpace(searchQuery) ? scenePaths : scenePaths
+            .Where(p => Path.GetFileNameWithoutExtension(p)
+            .IndexOf(searchQuery, System.StringComparison.OrdinalIgnoreCase) >= 0)
             .ToArray();
     }
 
@@ -54,7 +60,7 @@ public class S_DynamicSceneSwitcher : EditorWindow
         {
             fontSize = 14,
             padding = new RectOffset(6, 6, 4, 4),
-            fixedHeight = 25
+            fixedHeight = 25,
         };
 
         buttonStyle = new GUIStyle(GUI.skin.button)
@@ -62,7 +68,7 @@ public class S_DynamicSceneSwitcher : EditorWindow
             margin = new RectOffset(20, 20, 5, 5),
             padding = new RectOffset(10, 10, 8, 8),
             fontSize = Mathf.RoundToInt(14 * scale),
-            alignment = TextAnchor.MiddleCenter
+            alignment = TextAnchor.MiddleCenter,
         };
 
         buttonRefreshStyle = new GUIStyle(GUI.skin.button)
@@ -72,27 +78,60 @@ public class S_DynamicSceneSwitcher : EditorWindow
             fontSize = Mathf.RoundToInt(16 * scale),
             fontStyle = FontStyle.Bold,
             normal = { textColor = Color.white },
-            alignment = TextAnchor.MiddleCenter
+            alignment = TextAnchor.MiddleCenter,
         };
     }
 
     private void OnGUI()
     {
+        // Setup Styles
         SetupStyles();
 
-        RefreshSceneList();
-
+        // Title
         EditorGUILayout.Space(5);
-
         EditorGUILayout.LabelField("Search Scenes:", EditorStyles.boldLabel);
-
         EditorGUILayout.Space(5);
 
-        searchQuery = EditorGUILayout.TextField(searchQuery, searchFieldStyle);
+        // Dummy Focus Control
+        GUI.SetNextControlName("DummyFocus");
+        GUILayout.Box("", GUIStyle.none, GUILayout.Width(0), GUILayout.Height(0));
+
+        // Search Field
+        GUI.SetNextControlName("SearchField");
+        string newQuery = EditorGUILayout.TextField(searchQuery, searchFieldStyle);
+
+        // Event Handling
+        if (Event.current.type == EventType.MouseDown)
+        {
+            if (GUI.GetNameOfFocusedControl() == "SearchField")
+            {
+                Rect fieldRect = GUILayoutUtility.GetLastRect();
+                if (!fieldRect.Contains(Event.current.mousePosition))
+                {
+                    GUI.FocusControl(null);
+                    Repaint();
+                }
+            }
+        }
+
+        if (GUI.GetNameOfFocusedControl() == "SearchField" && Event.current.keyCode == KeyCode.Return)
+        {
+            GUI.FocusControl(null);
+            Repaint();
+        }
+
+        // Update Filtered Scenes
+        if (newQuery != searchQuery)
+        {
+            searchQuery = newQuery;
+            UpdateFilteredScenes();
+            Repaint();
+        }
 
         EditorGUILayout.Space(15);
 
-        if (scenePaths.Length == 0)
+        // Scene Buttons
+        if (filteredScenes.Length == 0)
         {
             EditorGUILayout.LabelField("No Scenes Found!", EditorStyles.centeredGreyMiniLabel);
         }
@@ -100,10 +139,9 @@ public class S_DynamicSceneSwitcher : EditorWindow
         {
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.ExpandHeight(true));
 
-            foreach (string scenePath in scenePaths.Where(path => string.IsNullOrEmpty(searchQuery) || Path.GetFileNameWithoutExtension(path).IndexOf(searchQuery, System.StringComparison.OrdinalIgnoreCase) >= 0))
+            foreach (var scenePath in filteredScenes)
             {
                 string sceneName = Path.GetFileNameWithoutExtension(scenePath);
-
                 if (GUILayout.Button(sceneName, buttonStyle) && EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                 {
                     EditorSceneManager.OpenScene(scenePath);
@@ -115,6 +153,7 @@ public class S_DynamicSceneSwitcher : EditorWindow
 
         EditorGUILayout.Space(5);
 
+        // Refresh Button
         if (GUILayout.Button("Refresh Scenes", buttonRefreshStyle))
         {
             RefreshSceneList();

@@ -1,54 +1,92 @@
-﻿using System.Collections;
+﻿using Sirenix.OdinInspector;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class S_PlayerBasicAttack : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Offset")]
     [SerializeField] private Vector3 attackOffset;
-    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
-    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
-    [SerializeField, S_AnimationName] string _attackParam;
 
-    [Header("Reference")]
-    [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] RSO_PlayerCurrentConviction _playerCurrentConviction;
-    [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
-    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
-    [SerializeField] RSO_PreconsumedConviction _preconsumedConviction;
+    [TabGroup("Settings")]
+    [Title("Animation")]
+    [SerializeField, S_AnimationName] private string _attackParam;
 
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
-   
-    [SerializeField] RSE_OnPlayerAttackInputCancel _onPlayerAttackInputCancel;
 
-    [Header("Output")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerAttackInputCancel _onPlayerAttackInputCancel;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSO_GameInPause _rsoGameInPause;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
-    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
-    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
-    [SerializeField] RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
-    [SerializeField] RSE_OnAttackStartPerformed _onAttackStartPerformed;
 
-    Coroutine _attackChargeCoroutine;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAttackCancel _onPlayerAttackCancel;
 
-    bool _isHolding;
-    bool _wasCanceled;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnAttackStartPerformed _onAttackStartPerformed;
 
-    List<PlayerAttackStep> _steps;
-    private List<float> _stepTimes = new List<float>();
-    private List<float> _stepConvThresholds = new List<float>();
-    float _reservedConviction;
-    int _lastCompletedStep;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentConviction _playerCurrentConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PreconsumedConviction _preconsumedConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_AnimationTransitionDelays _animationTransitionDelays;
+
+    private Coroutine _attackChargeCoroutine = null;
+
+    private bool _isHolding = false;
+    private bool _wasCanceled = false;
+
+    private List<S_StructPlayerAttackStep> _steps = new();
+    private List<float> _stepTimes = new();
+    private List<float> _stepConvThresholds = new();
+    private float _reservedConviction = 0;
+    private int _lastCompletedStep = 0;
 
     private void Awake()
     {
         _preconsumedConviction.Value = 0;
 
-        _steps = _playerAttackSteps.Value?.OrderBy(s => s.step).ToList() ?? new List<PlayerAttackStep>();
+        _steps = _playerAttackSteps.Value?.OrderBy(s => s.step).ToList() ?? new List<S_StructPlayerAttackStep>();
         if (_steps.Count == 0)
         {
             Debug.LogWarning("No attack steps configured");
@@ -70,6 +108,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnPlayerAttack.action += OnPlayerAttackInput;
         _rseOnPlayerGettingHit.action += OnHitCancel;
         _onPlayerAttackInputCancel.action += OnAttackReleased;
+
+        _rsoGameInPause.onValueChanged += OnGamePause;
     }
 
     private void OnDisable()
@@ -77,23 +117,35 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnPlayerAttack.action -= OnPlayerAttackInput;
         _rseOnPlayerGettingHit.action -= OnHitCancel;
         _onPlayerAttackInputCancel.action -= OnAttackReleased;
+
+        _rsoGameInPause.onValueChanged -= OnGamePause;
+    }
+
+    private void OnGamePause(bool newPauseValue)
+    {
+        if (newPauseValue == true)
+        {
+            OnAttackReleased();
+        }
     }
 
     private void OnPlayerAttackInput()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Attacking) == false ||_playerCurrentConviction.Value < 2) return;
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Attacking) == false ||_playerCurrentConviction.Value < 2) return;
 
-        _onPlayerAddState.Call(PlayerState.Attacking);
+        _onPlayerAddState.Call(S_EnumPlayerState.Attacking);
         _onAttackStartPerformed.Call();
         rseOnAnimationBoolValueChange.Call(_attackParam, true);
 
-        //_attackCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.attackStartupDelay, () =>
-        //{
-        //if (CanGoUpperState() == true)
-        //{
-        //    StartStepDuration();
-        //}
-        //}));
+        /*
+        _attackCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.attackStartupDelay, () =>
+        {
+            if (CanGoUpperState() == true)
+            {
+                StartStepDuration();
+            }
+        }));
+        */
 
         _isHolding = true;
         _wasCanceled = false;
@@ -103,50 +155,56 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         if (_attackChargeCoroutine != null) StopCoroutine(_attackChargeCoroutine);
         _attackChargeCoroutine = StartCoroutine(ChargeRoutine());
+
+        rseOnSendConsoleMessage.Call("Player Start Attacking!");
     }
 
-    void OnAttackReleased()
+    private void OnAttackReleased()
     {
         _isHolding = false;
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
+
+        rseOnSendConsoleMessage.Call("Player Launch Attack!");
     }
 
-    //private void StartStepDuration()
-    //{
-    //    float timeWait = _playerAttackSteps.Value.Find(x => x.step == _currenStepAttack + 1).timeHoldingInput - _playerAttackSteps.Value.Find(x => x.step == _currenStepAttack).timeHoldingInput;
+    /*
+    private void StartStepDuration()
+    {
+        float timeWait = _playerAttackSteps.Value.Find(x => x.step == _currenStepAttack + 1).timeHoldingInput - _playerAttackSteps.Value.Find(x => x.step == _currenStepAttack).timeHoldingInput;
 
-    //    _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(timeWait, () =>
-    //    {
-    //        _currenStepAttack++;
+        _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(timeWait, () =>
+        {
+            _currenStepAttack++;
 
-    //        if (CanGoUpperState() == true)
-    //        {
-    //            StartStepDuration();
-    //        }
-    //    }));
-    //}
+            if (CanGoUpperState() == true)
+            {
+                StartStepDuration();
+            }
+        }));
+    }
 
-    //bool CanGoUpperState()
-    //{
-    //    var lastStep = _playerAttackSteps.Value.OrderByDescending(x => x.step).First().step;
-    //    bool existNextStep = _playerAttackSteps.Value.Exists(x => x.step == _currenStepAttack + 1);
-    //    bool canGoUpperState = false;
+    private bool CanGoUpperState()
+    {
+        var lastStep = _playerAttackSteps.Value.OrderByDescending(x => x.step).First().step;
+        bool existNextStep = _playerAttackSteps.Value.Exists(x => x.step == _currenStepAttack + 1);
+        bool canGoUpperState = false;
 
-    //    if (existNextStep == true)
-    //    {
-    //        var nextStep = _playerAttackSteps.Value.Find(x => x.step == _currenStepAttack + 1);
-    //        canGoUpperState = _playerCurrentConviction.Value >= nextStep.ammountConvitionNeeded;
+        if (existNextStep == true)
+        {
+            var nextStep = _playerAttackSteps.Value.Find(x => x.step == _currenStepAttack + 1);
+            canGoUpperState = _playerCurrentConviction.Value >= nextStep.ammountConvitionNeeded;
 
-    //        if (_currenStepAttack < lastStep && canGoUpperState == true)
-    //        {
-    //            return true;
-    //        }
-    //    }
+            if (_currenStepAttack < lastStep && canGoUpperState == true)
+            {
+                return true;
+            }
+        }
 
-    //    return false;
-    //}
+        return false;
+    }
+    */
 
-    IEnumerator ChargeRoutine()
+    private IEnumerator ChargeRoutine()
     {
         yield return new WaitForSeconds(_animationTransitionDelays.Value.attackStartupDelay);
 
@@ -242,16 +300,14 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
             _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.attackRecoveryDelay, () =>
             {
-                _onPlayerAddState.Call(PlayerState.None);
+                _onPlayerAddState.Call(S_EnumPlayerState.None);
                 if (_attackChargeCoroutine == null) return;
                 _attackChargeCoroutine = null;
             }));
-
         }));
-
     }
 
-    void OnHitCancel()
+    private void OnHitCancel()
     {
         var currentConviction = _playerCurrentConviction.Value;
         var stepsUpperCurrentConviction = _playerAttackSteps.Value.FindAll(x => x.ammountConvitionNeeded <= currentConviction);
@@ -272,7 +328,6 @@ public class S_PlayerBasicAttack : MonoBehaviour
         PublishPreconsume(_reservedConviction);
     }
 
-
     private void PublishPreconsume(float value)
     {
         if (_preconsumedConviction != null)
@@ -281,4 +336,3 @@ public class S_PlayerBasicAttack : MonoBehaviour
         }
     }
 }
-

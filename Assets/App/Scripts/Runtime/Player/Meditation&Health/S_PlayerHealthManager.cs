@@ -1,17 +1,34 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_PlayerHealthManager : MonoBehaviour
 {
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerHealPerformed rseOnPlayerHealPerformed;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerHealthReduced rseOnPlayerHealthReduced;
 
-    [Header("Output")]
-    [SerializeField] private SSO_PlayerStats ssoPlayerStats;
-    [SerializeField] private RSO_PlayerCurrentHealth rsoPlayerCurrentHealth;
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerHealthUpdate rseOnPlayerHealthUpdate;
-    [SerializeField] SSO_DebugPlayer _debugPlayer;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnAnimationBoolValueChange _rseOnAnimationBoolValueChange;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_ConsoleCheats _debugPlayer;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentHealth rsoPlayerCurrentHealth;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats ssoPlayerStats;
 
     private float maxHealth => ssoPlayerStats.Value.maxHealth;
 
@@ -37,7 +54,6 @@ public class S_PlayerHealthManager : MonoBehaviour
         var newHealth = rsoPlayerCurrentHealth.Value + ssoPlayerStats.Value.healAmount;
         rsoPlayerCurrentHealth.Value = Mathf.Clamp(newHealth, 0, maxHealth);
         rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
-        //Debug.Log($"Player Healed, player health: {rsoPlayerCurrentHealth.Value}");
     }
 
     private void ReducePlayerHealth(float damage)
@@ -45,12 +61,13 @@ public class S_PlayerHealthManager : MonoBehaviour
         var newHealth= rsoPlayerCurrentHealth.Value - damage;
         rsoPlayerCurrentHealth.Value = Mathf.Clamp(newHealth, 0, maxHealth);
         rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
-        //Debug.Log($"Player heal reduced, Player Health: {rsoPlayerCurrentHealth.Value}");
 
         if (rsoPlayerCurrentHealth.Value <= 0)
         {
             if (_debugPlayer.Value.cantDie == true) return;
             rseOnPlayerDeath.Call();
+            _rseOnAnimationBoolValueChange.Call("isDead", true);
+            _onPlayerAddState.Call(S_EnumPlayerState.Dying);
         }
     }
 }

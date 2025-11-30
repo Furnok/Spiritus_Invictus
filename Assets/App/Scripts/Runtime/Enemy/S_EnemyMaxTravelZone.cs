@@ -6,14 +6,15 @@ public class S_EnemyMaxTravelZone : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Filters")]
-    [SerializeField][S_TagName] private string playerTag;
+    [SerializeField, S_TagName] private string playerTag;
 
     [TabGroup("References")]
     [Title("Collider")]
     [SerializeField] private BoxCollider box;
 
-    [HideInInspector] public UnityEvent<GameObject> onTargetDetected;
-    [HideInInspector] public UnityEvent<GameObject> onTarget;
+    [HideInInspector] public UnityEvent<GameObject> onTargetDetected = null;
+    [HideInInspector] public UnityEvent<GameObject> onTarget = null;
+
     private GameObject targetDetected = null;
 
     public void Setup(SSO_EnemyData enemyData)

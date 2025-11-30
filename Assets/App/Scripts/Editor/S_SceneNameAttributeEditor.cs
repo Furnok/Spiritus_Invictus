@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -6,56 +7,104 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(S_SceneReference))]
 public class S_SceneNameAttributeEditor : PropertyDrawer
 {
-    private static SceneAsset[] cachedScenes;
-    private static string[] cachedSceneNames;
+    private static SceneAsset[] sceneAssets;
+    private static string[] sceneNames;
+    private static string[] lastScenePaths;
 
-    private static void CacheBuildScenes()
+    static S_SceneNameAttributeEditor()
     {
-        cachedScenes = EditorBuildSettings.scenes
+        EditorApplication.update += CheckBuildSettings;
+    }
+
+    private static void CheckBuildSettings()
+    {
+        var currentPaths = EditorBuildSettings.scenes
+            .Where(s => s.enabled)
+            .Select(s => s.path)
+            .ToArray();
+
+        if (lastScenePaths == null || !currentPaths.SequenceEqual(lastScenePaths))
+        {
+            lastScenePaths = currentPaths;
+            RefreshScenes();
+
+            var inspectors = Resources.FindObjectsOfTypeAll<Editor>().OfType<Editor>();
+            foreach (var inspector in inspectors)
+            {
+                inspector.Repaint();
+            }
+        }
+    }
+
+    private static void RefreshScenes()
+    {
+        List<SceneAsset> scenes = EditorBuildSettings.scenes
             .Where(s => s.enabled)
             .Select(s => AssetDatabase.LoadAssetAtPath<SceneAsset>(s.path))
             .Where(s => s != null)
-            .ToArray();
+            .ToList();
 
-        cachedSceneNames = cachedScenes.Select(s => s.name).ToArray();
+        scenes.Insert(0, null);
+
+        sceneAssets = scenes.ToArray();
+        sceneNames = scenes.Select(s => s == null ? "None" : s.name).ToArray();
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        if (sceneAssets == null || sceneNames == null)
+        {
+            RefreshScenes();
+        }
+
+        // Get Properties
+        SerializedProperty nameProp = property.FindPropertyRelative("sceneName");
         SerializedProperty guidProp = property.FindPropertyRelative("sceneGUID");
         SerializedProperty pathProp = property.FindPropertyRelative("scenePath");
 
         EditorGUI.BeginProperty(position, label, property);
 
-        CacheBuildScenes();
-
-        // Get current scene from GUID
+        // Resolve Scene GUID
         string guid = guidProp.stringValue;
-        string resolvedPath = AssetDatabase.GUIDToAssetPath(guid);
-        SceneAsset currentScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(resolvedPath);
+        string absolutePath = AssetDatabase.GUIDToAssetPath(guid);
+        SceneAsset currentScene = string.IsNullOrEmpty(absolutePath) ? null : AssetDatabase.LoadAssetAtPath<SceneAsset>(absolutePath);
 
-        // Keep scenePath in sync with GUID
-        pathProp.stringValue = resolvedPath;
+        // Keep Name & Path Updated
+        pathProp.stringValue = currentScene ? AssetDatabase.GetAssetPath(currentScene) : "";
+        nameProp.stringValue = currentScene ? currentScene.name : "";
 
-        // Show popup
-        int currentIndex = Array.IndexOf(cachedScenes, currentScene);
-
-        if (currentIndex < 0) 
+        // Find Current Index
+        int currentIndex = Array.IndexOf(sceneAssets, currentScene);
+        if (currentIndex < 0)
         {
             currentIndex = 0;
+
+            // Apply Result
+            nameProp.stringValue = "";
+            guidProp.stringValue = "";
+            pathProp.stringValue = "";
         }
 
+        // Popup
         EditorGUI.BeginChangeCheck();
-        int newIndex = EditorGUI.Popup(position, label.text, currentIndex, cachedSceneNames);
+        int newIndex = EditorGUI.Popup(position, label.text, currentIndex, sceneNames);
 
         if (EditorGUI.EndChangeCheck())
         {
-            if (newIndex >= 0 && newIndex < cachedScenes.Length)
+            // Apply Result
+            if (newIndex == 0)
             {
-                SceneAsset selectedScene = cachedScenes[newIndex];
-                string path = AssetDatabase.GetAssetPath(selectedScene);
+                nameProp.stringValue = "";
+                guidProp.stringValue = "";
+                pathProp.stringValue = "";
+            }
+            else
+            {
+                SceneAsset scene = sceneAssets[newIndex];
+                string path = AssetDatabase.GetAssetPath(scene);
                 string newGUID = AssetDatabase.AssetPathToGUID(path);
 
+                nameProp.stringValue = scene.name;
                 guidProp.stringValue = newGUID;
                 pathProp.stringValue = path;
             }

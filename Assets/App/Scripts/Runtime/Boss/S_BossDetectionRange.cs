@@ -10,7 +10,8 @@ public class S_BossDetectionRange : MonoBehaviour
 
     [HideInInspector] public UnityEvent<GameObject> onTargetDetected;
 
-    private GameObject target;
+    private GameObject target = null;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(playerTag))

@@ -1,38 +1,51 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_PlayerParry : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Animation")]
     [SerializeField, S_AnimationName] string _parryParam;
 
-
-    [Header("References")]
-    [SerializeField] RSO_CanParry _canParry;
-    [SerializeField] RSO_ParryStartTime _parryStartTime;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
-    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
-    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
-
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerParryInput rseOnPlayerParry;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
 
-    [Header("Output")]
-    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
 
-    float _parryDuration => _playerStats.Value.parryDuration;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
-    Coroutine _parryCoroutine;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CanParry _canParry;
 
-    bool _parryUp = true;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_ParryStartTime _parryStartTime;
 
-    private void Awake()
-    {
-        _canParry.Value = false;
-        _parryStartTime.Value = 0f;
-    }
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_AnimationTransitionDelays _animationTransitionDelays;
+
+    private float _parryDuration => _playerStats.Value.parryDuration;
+
+    private Coroutine _parryCoroutine = null;
+
+    private bool _parryUp = true;
+
     private void OnEnable()
     {
         _canParry.Value = false;
@@ -50,8 +63,10 @@ public class S_PlayerParry : MonoBehaviour
 
     private void TryParry()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Parrying) == false || _parryUp == false) return;
-        _onPlayerAddState.Call(PlayerState.Parrying);
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Parrying) == false || _parryUp == false) return;
+        _onPlayerAddState.Call(S_EnumPlayerState.Parrying);
+
+        rseOnSendConsoleMessage.Call("Player Pary!");
 
         if (_parryCoroutine != null)
         {
@@ -77,23 +92,18 @@ public class S_PlayerParry : MonoBehaviour
 
                 if (_parryCoroutine != null) StopCoroutine(_parryCoroutine);
                 rseOnAnimationBoolValueChange.Call(_parryParam, false);
-                //_onPlayerAddState.Call(PlayerState.None);
 
                 _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryRecoveryDelay, () =>
                 {
                     if (_parryCoroutine != null) StopCoroutine(_parryCoroutine);
 
-
-                    //rseOnAnimationBoolValueChange.Call(_parryParam, false);
-                    _onPlayerAddState.Call(PlayerState.None);
-
-
+                    _onPlayerAddState.Call(S_EnumPlayerState.None);
                 }));
             }));
         }));
     }
 
-    void CancelParry()
+    private void CancelParry()
     {
         if (_parryCoroutine == null) return;
         StopCoroutine(_parryCoroutine);
@@ -106,5 +116,4 @@ public class S_PlayerParry : MonoBehaviour
         _canParry.Value = false;
         rseOnAnimationBoolValueChange.Call(_parryParam, false);
     }
-
 }

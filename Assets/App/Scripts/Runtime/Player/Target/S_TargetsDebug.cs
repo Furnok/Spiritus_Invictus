@@ -1,39 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class S_TargetsDebug : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("General")]
     [SerializeField] private Color gizmoColor;
+
+    [TabGroup("Settings")]
     [SerializeField] private Color gizmoTargetColor;
+
+    [TabGroup("Settings")]
     [SerializeField] private Color gizmoPreTargetColor;
+
+    [TabGroup("Settings")]
     [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("Settings")]
     [SerializeField] private float gizmoRadius;
+
+    [TabGroup("Settings")]
     [SerializeField] private float gizmoTargetRadius;
+
+    [TabGroup("Settings")]
     [SerializeField] private float gizmoPreTargetRadius;
+
+    [TabGroup("Settings")]
     [SerializeField] private float gizmoHeightOffset;
+
+    [TabGroup("Settings")]
     [SerializeField] private bool drawGizmos;
 
-    [Header("Reference")]
-    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
-    [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
-
-
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyEnterTargetingRange rseOnEnemyEnterTargetingRange;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyExitTargetingRange rseOnEnemyExitTargetingRange;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
 
     private HashSet<Transform> targets = new();
     private bool canDrawTarget = false;
     private Transform target = null;
     private Transform _preSelectedTarget = null;
-    private Transform _playerCenterTransform;
+    private Transform _playerCenterTransform = null;
 
     private void OnEnable()
     {
@@ -111,26 +138,7 @@ public class S_TargetsDebug : MonoBehaviour
         this.target = null;
     }
 
-    private void OnDrawGizmos()
-    {
-        if (!enabled || !drawGizmos) return;
-
-        DrawAll();
-
-        _preSelectedTarget = TargetSelection();
-
-        if (_preSelectedTarget != null && rsoPlayerIsTargeting.Value == false)
-        {
-            DrawPreSelectedTarget();
-        }
-
-        if (rsoPlayerIsTargeting.Value == true && canDrawTarget == true)
-        {
-            DrawTarget();
-        }
-    }
-
-    void GetPlayerCenterTransform(Transform playerCenter)
+    private void GetPlayerCenterTransform(Transform playerCenter)
     {
         _playerCenterTransform = playerCenter;
     }
@@ -153,7 +161,7 @@ public class S_TargetsDebug : MonoBehaviour
 
             bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
 
-            //Priority for the taget in the front cone
+            // Priority for the taget in the front cone
             float score = inFrontCone ? distance : distance + 1000f;
 
             if (score < bestScore /*&& target != currentTarget*/)
@@ -174,5 +182,24 @@ public class S_TargetsDebug : MonoBehaviour
         }
 
         return selectedTarget;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!enabled || !drawGizmos) return;
+
+        DrawAll();
+
+        _preSelectedTarget = TargetSelection();
+
+        if (_preSelectedTarget != null && rsoPlayerIsTargeting.Value == false)
+        {
+            DrawPreSelectedTarget();
+        }
+
+        if (rsoPlayerIsTargeting.Value == true && canDrawTarget == true)
+        {
+            DrawTarget();
+        }
     }
 }

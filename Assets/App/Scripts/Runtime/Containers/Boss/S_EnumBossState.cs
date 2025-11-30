@@ -7,5 +7,5 @@ public enum S_EnumBossState
     Chase,
     Combat,
     Stun,
-    Death
+    Death,
 }

@@ -23,10 +23,11 @@ public class S_EnemyAttackData : MonoBehaviour
     [Title("Image")]
     [SerializeField] private Image warning;
 
-    [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData;
+    [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData = null;
 
     private S_StructEnemyAttackData attackData;
-    private Tween fadeTween;
+
+    private Tween fadeTween = null;
 
     public void SetAttackMode(S_StructEnemyAttackData enemyAttackData)
     {
@@ -67,7 +68,6 @@ public class S_EnemyAttackData : MonoBehaviour
 
             content.gameObject.gameObject.SetActive(true);
 
-            content.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
             fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeDisplay).SetEase(Ease.Linear);
         }
     }
@@ -76,7 +76,6 @@ public class S_EnemyAttackData : MonoBehaviour
     {
         fadeTween?.Kill();
 
-        content.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
         fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeDisplay).SetEase(Ease.Linear).OnComplete(() =>
         {
             content.gameObject.SetActive(false);

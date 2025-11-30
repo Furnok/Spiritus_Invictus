@@ -6,26 +6,20 @@ public class S_EnemyDetectionRange : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Filters")]
-    [SerializeField][S_TagName] private string playerTag;
-
-    [TabGroup("Settings")]
-    [SerializeField] LayerMask playerLayerMask;
+    [SerializeField, S_TagName] private string playerTag;
 
     [TabGroup("References")]
     [Title("Collider")]
     [SerializeField] private SphereCollider detectionCollider;
 
     [TabGroup("References")]
-    [Title("Transform")]
-    [SerializeField] private Transform maxTravelZone;
-
-    [TabGroup("References")]
     [Title("Script")]
     [SerializeField] private S_Enemy enemy;
 
-    [HideInInspector] public UnityEvent<GameObject> onTargetDetected;
+    [HideInInspector] public UnityEvent<GameObject> onTargetDetected = null;
 
     private GameObject targetDetected = null;
+
     private float detectionRange = 0;
 
     private void Start()

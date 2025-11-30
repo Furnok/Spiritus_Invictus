@@ -1,7 +1,10 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIGameManager : MonoBehaviour
@@ -22,6 +25,18 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeConsole;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFadeGameOver;
+
+    [TabGroup("Settings")]
+    [Title("Game Over")]
+    [SerializeField] private bool haveGameOver;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Sliders")]
@@ -62,6 +77,19 @@ public class S_UIGameManager : MonoBehaviour
     [Title("Console")]
     [SerializeField] private GameObject consoleWindow;
 
+    [TabGroup("References")]
+    [SerializeField] private GameObject consoleBackgroundWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private Selectable buttonSend;
+
+    [TabGroup("References")]
+    [SerializeField] private TMP_InputField inputField;
+
+    [TabGroup("References")]
+    [Title("Game Over")]
+    [SerializeField] private GameObject gameOverWindow;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
@@ -96,7 +124,37 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private RSE_OnOpenWindow rseOnOpenWindow;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGamePause rseOnGamePause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerRespawn rseOnPlayerRespawn;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PreconsumedConviction rsoPreconsumedConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_ConsoleDisplay rsoConsoleDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_GameInPause rsoGameInPause;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
@@ -117,8 +175,6 @@ public class S_UIGameManager : MonoBehaviour
     private Tween convictionTween = null;
     private Tween preconvictionTween = null;
     private Tween skipTween = null;
-
-    private bool isInConsole = false;
 
     private void Awake()
     {
@@ -143,6 +199,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnSkipHold.action += SetSkipHoldValue;
         rseOnOpenExtractWindow.action += DiplayExtract;
         rseOnConsole.action += Console;
+        rseOnPlayerDeath.action += GameOver;
     }
 
     private void OnDisable()
@@ -155,27 +212,28 @@ public class S_UIGameManager : MonoBehaviour
         rseOnSkipHold.action -= SetSkipHoldValue;
         rseOnOpenExtractWindow.action -= DiplayExtract;
         rseOnConsole.action -= Console;
+        rseOnPlayerDeath.action -= GameOver;
 
         healthTween?.Kill();
         convictionTween?.Kill();
         preconvictionTween?.Kill();
     }
 
+    #region UI Game
     private void DisplayBossHealth(bool value)
     {
-        sliderBossHealth.GetComponent<CanvasGroup>()?.DOKill();
+        CanvasGroup cg = sliderBossHealth.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
         if (value && !sliderBossHealth.gameObject.activeInHierarchy)
         {
-            sliderBossHealth.gameObject.gameObject.SetActive(true);
+            sliderBossHealth.gameObject.SetActive(true);
 
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeFadeBoss).SetEase(Ease.Linear);
+            cg.DOFade(1f, timeFadeBoss).SetEase(Ease.Linear);
         }
         else if (!value)
         {
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().alpha = 1f;
-            sliderBossHealth.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeBoss).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, timeFadeBoss).SetEase(Ease.Linear).OnComplete(() =>
             {
                 sliderBossHealth.gameObject.SetActive(false);
             });
@@ -245,17 +303,19 @@ public class S_UIGameManager : MonoBehaviour
             rt.anchoredPosition = Vector2.zero;
         }
     }
+    #endregion
 
+    #region Skip
     private void DisplaySkip(bool value)
     {
-        skipWindow.GetComponent<CanvasGroup>()?.DOKill();
+        CanvasGroup cg = skipWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
 
         if (value && !skipWindow.activeInHierarchy)
         {
             skipWindow.SetActive(true);
 
-            skipWindow.GetComponent<CanvasGroup>().alpha = 0f;
-            skipWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
         }
         else if (!value)
         {
@@ -269,37 +329,156 @@ public class S_UIGameManager : MonoBehaviour
 
         skipTween = imageSkip.DOFillAmount(value / ssoCameraData.Value.holdSkipTime, animationSlider).SetEase(Ease.OutCubic);
     }
+    #endregion
 
+    #region Extract
     private void DiplayExtract(int index)
     {
+        RuntimeManager.PlayOneShot(uiSound);
+
         rseOnUIInputEnabled.Call();
         rseOnOpenWindow.Call(extractWindow);
         rseOnDisplayExtract.Call(ssoExtractText.Value[index]);
     }
+    #endregion
 
+    #region Console
     private void Console()
     {
-        if (!isInConsole)
+        if (!rsoConsoleDisplay.Value)
         {
-            isInConsole = true;
+            rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectableFocus;
+            rsoNavigation.Value.selectableDefault = null;
+            rseOnResetFocus.Call();
+
+            if (Gamepad.current == null)
+            {
+                rseOnShowMouseCursor.Call();
+            }
+
+            RuntimeManager.PlayOneShot(uiSound);
+
+            rsoConsoleDisplay.Value = true;
+            rsoInConsole.Value = true;
 
             rseOnUIInputEnabled.Call();
 
-            if (!consoleWindow.activeInHierarchy)
-            {
-                consoleWindow.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = consoleWindow.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
-                consoleWindow.SetActive(true);
+            consoleWindow.SetActive(true);
 
-                consoleWindow.GetComponent<CanvasGroup>().alpha = 0f;
-                consoleWindow.GetComponent<CanvasGroup>().DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
-            }
+            cg.DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
         }
         else
         {
-            isInConsole = false;
+            if (!rsoInConsole.Value)
+            {
+                rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectableFocus;
+                rsoNavigation.Value.selectableDefault = null;
+                rseOnResetFocus.Call();
 
-            rseOnGameInputEnabled.Call();
+                rsoNavigation.Value.selectableDefault = buttonSend;
+
+                if (Gamepad.current != null)
+                {
+                    buttonSend?.Select();
+                }
+
+                if (Gamepad.current == null)
+                {
+                    rseOnShowMouseCursor.Call();
+                }
+
+                rsoInConsole.Value = true;
+
+                rseOnUIInputEnabled.Call();
+
+                CanvasGroup cg = consoleBackgroundWindow.GetComponent<CanvasGroup>();
+                cg.DOKill();
+
+                cg.DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+                cg.blocksRaycasts = true;
+            }
+            else
+            {
+                if (rsoNavigation.Value.selectablePressOld != null)
+                {
+                    rseOnResetFocus.Call();
+                    rsoNavigation.Value.selectableDefault = rsoNavigation.Value.selectablePressOld;
+
+                    if (Gamepad.current != null)
+                    {
+                        rsoNavigation.Value.selectableFocus = rsoNavigation.Value.selectablePressOld;
+                        rsoNavigation.Value.selectableDefault.Select();
+                    }
+
+                    rsoNavigation.Value.selectablePressOld = null;
+                }
+                else
+                {
+                    rsoNavigation.Value.selectableDefault = null;
+                    rseOnResetFocus.Call();
+                }
+
+                inputField.text = "";
+                inputField.caretPosition = 0;
+
+                RuntimeManager.PlayOneShot(uiSound);
+
+                CanvasGroup cg = consoleWindow.GetComponent<CanvasGroup>();
+                cg.DOKill();
+
+                cg.DOFade(0f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+                {
+                    rseOnHideMouseCursor.Call();
+
+                    rsoConsoleDisplay.Value = false;
+                    rsoInConsole.Value = false;
+
+                    if (rsoGameInPause.Value)
+                    {
+                        rseOnUIInputEnabled.Call();
+
+                        if (Gamepad.current == null)
+                        {
+                            rseOnShowMouseCursor.Call();
+                        }
+                    }
+                    else
+                    {
+                        rseOnGameInputEnabled.Call();
+                    }
+
+                    consoleWindow.SetActive(false);
+                });
+            }
         }
     }
+    #endregion
+
+    #region Game Over
+    private void GameOver()
+    {
+        StartCoroutine(S_Utils.Delay(3f, () =>
+        {
+            if (haveGameOver)
+            {
+                rseOnUIInputEnabled.Call();
+                rseOnGamePause.Call(true);
+
+                CanvasGroup cg = gameOverWindow.GetComponent<CanvasGroup>();
+                cg.DOKill();
+
+                gameOverWindow.SetActive(true);
+
+                cg.DOFade(1f, timeFadeGameOver).SetEase(Ease.Linear).SetUpdate(true);
+            }
+            else
+            {
+                rseOnPlayerRespawn.Call();
+            }
+        }));
+    }
+    #endregion
 }

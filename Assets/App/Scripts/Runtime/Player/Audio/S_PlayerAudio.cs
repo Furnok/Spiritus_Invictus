@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class S_PlayerAudio : MonoBehaviour
 {
-    //[Header("Settings")]
-
     [TabGroup("References")]
+    [Title("Audio")]
     [SerializeField] private EventReference footstepsSound;
-
-    //[Header("Inputs")]
-
-    //[Header("Outputs")]
 
     public void PlayFootsteps()
     {

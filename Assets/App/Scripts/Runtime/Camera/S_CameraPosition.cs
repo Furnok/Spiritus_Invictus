@@ -6,6 +6,9 @@ public class S_CameraPosition : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InGame rsoInGame;
+
     private void OnDisable()
     {
         rsoCameraRotation.Value = new Quaternion();
@@ -13,7 +16,10 @@ public class S_CameraPosition : MonoBehaviour
 
     private void Update()
     {
-        CameraRotation();
+        if (rsoInGame.Value)
+        {
+            CameraRotation();
+        } 
     }
 
     private void CameraRotation()

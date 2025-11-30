@@ -1,13 +1,16 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class S_TargetsManager : MonoBehaviour
 {
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyEnterTargetingRange rseOnEnemyEnterTargetingRange;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyExitTargetingRange rseOnEnemyExitTargetingRange;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
 
     private HashSet<GameObject> enemiesInRange = new();

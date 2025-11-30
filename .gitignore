@@ -113,6 +113,16 @@ InitTestScene*.unity*
 
 
 
+* Odin Inspector
+
+# Ignore the auto-generated AOT compatibility dll.
+/Assets/Plugins/Sirenix/Assemblies/AOT/*
+
+# Ignore all unpacked demos.
+/Assets/Plugins/Sirenix/Demos/*
+
+
+
 # FMOD
 
 # Never ignore DLLs in the FMOD subfolder.
@@ -132,6 +142,21 @@ InitTestScene*.unity*
 # Log files can be ignored.
 fmod_editor.log
 
+#Keep Project FMOD
+!FMOD/project/.fspro
+!FMOD/project/Assets/
+!FMOD/project/Metadata/
+!FMOD/*/.GUID
+!FMOD/*/.xml
+
+# Ignorer Files Generated
+FMOD/project/.cache
+FMOD/project/.user
+FMOD/project/.unsaved
+FMOD/project/.tmp
+FMOD/project/.workspace
+FMOD/project/.metadata/
+FMOD/project/Logs/
 
 
 # Custom

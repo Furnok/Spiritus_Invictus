@@ -1,50 +1,101 @@
-﻿using System.Collections.Generic;
+﻿using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("General")]
     [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("Settings")]
     [SerializeField] private bool drawGizmos;
 
-    [Header("Reference")]
-    [SerializeField] GameObject _previewIndicatorPrefab;
-    [SerializeField] GameObject _lockedIndicatorPrefab;
+    [TabGroup("References")]
+    [Title("Indicators")]
+    [SerializeField] private GameObject _previewIndicatorPrefab;
 
-    [Header("Input")]
+    [TabGroup("References")]
+    [SerializeField] private GameObject _previewSwapIndicatorPrefab;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject _lockedIndicatorPrefab;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerTargeting rseOnPlayerTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerTargetingCancel rseOnPlayerTargetingCancel;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerSwapTarget rseOnPlayerSwapTarget;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCenter _rseOnPlayerCenter;
 
-    [Header("Output")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDeath _onPlayerDeathRse;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnStartTargeting rseOnStartTargeting;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting rseOnPlayerCancelTargeting;
-    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnStopTargeting rseOnStopTargeting;
-    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
-    [SerializeField] private RSO_TargetPosition rsoTargetPosition;
-    [SerializeField] private SSO_PlayerMaxDistanceTargeting ssoPlayerMaxDistanceTargeting;
-    [SerializeField] private SSO_PlayerTargetRangeRadius ssoPlayerTargetRangeRadius;
-    [SerializeField] private SSO_TargetObstacleBreakDelay ssoPargetObstacleBreakDelay;
-    [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerMaxDistanceTargeting ssoPlayerMaxDistanceTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerTargetRangeRadius ssoPlayerTargetRangeRadius;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_TargetObstacleBreakDelay ssoPargetObstacleBreakDelay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
 
     private GameObject currentTarget = null;
     private HashSet<GameObject> targetsPossible = new();
     private float obstacleTimer = 0f;
-    private Transform _playerCenterTransform;
+    private Transform _playerCenterTransform = null;
 
-    private GameObject _previewGO;
-    private GameObject _lockedGO;
-    private Transform _previewTargetTransform;
-    private Transform _lockedTargetTransfrom;
+    private GameObject _previewGO = null;
+    private GameObject _lockedGO = null;
+    private GameObject _swapLeftGO = null;
+    private GameObject _swapRightGO = null;
+
+    private Transform _previewTargetTransform = null;
+    private Transform _lockedTargetTransfrom = null;
+    private Transform _swapLeftTargetTransform = null;
+    private Transform _swapRightTargetTransform = null;
 
     private void Awake()
     {
@@ -53,8 +104,13 @@ public class S_TargetingManager : MonoBehaviour
         _previewGO = Instantiate(_previewIndicatorPrefab, gameObject.transform);
         _lockedGO = Instantiate(_lockedIndicatorPrefab, gameObject.transform);
 
+        _swapLeftGO = Instantiate(_previewSwapIndicatorPrefab, transform);
+        _swapRightGO = Instantiate(_previewSwapIndicatorPrefab, transform);
+
         _previewGO.SetActive(false);
         _lockedGO.SetActive(false);
+        _swapLeftGO.SetActive(false);
+        _swapRightGO.SetActive(false);
     }
 
     private void OnEnable()
@@ -70,6 +126,8 @@ public class S_TargetingManager : MonoBehaviour
         rseOnEnemyTargetDied.action += OnEnemyTargetDied;
 
         _rseOnPlayerCenter.action += GetPlayerCenterTransform;
+
+        _onPlayerDeathRse.action += CancelTargeting;
     }
 
     private void OnDisable()
@@ -81,15 +139,9 @@ public class S_TargetingManager : MonoBehaviour
         rseOnPlayerSwapTarget.action -= OnSwapTargetInput;
 
         rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
-
         _rseOnPlayerCenter.action -= GetPlayerCenterTransform;
 
-        rsoPlayerIsTargeting.Value = false;
-    }
-
-    void GetPlayerCenterTransform(Transform playerCenter)
-    {
-        _playerCenterTransform = playerCenter;
+        _onPlayerDeathRse.action -= CancelTargeting;
     }
 
     private void Update()
@@ -100,7 +152,7 @@ public class S_TargetingManager : MonoBehaviour
         {
             if (currentTarget == null)
             {
-                if (selection.TryGetComponent(out ITargetable targetable))
+                if (selection.TryGetComponent(out I_Targetable targetable))
                 {
                     _previewTargetTransform = targetable.GetTargetLockOnAnchorTransform();
                 }
@@ -113,10 +165,13 @@ public class S_TargetingManager : MonoBehaviour
                 _lockedGO.SetActive(false);
 
                 _previewGO.transform.position = _previewTargetTransform.position;
+
+                _swapLeftGO.SetActive(false);
+                _swapRightGO.SetActive(false);
             }
             else if (currentTarget != null)
             {
-                if (currentTarget.TryGetComponent(out ITargetable targetable))
+                if (currentTarget.TryGetComponent(out I_Targetable targetable))
                 {
                     _lockedTargetTransfrom = targetable.GetTargetLockOnAnchorTransform();
                 }
@@ -129,14 +184,69 @@ public class S_TargetingManager : MonoBehaviour
                 _lockedGO.SetActive(true);
 
                 _lockedGO.transform.position = _lockedTargetTransfrom.position;
+
+                // Swap indicators  
+                var candidates = BuildSwapCandidates();
+
+                GameObject leftTarget = GetSwapTarget(-1f, candidates);
+                GameObject rightTarget = GetSwapTarget(+1f, candidates);
+
+                if (leftTarget != null && rightTarget != null && leftTarget == rightTarget)
+                {
+                    _swapLeftGO.SetActive(false);
+
+                    if (rightTarget.TryGetComponent(out I_Targetable t))
+                        _swapRightTargetTransform = t.GetTargetLockOnAnchorTransform();
+                    else
+                        _swapRightTargetTransform = rightTarget.transform;
+
+                    _swapRightGO.SetActive(true);
+                    _swapRightGO.transform.position = _swapRightTargetTransform.position;
+
+                    return;
+                }
+                // Left
+                if (leftTarget != null && leftTarget != currentTarget)
+                {
+                    if (leftTarget.TryGetComponent(out I_Targetable leftTargetable))
+                        _swapLeftTargetTransform = leftTargetable.GetTargetLockOnAnchorTransform();
+                    else
+                        _swapLeftTargetTransform = leftTarget.transform;
+
+                    _swapLeftGO.SetActive(true);
+                    _swapLeftGO.transform.position = _swapLeftTargetTransform.position;
+                }
+                else
+                {
+                    _swapLeftGO.SetActive(false);
+                }
+
+                // Right
+                if (rightTarget != null && rightTarget != currentTarget)
+                {
+                    if (rightTarget.TryGetComponent(out I_Targetable rightTargetable))
+                        _swapRightTargetTransform = rightTargetable.GetTargetLockOnAnchorTransform();
+                    else
+                        _swapRightTargetTransform = rightTarget.transform;
+
+                    _swapRightGO.SetActive(true);
+                    _swapRightGO.transform.position = _swapRightTargetTransform.position;
+                }
+                else
+                {
+                    _swapRightGO.SetActive(false);
+                }
             }
         }
         else
         {
-            if (_previewGO.activeInHierarchy || _lockedGO.activeInHierarchy)
+            if (_previewGO.activeInHierarchy || _lockedGO.activeInHierarchy ||
+            _swapLeftGO.activeInHierarchy || _swapRightGO.activeInHierarchy)
             {
                 _previewGO.SetActive(false);
                 _lockedGO.SetActive(false);
+                _swapLeftGO.SetActive(false);
+                _swapRightGO.SetActive(false);
             }
         }
     }
@@ -180,6 +290,11 @@ public class S_TargetingManager : MonoBehaviour
         }
     }
 
+    private void GetPlayerCenterTransform(Transform playerCenter)
+    {
+        _playerCenterTransform = playerCenter;
+    }
+
     private void OnChangeTargetsPosible(HashSet<GameObject> targetsList)
     {
         targetsPossible = targetsList;
@@ -211,7 +326,6 @@ public class S_TargetingManager : MonoBehaviour
         if(rsoSettingsSaved.Value.holdLockTarget == false) return;
         
         CancelTargeting();
-        
     }
 
     private void CancelTargeting()
@@ -221,7 +335,6 @@ public class S_TargetingManager : MonoBehaviour
         if (currentTarget != null)
         {
             rseOnPlayerCancelTargeting.Call(currentTarget);
-            rsoTargetPosition.Value = Vector3.zero;
             rseOnAnimationBoolValueChange.Call("TargetLock", false);
 
             rseOnStopTargeting.Call();
@@ -272,7 +385,6 @@ public class S_TargetingManager : MonoBehaviour
             if (_playerCenterTransform == null) return;
             float signedAngle = Vector3.SignedAngle(_playerCenterTransform.forward, toTarget, Vector3.up);
 
-
             float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
 
             Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
@@ -307,8 +419,8 @@ public class S_TargetingManager : MonoBehaviour
                 delta += 360;
             }
 
-            // if axis > 0 ? right ? look for the smallest positive delta
-            // if axis < 0 ? left ? look for the largest negative delta (the closest to 0)
+            // If axis > 0 ? right ? look for the smallest positive delta
+            // If axis < 0 ? left ? look for the largest negative delta (the closest to 0)
             if (axis > 0 && delta > 0 && delta < bestDelta)
             {
                 bestDelta = delta;
@@ -321,7 +433,7 @@ public class S_TargetingManager : MonoBehaviour
             }
         }
 
-        // if nothing found
+        // If nothing found
         if (bestTarget == null)
         {
             if (axis > 0)
@@ -338,7 +450,6 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnPlayerCancelTargeting.Call(currentTarget);
             currentTarget = bestTarget;
-            rsoTargetPosition.Value = currentTarget.transform.position;
             rseOnNewTargeting.Call(bestTarget);
         }
     }
@@ -361,7 +472,7 @@ public class S_TargetingManager : MonoBehaviour
 
             bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
 
-            //Priority for the taget in the front cone
+            // Priority for the taget in the front cone
             float score = inFrontCone ? distance : distance + 1000f;
 
             if (score < bestScore && target != currentTarget)
@@ -383,12 +494,133 @@ public class S_TargetingManager : MonoBehaviour
 
         if (selectedTarget != null)
         {
-            rsoTargetPosition.Value = selectedTarget.transform.position;
-
             rseOnAnimationBoolValueChange.Call("TargetLock", true);
         }
 
         return selectedTarget;
+    }
+
+    private GameObject TargetSelectionExist()
+    {
+        GameObject selectedTarget = null;
+
+        float bestScore = float.MaxValue;
+
+        foreach (var target in targetsPossible)
+        {
+            if (target == null) continue;
+
+            Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value);
+            float distance = toTarget.magnitude;
+
+            if (_playerCenterTransform == null) return null;
+            float angle = Vector3.Angle(_playerCenterTransform.forward, toTarget);
+
+            bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
+
+            // Priority for the taget in the front cone
+            float score = inFrontCone ? distance : distance + 1000f;
+
+            if (score < bestScore && target != currentTarget)
+            {
+                float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
+
+                Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
+                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+                {
+                    continue;
+                }
+                else
+                {
+                    bestScore = score;
+                    selectedTarget = target;
+                }
+            }
+        }
+
+        return selectedTarget;
+    }
+
+    private List<(GameObject go, float angle)> BuildSwapCandidates()
+    {
+        List<(GameObject go, float angle)> candidates = new();
+
+        foreach (var target in targetsPossible)
+        {
+            if (target == null) continue;
+            if (_playerCenterTransform == null) return candidates;
+
+            Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value).normalized;
+            float signedAngle = Vector3.SignedAngle(_playerCenterTransform.forward, toTarget, Vector3.up);
+
+            float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
+            Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
+
+            if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+                continue;
+
+            candidates.Add((target, signedAngle));
+        }
+
+        return candidates;
+    }
+
+    private GameObject GetSwapTarget(float axis, List<(GameObject go, float angle)> candidates)
+    {
+        if (candidates == null || candidates.Count == 0 || currentTarget == null) return null;
+
+        int index = candidates.FindIndex(c => c.go == currentTarget);
+
+        float currentAngle;
+
+        if (index >= 0)
+        {
+            currentAngle = candidates[index].angle;
+        }
+        else
+        {
+            currentAngle = 0f;
+        }
+
+        GameObject bestTarget = null;
+        float bestDelta = float.MaxValue;
+
+        foreach (var (go, angle) in candidates)
+        {
+            if (go == currentTarget) continue;
+
+            float delta = angle - currentAngle;
+
+            if (delta > 180f) delta -= 360f;
+            if (delta < -180f) delta += 360f;
+
+            if (axis > 0f)
+            {
+                if (delta > 0f && delta < bestDelta)
+                {
+                    bestDelta = delta;
+                    bestTarget = go;
+                }
+            }
+            else if (axis < 0f)
+            {
+                if (delta < 0f && Mathf.Abs(delta) < bestDelta)
+                {
+                    bestDelta = Mathf.Abs(delta);
+                    bestTarget = go;
+                }
+            }
+        }
+
+        if (bestTarget == null && candidates.Count > 1)
+        {
+            if (axis > 0f)
+                bestTarget = candidates.OrderBy(c => c.angle).First().go;
+            else if (axis < 0f)
+                bestTarget = candidates.OrderByDescending(c => c.angle).First().go;
+        }
+
+        return bestTarget;
     }
 
     private void OnDrawGizmos()
@@ -433,53 +665,5 @@ public class S_TargetingManager : MonoBehaviour
             Gizmos.DrawLine(origin, origin + leftDir * radius);
             Gizmos.DrawLine(origin, origin + rightDir * radius);
         }
-    }
-
-    private GameObject TargetSelectionExist()
-    {
-        GameObject selectedTarget = null;
-
-        float bestScore = float.MaxValue;
-
-        foreach (var target in targetsPossible)
-        {
-            if (target == null) continue;
-
-            Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value);
-            float distance = toTarget.magnitude;
-
-            if (_playerCenterTransform == null) return null;
-            float angle = Vector3.Angle(_playerCenterTransform.forward, toTarget);
-
-            bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
-
-            //Priority for the taget in the front cone
-            float score = inFrontCone ? distance : distance + 1000f;
-
-            if (score < bestScore && target != currentTarget)
-            {
-                float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
-
-                Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
-                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
-                {
-                    continue;
-                }
-                else
-                {
-                    bestScore = score;
-                    selectedTarget = target;
-                }
-            }
-        }
-
-        //if (selectedTarget != null)
-        //{
-        //    rsoTargetPosition.Value = selectedTarget.transform.position;
-
-        //    rseOnAnimationBoolValueChange.Call("TargetLock", true);
-        //}
-
-        return selectedTarget;
     }
 }

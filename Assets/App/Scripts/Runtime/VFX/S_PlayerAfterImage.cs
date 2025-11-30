@@ -1,25 +1,32 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class S_PlayerAfterImage : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("General")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float _ghostLifetime = 0.3f;
-    [SerializeField] private float _spawnInterval = 0.04f;
+
+    [TabGroup("Settings")]
     [SerializeField] private int _ghostCount = 6;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Meshs")]
     [SerializeField] private SkinnedMeshRenderer[] _skinnedMeshes;
+
+    [TabGroup("References")]
+    [Title("Material")]
     [SerializeField] private Material _ghostMaterial;
-    [SerializeField] SSO_PlayerStats _playerStats;
 
-    [Header("Inputs")]
-    [SerializeField] RSE_OnPlayerDodgePerfect _onPerfectDodge;
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDodgePerfect _onPerfectDodge;
 
-    //[Header("Outputs")]
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
 
-    Transform _root;
+    private Transform _root = null;
 
     private void Awake()
     {
@@ -40,12 +47,12 @@ public class S_PlayerAfterImage : MonoBehaviour
         _onPerfectDodge.action -= StartAfterimageBurst;
     }
 
-    void StartAfterimageBurst()
+    private void StartAfterimageBurst()
     {
         StartCoroutine(Co_AfterimageBurst());
     }
 
-    IEnumerator Co_AfterimageBurst()
+    private IEnumerator Co_AfterimageBurst()
     {
         for (int i = 0; i < _ghostCount; i++)
         {
@@ -54,7 +61,7 @@ public class S_PlayerAfterImage : MonoBehaviour
         }
     }
 
-    void SpawnOneSnapshot()
+    private void SpawnOneSnapshot()
     {
         if (_skinnedMeshes == null || _skinnedMeshes.Length == 0 || _ghostMaterial == null)
             return;
@@ -86,7 +93,7 @@ public class S_PlayerAfterImage : MonoBehaviour
         }
     }
 
-    IEnumerator Co_FadeAndDestroy(GameObject go, Material mat, float lifetime)
+    private IEnumerator Co_FadeAndDestroy(GameObject go, Material mat, float lifetime)
     {
         float t = 0f;
         Color baseColor = mat.HasProperty("_BaseColor")

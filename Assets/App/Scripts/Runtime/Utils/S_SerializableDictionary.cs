@@ -10,31 +10,35 @@ public class S_SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, 
 
     public void OnBeforeSerialize()
     {
+        int count = Count;
+        if (keys.Count != count) keys = new List<TKey>(count);
+        if (values.Count != count) values = new List<TValue>(count);
+
         keys.Clear();
         values.Clear();
 
-        keys.Capacity = this.Count;
-        values.Capacity = this.Count;
-
-        foreach (var kvp in this)
+        foreach (var pair in this)
         {
-            keys.Add(kvp.Key);
-            values.Add(kvp.Value);
+            keys.Add(pair.Key);
+            values.Add(pair.Value);
         }
     }
 
     public void OnAfterDeserialize()
     {
-        this.Clear();
+        Clear();
 
-        int count = Mathf.Min(keys.Count, values.Count);
+        int count = Mathf.Min(keys?.Count ?? 0, values?.Count ?? 0);
 
         for (int i = 0; i < count; i++)
         {
-            if (!this.ContainsKey(keys[i]))
-            {
-                this.Add(keys[i], values[i]);
-            }
+            var key = keys[i];
+
+            if (key == null)
+                continue;
+
+            if (!ContainsKey(key))
+                Add(key, values[i]);
         }
     }
 }

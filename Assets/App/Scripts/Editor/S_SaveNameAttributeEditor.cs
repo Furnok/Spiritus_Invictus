@@ -6,71 +6,68 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(S_SaveNameAttribute))]
 public class S_SaveNameAttributeEditor : PropertyDrawer
 {
-    private static List<string> cachedSaveNames = new();
-    private static string[] cachedSaveNamesArray;
+    private static readonly string[] saveNames;
 
     private static readonly bool haveSettings = true;
     private static readonly bool haveSaves = true;
     private static readonly int saveMax = 1;
 
-    private static void CacheSaveNames()
+    static S_SaveNameAttributeEditor()
     {
-        cachedSaveNames.Clear();
+        List<string> names = new List<string>(saveMax + 2) { "None" };
 
         if (haveSettings)
         {
-            cachedSaveNames.Add("Settings");
+            names.Add("Settings");
         }
-            
+
         if (haveSaves)
         {
             if (saveMax == 1)
             {
-                cachedSaveNames.Add("Save");
+                names.Add($"Save");
             }
             else
             {
-                for (int i = 0; i < saveMax; i++)
-                    cachedSaveNames.Add($"Save_{i + 1}");
+                for (int i = 1; i <= saveMax; i++)
+                {
+                    names.Add($"Save_{i}");
+                }
             }
         }
 
-        cachedSaveNamesArray = cachedSaveNames.ToArray();
+        saveNames = names.ToArray();
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
 
+        // String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [SaveName] with a String.");
+            EditorGUI.LabelField(position, label.text, "Use [SaveName] with a string field.");
             EditorGUI.EndProperty();
             return;
         }
 
-        CacheSaveNames();
-
-        if (cachedSaveNamesArray.Length < 1)
+        // Saves Disabled Check
+        if (!haveSettings && !haveSaves)
         {
             EditorGUI.LabelField(position, label.text, "Saves Disabled");
             EditorGUI.EndProperty();
             return;
         }
 
-        int selectedIndex = Array.IndexOf(cachedSaveNamesArray, property.stringValue);
+        // Find Current Index
+        int selectedIndex = Array.IndexOf(saveNames, property.stringValue);
+        if (selectedIndex < 0) selectedIndex = 0;
 
-        if (selectedIndex < 0)
-        {
-            selectedIndex = 0;
-        }
+        // Popup
+        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, saveNames);
 
-        EditorGUI.BeginChangeCheck();
-        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, cachedSaveNamesArray);
-        if (EditorGUI.EndChangeCheck())
-        {
-            property.stringValue = cachedSaveNamesArray[newIndex];
-        }
+        // Apply Result
+        property.stringValue = (newIndex == 0) ? string.Empty : saveNames[newIndex];
 
         EditorGUI.EndProperty();
     }

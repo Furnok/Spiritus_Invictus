@@ -1,33 +1,23 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_PlayerHurtboxCollider : MonoBehaviour
 {
-    //[Header("Settings")]
-    
+    [TabGroup("Settings")]
+    [Title("Filter")]
+    [SerializeField, S_TagName] private string tagHit;
 
-    [Header("References")]
-    [SerializeField] RSO_CanParry _canParry;
-    [SerializeField] RSO_ParryStartTime _parryStartTime;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
-    [SerializeField] Collider _hurtboxCollider;
+    [TabGroup("References")]
+    [SerializeField] private Collider _hurtboxCollider;
 
-
-    //[Header("Input")]
-
-    [Header("Output")]
-    [SerializeField] RSE_OnAttackCollide _onAttackCollide;
-
-    float _parryDuration => _playerStats.Value.parryDuration;
-
-    float _hitTime;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnAttackCollide _onAttackCollide;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Hitbox") && other.TryGetComponent(out I_AttackProvider attack))
+        if (other.CompareTag(tagHit) && other.TryGetComponent(out I_AttackProvider attack))
         {
             var attackData = attack.GetAttackData();
-            //var goId = other.gameObject.GetInstanceID();
             attackData.attackDirection = (transform.position - other.transform.position).normalized;
 
             Vector3 contactOnMe = _hurtboxCollider.ClosestPoint(other.transform.position);
@@ -36,20 +26,13 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
 
             attackData.contactPoint = finalContact;
 
-            var contact = new AttackContact
+            var contact = new S_StructAttackContact
             {
                 data = attackData,
                 source = other
             };
 
             _onAttackCollide.Call(contact);
-
         }
     }
-}
-
-public struct AttackContact
-{
-    public S_StructEnemyAttackData data;
-    public Collider source;
 }

@@ -9,10 +9,11 @@ public class S_ClassSettingsSaved
     public int languageIndex = 0;
 
     [Title("Target")]
-    public bool holdLockTarget = true;
+    public bool holdLockTarget = false;
 
     [Title("Screen")]
     public bool fullScreen = true;
+
     public int resolutionIndex = -1;
 
     [Title("Audio")]

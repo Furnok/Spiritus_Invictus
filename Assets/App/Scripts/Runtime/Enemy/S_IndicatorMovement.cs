@@ -1,19 +1,17 @@
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_IndicatorMovement : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
     [SerializeField] private float _amplitude = 0.5f;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float _duration = 0.9f;
 
-    //[Header("References")]
-
-    //[Header("Inputs")]
-
-    //[Header("Outputs")]
-
-    Tween floatTween;
+    private Tween floatTween = null;
 
     private void OnEnable()
     {
@@ -27,7 +25,7 @@ public class S_IndicatorMovement : MonoBehaviour
         transform.localPosition = Vector3.zero;
     }
 
-    void StartFloatAnim()
+    private void StartFloatAnim()
     {
         floatTween?.Kill();
 

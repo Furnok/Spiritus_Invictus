@@ -6,9 +6,6 @@ namespace BT.ScriptablesObject
     {
         [SerializeField] private T _value = default;
 
-        public T Value
-        {
-            get => _value;
-        }
+        public T Value => _value;
     }
 }

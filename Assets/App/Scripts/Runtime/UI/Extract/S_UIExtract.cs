@@ -1,8 +1,10 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UIExtract : MonoBehaviour
@@ -18,12 +20,20 @@ public class S_UIExtract : MonoBehaviour
     [SerializeField] private float startDisplay;
 
     [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
+    [TabGroup("References")]
     [Title("Text")]
     [SerializeField] private TextMeshProUGUI textContent;
 
     [TabGroup("References")]
     [Title("Scroll View")]
     [SerializeField] private ScrollRect scrollRect;
+
+    [TabGroup("References")]
+    [Title("Slider")]
+    [SerializeField] private Scrollbar sliderScroll;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayExtract rseOnDisplayExtract;
@@ -41,27 +51,48 @@ public class S_UIExtract : MonoBehaviour
     [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
 
     private bool displayText = false;
     private bool userIsScrolling = false;
+
     private Tween textDisplay = null;
     private Tween scrollTween = null;
+
     private bool isClosing = false;
+
+    private int lastSoundFrame = -1;
+    private float lastValue = 0;
 
     private void OnEnable()
     {
         rseOnDisplayExtract.action += DisplayTextContent;
-        rseOnPlayerPause.action += Close;
+        rseOnPlayerPause.action += CloseEscape;
+
+        if (Gamepad.current == null)
+        {
+            rseOnShowMouseCursor.Call();
+        }
 
         scrollRect.verticalNormalizedPosition = 1;
-        isClosing = false;
     }
 
     private void OnDisable()
     {
         rseOnDisplayExtract.action -= DisplayTextContent;
-        rseOnPlayerPause.action -= Close;
+        rseOnPlayerPause.action -= CloseEscape;
 
         displayText = false;
         textContent.text = "";
@@ -70,6 +101,7 @@ public class S_UIExtract : MonoBehaviour
         scrollTween?.Kill();
         textDisplay = null;
         scrollTween = null;
+        isClosing = false;
     }
 
     public void OnScrollChanged()
@@ -82,23 +114,13 @@ public class S_UIExtract : MonoBehaviour
         }
     }
 
-    public void MoveScroll(BaseEventData eventData)
+    private void CloseEscape()
     {
-        if (displayText && !userIsScrolling)
+        if (!isClosing)
         {
-            AxisEventData axisData = eventData as AxisEventData;
-            MoveDirection direction = axisData.moveDir;
-
-            switch (direction)
+            if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
             {
-                case MoveDirection.Up:
-                    OnScrollChanged();
-                    break;
-                case MoveDirection.Down:
-                    OnScrollChanged();
-                    break;
-                default:
-                    break;
+                Close();
             }
         }
     }
@@ -107,11 +129,56 @@ public class S_UIExtract : MonoBehaviour
     {
         if (!isClosing)
         {
+            rseOnHideMouseCursor.Call();
+
+            RuntimeManager.PlayOneShot(uiSound);
+
             isClosing = true;
             rseOnGameInputEnabled.Call();
             rseOnCloseWindow.Call(gameObject);
             rsoNavigation.Value.selectableFocus = null;
             rseOnResetFocus.Call();
+        }
+    }
+
+    public void SliderAudio(BaseEventData eventData)
+    {
+        if (Gamepad.current != null)
+        {
+            if (lastSoundFrame == Time.frameCount)
+                return;
+
+            AxisEventData axisData = eventData as AxisEventData;
+            MoveDirection direction = axisData.moveDir;
+            float roundedValue = 0;
+
+            switch (direction)
+            {
+                case MoveDirection.Up:
+                    lastSoundFrame = Time.frameCount;
+
+                    roundedValue = Mathf.Round(sliderScroll.value * 1000f) / 1000f;
+                    if (roundedValue != lastValue && sliderScroll.size < 1)
+                    {
+                        OnScrollChanged();
+                        lastValue = roundedValue;
+                        RuntimeManager.PlayOneShot(uiSound);
+                    }
+                    break;
+                case MoveDirection.Down:
+                    lastSoundFrame = Time.frameCount;
+
+                    roundedValue = Mathf.Round(sliderScroll.value * 1000f) / 1000f;
+                    if (roundedValue != lastValue && sliderScroll.size < 1)
+                    {
+                        OnScrollChanged();
+                        lastValue = roundedValue;
+                        RuntimeManager.PlayOneShot(uiSound);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

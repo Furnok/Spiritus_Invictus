@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,10 @@ using UnityEngine;
 
 public class S_CameraManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("References")]
     [Title("Camera Main")]
     [SerializeField] private Camera cameraMain;
@@ -78,9 +83,6 @@ public class S_CameraManager : MonoBehaviour
     [SerializeField] private RSE_OnCinematicInputEnabled rseOnCinematicInputEnabled;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnCinematicStart rseOnCinematicStart;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
 
     [TabGroup("Outputs")]
@@ -94,6 +96,9 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCancelTargeting rseOnCancelTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
@@ -202,6 +207,34 @@ public class S_CameraManager : MonoBehaviour
         }
     }
 
+    private void PlayerPos(Transform player)
+    {
+        playerPos = player;
+        cinemachineCameraRail.Target.TrackingTarget = player;
+    }
+
+    private void InputsMove(Vector2 move)
+    {
+        if (currentMode == ModeCamera.Player)
+        {
+            if (move.x > 0 && lastDirection <= 0)
+            {
+                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetNegative);
+                lastDirection = move.x;
+            }
+            else if (move.x < 0 && lastDirection >= 0)
+            {
+                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetPositive);
+                lastDirection = move.x;
+            }
+        }
+        else
+        {
+            shoulderTween?.Kill();
+        }
+    }
+
+    #region Camera System
     private void SwitchCameraMode()
     {
         shoulderTween?.Kill();
@@ -212,12 +245,14 @@ public class S_CameraManager : MonoBehaviour
         switch (currentMode)
         {
             case ModeCamera.Player:
+                rseOnSendConsoleMessage.Call("Player Stop Targeting!");
                 cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
                 cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
                 Transition(cinemachineCameraPlayer, cinemachineCameraRail, ModeCamera.Rail, playerPoint);
                 break;
 
             case ModeCamera.Rail:
+                rseOnSendConsoleMessage.Call("Player is Targeting!");
                 cinemachineCameraBridge.Target.TrackingTarget = currentTarget;
                 cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
                 lastDirection = 0f;
@@ -232,11 +267,13 @@ public class S_CameraManager : MonoBehaviour
             case ModeCamera.Bridge:
                 if (oldMode == ModeCamera.Player)
                 {
+                    rseOnSendConsoleMessage.Call("Player is Targeting!");
                     oldMode = ModeCamera.Rail;
                     newMode = ModeCamera.Player;
                 }
                 else
                 {
+                    rseOnSendConsoleMessage.Call("Player Stop Targeting!");
                     oldMode = ModeCamera.Player;
                     newMode = ModeCamera.Rail;
                 }
@@ -333,7 +370,9 @@ public class S_CameraManager : MonoBehaviour
         currentCam = to;
         currentMode = newMode;
     }
+    #endregion
 
+    #region Cinematic System
     private void CameraIntro()
     {
         if (cinemachineCameraIntro.transform.parent.gameObject.activeInHierarchy)
@@ -341,7 +380,6 @@ public class S_CameraManager : MonoBehaviour
             StartSkipTimer();
 
             rseOnDisplayUIGame.Call(false);
-            rseOnCinematicStart.Call();
             rseOnCinematicInputEnabled.Call();
 
             currentCam = cinemachineCameraIntro;
@@ -375,7 +413,6 @@ public class S_CameraManager : MonoBehaviour
         StartSkipTimer();
 
         rseOnDisplayUIGame.Call(false);
-        rseOnCinematicStart.Call();
         rseOnCinematicInputEnabled.Call();
 
         currentTarget = null;
@@ -417,7 +454,9 @@ public class S_CameraManager : MonoBehaviour
         rseOnDisplayUIGame.Call(true);
         rseOnGameInputEnabled.Call();
     }
+    #endregion
 
+    #region Camera Shake
     private void CameraShake(S_ClassCameraShake data)
     {
         var perlin = currentCam.GetComponent<CinemachineBasicMultiChannelPerlin>();
@@ -437,7 +476,9 @@ public class S_CameraManager : MonoBehaviour
             perlin.AmplitudeGain = perlin.FrequencyGain = 0;
         }));
     }
+    #endregion
 
+    #region Handle Systems
     private void HandleCameraRotation()
     {
         if (currentMode == ModeCamera.Rail)
@@ -522,6 +563,8 @@ public class S_CameraManager : MonoBehaviour
             skipRoutine = null;
         }
 
+        RuntimeManager.PlayOneShot(uiSound);
+
         skipHold = 0f;
         isSkipping = true;
 
@@ -536,6 +579,8 @@ public class S_CameraManager : MonoBehaviour
             StopCoroutine(skipRoutine);
             skipRoutine = null;
         }
+
+        RuntimeManager.PlayOneShot(uiSound);
 
         skipHold = 0f;
         isSkipping = false;
@@ -577,31 +622,5 @@ public class S_CameraManager : MonoBehaviour
             ssoCameraData.Value.switchDurationCamera
         ).SetEase(Ease.Linear);
     }
-
-    public void PlayerPos(Transform player)
-    {
-        playerPos = player;
-        cinemachineCameraRail.Target.TrackingTarget = player;
-    }
-
-    public void InputsMove(Vector2 move)
-    {
-        if (currentMode == ModeCamera.Player)
-        {
-            if (move.x > 0 && lastDirection <= 0)
-            {
-                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetNegative);
-                lastDirection = move.x;
-            }
-            else if (move.x < 0 && lastDirection >= 0)
-            {
-                ChangeShoulderOffset(ssoCameraData.Value.targetShoulderOffsetPositive);
-                lastDirection = move.x;
-            }
-        }
-        else
-        {
-            shoulderTween?.Kill();
-        }
-    }
+    #endregion
 }

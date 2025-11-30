@@ -9,6 +9,10 @@ public class S_EnemyUI : MonoBehaviour
     [TabGroup("Settings")]
     [Title("Time")]
     [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFade;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeDisplayHealthBar;
 
     [TabGroup("Settings")]
@@ -50,18 +54,36 @@ public class S_EnemyUI : MonoBehaviour
     {
         sliderHealth.maxValue = ssoEnemyData.Value.health;
         sliderHealth.value = ssoEnemyData.Value.health;
-        content.SetActive(false);
+
+        if (content.activeInHierarchy)
+        {
+            CanvasGroup cg = content.GetComponent<CanvasGroup>();
+            cg.DOKill();
+
+            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                content.SetActive(false);
+            });
+        }
     }
 
     private void UpdateHealthBar(float healthValue)
     {
+        CanvasGroup cg = content.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
         if (healthValue <= 0)
         {
-            content.SetActive(false);
+            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                content.SetActive(false);
+            });
         }
         else
         {
-            content.SetActive(true);
+            content.gameObject.SetActive(true);
+
+            cg.DOFade(1f, timeFade).SetEase(Ease.Linear);
         }
 
         healthTween?.Kill();
@@ -80,7 +102,13 @@ public class S_EnemyUI : MonoBehaviour
     private IEnumerator DisplayHealthBar()
     {
         yield return new WaitForSeconds(timeDisplayHealthBar);
-        content.SetActive(false);
-        displayHealthBar = null;
+
+        CanvasGroup cg = content.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            content.SetActive(false);
+        });
     }
 }

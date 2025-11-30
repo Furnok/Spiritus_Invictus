@@ -10,28 +10,28 @@ public class S_Enemy : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Animations Parameters")]
-    [SerializeField, S_AnimationName] private string moveParam;
+    [SerializeField, S_AnimationName("animator")] private string moveParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string deathParam;
+    [SerializeField, S_AnimationName("animator")] private string deathParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string idleAttack;
+    [SerializeField, S_AnimationName("animator")] private string idleAttack;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string attackParam;
+    [SerializeField, S_AnimationName("animator")] private string attackParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string comboParam;
+    [SerializeField, S_AnimationName("animator")] private string comboParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string stopAttackParam;
+    [SerializeField, S_AnimationName("animator")] private string stopAttackParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string hitHeavyParam;
+    [SerializeField, S_AnimationName("animator")] private string hitHeavyParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string tBagParam;
+    [SerializeField, S_AnimationName("animator")] private string tBagParam;
 
     [TabGroup("Settings")]
     [Title("Mask")]
@@ -53,7 +53,10 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private Collider bodyCollider;
 
     [TabGroup("References")]
-    [SerializeField] private Collider DetectionCollider;
+    [SerializeField] private Collider detectionCollider;
+
+    [TabGroup("References")]
+    [SerializeField] private Collider hurtCollider;
 
     [TabGroup("References")]
     [Title("Animator")]
@@ -97,6 +100,9 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
 
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth = null;
@@ -104,32 +110,41 @@ public class S_Enemy : MonoBehaviour
 
     private float health = 0;
     private float maxhealth = 0;
+
     private int currentPatrolIndex = 0;
+
     private Transform aimPoint = null;
+
     private BlackboardVariable<bool> isPatroling = null;
     private BlackboardVariable<bool> isChasing = null;
     private BlackboardVariable<bool> isAttacking = null;
+
     private AnimatorOverrideController overrideController = null;
+
     private Coroutine comboCoroutine = null;
     private Coroutine resetCoroutine = null;
     private Coroutine patrolCoroutine = null;
+
     private bool isPerformingCombo = false;
     private S_EnumEnemyState? pendingState = null;
     private GameObject pendingTarget = null;
+
     private bool isPlayerDead = false;
+
     private GameObject targetInZone = null;
     private GameObject target = null;
+
     private bool isChase = false;
     private bool isPatrolling = false;
-    private bool lastMoveState = false;
     private bool isDead = false;
-    private S_ClassAnimationsCombos combo;
+
+    private S_ClassAnimationsCombos combo = null;
 
     private void Awake()
     {
         Refresh();
 
-        Animator anim = GetComponent<Animator>();
+        Animator anim = animator;
         AnimatorOverrideController instance = new AnimatorOverrideController(ssoEnemyData.Value.controllerOverride);
 
         var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
@@ -144,7 +159,8 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.SetVariableValue<List<GameObject>>("PatrolPoints", patrolPointsList);
         behaviorAgent.SetVariableValue<Animator>("Animator", animator);
         behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
-        behaviorAgent.SetVariableValue<Collider>("DetectionRangeCollider", DetectionCollider);
+        behaviorAgent.SetVariableValue<Collider>("DetectionRangeCollider", detectionCollider);
+        behaviorAgent.SetVariableValue<Collider>("HurtBox", hurtCollider);
 
         health = ssoEnemyData.Value.health;
         maxhealth = ssoEnemyData.Value.health;
@@ -230,7 +246,6 @@ public class S_Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         bool isMoving = navMeshAgent.velocity.magnitude > 0.1f;
-        lastMoveState = isMoving;
         animator.SetBool(moveParam, isMoving);
     }
 
@@ -248,27 +263,6 @@ public class S_Enemy : MonoBehaviour
         foreach (Transform child in patrolPoints)
         {
             patrolPointsList.Add(child.gameObject);
-        }
-    }
-
-    private void Chase()
-    {
-        float distance = Vector3.Distance(body.transform.position, target.transform.position);
-
-        bool destinationReached = distance <= (combo.distanceToChase);
-
-        if (!destinationReached)
-        {
-            navMeshAgent.SetDestination(target.transform.position);
-        }
-        else if (destinationReached)
-        {
-            isChase = false;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-            behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
-            behaviorAgent.Restart();
         }
     }
 
@@ -335,7 +329,7 @@ public class S_Enemy : MonoBehaviour
 
             aimPoint = null;
 
-            DetectionCollider.enabled = false;
+            detectionCollider.enabled = false;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
         }
@@ -346,8 +340,11 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.Restart();
     }
 
+    #region Health System
     private void SetHealth(float damage)
     {
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Take " + damage + " Damage!");
+
         health = Mathf.Max(health - damage, 0);
         onUpdateEnemyHealth.Invoke(health);
 
@@ -372,6 +369,8 @@ public class S_Enemy : MonoBehaviour
             behaviorAgent.Restart();
 
             rseOnEnemyTargetDied.Call(body);
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Dead!");
         }
         else if (damage >= maxhealth / 2)
         {
@@ -391,6 +390,8 @@ public class S_Enemy : MonoBehaviour
             behaviorAgent.Restart();
 
             resetCoroutine = StartCoroutine(ResetAttack());
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Stun!");
         }
     }
 
@@ -416,7 +417,9 @@ public class S_Enemy : MonoBehaviour
             SetHealth(damage);
         }
     }
+    #endregion
 
+    #region Player Death
     private void TBag()
     {
         if (isPlayerDead)
@@ -460,7 +463,9 @@ public class S_Enemy : MonoBehaviour
 
         TBag();
     }
+    #endregion
 
+    #region Patrol System
     public void Patroling()
     {
         if (isPatroling != null && isPatroling.Value)
@@ -475,10 +480,14 @@ public class S_Enemy : MonoBehaviour
             }
 
             patrolCoroutine = StartCoroutine(PatrolRoutine());
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Start Patroling!");
         }
         else
         {
             isPatrolling = false;
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Stop Patroling!");
         }
     }
 
@@ -505,13 +514,36 @@ public class S_Enemy : MonoBehaviour
             }
 
             navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
-            DetectionCollider.enabled = true;
+            detectionCollider.enabled = true;
 
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
 
             yield return new WaitForSeconds(waitTime);
 
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPointsList.Count;
+        }
+    }
+    #endregion
+
+    #region Chase System
+    private void Chase()
+    {
+        float distance = Vector3.Distance(body.transform.position, target.transform.position);
+
+        bool destinationReached = distance <= (combo.distanceToChase);
+
+        if (!destinationReached)
+        {
+            navMeshAgent.SetDestination(target.transform.position);
+        }
+        else if (destinationReached)
+        {
+            isChase = false;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+            behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
+            behaviorAgent.Restart();
         }
     }
 
@@ -528,13 +560,19 @@ public class S_Enemy : MonoBehaviour
             GetCombo();
             navMeshAgent.speed = ssoEnemyData.Value.speedChase;
             isChase = true;
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Chasing the Player!");
         }
         else
         {
             isChase = false;
+
+            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Stop Chasing the Player!");
         }
     }
+    #endregion
 
+    #region Combo System
     private void GetCombo()
     {
         int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
@@ -555,6 +593,8 @@ public class S_Enemy : MonoBehaviour
     private IEnumerator PlayComboSequence()
     {
         yield return new WaitForSeconds(0.4f);
+
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Attacking with a Combo!");
 
         isPerformingCombo = true;
 
@@ -618,6 +658,7 @@ public class S_Enemy : MonoBehaviour
 
         behaviorAgent.SetVariableValue<bool>("CanAttack", true);
     }
+    #endregion
 
     private void OnDrawGizmos()
     {

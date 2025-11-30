@@ -43,8 +43,17 @@ public class S_CursorManager : MonoBehaviour
     private void Awake()
     {
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
-        rsoNavigation.Value = new();
-        rsoDevice.Value = S_EnumDevice.None;
+
+        HideMouseCursor();
+
+        if (Gamepad.current != null)
+        {
+            Device(Gamepad.current);
+        }
+        else
+        {
+            rsoDevice.Value = S_EnumDevice.KeyboardMouse;
+        }
     }
 
     private void OnEnable()
@@ -61,6 +70,8 @@ public class S_CursorManager : MonoBehaviour
 
     private void OnDisable() 
     {
+        rsoNavigation.Value = new();
+
         InputSystem.onDeviceChange -= OnDeviceChange;
         rseOnShowMouseCursor.action -= ShowMouseCursor;
         rseOnHideMouseCursor.action -= HideMouseCursor;
@@ -69,20 +80,6 @@ public class S_CursorManager : MonoBehaviour
         rseOnResetFocus.action -= ResetFocus;
         rseOnMouseEnterUI.action -= MouseEnter;
         rseOnMouseLeaveUI.action -= MouseLeave;
-    }
-
-    private void Start()
-    {
-        if (Gamepad.current != null)
-        {
-            Device(Gamepad.current);
-            HideMouseCursor();
-        }
-        else
-        {
-            rsoDevice.Value = S_EnumDevice.KeyboardMouse;
-            ShowMouseCursor();
-        }
     }
 
     private void Device(InputDevice device)
@@ -167,6 +164,7 @@ public class S_CursorManager : MonoBehaviour
         if (uiElement != null && uiElement.interactable && Gamepad.current != null)
         {
             uiElement.Select();
+            rsoNavigation.Value.selectableFocus = uiElement;
         }
     }
 
@@ -178,5 +176,6 @@ public class S_CursorManager : MonoBehaviour
     private void ResetFocus()
     {
         EventSystem.current.SetSelectedGameObject(null);
+        rsoNavigation.Value.selectableFocus = null;
     }
 }

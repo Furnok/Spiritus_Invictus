@@ -105,7 +105,7 @@ Transform:
   m_GameObject: {fileID: 1141386902013969523}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.32, y: 2.49, z: -3.62}
+  m_LocalPosition: {x: 1.32, y: 2.49, z: -4.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -914,6 +914,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86287af914551344e8d40c24e4baf773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
   cameraMain: {fileID: 3874155762252318603}
   cinemachineCameraIntro: {fileID: 3925711368591419889}
   cinemachineCameraRail: {fileID: 7490627387889166057}
@@ -943,6 +950,7 @@ MonoBehaviour:
   rseOnDisplaySkip: {fileID: 11400000, guid: 64885743d5c268f4e8ee6778a6d05dee, type: 2}
   rseOnSkipHold: {fileID: 11400000, guid: 7709a15568edb4947a9d8f2767f9d16e, type: 2}
   rseOnCancelTargeting: {fileID: 11400000, guid: eb8598b903ee53643b0a3d76f3657c63, type: 2}
+  rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
   rsoPlayerIsDodging: {fileID: 11400000, guid: f932dda1749effc4aac91cb2aeeff6d5, type: 2}
   ssoCameraData: {fileID: 11400000, guid: 8a8b9ed3ac9bcab418920e1de02ba0e2, type: 2}
 --- !u!1 &3839073689257792411
@@ -1014,7 +1022,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1230,6 +1238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rsoCameraRotation: {fileID: 11400000, guid: 04261daa98f35d44f84baecbdcfa77df, type: 2}
+  rsoInGame: {fileID: 11400000, guid: 943dbfd29f5e329458fb1745ff11f0ba, type: 2}
 --- !u!1 &4040462017158309725
 GameObject:
   m_ObjectHideFlags: 0

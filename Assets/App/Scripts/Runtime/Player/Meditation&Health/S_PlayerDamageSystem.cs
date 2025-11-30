@@ -1,53 +1,52 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_PlayerDamageSystem : MonoBehaviour
 {
-    [Header("Reference")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
 
-    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
-    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] RSO_IsInvicible _isInvicible;
-    [SerializeField] SSO_DebugPlayer _debugPlayer;
-
-    [Header("Input")]
-    [SerializeField] private RSE_OnPlayerTakeDamage rseOnPlayerTakeDamage;
-    [SerializeField] RSE_OnPlayerHit _rseOnPlayerHit;
-
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerHealthReduced rseOnPlayerHealthReduced;
-    [SerializeField] RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
-    [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
-    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
 
-    Coroutine _hitReactCoroutine;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnAnimationTriggerValueChange rseOnAnimationTriggerValueChange;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_ConsoleCheats _debugPlayer;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    private Coroutine _hitReactCoroutine = null;
+
+    private bool _isInvicible = false;
+
     private void OnEnable()
     {
-        _isInvicible.Value = false;
-        rseOnPlayerTakeDamage.action += TakeDamage;
         _rseOnPlayerHit.action += TakeDamage;
     }
     
     private void OnDisable()
     {
-        rseOnPlayerTakeDamage.action -= TakeDamage;
         _rseOnPlayerHit.action -= TakeDamage;
-        _isInvicible.Value = false;
-
     }
 
-    private void TakeDamage(float damage)
+    private void TakeDamage(S_StructAttackContact attackContact)
     {
-        //rseOnAnimationTriggerValueChange.Call("isHit");
-        //rseOnPlayerHealthReduced.Call(damage);
-        //_rseOnPlayerGettingHit.Call();
-    }
-
-
-    private void TakeDamage(AttackContact attackContact)
-    {
-
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.HitReact) == true && _isInvicible.Value == false && _debugPlayer.Value.cantGetttingHit == false)
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.HitReact) == true && _isInvicible == false && _debugPlayer.Value.cantGetttingHit == false)
         {
             var attackData = attackContact.data;
 
@@ -57,22 +56,24 @@ public class S_PlayerDamageSystem : MonoBehaviour
             }
 
             rseOnAnimationTriggerValueChange.Call("isHit");
-            _onPlayerAddState.Call(PlayerState.HitReact);
-            _isInvicible.Value = true;
+            _onPlayerAddState.Call(S_EnumPlayerState.HitReact);
+            _isInvicible = true;
 
             _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackHitDuration, () =>
             {
-                _onPlayerAddState.Call(PlayerState.None);
+                if(_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.None) == true)
+                {
+                    _onPlayerAddState.Call(S_EnumPlayerState.None);
+                }
             }));
 
             StartCoroutine(S_Utils.Delay(attackData.invicibilityDuration, () =>
             {
-                _isInvicible.Value = false;
+                _isInvicible = false;
             }));
 
             rseOnPlayerHealthReduced.Call(attackData.damage);
             _rseOnPlayerGettingHit.Call();
         }
-        
     }
 }

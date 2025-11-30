@@ -1,39 +1,48 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_PlayerProjectile : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] SSO_PlayerAttackSteps _playerAttackSteps;
-    [SerializeField] SSO_PlayerStats _playerStats;
+    [TabGroup("Settings")]
+    [Title("Filter")]
+    [SerializeField, S_TagName] private string tagHurt;
 
-    [Header("Input")]
-
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied _onEnemyTargetDied;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnDespawnProjectile rseOnDespawnProjectile;
 
-    private Transform _target = null;
-    private float _timeAlive = 0f;
-    private float _speed;
-    private float _lifeTime => _playerStats.Value.projectileLifeTime;
-    private float _damage;
-    private Vector3 _direction = Vector3.zero;
-    private bool _isInitialized = false;
-    private Vector3 _startPos;
-    private Vector3 _controlPoint;
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
 
-    private S_StructDataProjectile _projectileData;
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    private float _lifeTime => _playerStats.Value.projectileLifeTime;
 
     private float _arcHeightMultiplier => _projectileData.arcHeightMultiplier;
     private float _arcDirection => _projectileData.arcDirection;
     private bool _randomizeArc => _projectileData.randomizeArc;
-    private float _arcRandomDirectionMin;
-    private float _arcRandomDirectionMax;
-    private float _travelTime;
+
     private AnimationCurve _arcCurve => _projectileData.speedAnimationCurve;
 
-    int _attackStep = 0;
+    private Transform _target = null;
+    private float _timeAlive = 0f;
+    private float _speed = 0;
+    
+    private float _damage = 0;
+    private Vector3 _direction = Vector3.zero;
+    private bool _isInitialized = false;
+    private Vector3 _startPos = Vector3.zero;
+    private Vector3 _controlPoint = Vector3.zero;
+
+    private S_StructDataProjectile _projectileData;
+    private float _arcRandomDirectionMin = 0;
+    private float _arcRandomDirectionMax = 0;
+    private float _travelTime = 0;
+
+    private int _attackStep = 0;
 
     public void Initialize(float damage, Transform target = null, int attackStep = 0)
     {
@@ -71,7 +80,7 @@ public class S_PlayerProjectile : MonoBehaviour
 
         Vector3 midPoint = _startPos + toTarget * 0.5f;
 
-        //Default arc direction (top)
+        // Default arc direction (top)
         Vector3 arcDir = Vector3.up;
 
         if (_arcDirection != 0f || _randomizeArc == true)
@@ -108,16 +117,8 @@ public class S_PlayerProjectile : MonoBehaviour
         _direction = Vector3.zero;
 
         _onEnemyTargetDied.action -= OnTargetDie;
-
     }
 
-    void OnTargetDie(GameObject enemyDie)
-    {
-        if (_target != null && enemyDie == _target.gameObject && enemyDie != null)
-        {
-            _target = null;
-        }
-    }
     private void Update()
     {
         if (!_isInitialized) return;
@@ -135,7 +136,7 @@ public class S_PlayerProjectile : MonoBehaviour
         Vector3 endPos = _target != null ? _target.position : _startPos + transform.forward * 10f;
 
         float easedT = _arcCurve != null ? _arcCurve.Evaluate(t01) : t01;
-        // on utilise easedT pour le Bézier
+        // Use easedT for Bézier
         Vector3 a = Vector3.Lerp(_startPos, _controlPoint, easedT);
         Vector3 b = Vector3.Lerp(_controlPoint, endPos, easedT);
         Vector3 newPos = Vector3.Lerp(a, b, easedT);
@@ -153,27 +154,31 @@ public class S_PlayerProjectile : MonoBehaviour
             transform.position += _direction * _speed * Time.deltaTime;
             transform.forward = _direction;
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Hurtbox" && other.TryGetComponent(out I_Damageable damageable))
+        if (other.CompareTag(tagHurt) && other.TryGetComponent(out I_Damageable damageable))
         {
             if (damageable != null)
             {
-
                 damageable.TakeDamage(_damage);
                 rseOnDespawnProjectile.Call(this);
 
                 Debug.Log($"Hit enemy for {_damage} damage.");
-
             }
         }
         else
         {
             rseOnDespawnProjectile.Call(this);
         }
+    }
 
+    private void OnTargetDie(GameObject enemyDie)
+    {
+        if (_target != null && enemyDie == _target.gameObject && enemyDie != null)
+        {
+            _target = null;
+        }
     }
 }

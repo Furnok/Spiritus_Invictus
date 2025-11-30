@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,10 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeSkip;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
     [Title("Buttons")]
@@ -30,9 +35,6 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnDataTemp rseOnDataTemp;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCameraIntro rseOnCameraIntro;
 
     [TabGroup("Outputs")]
@@ -45,10 +47,10 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+    [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
@@ -62,24 +64,11 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
-    private bool isTransit = false;
+    private bool isTransit = true;
 
     private void OnEnable()
     {
         rseOnDataTemp.action += SetupMenu;
-
-        StartCoroutine(S_Utils.DelayFrame(() => rseOnUIInputEnabled.Call()));
-        StartCoroutine(S_Utils.DelayFrame(() => rsoInGame.Value = false));
-        StartCoroutine(S_Utils.DelayFrame(() => rseOnDisplayUIGame.Call(false)));
-
-        gameObject.GetComponent<CanvasGroup>()?.DOKill();
-
-        gameObject.GetComponent<CanvasGroup>().alpha = 0f;
-
-        StartCoroutine(S_Utils.Delay(ssoFadeTime.Value, () =>
-        {
-            gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
-        }));
 
         isTransit = false;
     }
@@ -119,12 +108,16 @@ public class S_UIMainMenu : MonoBehaviour
         {
             isTransit = true;
 
+            RuntimeManager.PlayOneShot(uiSound);
+
+            rseOnHideMouseCursor.Call();
+
             rseOnCloseAllWindows.Call();
 
-            gameObject.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = gameObject.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
-            gameObject.GetComponent<CanvasGroup>().alpha = 1f;
-            gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 gameObject.SetActive(false);
                 rsoNavigation.Value.selectableFocus = null;
@@ -140,6 +133,8 @@ public class S_UIMainMenu : MonoBehaviour
         {
             isTransit = true;
 
+            rseOnHideMouseCursor.Call();
+
             rseOnFadeOut.Call();
 
             StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
@@ -152,16 +147,22 @@ public class S_UIMainMenu : MonoBehaviour
 
     public void Settings()
     {
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnOpenWindow.Call(settingsWindow);
+        if (!isTransit)
+        {
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableFocus = null;
+            rseOnOpenWindow.Call(settingsWindow);
+        }
     }
 
     public void Credits()
     {
-        rseOnCloseAllWindows.Call();
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnOpenWindow.Call(creditsWindow);
+        if (!isTransit)
+        {
+            rseOnCloseAllWindows.Call();
+            rsoNavigation.Value.selectableFocus = null;
+            rseOnOpenWindow.Call(creditsWindow);
+        }
     }
 
     public void QuitGame()

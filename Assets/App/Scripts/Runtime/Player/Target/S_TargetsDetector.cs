@@ -1,24 +1,41 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_TargetDetector : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] [S_TagName] private string tagEnemy;
+    [TabGroup("Settings")]
+    [Title("Filter")]
+    [SerializeField, S_TagName] private string tagEnemy;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Collider")]
     [SerializeField] private SphereCollider sphereCollider;
 
-    [Header("Intput")]
+    [TabGroup("Intputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
-    [Header("Output")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnEnemyEnterTargetingRange rseOnEnemyEnterTargetingRange;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnEnemyExitTargetingRange rseOnEnemyExitTargetingRange;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerTargetRangeRadius ssoPlayerTargetRangeRadius;
 
     private void Awake()
     {
         sphereCollider.radius = ssoPlayerTargetRangeRadius.Value;
+    }
+
+    private void OnEnable()
+    {
+        rseOnEnemyTargetDied.action += OnEnemyTargetDied;
+    }
+
+    private void OnDisable()
+    {
+        rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -43,17 +60,7 @@ public class S_TargetDetector : MonoBehaviour
         }
     }
 
-    void OnEnable()
-    {
-        rseOnEnemyTargetDied.action += OnEnemyTargetDied;
-    }
-
-    void OnDisable()
-    {
-        rseOnEnemyTargetDied.action -= OnEnemyTargetDied;
-    }
-
-    void OnEnemyTargetDied(GameObject enemyObject)
+    private void OnEnemyTargetDied(GameObject enemyObject)
     {
         if(enemyObject != null)
         {

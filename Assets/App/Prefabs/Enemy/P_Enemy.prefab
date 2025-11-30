@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveParam: IsMoving
-  deathParam: isDead
+  deathParam: IsDead
   idleAttack: IsIdleAttack
   attackParam: IsAttack
   comboParam: IsCombo
@@ -310,7 +310,8 @@ MonoBehaviour:
   behaviorAgent: {fileID: 495233547217921218}
   navMeshAgent: {fileID: 1431773725924121066}
   bodyCollider: {fileID: 6217138946037749130}
-  DetectionCollider: {fileID: 1536210782470915829}
+  detectionCollider: {fileID: 1536210782470915829}
+  hurtCollider: {fileID: 6177182004407894465}
   animator: {fileID: 5886562096679836169}
   body: {fileID: 6905421159853868602}
   spawnProjectilePoint: {fileID: 1872526195975783811}
@@ -323,6 +324,7 @@ MonoBehaviour:
   patrolPoints: {fileID: 2395496571129997540}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
+  rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
   ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
   onUpdateEnemyHealth:
     m_PersistentCalls:
@@ -429,6 +431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2493246550919936720}
+  - component: {fileID: 6910113154253423696}
   m_Layer: 5
   m_Name: ContentHealth
   m_TagString: Untagged
@@ -456,6 +459,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &6910113154253423696
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861027275683421439}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1872526195975783811
 GameObject:
   m_ObjectHideFlags: 0
@@ -706,11 +721,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  playerLayerMask:
-    serializedVersion: 2
-    m_Bits: 1024
   detectionCollider: {fileID: 1536210782470915829}
-  maxTravelZone: {fileID: 1081287201517365919}
   enemy: {fileID: 445208566684554611}
   onTargetDetected:
     m_PersistentCalls:
@@ -1062,7 +1073,7 @@ Transform:
   m_GameObject: {fileID: 7384311513534882751}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -15}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1261,6 +1272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ea4abc89a559048b3a6537ee91a02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeFade: 0.4
   timeDisplayHealthBar: 3
   animationSlider: 0.4
   content: {fileID: 1861027275683421439}

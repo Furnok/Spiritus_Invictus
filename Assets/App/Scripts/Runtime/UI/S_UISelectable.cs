@@ -21,7 +21,10 @@ public class S_UISelectable : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Audio")]
-    [SerializeField] private EventReference uiSound;
+    [SerializeField] private EventReference uiClick;
+
+    [TabGroup("References")]
+    [SerializeField] private EventReference uiHover;
 
     [TabGroup("References")]
     [Title("Images")]
@@ -35,8 +38,11 @@ public class S_UISelectable : MonoBehaviour
 
     private Color32 colorBase = new();
     private Color32 colorBase2 = new();
+
     private bool mouseOver = false;
     private bool isPressed = false;
+    private bool isSelected = false;
+
     private Tween colorTween = null;
     private Tween colorTween2 = null;
 
@@ -60,12 +66,18 @@ public class S_UISelectable : MonoBehaviour
         {
             image2.color = colorBase2;
         }
+
+        mouseOver = false;
+        isPressed = false;
+        isSelected = false;
     }
 
     public void MouseEnter(Selectable uiElement)
     {
         if (uiElement.interactable)
         {
+            RuntimeManager.PlayOneShot(uiHover);
+
             if (!isPressed)
             {
                 PlayColorTransition(colorMouseEnter, colorMouseEnter);
@@ -79,6 +91,8 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable)
         {
+            RuntimeManager.PlayOneShot(uiHover);
+
             if (!isPressed)
             {
                 PlayColorTransition(colorBase, colorBase2);
@@ -120,8 +134,12 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable && Gamepad.current != null)
         {
+            RuntimeManager.PlayOneShot(uiHover);
+
             PlayColorTransition(colorMouseEnter, colorMouseEnter);
             rsoNavigation.Value.selectableFocus = uiElement;
+
+            isSelected = true;
         }
     }
 
@@ -131,19 +149,53 @@ public class S_UISelectable : MonoBehaviour
         {
             PlayColorTransition(colorBase, colorBase2);
         }
+        else if (isSelected)
+        {
+            PlayColorTransition(colorBase, colorBase2);
+
+            isSelected = false;
+        }
     }
 
     public void Clicked(Selectable uiElement)
     {
         if (uiElement.interactable)
         {
-            RuntimeManager.PlayOneShot(uiSound);
+            RuntimeManager.PlayOneShot(uiClick);
 
             if (Gamepad.current != null)
             {
                 rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectablePress;
                 rsoNavigation.Value.selectablePress = uiElement;
             }
+        }
+    }
+
+    public void ClickedNotAudio(Selectable uiElement)
+    {
+        if (uiElement.interactable)
+        {
+            if (Gamepad.current != null)
+            {
+                rsoNavigation.Value.selectablePressOld = rsoNavigation.Value.selectablePress;
+                rsoNavigation.Value.selectablePress = uiElement;
+            }
+        }
+    }
+
+    public void PlayAudio(Selectable uiElement)
+    {
+        if (uiElement.interactable)
+        {
+            RuntimeManager.PlayOneShot(uiClick);
+        }
+    }
+
+    public void SliderAudio(Selectable uiElement)
+    {
+        if (uiElement.interactable && Gamepad.current != null)
+        {
+            RuntimeManager.PlayOneShot(uiClick);
         }
     }
 

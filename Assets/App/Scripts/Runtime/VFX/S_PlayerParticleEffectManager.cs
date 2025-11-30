@@ -1,19 +1,25 @@
-using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerParticleEffectManager : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] float _forwardOffset = 0.5f;
-    [SerializeField] float _upwardOffset = 0.2f;
+    [Title("Offsets")]
+    [SerializeField] private float _forwardOffset = 0.5f;
+
+    [Header("Settings")]
+    [SerializeField] private float _upwardOffset = 0.2f;
+
     [Header("References")]
-    [SerializeField] Transform _particleEffectParent;
-    [SerializeField] GameObject _prefabParryEffect;
+    [Title("Parent")]
+    [SerializeField] private Transform _particleEffectParent;
+
+    [Header("References")]
+    [Title("Prefab")]
+    [SerializeField] private GameObject _prefabParryEffect;
 
     [Header("Inputs")]
-    [SerializeField] RSE_OnParrySuccess _onParrySuccess;
-
-    //[Header("Outputs")]
+    [SerializeField] private RSE_OnParrySuccess _onParrySuccess;
 
     private void OnEnable()
     {
@@ -24,7 +30,8 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     {
         _onParrySuccess.action -= ActiveParryEffect;
     }
-    void ActiveParryEffect(AttackContact contact)
+
+    private void ActiveParryEffect(S_StructAttackContact contact)
     {
         Vector3 offset = transform.forward * _forwardOffset + transform.up * _upwardOffset;
 

@@ -1,60 +1,124 @@
-﻿using System.Collections;
+﻿using Sirenix.OdinInspector;
+using System.Collections;
 using UnityEngine;
 
 public class S_PlayerDodge : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField, S_AnimationName] string _dodgeParam;
-    [SerializeField, S_AnimationName] string _dodgeDirXParam;
-    [SerializeField, S_AnimationName] string _dodgeDirYParam;
+    [TabGroup("Settings")]
+    [Title("Animations")]
+    [SerializeField, S_AnimationName] private string _dodgeParam;
 
-    [Header("World / collision")]
-    [SerializeField] CapsuleCollider _capsule;
-    [SerializeField] LayerMask groundMask;
-    [SerializeField] LayerMask obstacleMask;
-    float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
-    float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
-    //[SerializeField] float edgeProbeDistance = 0.6f;
-    [SerializeField] float edgeProbeHeight = 0.5f;
-    [SerializeField] float stopFromWall = 0.03f;
+    [TabGroup("Settings")]
+    [SerializeField, S_AnimationName] private string _dodgeDirXParam;
 
-    [Header("References")]
-    [SerializeField] private SSO_PlayerStateTransitions _ssoPlayerStateTransitions;
+    [TabGroup("Settings")]
+    [SerializeField, S_AnimationName] private  string _dodgeDirYParam;
+
+    [TabGroup("Settings")]
+    [Title("World / Collision")]
+    [SerializeField] private CapsuleCollider _capsule;
+
+    [TabGroup("Settings")]
+    [SerializeField] private LayerMask groundMask;
+
+    [TabGroup("Settings")]
+    [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float edgeProbeHeight = 0.5f;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float stopFromWall = 0.03f;
+
+    [TabGroup("References")]
+    [Title("Rigidbody")]
     [SerializeField] private Rigidbody _rb;
-    [SerializeField] RSO_PlayerIsDodging _playerIsDodging;
-    [SerializeField] RSO_PlayerIsTargeting _playerIsTargeting;
-    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
-    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
-    [SerializeField] SSO_PlayerStats _playerStats;
-    [SerializeField] RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
-    [SerializeField] RSO_AttackCanHitPlayer _attackCanHitPlayer;
-    [SerializeField] SSO_PlayerConvictionData _playerConvictionData;
-    [SerializeField] SSO_AnimationTransitionDelays _animationTransitionDelays;
 
-    [Header("Input")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerMove _rseOnPlayerMove;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnNewTargeting _rseOnNewTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerCancelTargeting _rseOnPlayerCancelTargeting;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDodgeInputCancel _onPlayerDodgeInputCancel;
 
-    [Header("Output")]
-    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
-    [SerializeField] RSE_OnPlayerGainConviction _onPlayerGainConviction;
-    [SerializeField] RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
 
-    Vector2 _moveInput;
-    Transform _target = null;
-    Coroutine _dodgeCoroutine;
-    Coroutine _prepareRunCoroutine;
-    float _linearDamping;
-    bool _canRunAfterDodge = false;
-    bool _dodgeUp = true;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerGainConviction _onPlayerGainConviction;
 
-    
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerIsDodging _playerIsDodging;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerIsTargeting _playerIsTargeting;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_AttackDataInDodgeableArea _attackDataInDodgeableArea;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_AttackCanHitPlayer _attackCanHitPlayer;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_AnimationTransitionDelays _animationTransitionDelays;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _ssoPlayerStateTransitions;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    private float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
+    private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
+
+    private Vector2 _moveInput = Vector2.zero;
+
+    private Transform _target = null;
+
+    private Coroutine _dodgeCoroutine = null;
+    private Coroutine _prepareRunCoroutine = null;
+
+    private float _linearDamping = 0;
+
+    private bool _canRunAfterDodge = false;
+    private bool _dodgeUp = true;
+
+    private void Awake()
+    {
+        _linearDamping = _rb.linearDamping;
+    }
 
     private void OnEnable()
     {
@@ -65,9 +129,7 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnPlayerGettingHit.action += CancelDodge;
         _onPlayerDodgeInputCancel.action += CancelInputdodge;
 
-        _playerIsDodging.Value = false;
         _canRunAfterDodge = false;
-
     }
 
     private void OnDisable()
@@ -78,13 +140,6 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnPlayerCancelTargeting.action -= CancelTarget;
         _rseOnPlayerGettingHit.action -= CancelDodge;
         _onPlayerDodgeInputCancel.action -= CancelInputdodge;
-
-    }
-
-    private void Awake()
-    {
-        _playerIsDodging.Value = false;
-        _linearDamping = _rb.linearDamping;
     }
 
     private void ChangeNewTarget(GameObject newTarget)
@@ -96,10 +151,13 @@ public class S_PlayerDodge : MonoBehaviour
     {
         _target = null;
     }
+
     private void TryDodge()
     {
-        if (_playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Dodging) == false || _dodgeUp == false) return;
-        _onPlayerAddState.Call(PlayerState.Dodging);
+        if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Dodging) == false || _dodgeUp == false) return;
+        _onPlayerAddState.Call(S_EnumPlayerState.Dodging);
+
+        rseOnSendConsoleMessage.Call("Player Dodge!");
 
         _dodgeUp = false;
         StartCoroutine(S_Utils.Delay(_playerStats.Value.dodgeCooldown, () =>
@@ -107,8 +165,7 @@ public class S_PlayerDodge : MonoBehaviour
             _dodgeUp = true;
         }));
 
-
-        //Test triggerDodgePerfect
+        // Test TriggerDodgePerfect
         var isDodgePrefect = _attackDataInDodgeableArea.Value.Count > 0;
         if (isDodgePrefect)
         { 
@@ -127,17 +184,14 @@ public class S_PlayerDodge : MonoBehaviour
         if (_playerIsTargeting.Value == false)
         {
             dodgeDirection = transform.forward;
-
         }
         else
         {
             dodgeDirection = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-
         }
 
         if (dodgeDirection == Vector3.zero)
         {
-
             dodgeDirection = -transform.forward;
         }
 
@@ -154,10 +208,7 @@ public class S_PlayerDodge : MonoBehaviour
         _dodgeCoroutine = StartCoroutine(StartupAndDash(dodgeDirection));
     }
 
-   
-
-    
-    IEnumerator StartupAndDash(Vector3 dodgeDir)
+    private IEnumerator StartupAndDash(Vector3 dodgeDir)
     {
         float startup = _animationTransitionDelays.Value.dodgeStartupDelay;
         if (startup > 0f)
@@ -239,12 +290,12 @@ public class S_PlayerDodge : MonoBehaviour
             yield return new WaitForSeconds(rec);
         }
 
-        _onPlayerAddState.Call(PlayerState.None);
+        _onPlayerAddState.Call(S_EnumPlayerState.None);
 
         yield return new WaitForSeconds(_playerStats.Value.delayBeforeRunningAfterDodge);
-        if (_canRunAfterDodge && _playerStateTransitions.CanTransition(_playerCurrentState.Value, PlayerState.Running))
+        if (_canRunAfterDodge && _playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Running))
         {
-            _onPlayerAddState.Call(PlayerState.Running);
+            _onPlayerAddState.Call(S_EnumPlayerState.Running);
         }
 
         _dodgeCoroutine = null;
@@ -255,7 +306,7 @@ public class S_PlayerDodge : MonoBehaviour
         _moveInput = input;
     }
 
-    void CancelDodge()
+    private void CancelDodge()
     {
         _canRunAfterDodge = false;
         _playerIsDodging.Value = false;
@@ -266,23 +317,24 @@ public class S_PlayerDodge : MonoBehaviour
 
         if (_prepareRunCoroutine != null) StopCoroutine(_prepareRunCoroutine);
 
-
         ResetValue();
     }
 
-    void CancelInputdodge()
+    private void CancelInputdodge()
     {
         _canRunAfterDodge = false;
 
-        //if (_playerCurrentState.Value != PlayerState.Running /*&& _prepareRunCoroutine != null*/ && _dodgeCoroutine == null)
-        //{
-        //    //StopCoroutine(_prepareRunCoroutine);
-        //    _onPlayerAddState.Call(PlayerState.None);
-        //}
-        
-        if(_playerCurrentState.Value == PlayerState.Running /*&& _dodgeCoroutine != null*/)
+        /*
+        if (_playerCurrentState.Value != PlayerState.Running && _prepareRunCoroutine != null && _dodgeCoroutine == null)
         {
+            StopCoroutine(_prepareRunCoroutine);
             _onPlayerAddState.Call(PlayerState.None);
+        }
+        */
+        
+        if(_playerCurrentState.Value == S_EnumPlayerState.Running /*&& _dodgeCoroutine != null*/)
+        {
+            _onPlayerAddState.Call(S_EnumPlayerState.None);
         }
     }
 
@@ -293,7 +345,7 @@ public class S_PlayerDodge : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
     }
 
-    void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
+    private void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
     {
         float height = Mathf.Max(_capsule.height * Mathf.Abs(transform.lossyScale.y), _capsule.radius * 2f);
         radius = _capsule.radius * Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));
@@ -303,7 +355,7 @@ public class S_PlayerDodge : MonoBehaviour
         bottom = center - up * (height * 0.5f - radius);
     }
 
-    bool CheckGround(out Vector3 normal)
+    private bool CheckGround(out Vector3 normal)
     {
         GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
         Vector3 start = bottom + Vector3.up * 0.02f;
@@ -322,18 +374,34 @@ public class S_PlayerDodge : MonoBehaviour
         return false;
     }
 
-    float ProbeObstacle(Vector3 dir, float maxDist)
+    private float ProbeObstacle(Vector3 dir, float maxDist)
     {
         GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
 
-        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, maxDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        bool overlapping = Physics.CheckCapsule(
+        bottom, top, radius,
+        obstacleMask, QueryTriggerInteraction.Ignore
+    );
+
+        if (overlapping)
         {
-            return Mathf.Max(0f, hit.distance - stopFromWall);
+            return 0f;
         }
+
+        float castDist = maxDist + stopFromWall;
+
+        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, castDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        {
+            float allowed = hit.distance - stopFromWall;
+            if (allowed < 0f) allowed = 0f;
+
+            return Mathf.Min(maxDist, allowed);
+        }
+
         return maxDist;
     }
 
-    float ProbeGroundAhead(Vector3 dir, float maxDist, Vector3 currentGroundNormal)
+    private float ProbeGroundAhead(Vector3 dir, float maxDist, Vector3 currentGroundNormal)
     {
         Vector3 probePos = transform.position + dir * maxDist + Vector3.up * edgeProbeHeight;
         if (Physics.Raycast(probePos, Vector3.down, out var hit, edgeProbeHeight * 2f, groundMask, QueryTriggerInteraction.Ignore))

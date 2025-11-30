@@ -1,42 +1,33 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerStatesManager : MonoBehaviour
 {
-    //[Header("Settings")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
-    [Header("References")]
-    [SerializeField] SSO_PlayerStateTransitions _playerStateTransitions;
-    [SerializeField] RSO_PlayerCurrentState _playerCurrentState;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
 
-    [Header("Input")]
-    [SerializeField] RSE_OnPlayerAddState _onPlayerAddState;
-    [SerializeField] RSE_OnPlayerRemoveState _onPlayerRemoveState;
-
-    //[Header("Output")]
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
 
     private void OnEnable()
     {
-        _playerCurrentState.Value = PlayerState.None;
+        _playerCurrentState.Value = S_EnumPlayerState.None;
 
         _onPlayerAddState.action += AddState;
-        _onPlayerRemoveState.action += RemoveState;
     }
 
     private void OnDisable()
     {
         _onPlayerAddState.action -= AddState;
-        _onPlayerRemoveState.action -= RemoveState;
-
-        _playerCurrentState.Value = PlayerState.None;
     }
-    void AddState(PlayerState state)
+
+    private void AddState(S_EnumPlayerState state)
     {
         if (state == _playerCurrentState.Value) return;
-        _playerCurrentState.Value = state;
-    }
 
-    void RemoveState(PlayerState state)
-    {
-        _playerCurrentState.Value -= state;
+        _playerCurrentState.Value = state;
     }
 }

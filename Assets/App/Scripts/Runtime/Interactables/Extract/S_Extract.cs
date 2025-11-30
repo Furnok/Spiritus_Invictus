@@ -5,7 +5,7 @@ public class S_Extract : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Filter")]
-    [SerializeField] [S_TagName] private string tagPlayer;
+    [SerializeField, S_TagName] private string tagPlayer;
 
     [TabGroup("Settings")]
     [Title("Extract")]
@@ -20,6 +20,9 @@ public class S_Extract : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     private void OnDisable()
     {
@@ -46,6 +49,7 @@ public class S_Extract : MonoBehaviour
 
     private void ExtractInteract()
     {
+        rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnOpenExtractWindow.Call(extractIndex);
     }
 }

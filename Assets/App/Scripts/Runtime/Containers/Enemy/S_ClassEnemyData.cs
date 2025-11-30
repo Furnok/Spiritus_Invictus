@@ -46,5 +46,5 @@ public class S_ClassEnemyData
 
     [Title("Animations")]
     public AnimatorOverrideController controllerOverride = null;
-    public List<S_ClassAnimationsCombos> listCombos = null;
+    public List<S_ClassAnimationsCombos> listCombos = new();
 }

@@ -1,7 +1,9 @@
 ﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UISettings : MonoBehaviour
@@ -11,10 +13,14 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private float timeFadeSkip;
 
     [TabGroup("References")]
-    [Title("Default")]
-    [SerializeField] private GameObject defaultWindow;
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSoundClick;
 
     [TabGroup("References")]
+    [SerializeField] private EventReference uiSoundClose;
+
+    [TabGroup("References")]
+    [Title("Default")]
     [SerializeField] private GameObject defaultPanelSet;
 
     [TabGroup("References")]
@@ -76,24 +82,35 @@ public class S_UISettings : MonoBehaviour
     [SerializeField] private RSE_OnCloseWindow rseOnCloseWindow;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnShowMouseCursor rseOnShowMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
     private GameObject currentPanelSet = null;
+
     private bool isClosing = false;
 
     private void OnEnable()
     {
-        rseOnPlayerPause.action += Close;
+        rseOnPlayerPause.action += CloseEscape;
 
         if (defaultPanelSet != null)
         {
             textGameplay.color = Color.red;
 
-            defaultPanelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = defaultPanelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             defaultPanelSet.SetActive(true);
-            defaultPanelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            defaultPanelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = defaultPanelSet;
 
@@ -148,7 +165,7 @@ public class S_UISettings : MonoBehaviour
 
     private void OnDisable()
     {
-        rseOnPlayerPause.action -= Close;
+        rseOnPlayerPause.action -= CloseEscape;
 
         if (currentPanelSet != null)
         {
@@ -162,6 +179,43 @@ public class S_UISettings : MonoBehaviour
         textAudio.color = Color.white;
     }
 
+    public void OnDropdownClicked(Selectable uiElement)
+    {
+        if (uiElement.interactable)
+        {
+            GameObject blocker = transform.root.Find("Blocker")?.gameObject;
+            if (blocker != null)
+            {
+                Button button = blocker.GetComponent<Button>();
+                if (button != null)
+                {
+                    button.onClick.AddListener(CloseDropDown);
+                }
+            }
+        }
+    }
+
+    private void CloseDropDown()
+    {
+        RuntimeManager.PlayOneShot(uiSoundClick);
+    }
+
+    private void CloseEscape()
+    {
+        if (rsoInConsole.Value && dropDownLanguages?.GetComponent<TMP_Dropdown>()?.IsExpanded == true || dropDownResolutions?.GetComponent<TMP_Dropdown>()?.IsExpanded == true)
+        {
+            return;
+        }
+
+        if (!isClosing)
+        {
+            if (rsoCurrentWindows.Value[^1] == gameObject)
+            {
+                Close();
+            }
+        }
+    }
+
     public void Close()
     {
         if (!isClosing)
@@ -169,12 +223,13 @@ public class S_UISettings : MonoBehaviour
             isClosing = true;
             settings.Close();
 
+            RuntimeManager.PlayOneShot(uiSoundClose);
+
             rseOnCloseWindow.Call(gameObject);
 
             if (rsoNavigation.Value.selectablePressOldWindow == null)
             {
                 rsoNavigation.Value.selectableFocus = null;
-                defaultWindow.SetActive(true);
             }
             else
             {
@@ -184,6 +239,7 @@ public class S_UISettings : MonoBehaviour
         }
     }
 
+    #region Panels Management
     private void ClosePanel()
     {
         if (currentPanelSet != null)
@@ -192,12 +248,12 @@ public class S_UISettings : MonoBehaviour
             textGraphics.color = Color.white;
             textAudio.color = Color.white;
 
-            currentPanelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = currentPanelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             GameObject oldpanel = currentPanelSet;
 
-            currentPanelSet.GetComponent<CanvasGroup>().alpha = 1f;
-            currentPanelSet.GetComponent<CanvasGroup>().DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 oldpanel.SetActive(false);
             });
@@ -233,11 +289,12 @@ public class S_UISettings : MonoBehaviour
 
             textGameplay.color = Color.red;
 
-            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = panelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             panelSet.SetActive(true);
-            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -296,11 +353,12 @@ public class S_UISettings : MonoBehaviour
 
             textGraphics.color = Color.red;
 
-            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = panelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             panelSet.SetActive(true);
-            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -359,11 +417,12 @@ public class S_UISettings : MonoBehaviour
 
             textAudio.color = Color.red;
 
-            panelSet.GetComponent<CanvasGroup>()?.DOKill();
+            CanvasGroup cg = panelSet.GetComponent<CanvasGroup>();
+            cg.DOKill();
 
             panelSet.SetActive(true);
-            panelSet.GetComponent<CanvasGroup>().alpha = 0f;
-            panelSet.GetComponent<CanvasGroup>().DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+
+            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -413,4 +472,5 @@ public class S_UISettings : MonoBehaviour
             buttonReturn.navigation = nav;
         }
     }
+    #endregion
 }

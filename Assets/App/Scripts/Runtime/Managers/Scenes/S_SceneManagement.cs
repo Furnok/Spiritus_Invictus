@@ -14,9 +14,6 @@ public class S_SceneManagement : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
 
-    [TabGroup("Outputs")]
-    [SerializeField] private RSO_CurrentLevel rsoCurrentLevel;
-
     private bool isLoading = false;
 
     private void OnEnable()
@@ -29,8 +26,6 @@ public class S_SceneManagement : MonoBehaviour
     {
         rseOnLoadScene.action -= LoadLevel;
         rseOnQuitGame.action -= QuitGame;
-
-        rsoCurrentLevel.Value = null;
     }
 
     private void LoadLevel(string sceneName)
@@ -47,8 +42,6 @@ public class S_SceneManagement : MonoBehaviour
         StartCoroutine(S_Utils.LoadSceneAsync(sceneName, LoadSceneMode.Single, () =>
         {
             isLoading = false;
-
-            rsoCurrentLevel.Value = sceneName;
         }));
     }
 

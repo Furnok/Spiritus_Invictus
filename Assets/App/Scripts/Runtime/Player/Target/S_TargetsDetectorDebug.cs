@@ -1,12 +1,17 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_TargetsDetectorDebug : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("General")]
     [SerializeField] private Color gizmoColor;
+
+    [TabGroup("Settings")]
     [SerializeField] private bool drawGizmos;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Collider")]
     [SerializeField] private SphereCollider detectionCollider;
 
     private void OnDrawGizmos()
@@ -14,6 +19,6 @@ public class S_TargetsDetectorDebug : MonoBehaviour
         if (!enabled || !drawGizmos || detectionCollider == null) return;
 
         Gizmos.color = gizmoColor;
-        Gizmos.DrawSphere(gameObject.transform.position/*_detectionCollider.center*/, detectionCollider.radius);
+        Gizmos.DrawSphere(gameObject.transform.position, detectionCollider.radius);
     }
 }

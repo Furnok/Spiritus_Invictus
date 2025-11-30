@@ -1,38 +1,41 @@
 ﻿using System;
 using UnityEditor;
-using UnityEngine;
 using UnityEditorInternal;
+using UnityEngine;
 
 [CustomPropertyDrawer(typeof(S_TagNameAttribute))]
 public class S_TagNameAttributeEditor : PropertyDrawer
 {
-    private static string[] allTags;
+    private static readonly string[] tags;
+
+    static S_TagNameAttributeEditor()
+    {
+        var allTags = InternalEditorUtility.tags;
+        tags = new string[allTags.Length + 1];
+        tags[0] = "None";
+        Array.Copy(allTags, 0, tags, 1, allTags.Length);
+    }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
 
+        // String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [TagName] with a String.");
+            EditorGUI.LabelField(position, label.text, "Use [TagName] with a string field.");
         }
         else
         {
-            // Get All Unity Tags
-            if (allTags == null || allTags.Length == 0)
-            {
-                allTags = InternalEditorUtility.tags;
-            }
+            // Find Current Index
+            int selectedIndex = Array.IndexOf(tags, property.stringValue);
+            if (selectedIndex < 0) selectedIndex = 0;
 
-            // Find the Index of the Current Tag
-            int selectedIndex = Array.IndexOf(allTags, property.stringValue);
+            // Popup
+            int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, tags);
 
-            if (selectedIndex < 0)
-            {
-                selectedIndex = 0;
-            }
-
-            property.stringValue = allTags[EditorGUI.Popup(position, label.text, selectedIndex, allTags)];
+            // Apply Result
+            property.stringValue = (newIndex == 0) ? string.Empty : tags[newIndex];
         }
 
         EditorGUI.EndProperty();

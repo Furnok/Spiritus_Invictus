@@ -1,7 +1,6 @@
 ﻿using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
-using System;
 
 [CustomPropertyDrawer(typeof(S_AnimationNameAttribute))]
 public class S_AnimationNameAttributeEditor : PropertyDrawer
@@ -10,68 +9,114 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
     {
         EditorGUI.BeginProperty(position, label, property);
 
+        // String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [S_AnimatorParameter] on a String.");
-            EditorGUI.EndProperty();
+            DrawError(position, label, "Use [S_AnimationName] with a string field.");
             return;
         }
 
-        // Get the target MonoBehaviour
+        // MonoBehaviour Check
         if (!(property.serializedObject.targetObject is MonoBehaviour mb))
         {
-            EditorGUI.LabelField(position, label.text, "Target is not a MonoBehaviour.");
-            EditorGUI.EndProperty();
+            DrawError(position, label, "Target must be a MonoBehaviour.");
             return;
         }
 
-        Animator animator = mb.GetComponent<Animator>();
+        // Animator Field Check
+        Animator animator = GetAnimatorFromField(property);
+
+        // Animator GameObject Check
         if (animator == null)
         {
-            EditorGUI.LabelField(position, label.text, "No Animator Found on this GameObject.");
-            EditorGUI.EndProperty();
+            animator = mb.GetComponent<Animator>();
+        }
+            
+        if (animator == null)
+        {
+            DrawError(position, label, "No Animator found.");
             return;
         }
 
-        RuntimeAnimatorController rac = animator.runtimeAnimatorController;
-        AnimatorController controller = null;
-
-        if (rac is AnimatorOverrideController overrideController)
-        {
-            controller = overrideController.runtimeAnimatorController as AnimatorController;
-        }
-        else
-        {
-            controller = rac as AnimatorController;
-        }
-
+        // AnimatorController Check
+        AnimatorController controller = GetAnimatorController(animator);
         if (controller == null)
         {
-            EditorGUI.LabelField(position, label.text, "No Valid AnimatorController Assigned.");
-            EditorGUI.EndProperty();
+            DrawError(position, label, "Animator has no valid AnimatorController.");
             return;
         }
 
-        var parameters = controller.parameters;
-
-        if (parameters.Length == 0)
+        // Parameters Check
+        AnimatorControllerParameter[] parameters = controller.parameters;
+        if (parameters == null || parameters.Length == 0)
         {
-            EditorGUI.LabelField(position, label.text, "No Parameters in AnimatorController.");
-            EditorGUI.EndProperty();
+            DrawError(position, label, "Animator has no parameters.");
             return;
         }
 
-        string[] parameterNames = Array.ConvertAll(parameters, p => p.name);
-        int selectedIndex = Array.IndexOf(parameterNames, property.stringValue);
+        // Build List
+        int count = parameters.Length;
+        string[] options = new string[count + 1];
+        options[0] = "None";
 
-        if (selectedIndex < 0)
+        for (int i = 0; i < count; i++)
         {
-            selectedIndex = 0;
+            options[i + 1] = parameters[i].name;
         }
 
-        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, parameterNames);
-        property.stringValue = parameterNames[newIndex];
 
+        // Find Current Index
+        string value = property.stringValue;
+        int selectedIndex = 0;
+        for (int i = 1; i < options.Length; i++)
+        {
+            if (options[i] == value)
+            {
+                selectedIndex = i;
+                break;
+            }
+        }
+
+        // Popup
+        int newIndex = EditorGUI.Popup(position, label.text, selectedIndex, options);
+
+        // Apply Result
+        property.stringValue = (newIndex == 0) ? string.Empty : options[newIndex];
+
+        EditorGUI.EndProperty();
+    }
+
+    private Animator GetAnimatorFromField(SerializedProperty property)
+    {
+        var attr = (S_AnimationNameAttribute)attribute;
+        if (string.IsNullOrEmpty(attr.animatorFieldName)) return null;
+
+        SerializedProperty animatorProp = property.serializedObject.FindProperty(attr.animatorFieldName);
+
+        if (animatorProp != null && animatorProp.propertyType == SerializedPropertyType.ObjectReference)
+        {
+            return animatorProp.objectReferenceValue as Animator;
+        }
+
+        return null;
+    }
+
+    private AnimatorController GetAnimatorController(Animator animator)
+    {
+        var rac = animator.runtimeAnimatorController;
+        if (!rac) return null;
+
+        if (rac is AnimatorOverrideController overrideCtrl)
+        {
+            return overrideCtrl.runtimeAnimatorController as AnimatorController;
+        }
+
+        return rac as AnimatorController;
+    }
+
+    private void DrawError(Rect position, GUIContent label, string message)
+    {
+        EditorGUI.LabelField(position, label.text, message);
         EditorGUI.EndProperty();
     }
 }

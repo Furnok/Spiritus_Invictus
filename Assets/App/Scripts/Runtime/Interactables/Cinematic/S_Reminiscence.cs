@@ -5,7 +5,7 @@ public class S_Reminiscence : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Filter")]
-    [SerializeField] [S_TagName] private string tagName;
+    [SerializeField, S_TagName] private string tagName;
 
     [TabGroup("Settings")]
     [Title("Camera Cinematic")]
@@ -20,6 +20,9 @@ public class S_Reminiscence : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCameraCinematic rseOnCameraCinematic;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     private void OnValidate()
     {
@@ -54,6 +57,7 @@ public class S_Reminiscence : MonoBehaviour
 
     private void Interract()
     {
+        rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnCameraCinematic.Call(cameraIndex);
     }
 }

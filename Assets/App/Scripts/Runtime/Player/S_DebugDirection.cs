@@ -1,10 +1,16 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_DebugDirection : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("General")]
     [SerializeField] private float length;
+
+    [TabGroup("Settings")]
     [SerializeField] private float yOffset;
+
+    [TabGroup("Settings")]
     [SerializeField] private Color color;
 
     private void OnDrawGizmos()

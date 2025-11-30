@@ -1,9 +1,15 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class S_UIMenu : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("References")]
     [Title("Windows")]
     [SerializeField] private GameObject settingsWindow;
@@ -36,16 +42,22 @@ public class S_UIMenu : MonoBehaviour
     [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InGame rsoInGame;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_GameInPause rsoGameInPause;
+    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSO_CurrentWindows rsoCurrentWindows;
+    [SerializeField] private RSO_InConsole rsoInConsole;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_GameInPause rsoGameInPause;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
@@ -54,37 +66,50 @@ public class S_UIMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        rseOnPlayerPause.action += ResumeGame;
+        rseOnPlayerPause.action += CloseEscape;
 
         isTransit = false;
     }
 
     private void OnDisable()
     {
-        rseOnPlayerPause.action -= ResumeGame;
+        rseOnPlayerPause.action -= CloseEscape;
 
         isTransit = false;
     }
 
+    private void CloseEscape()
+    {
+        if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
+        {
+            ResumeGame();
+        }
+    }
+
     public void ResumeGame()
     {
-        if (rsoCurrentWindows.Value.Count < 2)
+        if (!isTransit)
         {
+            RuntimeManager.PlayOneShot(uiSound);
+
+            rseOnHideMouseCursor.Call();
+
             rseOnGameInputEnabled.Call();
             rseOnCloseAllWindows.Call();
             rsoNavigation.Value.selectableDefault = null;
             rseOnResetFocus.Call();
-            rsoNavigation.Value.selectableFocus = null;
             rsoInGame.Value = true;
-            rsoGameInPause.Value = false;
             rseOnGamePause.Call(false);
         }
     }
 
     public void Settings()
     {
-        rsoNavigation.Value.selectableFocus = null;
-        rseOnOpenWindow.Call(settingsWindow);
+        if (!isTransit)
+        {
+            rsoNavigation.Value.selectableFocus = null;
+            rseOnOpenWindow.Call(settingsWindow);
+        }
     }
 
     public void MainMenu()
@@ -99,7 +124,6 @@ public class S_UIMenu : MonoBehaviour
                 rseOnCloseAllWindows.Call();
                 rsoNavigation.Value.selectableFocus = null;
 
-                rsoGameInPause.Value = false;
                 rseOnGamePause.Call(false);
 
                 Scene currentScene = SceneManager.GetActiveScene();
