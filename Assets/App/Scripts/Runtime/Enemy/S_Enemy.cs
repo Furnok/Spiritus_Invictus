@@ -364,6 +364,7 @@ public class S_Enemy : MonoBehaviour
         behaviorAgent.Restart();
     }
 
+    #region Load Enemy
     private void LoadEnemy()
     {
         int index = 0;
@@ -408,6 +409,7 @@ public class S_Enemy : MonoBehaviour
             rseOnEnemyTargetDied.Call(body);
         }
     }
+    #endregion
 
     #region Health System
     private void SetHealth(float damage)
