@@ -103,6 +103,9 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerRespawn rseOnPlayerRespawn;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
 
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth = null;
@@ -190,6 +193,7 @@ public class S_Enemy : MonoBehaviour
         enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action += PlayerDied;
+        rseOnPlayerRespawn.action += PlayerRespawn;
 
         if (behaviorAgent.GetVariable("IsPatroling", out isPatroling))
         {
@@ -215,6 +219,7 @@ public class S_Enemy : MonoBehaviour
         enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
 
         rseOnPlayerDeath.action -= PlayerDied;
+        rseOnPlayerRespawn.action -= PlayerRespawn;
 
         if (isPatroling != null)
         {
@@ -462,6 +467,11 @@ public class S_Enemy : MonoBehaviour
         }
 
         TBag();
+    }
+
+    private void PlayerRespawn()
+    {
+        isPlayerDead = false;
     }
     #endregion
 
