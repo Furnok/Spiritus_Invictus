@@ -153,11 +153,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitParam: 
+  _cameraShake:
+    amplitude: 2
+    frequency: 2
+    duration: 0.3
+  lowFreq: 0.5
+  highFreq: 1
+  duration: 0.3
   _playerMotorGO: {fileID: 8174768722539903590}
   _onAttackCollide: {fileID: 11400000, guid: 01e50bd3bc6fbd64699dca52d9398f0a, type: 2}
   _rseOnParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
   _rseOnPlayerHit: {fileID: 11400000, guid: 577377e3b86e97b4eb3c9400800347ce, type: 2}
   _onPlayerGainConviction: {fileID: 11400000, guid: c3ba1e97cce4a3d4e929f7197f47a3c1, type: 2}
+  _onCameraShake: {fileID: 11400000, guid: beaf63a232cb7b8488844f87f5bc900b, type: 2}
   _canParry: {fileID: 11400000, guid: 7ae3103e78e3f8444a77fdea4b6192cc, type: 2}
   _parryStartTime: {fileID: 11400000, guid: 9da05f4356989674baabec68e1a341fa, type: 2}
   _attackDataInDodgeableArea: {fileID: 11400000, guid: 79f9804437f056944b65f9228ccc9a50, type: 2}

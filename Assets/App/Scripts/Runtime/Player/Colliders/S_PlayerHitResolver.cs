@@ -8,6 +8,21 @@ public class S_PlayerHitResolver : MonoBehaviour
     [Title("Animation")]
     [SerializeField, S_AnimationName] private string _hitParam;
 
+    [TabGroup("Settings")]
+    [Title("Camera")]
+    [SerializeField] private S_ClassCameraShake _cameraShake;
+
+    [TabGroup("Settings")]
+    [Title("Controller")]
+    [SerializeField] private float lowFreq;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float highFreq;
+
+    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float duration;
+
     [TabGroup("References")]
     [Title("Motor")]
     [SerializeField] private  GameObject _playerMotorGO;
@@ -23,6 +38,9 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerGainConviction _onPlayerGainConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnCameraShake _onCameraShake;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CanParry _canParry;
@@ -64,6 +82,8 @@ public class S_PlayerHitResolver : MonoBehaviour
                     {
                         _rseOnParrySuccess.Call(data);
                         _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
+                        _onCameraShake.Call(_cameraShake);
+                        StartCoroutine(S_Utils.Shake(lowFreq, highFreq, duration));
                         Debug.Log("Parried!");
                     }
                     else
