@@ -41,6 +41,7 @@ public class S_Boss : MonoBehaviour
 
     [TabGroup("Settings")]
     [Title("Strafe Parameters")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float strafeChangeInterval = 1.5f;
 
     [TabGroup("Settings")]
