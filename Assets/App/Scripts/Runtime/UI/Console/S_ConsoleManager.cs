@@ -171,6 +171,19 @@ public class S_ConsoleManager : MonoBehaviour
                     UpdateUI("Your are not Invincible!", true);
                 }
             }
+            else if (cmd.command == "/NoHealthLose")
+            {
+                if (!rsoConsoleCheats.Value.cantLoseHealth)
+                {
+                    rsoConsoleCheats.Value.cantLoseHealth = true;
+                    UpdateUI("You can't lose health now!", true);
+                }
+                else
+                {
+                    rsoConsoleCheats.Value.cantLoseHealth = false;
+                    UpdateUI("You can't lose health now!", true);
+                }
+            }
         }
         else
         {

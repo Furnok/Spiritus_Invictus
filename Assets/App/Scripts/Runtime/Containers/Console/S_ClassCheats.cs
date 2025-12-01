@@ -10,4 +10,6 @@ public class S_ClassCheats
     public bool infiniteConviction = false;
 
     public bool cantGetttingHit = false;
+
+    public bool cantLoseHealth = false;
 }

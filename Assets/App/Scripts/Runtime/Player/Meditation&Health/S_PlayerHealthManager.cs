@@ -58,7 +58,10 @@ public class S_PlayerHealthManager : MonoBehaviour
 
     private void ReducePlayerHealth(float damage)
     {
-        var newHealth= rsoPlayerCurrentHealth.Value - damage;
+        if (_debugPlayer.Value.cantLoseHealth == true) return;
+
+        var newHealth = rsoPlayerCurrentHealth.Value - damage;
+
         rsoPlayerCurrentHealth.Value = Mathf.Clamp(newHealth, 0, maxHealth);
         rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
 

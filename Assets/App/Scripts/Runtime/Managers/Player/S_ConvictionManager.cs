@@ -1,8 +1,12 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_ConvictionManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [SerializeField] private EventReference _convictionAccumulationSound;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnHealStart _onHealStart;
 

@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,6 +22,13 @@ public class S_TargetingManager : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private GameObject _lockedIndicatorPrefab;
+
+    [TabGroup("References")]
+    [Title("Sounds")]
+    [SerializeField] private EventReference _targetLockOnSound;
+
+    [TabGroup("References")]
+    [SerializeField] private EventReference _targetLockOffSound;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnTargetsInRangeChange rseOnTargetsInRangeChange;
@@ -318,6 +326,7 @@ public class S_TargetingManager : MonoBehaviour
             rsoPlayerIsTargeting.Value = true;
 
             rseOnStartTargeting.Call();
+            RuntimeManager.PlayOneShot(_targetLockOnSound);
         }
     }
 
@@ -336,9 +345,12 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnPlayerCancelTargeting.Call(currentTarget);
             rseOnAnimationBoolValueChange.Call("TargetLock", false);
+            RuntimeManager.PlayOneShot(_targetLockOffSound);
 
             rseOnStopTargeting.Call();
         }
+
+        RuntimeManager.PlayOneShot(_targetLockOffSound);
 
         currentTarget = null;
         obstacleTimer = 0f;
@@ -359,12 +371,16 @@ public class S_TargetingManager : MonoBehaviour
                 {
                     rseOnNewTargeting.Call(currentTarget);
                     rsoPlayerIsTargeting.Value = true;
+
+                    RuntimeManager.PlayOneShot(_targetLockOnSound);
                 }
                 else
                 {
                     rseOnAnimationBoolValueChange.Call("TargetLock", false);
 
                     rseOnStopTargeting.Call();
+
+                    RuntimeManager.PlayOneShot(_targetLockOffSound);
                 }
             }
         }
@@ -451,6 +467,8 @@ public class S_TargetingManager : MonoBehaviour
             rseOnPlayerCancelTargeting.Call(currentTarget);
             currentTarget = bestTarget;
             rseOnNewTargeting.Call(bestTarget);
+
+            RuntimeManager.PlayOneShot(_targetLockOnSound);
         }
     }
 

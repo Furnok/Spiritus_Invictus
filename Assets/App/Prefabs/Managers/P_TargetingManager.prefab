@@ -72,14 +72,14 @@ MonoBehaviour:
   gizmoPreTargetRadius: 0.2
   gizmoHeightOffset: 1.5
   drawGizmos: 1
-  rsoPlayerPosition: {fileID: 11400000, guid: a3d33267cdb3a0a43bb8ab4811624f21, type: 2}
-  ssoFrontConeAngle: {fileID: 11400000, guid: 1a334ea9ff9f95d45bd16bd34d05d126, type: 2}
   rseOnEnemyEnterTargetingRange: {fileID: 11400000, guid: 857c3a1874fe4f34b9a4e7de1355f9c0, type: 2}
   rseOnEnemyExitTargetingRange: {fileID: 11400000, guid: 9464073673f74034da5e08cf174a885c, type: 2}
   rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
   rseOnPlayerCancelTargeting: {fileID: 11400000, guid: d8d0a24f7352ea84ba1f5614f16bb752, type: 2}
   _rseOnPlayerCenter: {fileID: 11400000, guid: 0a40b7ab63540b84891bec3b379c9b89, type: 2}
   rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
+  rsoPlayerPosition: {fileID: 11400000, guid: a3d33267cdb3a0a43bb8ab4811624f21, type: 2}
+  ssoFrontConeAngle: {fileID: 11400000, guid: 1a334ea9ff9f95d45bd16bd34d05d126, type: 2}
 --- !u!114 &9042962056823339771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +99,20 @@ MonoBehaviour:
   _previewIndicatorPrefab: {fileID: 3799582976103044944, guid: dcbe018d5be8a1642ae04cbc4dc3d073, type: 3}
   _previewSwapIndicatorPrefab: {fileID: 3799582976103044944, guid: bbf4d65fa7d43cc4aa50318b61bc5a10, type: 3}
   _lockedIndicatorPrefab: {fileID: 805231945142539551, guid: 0a3511817ddfeeb4585cef062af90778, type: 3}
+  _targetLockOnSound:
+    Guid:
+      Data1: -1463308652
+      Data2: 1127007918
+      Data3: 948039580
+      Data4: 1657030724
+    Path: event:/Player/Combat/Targeting/LockOn
+  _targetLockOffSound:
+    Guid:
+      Data1: 935628466
+      Data2: 1313059786
+      Data3: -874287744
+      Data4: 680655546
+    Path: event:/Player/Combat/Targeting/LockOff
   rseOnTargetsInRangeChange: {fileID: 11400000, guid: 6660d5373f88799428a248d2c3615ece, type: 2}
   rseOnPlayerTargeting: {fileID: 11400000, guid: b5715b3f29f85be4e87180aa0db11aab, type: 2}
   rseOnPlayerTargetingCancel: {fileID: 11400000, guid: e7c8e675e790c2a44a00f20297f51dc8, type: 2}
@@ -110,13 +124,12 @@ MonoBehaviour:
   rseOnStartTargeting: {fileID: 11400000, guid: 06dd5cb141e805f4886a0677d415d129, type: 2}
   rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
   rseOnPlayerCancelTargeting: {fileID: 11400000, guid: d8d0a24f7352ea84ba1f5614f16bb752, type: 2}
-  rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
   rseOnStopTargeting: {fileID: 11400000, guid: 608c9d5cdb53a9d40a4926c3ca41a1ff, type: 2}
+  rseOnAnimationBoolValueChange: {fileID: 11400000, guid: f3b68030aacb033438a094c87c0e44ca, type: 2}
+  rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
   rsoPlayerPosition: {fileID: 11400000, guid: a3d33267cdb3a0a43bb8ab4811624f21, type: 2}
-  rsoTargetPosition: {fileID: 11400000, guid: 3f7350d94d82e7a4ab2f89bed6a65c11, type: 2}
+  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
   ssoPlayerMaxDistanceTargeting: {fileID: 11400000, guid: 541adfab7eb5e28439bb20fb68f82377, type: 2}
   ssoPlayerTargetRangeRadius: {fileID: 11400000, guid: 5be727c44da2ea945accbd91b94caaf1, type: 2}
   ssoPargetObstacleBreakDelay: {fileID: 11400000, guid: 12b9fac0e12e2f94bbd815009f9dfa4c, type: 2}
   ssoFrontConeAngle: {fileID: 11400000, guid: 1a334ea9ff9f95d45bd16bd34d05d126, type: 2}
-  rseOnAnimationBoolValueChange: {fileID: 11400000, guid: f3b68030aacb033438a094c87c0e44ca, type: 2}
-  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}

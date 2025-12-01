@@ -1,8 +1,12 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerDamageSystem : MonoBehaviour
 {
+    [TabGroup("Reference")]
+    [SerializeField] private EventReference _damageSound;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
 
@@ -55,6 +59,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
                 StopCoroutine(_hitReactCoroutine);
             }
 
+            RuntimeManager.PlayOneShot(_damageSound);
             rseOnAnimationTriggerValueChange.Call("isHit");
             _onPlayerAddState.Call(S_EnumPlayerState.HitReact);
             _isInvicible = true;
