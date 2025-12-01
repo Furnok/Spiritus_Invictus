@@ -106,6 +106,9 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private RSE_OnPlayerRespawn rseOnPlayerRespawn;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
 
     [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth = null;
@@ -240,6 +243,17 @@ public class S_Enemy : MonoBehaviour
         overrideController["AttackAnimation2"] = null;
     }
 
+    private void Start()
+    {
+        S_ClassEnemySaved enemy = new S_ClassEnemySaved
+        {
+            entity = gameObject,
+            isDead = false,
+        };
+
+        rsoDataSaved.Value.enemy.Add(enemy);
+    }
+
     private void Update()
     {
         if (isChase && target != null)
@@ -359,6 +373,17 @@ public class S_Enemy : MonoBehaviour
         if (health <= 0)
         {
             isDead = true;
+
+            var list = rsoDataSaved.Value.enemy;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].entity == gameObject)
+                {
+                    list[i].isDead = true;
+                    break;
+                }
+            }
 
             enemyAttackData.DisableWeaponCollider();
 

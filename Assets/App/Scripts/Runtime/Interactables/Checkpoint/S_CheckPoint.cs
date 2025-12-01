@@ -7,6 +7,10 @@ public class S_CheckPoint : MonoBehaviour
     [Title("Filter")]
     [SerializeField, S_TagName] private string tagPlayer;
 
+    [TabGroup("Settings")]
+    [Title("Saves")]
+    [SerializeField, S_SaveName] private string saveName;
+
     [TabGroup("References")]
     [Title("Content")]
     [SerializeField] private GameObject content;
@@ -25,21 +29,31 @@ public class S_CheckPoint : MonoBehaviour
     [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSaveData rseOnSaveData;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerRespawnPosition rsoplayerRespawnPosition;
 
-    private bool isActivated = false;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentHealth rsoPlayerCurrentHealth;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerCurrentConviction rsoPlayerCurrentConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
 
     private void OnDisable()
     {
-        rseOnPlayerInteract.action -= SaveInteract;
+        rseOnPlayerInteract.action -= Checkpoint;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(tagPlayer) && isActivated == false)
+        if (other.CompareTag(tagPlayer))
         {
             content.SetActive(true);
-            rseOnPlayerInteract.action += SaveInteract;
+            rseOnPlayerInteract.action += Checkpoint;
         }
     }
 
@@ -48,20 +62,28 @@ public class S_CheckPoint : MonoBehaviour
         if (other.CompareTag(tagPlayer))
         {
             content.SetActive(false);
-            rseOnPlayerInteract.action -= SaveInteract;
+            rseOnPlayerInteract.action -= Checkpoint;
         }
     }
 
-    private void SaveInteract()
+    private void Checkpoint()
     {
-        if (isActivated) return;
-        isActivated = true;
-
-        rseOnPlayerInteract.action -= SaveInteract;
-        content.SetActive(false);
         rsoplayerRespawnPosition.Value.position = newSpawnPositionAndRotation.transform.position;
         rsoplayerRespawnPosition.Value.rotation = newSpawnPositionAndRotation.transform.rotation;
         rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnSendConsoleMessage.Call("Checkpoint activated, new pose respawn: " + newSpawnPositionAndRotation.transform.position + "!");
+
+        Save();
+    }
+
+    private void Save()
+    {
+        rsoDataSaved.Value.dateSaved = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        rsoDataSaved.Value.position = newSpawnPositionAndRotation.transform.position;
+        rsoDataSaved.Value.rotation = newSpawnPositionAndRotation.transform.rotation;
+        rsoDataSaved.Value.health = rsoPlayerCurrentHealth.Value;
+        rsoDataSaved.Value.conviction = rsoPlayerCurrentConviction.Value;
+
+        rseOnSaveData.Call(saveName, false);
     }
 }
