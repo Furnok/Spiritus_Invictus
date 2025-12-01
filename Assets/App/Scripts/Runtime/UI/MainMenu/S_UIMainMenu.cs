@@ -7,6 +7,11 @@ using UnityEngine.UI;
 public class S_UIMainMenu : MonoBehaviour
 {
     [TabGroup("Settings")]
+    [Title("Save")]
+    [SerializeField, S_SaveName] private string saveName;
+
+    [TabGroup("Settings")]
+    [Title("Time")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeSkip;
 
@@ -63,6 +68,9 @@ public class S_UIMainMenu : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnLoadData rseOnLoadData;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
@@ -150,19 +158,24 @@ public class S_UIMainMenu : MonoBehaviour
 
             rseOnCloseAllWindows.Call();
 
+            rseOnLoadData.Call(saveName, false);
+
             rseOnFadeOut.Call();
 
             StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
-                gameObject.SetActive(false);
-                rsoNavigation.Value.selectableFocus = null;
-
                 rseOnDataLoad.Call();
                 rseOnDisplayUIGame.Call(true);
                 rseOnGameInputEnabled.Call();
                 rsoInGame.Value = true;
 
-                rseOnFadeIn.Call();
+                StartCoroutine(S_Utils.DelayRealTime(1.2f, () => 
+                {
+                    gameObject.SetActive(false);
+                    rsoNavigation.Value.selectableFocus = null;
+
+                    rseOnFadeIn.Call();
+                }));
             }));
         }
     }

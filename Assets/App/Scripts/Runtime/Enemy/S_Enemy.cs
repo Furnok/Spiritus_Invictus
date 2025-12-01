@@ -99,6 +99,9 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
@@ -197,6 +200,7 @@ public class S_Enemy : MonoBehaviour
 
         rseOnPlayerDeath.action += PlayerDied;
         rseOnPlayerRespawn.action += PlayerRespawn;
+        rseOnDataLoad.action += LoadEnemy;
 
         if (behaviorAgent.GetVariable("IsPatroling", out isPatroling))
         {
@@ -223,6 +227,7 @@ public class S_Enemy : MonoBehaviour
 
         rseOnPlayerDeath.action -= PlayerDied;
         rseOnPlayerRespawn.action -= PlayerRespawn;
+        rseOnDataLoad.action -= LoadEnemy;
 
         if (isPatroling != null)
         {
@@ -357,6 +362,51 @@ public class S_Enemy : MonoBehaviour
         navMeshAgent.velocity = Vector3.zero;
 
         behaviorAgent.Restart();
+    }
+
+    private void LoadEnemy()
+    {
+        int index = 0;
+
+        for (int i = 0; i < rsoDataSaved.Value.enemy.Count; i++)
+        {
+            if (rsoDataSaved.Value.enemy[i].entity == gameObject)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        if (rsoDataSaved.Value.enemy[index].isDead)
+        {
+            isDead = true;
+
+            var list = rsoDataSaved.Value.enemy;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].entity == gameObject)
+                {
+                    list[i].isDead = true;
+                    break;
+                }
+            }
+
+            enemyAttackData.DisableWeaponCollider();
+
+            StopAllCoroutines();
+            comboCoroutine = null;
+            resetCoroutine = null;
+            patrolCoroutine = null;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+
+            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);
+            behaviorAgent.Restart();
+
+            rseOnEnemyTargetDied.Call(body);
+        }
     }
 
     #region Health System

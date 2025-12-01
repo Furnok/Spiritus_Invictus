@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class S_PlayerHealthManager : MonoBehaviour
 {
-    [TabGroup("References")]
-    [SerializeField] private RSO_DataSaved rsoDataSaved;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
 
@@ -34,13 +31,16 @@ public class S_PlayerHealthManager : MonoBehaviour
     [SerializeField] private RSO_PlayerCurrentHealth rsoPlayerCurrentHealth;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats ssoPlayerStats;
 
     private float maxHealth => ssoPlayerStats.Value.maxHealth;
 
     private void Awake()
     {
-        rsoPlayerCurrentHealth.Value = maxHealth;
+        rsoPlayerCurrentHealth.Value = rsoDataSaved.Value.health;
     }
 
     private void OnEnable()
@@ -62,6 +62,7 @@ public class S_PlayerHealthManager : MonoBehaviour
     void SetValueFromData()
     {
         rsoPlayerCurrentHealth.Value = rsoDataSaved.Value.health;
+        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
     }
 
     private void HealPlayer()

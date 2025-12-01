@@ -32,6 +32,12 @@ public class S_CheckPoint : MonoBehaviour
     [SerializeField] private RSE_OnSaveData rseOnSaveData;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerHealthUpdate rseOnPlayerHealthUpdate;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerRespawnPosition rsoplayerRespawnPosition;
 
     [TabGroup("Outputs")]
@@ -42,6 +48,12 @@ public class S_CheckPoint : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats ssoPlayerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerAttackSteps ssoPlayerAttackSteps;
 
     private void OnDisable()
     {
@@ -73,7 +85,18 @@ public class S_CheckPoint : MonoBehaviour
         rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnSendConsoleMessage.Call("Checkpoint activated, new pose respawn: " + newSpawnPositionAndRotation.transform.position + "!");
 
+        Heal();
+
         Save();
+    }
+
+    private void Heal()
+    {
+        rsoPlayerCurrentHealth.Value = ssoPlayerStats.Value.maxHealth;
+        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
+
+        rsoPlayerCurrentConviction.Value = ssoPlayerAttackSteps.Value[1].ammountConvitionNeeded;
+        rseOnPlayerConvictionUpdate.Call(rsoPlayerCurrentConviction.Value);
     }
 
     private void Save()

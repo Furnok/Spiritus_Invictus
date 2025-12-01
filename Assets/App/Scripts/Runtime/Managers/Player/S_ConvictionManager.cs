@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class S_ConvictionManager : MonoBehaviour
 {
-    [TabGroup("References")]
-    [SerializeField] private RSO_DataSaved rsoDataSaved;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
 
@@ -42,6 +39,9 @@ public class S_ConvictionManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_ConsoleCheats _debugPlayer;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
     private Coroutine _convictionConsumptionCoroutine = null;
     private Coroutine _convictionGainOrLossCoroutine = null;
 
@@ -76,6 +76,7 @@ public class S_ConvictionManager : MonoBehaviour
     void SetValueFromData()
     {
         _playerCurrentConviction.Value = rsoDataSaved.Value.conviction;
+        rseOnPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
     }
 
     private void ReduceConvictionOnHealPerformed()
