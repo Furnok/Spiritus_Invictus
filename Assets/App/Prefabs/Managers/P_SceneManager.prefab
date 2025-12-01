@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8726563525680051403}
   - component: {fileID: 8582405749010379281}
+  - component: {fileID: 6349438636028513202}
   m_Layer: 0
   m_Name: P_SceneManager
   m_TagString: Untagged
@@ -65,4 +66,18 @@ MonoBehaviour:
     scenePath: "Assets/App/Scenes/Tests/Timothee/SC_Timoth\xE9e_Ambience.unity"
   rseOnLoadScene: {fileID: 11400000, guid: 3e9462016f0203448bead1ff197b69f0, type: 2}
   rseOnQuitGame: {fileID: 11400000, guid: 20d7180e7bae6694fb8ddf9ff9a7a20d, type: 2}
-  rsoCurrentLevel: {fileID: 11400000, guid: ab847673dbce4a74b89d8a3984a3e66b, type: 2}
+--- !u!114 &6349438636028513202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2993098812551795013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f450e4d516938945864937d7a838817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rseOnDataLoad: {fileID: 11400000, guid: d8401e7eeb710344ca47f8e9df92d71d, type: 2}
+  rsoDataSaved: {fileID: 11400000, guid: db0edbbd21d7571419860daa092a7506, type: 2}
+  rsoPlayerRespawnPosition: {fileID: 11400000, guid: a277ad2b8f148a94caba870bf683ea0f, type: 2}
