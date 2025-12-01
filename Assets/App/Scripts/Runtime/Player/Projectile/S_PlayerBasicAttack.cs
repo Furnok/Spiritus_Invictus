@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMOD.Studio;
+using FMODUnity;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +8,16 @@ using UnityEngine;
 
 public class S_PlayerBasicAttack : MonoBehaviour
 {
+    [TabGroup("References")]
+    [SerializeField] private EventReference _convictionAccumulationSound;
+
     [TabGroup("Settings")]
     [Title("Offset")]
     [SerializeField] private Vector3 attackOffset;
+
+    [TabGroup("Settings")]
+    [Title("Sounds")]
+    [SerializeField] private bool allowFadeoutSoundConvictionAccu = true;
 
     [TabGroup("Settings")]
     [Title("Animation")]
@@ -81,6 +90,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
     private List<float> _stepConvThresholds = new();
     private float _reservedConviction = 0;
     private int _lastCompletedStep = 0;
+
+    EventInstance _convictionAccumulationInstance;
 
     private void Awake()
     {
@@ -208,6 +219,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
     {
         yield return new WaitForSeconds(_animationTransitionDelays.Value.attackStartupDelay);
 
+        if (!_convictionAccumulationSound.IsNull)
+        {
+            _convictionAccumulationInstance = RuntimeManager.CreateInstance(_convictionAccumulationSound);
+            _convictionAccumulationInstance.start();
+        }
+
         float started = Time.time;
         float pauseCarry = 0f;
 
@@ -288,6 +305,13 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     private void FinalizeAttack()
     {
+        if (_convictionAccumulationInstance.isValid())
+        {
+            _convictionAccumulationInstance.stop(allowFadeoutSoundConvictionAccu ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+            _convictionAccumulationInstance.release();
+            _convictionAccumulationInstance = default;
+        }
+
         _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeCastAttack, () =>
         {
             rseOnAnimationBoolValueChange.Call(_attackParam, false);
