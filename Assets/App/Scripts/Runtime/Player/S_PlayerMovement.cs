@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class S_PlayerMovement : MonoBehaviour
 {
+    [TabGroup("References")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
     [TabGroup("Settings")]
     [Title("Animations")]
     [SerializeField, S_AnimationName] private string moveParam;
@@ -158,6 +164,8 @@ public class S_PlayerMovement : MonoBehaviour
         _rseOnPlayerHit.action += DoKnockbackOnHit;
 
         _rsoGameInPause.onValueChanged += OnPauseChange;
+
+        rseOnDataLoad.action += SetValueFromData;
     }
 
     private void OnDisable()
@@ -170,6 +178,14 @@ public class S_PlayerMovement : MonoBehaviour
         _rseOnPlayerHit.action -= DoKnockbackOnHit;
 
         _rsoGameInPause.onValueChanged -= OnPauseChange;
+
+        rseOnDataLoad.action -= SetValueFromData;
+    }
+
+    void SetValueFromData()
+    {
+        transform.position = rsoDataSaved.Value.position;
+        transform.rotation = rsoDataSaved.Value.rotation;
     }
 
     private void FixedUpdate()

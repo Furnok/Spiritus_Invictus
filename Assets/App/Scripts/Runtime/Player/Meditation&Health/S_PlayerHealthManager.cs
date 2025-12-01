@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class S_PlayerHealthManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerHealPerformed rseOnPlayerHealPerformed;
 
@@ -41,12 +47,21 @@ public class S_PlayerHealthManager : MonoBehaviour
     {
         rseOnPlayerHealPerformed.action += HealPlayer;
         rseOnPlayerHealthReduced.action += ReducePlayerHealth;
+
+        rseOnDataLoad.action += SetValueFromData;
     }
 
     private void OnDisable()
     {
         rseOnPlayerHealPerformed.action -= HealPlayer;
         rseOnPlayerHealthReduced.action -= ReducePlayerHealth;
+
+        rseOnDataLoad.action -= SetValueFromData;
+    }
+
+    void SetValueFromData()
+    {
+        rsoPlayerCurrentHealth.Value = rsoDataSaved.Value.health;
     }
 
     private void HealPlayer()

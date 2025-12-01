@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class S_ConvictionManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnHealStart _onHealStart;
 
@@ -52,6 +58,8 @@ public class S_ConvictionManager : MonoBehaviour
         _onPlayerGainConviction.action += OnPlayerGainConviction;
         _onSpawnProjectile.action += ReductionConviction;
         _onAttackStartPerformed.action += StopComsuptioncoroutine;
+
+        rseOnDataLoad.action += SetValueFromData;
     }
 
     private void OnDisable()
@@ -61,6 +69,13 @@ public class S_ConvictionManager : MonoBehaviour
         _onPlayerGainConviction.action -= OnPlayerGainConviction;
         _onSpawnProjectile.action -= ReductionConviction;
         _onAttackStartPerformed.action -= StopComsuptioncoroutine;
+
+        rseOnDataLoad.action -= SetValueFromData;
+    }
+
+    void SetValueFromData()
+    {
+        _playerCurrentConviction.Value = rsoDataSaved.Value.conviction;
     }
 
     private void ReduceConvictionOnHealPerformed()
