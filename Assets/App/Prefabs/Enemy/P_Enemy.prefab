@@ -274,7 +274,10 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 1
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyHAttack1_D1'\n\tFrom
+    animation clip 'A_EnemyHAttack2_D1'\n\tFrom animation clip 'A_EnemyHAttack3_D1'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -335,6 +338,11 @@ MonoBehaviour:
   onGetHit:
     m_PersistentCalls:
       m_Calls: []
+  strafeMinInterval: 1
+  strafeMaxInterval: 2
+  strafeWaitTime: 1
+  strafeOffset: 2
+  stoppingDistanceThreshold: 0.3
 --- !u!114 &9183690598147176708
 MonoBehaviour:
   m_ObjectHideFlags: 0
