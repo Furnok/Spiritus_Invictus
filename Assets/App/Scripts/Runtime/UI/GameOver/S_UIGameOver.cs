@@ -85,6 +85,8 @@ public class S_UIGameOver : MonoBehaviour
                     rseOnResetFocus.Call();
 
                     rseOnPlayerRespawn.Call();
+                    rseOnPlayerRespawn.Call();
+                    rseOnPlayerRespawn.Call();
 
                     rseOnFadeIn.Call();
                 }));
