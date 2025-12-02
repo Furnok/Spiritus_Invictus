@@ -110,7 +110,7 @@ public class S_RumbleManager : MonoBehaviour
             pad.SetMotorSpeeds(0f, 0f);
     }
 
-    private void OnRumbleStopChannel(RumbleChannel channel)
+    private void OnRumbleStopChannel(S_EnumRumbleChannel channel)
     {
         for (int i = _activeRumbles.Count - 1; i >= 0; i--)
         {
@@ -121,11 +121,4 @@ public class S_RumbleManager : MonoBehaviour
         if (_activeRumbles.Count == 0)
             ApplyMotorSpeeds(0f, 0f);
     }
-}
-
-public enum RumbleChannel
-{
-    ChargeAttack,
-    Parry,
-    Hit
 }

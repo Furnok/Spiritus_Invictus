@@ -14,7 +14,6 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     [TabGroup("Settings")]
     [Title("Controller")]
-
     [SerializeField, Range(0, 1)] private float lowFreq;
 
     [TabGroup("Settings")]
