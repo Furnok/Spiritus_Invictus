@@ -161,7 +161,16 @@ public class S_Enemy : MonoBehaviour
     private int strafeDirection = 1;
 
     [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float strafeWaitTime;
+    [SerializeField] private float strafeWaitTimeMin;
+
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float strafeWaitTimeMax;
+
+    [SuffixLabel("°", Overlay = true)]
+    [SerializeField] private float strafeRotationMin;
+
+    [SuffixLabel("°", Overlay = true)]
+    [SerializeField] private float strafeRotationMax;
 
     private void Awake()
     {
@@ -552,8 +561,6 @@ public class S_Enemy : MonoBehaviour
                 behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
                 behaviorAgent.Restart();
             }
-
-            isPlayerDead = false;
         }
     }
 
@@ -668,7 +675,7 @@ public class S_Enemy : MonoBehaviour
 
         float distance = Vector3.Distance(body.transform.position, target.transform.position);
 
-        if (distance > (combo.distanceToLoseAttack + 1f))
+        if (distance > (combo.distanceToLoseAttack))
         {
             isStrafe = false;
             isChase = true;
@@ -702,6 +709,7 @@ public class S_Enemy : MonoBehaviour
             {
                 strafeDirection = Random.value > 0.5f ? 1 : -1;
 
+                float strafeWaitTime = Random.Range(strafeWaitTimeMin, strafeWaitTimeMax);
                 nextChangeTime = Time.time + strafeWaitTime;
 
                 Vector3 offsetPlayer = transform.position - target.transform.position;
@@ -712,7 +720,7 @@ public class S_Enemy : MonoBehaviour
 
                 Vector3 offsetAtRadius = offsetPlayer.normalized * combo.distanceToChase;
 
-                float angle = Random.Range(30, 90) * strafeDirection;
+                float angle = Random.Range(strafeRotationMin, strafeRotationMax) * strafeDirection;
 
                 Quaternion rot = Quaternion.Euler(0f, angle, 0f);
                 Vector3 rotatedOffset = rot * offsetAtRadius;
