@@ -8,10 +8,6 @@ public class S_PlayerProjectileManager : MonoBehaviour
     [Title("Size")]
     [SerializeField] private int initialPoolSize;
 
-    [TabGroup("Settings")]
-    [Title("Offset")]
-    [SerializeField] private Vector3 attackOffset;
-
     [TabGroup("References")]
     [Title("Spawn Point")]
     [SerializeField] private Transform spawnProjectileParent;
@@ -40,6 +36,9 @@ public class S_PlayerProjectileManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
 
     private S_ObjectPool<S_PlayerProjectile> projectilePool = null;
     private Transform target = null;
@@ -83,7 +82,7 @@ public class S_PlayerProjectileManager : MonoBehaviour
         var currentStepAttack = stepsUpperCurrentConviction.OrderByDescending(x => x.ammountConvitionNeeded).First();
 
         var projectile = projectilePool.Get();
-        projectile.transform.position = _playerPosition.Value + _playerRotation.Value * attackOffset;
+        projectile.transform.position = _playerPosition.Value + _playerRotation.Value * _playerStats.Value.attackOffset;
         projectile.transform.rotation = _playerRotation.Value;
 
         Transform aimPoint = null;

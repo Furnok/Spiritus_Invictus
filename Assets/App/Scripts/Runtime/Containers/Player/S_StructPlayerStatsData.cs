@@ -55,4 +55,6 @@ public struct S_StructPlayerStatsData
 
     [SuffixLabel("s", Overlay = true)]
     public float timeWaitBetweenSteps;
+
+    public Vector3 attackOffset;
 }

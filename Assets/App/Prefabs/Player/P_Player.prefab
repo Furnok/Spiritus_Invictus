@@ -255,6 +255,7 @@ MonoBehaviour:
   _upwardOffsetParry: 0.2
   _particleEffectParent: {fileID: 6828950947144670064}
   _chargingEffectParent: {fileID: 7407941331798223579}
+  _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   _prefabParryEffect: {fileID: 7037283364390755613, guid: f671b5c181719594aaad66529f73ace8, type: 3}
   _onParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
   _onAttackStartPerformed: {fileID: 11400000, guid: 995ec1e0339518542872ee761d2b0eb8, type: 2}
@@ -508,7 +509,7 @@ Transform:
   m_GameObject: {fileID: 5228778055071257574}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.7, y: 1.6, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1456,7 +1457,6 @@ MonoBehaviour:
       Data3: 1681901210
       Data4: 1026055606
     Path: event:/Player/Combat/ConvictionAccumulation
-  attackOffset: {x: 0, y: 1.5, z: 1}
   allowFadeoutSoundConvictionAccu: 1
   _attackParam: isAttacking
   rseOnPlayerAttack: {fileID: 11400000, guid: 87ff9d1d837c0324eb87e1b22c96bdf5, type: 2}

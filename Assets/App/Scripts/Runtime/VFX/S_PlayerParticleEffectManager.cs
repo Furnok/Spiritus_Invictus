@@ -16,6 +16,10 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     [SerializeField] private Transform _chargingEffectParent;
 
     [Header("References")]
+    [Title("Stats")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [Header("References")]
     [Title("Prefab")]
     [SerializeField] private GameObject _prefabParryEffect;
     //[SerializeField] private GameObject _prefabChargingEffect;
@@ -26,6 +30,10 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
     [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
 
+    private void Awake()
+    {
+        _chargingEffectParent.localPosition += _playerStats.Value.attackOffset;
+    }
 
     private void OnEnable()
     {
