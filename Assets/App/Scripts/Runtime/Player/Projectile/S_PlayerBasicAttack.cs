@@ -11,6 +11,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private EventReference _convictionAccumulationSound;
 
+    [TabGroup("References")]
+    [SerializeField] private SSO_RumbleData _chargeAttackRumbleData;
+
+    [TabGroup("References")]
+    [SerializeField] private SSO_RumbleData _chargeAttackBetweenStepRumbleData;
+
     [TabGroup("Settings")]
     [Title("Sounds")]
     [SerializeField] private bool allowFadeoutSoundConvictionAccu = true;
@@ -75,6 +81,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_AnimationTransitionDelays _animationTransitionDelays;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
 
     private Coroutine _attackChargeCoroutine = null;
 
@@ -172,6 +184,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         rseOnSendConsoleMessage.Call("Player Launch Attack!");
+
+        _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
     }
 
     /*
@@ -224,6 +238,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
         float started = Time.time;
         float pauseCarry = 0f;
 
+        _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
+        var rumbleData = _chargeAttackRumbleData.Value;
+        rumbleData.Duration = _steps[_lastCompletedStep].timeHoldingInput;
+        _rseOnRumbleRequested.Call(rumbleData);
+
         // i go in each attackSteps
         for (int i = 1; i < _stepTimes.Count; i++)
         {
@@ -237,6 +257,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
             float cap = _playerCurrentConviction.Value;
             float targetEnd = Mathf.Min(convEnd, cap);
+
+            _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
+            rumbleData = _chargeAttackRumbleData.Value;
+            rumbleData.Duration = _steps[_lastCompletedStep + 1].timeHoldingInput;
+            _rseOnRumbleRequested.Call(rumbleData);
 
             if (targetEnd <= convStart + 0.0001f)
             {
@@ -276,6 +302,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
                 if (pause > 0f)
                 {
+                    _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
+                    var rumbleBetweenStepData = _chargeAttackBetweenStepRumbleData.Value;
+                    rumbleBetweenStepData.Duration = _playerStats.Value.timeWaitBetweenSteps;
+                    _rseOnRumbleRequested.Call(rumbleData);
+
                     float endPause = Time.time + pause;
                     while (Time.time < endPause)
                     {
@@ -310,6 +342,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeCastAttack, () =>
         {
+            _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
             rseOnAnimationBoolValueChange.Call(_attackParam, false);
             var value = Mathf.FloorToInt(_reservedConviction);
 
@@ -345,6 +379,9 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         _reservedConviction = 0f;
+
+        _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
         PublishPreconsume(_reservedConviction);
     }
 

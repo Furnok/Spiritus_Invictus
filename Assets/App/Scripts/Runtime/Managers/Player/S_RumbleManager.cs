@@ -56,11 +56,16 @@ public class S_RumbleManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(_activeRumbles.Count);
+
         if (!_activeRumble)
             return;
 
         if (_activeRumbles.Count == 0)
+        {
+            ApplyMotorSpeeds(0, 0);
             return;
+        }
 
         float dt;
         float low = 0f;
@@ -83,9 +88,6 @@ public class S_RumbleManager : MonoBehaviour
             {
                 _activeRumbles.RemoveAt(i);
             }
-
-            Debug.Log(r.elapsed);
-
         }
 
         low = Mathf.Clamp01(low);
@@ -115,7 +117,10 @@ public class S_RumbleManager : MonoBehaviour
         for (int i = _activeRumbles.Count - 1; i >= 0; i--)
         {
             if (_activeRumbles[i].data.Channel == channel)
+            {
                 _activeRumbles.RemoveAt(i);
+                ApplyMotorSpeeds(0f, 0f);
+            }
         }
 
         if (_activeRumbles.Count == 0)
