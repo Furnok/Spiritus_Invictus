@@ -12,10 +12,6 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] private EventReference _convictionAccumulationSound;
 
     [TabGroup("Settings")]
-    [Title("Offset")]
-    [SerializeField] private Vector3 attackOffset;
-
-    [TabGroup("Settings")]
     [Title("Sounds")]
     [SerializeField] private bool allowFadeoutSoundConvictionAccu = true;
 
