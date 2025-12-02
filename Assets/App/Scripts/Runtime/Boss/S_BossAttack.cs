@@ -1,58 +1,78 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
+using Unity.Behavior;
+using Unity.Services.Analytics;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class S_BossAttack : MonoBehaviour
 {
-
     [TabGroup("Settings")]
-    [Title("Animations Parameters")]
+    [Title("Ichimanji")]
     [SerializeField, S_AnimationName("animator")] private string ichimanji;
 
     [TabGroup("Settings")]
+    [Title("Makashi")]
     [SerializeField, S_AnimationName("animator")] private string makashi;
 
     [TabGroup("Settings")]
+    [Title("Margit")]
     [SerializeField, S_AnimationName("animator")] private string margit;
 
     [TabGroup("Settings")]
+    [Title("Valkyrie")]
     [SerializeField, S_AnimationName("animator")] private string valkyrie;
 
     [TabGroup("Settings")]
+    [Title("Makashi Special")]
     [SerializeField, S_AnimationName("animator")] private string makashiSpe;
 
     [TabGroup("Settings")]
+    [Title("Ataru")]
     [SerializeField, S_AnimationName("animator")] private string ataru;
 
     [TabGroup("Settings")]
+    [Title("Vaapad")]
     [SerializeField, S_AnimationName("animator")] private string vaapad;
 
     [TabGroup("Settings")]
+    [Title("Genichiro")]
     [SerializeField, S_AnimationName("animator")] private string genichiro;
 
     [TabGroup("Settings")]
+    [Title("Simon")]
     [SerializeField, S_AnimationName("animator")] private string simon;
+    [TabGroup("Settings")][SerializeField] private float timeEchoSimon = 1f;
+    [TabGroup("Settings")][SerializeField] private GameObject echoSimonWeapon;
 
     [TabGroup("Settings")]
+    [Title("Dualliste")]
     [SerializeField, S_AnimationName("animator")] private string dualliste;
 
     [TabGroup("Settings")]
+    [Title("PingPong")]
     [SerializeField, S_AnimationName("animator")] private string pingPong;
 
     [TabGroup("Settings")]
+    [Title("Waves")]
     [SerializeField, S_AnimationName("animator")] private string waves;
 
     [TabGroup("Settings")]
+    [Title("Balls")]
     [SerializeField, S_AnimationName("animator")] private string balls;
 
     [TabGroup("Settings")]
+    [Title("Genion")]
     [SerializeField, S_AnimationName("animator")] private string genion;
 
     [TabGroup("Settings")]
+    [Title("Gathering")]
     [SerializeField, S_AnimationName("animator")] private string gathering;
 
     [TabGroup("Settings")]
+    [Title("WingsOfHell")]
     [SerializeField, S_AnimationName("animator")] private string wingsOfHell;
 
     [TabGroup("References")]
@@ -188,8 +208,15 @@ public class S_BossAttack : MonoBehaviour
 
     IEnumerator PlayEchoAnimation()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(timeEchoSimon);
+        echoSimonWeapon.SetActive(true);
         animatorEcho.SetTrigger(simon);
+        StartCoroutine(DisableEchoWeaponAfterDelay(currentAttack.attackTime));
+    }
+    IEnumerator DisableEchoWeaponAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay-1);
+        echoSimonWeapon.SetActive(false);
     }
 
     void Dualliste()

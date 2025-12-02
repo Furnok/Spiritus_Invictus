@@ -544,6 +544,8 @@ public class S_Boss : MonoBehaviour
     {
         lastAttack = attack;
         attack.frequency++;
+        navMeshAgent.ResetPath();
+        navMeshAgent.velocity = Vector3.zero;
         onExecuteAttack.Call(attack.bossAttack);
     }
 
