@@ -388,7 +388,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 2}
+  m_Size: {x: 2, y: 5, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7176222770548604516
 MonoBehaviour:
@@ -407,6 +407,7 @@ MonoBehaviour:
   content: {fileID: 4239060498813291616}
   rseOnPlayerInteract: {fileID: 11400000, guid: 7dddd8b752c27d34f9be002f7e6f2343, type: 2}
   rseOnOpenExtractWindow: {fileID: 11400000, guid: 35cf34216d315aa4c862e26e5a6884c7, type: 2}
+  rseOnSendConsoleMessage: {fileID: 0}
 --- !u!1 &4239060498813291616
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +456,7 @@ GameObject:
   - component: {fileID: 6339293264011400778}
   - component: {fileID: 6941852663288044015}
   - component: {fileID: 5166364888455638309}
-  - component: {fileID: 2309251450840572566}
+  - component: {fileID: 1571620427680240627}
   m_Layer: 0
   m_Name: FBX_Book
   m_TagString: Untagged
@@ -531,8 +532,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2309251450840572566
-BoxCollider:
+--- !u!64 &1571620427680240627
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -549,9 +550,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.5454889, y: 0.08497958, z: 0.28375977}
-  m_Center: {x: 0, y: 0.040463254, z: 0.002994381}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4902308011658486992, guid: 7cd1fdbd43957954684e076aa86ff1c3, type: 3}
 --- !u!1 &7400137370790756158
 GameObject:
   m_ObjectHideFlags: 0
