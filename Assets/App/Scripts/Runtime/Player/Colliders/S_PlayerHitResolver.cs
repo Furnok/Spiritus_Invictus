@@ -14,10 +14,11 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     [TabGroup("Settings")]
     [Title("Controller")]
-    [SerializeField] private float lowFreq;
+
+    [SerializeField, Range(0, 1)] private float lowFreq;
 
     [TabGroup("Settings")]
-    [SerializeField] private float highFreq;
+    [SerializeField, Range(0, 1)] private float highFreq;
 
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
