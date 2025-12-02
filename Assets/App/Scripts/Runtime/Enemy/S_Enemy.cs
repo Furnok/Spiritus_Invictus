@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Behavior;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -146,8 +147,22 @@ public class S_Enemy : MonoBehaviour
     private bool isChase = false;
     private bool isPatrolling = false;
     private bool isDead = false;
+    private bool isStrafe = false;
+    private bool canAttack = false;
 
     private S_ClassAnimationsCombos combo = null;
+
+
+    [SerializeField] private float strafeMinInterval = 1.0f;
+    [SerializeField] private float strafeMaxInterval = 2.0f;
+    [SerializeField] private float strafeWaitTime = 1f;         // time to wait after reaching a strafe point
+    [SerializeField] private float strafeOffset = 2f;             // how far left/right from the circle
+    [SerializeField] private float stoppingDistanceThreshold = 0.3f;
+
+    private float nextChangeTime = 0f;
+    private float nextWaitEndTime = 0f;
+    private int strafeDirection = 1; // +1 = right, -1 = left
+    private bool waiting = false;
 
     private void Awake()
     {
@@ -264,6 +279,11 @@ public class S_Enemy : MonoBehaviour
         if (isChase && target != null)
         {
             Chase();
+        }
+
+        if (isStrafe && target != null)
+        {
+            Strafing();
         }
     }
 
@@ -627,10 +647,86 @@ public class S_Enemy : MonoBehaviour
         {
             isChase = false;
 
+            /*navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+            isStrafe = true;*/
+
             navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
             behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
             behaviorAgent.Restart();
+        }
+    }
+
+    private void Strafing()
+    {
+        if (target == null) return;
+
+        if (canAttack)
+        {
+            isStrafe = false;
+            waiting = false;
+
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+            behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
+            behaviorAgent.Restart();
+        }
+        else
+        {
+            if (waiting)
+            {
+                if (Time.time < nextWaitEndTime)
+                    return; // keep waiting
+
+                waiting = false;   // finished waiting → choose a new direction
+                nextChangeTime = Time.time;
+            }
+
+            // ---------------------------------------------------------
+            // CHANGE DIRECTION PHASE
+            // ---------------------------------------------------------
+            if (Time.time >= nextChangeTime)
+            {
+                // Randomly choose left (-1) or right (+1)
+                strafeDirection = Random.value > 0.5f ? 1 : -1;
+
+                // How long before next direction change?
+                float interval = Random.Range(strafeMinInterval, strafeMaxInterval);
+                nextChangeTime = Time.time + interval;
+            }
+
+            // ---------------------------------------------------------
+            // COMPUTE STRAFE POSITION AROUND PLAYER
+            // ---------------------------------------------------------
+            Vector3 offsetPlayer = transform.position - target.transform.position;
+            offsetPlayer.y = 0;
+
+            if (offsetPlayer.sqrMagnitude < 0.01f)
+                offsetPlayer = transform.right;
+
+            // distance circle around player
+            Vector3 offsetAtRadius = offsetPlayer.normalized * combo.distanceToChase;
+
+            // perpendicular direction
+            Vector3 sideDir = Vector3.Cross(offsetAtRadius, Vector3.up).normalized * strafeDirection;
+
+            // final strafe target
+            Vector3 finalPos = target.transform.position + offsetAtRadius + sideDir * strafeOffset;
+
+            navMeshAgent.SetDestination(finalPos);
+
+            Debug.Log(navMeshAgent.remainingDistance);
+
+            // ---------------------------------------------------------
+            // CHECK IF ARRIVED → START WAITING
+            // ---------------------------------------------------------
+            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= stoppingDistanceThreshold)
+            {
+                waiting = true;
+                navMeshAgent.velocity = Vector3.zero;
+                nextWaitEndTime = Time.time + strafeWaitTime; // pause at the point
+            }
         }
     }
 
@@ -684,6 +780,7 @@ public class S_Enemy : MonoBehaviour
         rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Attacking with a Combo!");
 
         isPerformingCombo = true;
+        canAttack = false;
 
         for (int i = 0; i < combo.listAnimationsCombos.Count; i++)
         {
@@ -744,6 +841,7 @@ public class S_Enemy : MonoBehaviour
         yield return new WaitForSeconds(ssoEnemyData.Value.attackCooldown);
 
         behaviorAgent.SetVariableValue<bool>("CanAttack", true);
+        canAttack = true;
     }
     #endregion
 
