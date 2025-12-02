@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 495233547217921218}
   - component: {fileID: 1431773725924121066}
   - component: {fileID: 5886562096679836169}
+  - component: {fileID: 2819568101127906853}
   - component: {fileID: 445208566684554611}
   - component: {fileID: 9183690598147176708}
   m_Layer: 0
@@ -282,6 +283,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!54 &2819568101127906853
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039572514723219672}
+  serializedVersion: 4
+  m_Mass: 100000
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!114 &445208566684554611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +340,7 @@ MonoBehaviour:
   - {fileID: 481751962266192794}
   behaviorAgent: {fileID: 495233547217921218}
   navMeshAgent: {fileID: 1431773725924121066}
+  rb: {fileID: 2819568101127906853}
   bodyCollider: {fileID: 6217138946037749130}
   detectionCollider: {fileID: 1536210782470915829}
   hurtCollider: {fileID: 6177182004407894465}
@@ -338,11 +367,7 @@ MonoBehaviour:
   onGetHit:
     m_PersistentCalls:
       m_Calls: []
-  strafeMinInterval: 1
-  strafeMaxInterval: 2
-  strafeWaitTime: 1
-  strafeOffset: 2
-  stoppingDistanceThreshold: 0.3
+  strafeWaitTime: 2
 --- !u!114 &9183690598147176708
 MonoBehaviour:
   m_ObjectHideFlags: 0

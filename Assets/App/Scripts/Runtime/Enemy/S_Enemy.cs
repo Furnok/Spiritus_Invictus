@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Behavior;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -48,6 +47,10 @@ public class S_Enemy : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private NavMeshAgent navMeshAgent;
+
+    [TabGroup("References")]
+    [Title("RigidBody")]
+    [SerializeField] private Rigidbody rb;
 
     [TabGroup("References")]
     [Title("Colliders")]
@@ -148,25 +151,23 @@ public class S_Enemy : MonoBehaviour
     private bool isPatrolling = false;
     private bool isDead = false;
     private bool isStrafe = false;
-    private bool canAttack = false;
+    private bool canAttack = true;
+    private bool waiting = false;
 
     private S_ClassAnimationsCombos combo = null;
 
-
-    [SerializeField] private float strafeMinInterval = 1.0f;
-    [SerializeField] private float strafeMaxInterval = 2.0f;
-    [SerializeField] private float strafeWaitTime = 1f;         // time to wait after reaching a strafe point
-    [SerializeField] private float strafeOffset = 2f;             // how far left/right from the circle
-    [SerializeField] private float stoppingDistanceThreshold = 0.3f;
-
     private float nextChangeTime = 0f;
     private float nextWaitEndTime = 0f;
-    private int strafeDirection = 1; // +1 = right, -1 = left
-    private bool waiting = false;
+    private int strafeDirection = 1;
+
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float strafeWaitTime;
 
     private void Awake()
     {
         Refresh();
+
+        canAttack = true;
 
         Animator anim = animator;
         AnimatorOverrideController instance = new AnimatorOverrideController(ssoEnemyData.Value.controllerOverride);
@@ -458,6 +459,7 @@ public class S_Enemy : MonoBehaviour
             }
 
             enemyAttackData.DisableWeaponCollider();
+            enemyAttackData.UnDisplayTriggerWarning();
 
             StopAllCoroutines();
             comboCoroutine = null;
@@ -466,6 +468,10 @@ public class S_Enemy : MonoBehaviour
 
             navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
+
+            isPerformingCombo = false;
+            isStrafe = false;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);
             behaviorAgent.Restart();
@@ -477,6 +483,7 @@ public class S_Enemy : MonoBehaviour
         else if (damage >= maxhealth / 2)
         {
             enemyAttackData.DisableWeaponCollider();
+            enemyAttackData.UnDisplayTriggerWarning();
 
             StopAllCoroutines();
             comboCoroutine = null;
@@ -485,8 +492,10 @@ public class S_Enemy : MonoBehaviour
 
             navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
 
             isPerformingCombo = false;
+            isStrafe = false;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
             behaviorAgent.Restart();
@@ -647,14 +656,9 @@ public class S_Enemy : MonoBehaviour
         {
             isChase = false;
 
-            /*navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-            isStrafe = true;*/
-
             navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
-            behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Attack);
-            behaviorAgent.Restart();
+            isStrafe = true;
         }
     }
 
@@ -662,10 +666,21 @@ public class S_Enemy : MonoBehaviour
     {
         if (target == null) return;
 
+        float distance = Vector3.Distance(body.transform.position, target.transform.position);
+
+        if (distance > (combo.distanceToLoseAttack + 1f))
+        {
+            isStrafe = false;
+            isChase = true;
+            return;
+        }
+
         if (canAttack)
         {
             isStrafe = false;
             waiting = false;
+            nextWaitEndTime = 0;
+            nextChangeTime = 0;
 
             navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
@@ -677,55 +692,40 @@ public class S_Enemy : MonoBehaviour
             if (waiting)
             {
                 if (Time.time < nextWaitEndTime)
-                    return; // keep waiting
+                    return;
 
-                waiting = false;   // finished waiting → choose a new direction
+                waiting = false;
                 nextChangeTime = Time.time;
             }
 
-            // ---------------------------------------------------------
-            // CHANGE DIRECTION PHASE
-            // ---------------------------------------------------------
             if (Time.time >= nextChangeTime)
             {
-                // Randomly choose left (-1) or right (+1)
                 strafeDirection = Random.value > 0.5f ? 1 : -1;
 
-                // How long before next direction change?
-                float interval = Random.Range(strafeMinInterval, strafeMaxInterval);
-                nextChangeTime = Time.time + interval;
-            }
+                nextChangeTime = Time.time + strafeWaitTime;
 
-            // ---------------------------------------------------------
-            // COMPUTE STRAFE POSITION AROUND PLAYER
-            // ---------------------------------------------------------
-            Vector3 offsetPlayer = transform.position - target.transform.position;
-            offsetPlayer.y = 0;
+                Vector3 offsetPlayer = transform.position - target.transform.position;
+                offsetPlayer.y = 0;
 
-            if (offsetPlayer.sqrMagnitude < 0.01f)
-                offsetPlayer = transform.right;
+                if (offsetPlayer.sqrMagnitude < 0.01f)
+                    offsetPlayer = transform.right;
 
-            // distance circle around player
-            Vector3 offsetAtRadius = offsetPlayer.normalized * combo.distanceToChase;
+                Vector3 offsetAtRadius = offsetPlayer.normalized * combo.distanceToChase;
 
-            // perpendicular direction
-            Vector3 sideDir = Vector3.Cross(offsetAtRadius, Vector3.up).normalized * strafeDirection;
+                float angle = Random.Range(30, 90) * strafeDirection;
 
-            // final strafe target
-            Vector3 finalPos = target.transform.position + offsetAtRadius + sideDir * strafeOffset;
+                Quaternion rot = Quaternion.Euler(0f, angle, 0f);
+                Vector3 rotatedOffset = rot * offsetAtRadius;
 
-            navMeshAgent.SetDestination(finalPos);
+                Vector3 finalPos = target.transform.position + rotatedOffset;
+                navMeshAgent.SetDestination(finalPos);
 
-            Debug.Log(navMeshAgent.remainingDistance);
-
-            // ---------------------------------------------------------
-            // CHECK IF ARRIVED → START WAITING
-            // ---------------------------------------------------------
-            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= stoppingDistanceThreshold)
-            {
-                waiting = true;
-                navMeshAgent.velocity = Vector3.zero;
-                nextWaitEndTime = Time.time + strafeWaitTime; // pause at the point
+                if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= 0.1f)
+                {
+                    waiting = true;
+                    navMeshAgent.velocity = Vector3.zero;
+                    nextWaitEndTime = Time.time + strafeWaitTime;
+                }
             }
         }
     }
