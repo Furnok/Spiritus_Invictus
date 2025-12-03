@@ -430,7 +430,6 @@ public class S_TargetingManager : MonoBehaviour
             rseOnNewTargeting.Call(currentTarget);
             rsoPlayerIsTargeting.Value = true;
             rsoTargetPosition.Value = currentTarget.GetComponent<S_LookAt>().GetAimPoint();
-            Debug.Log(currentTarget.name);
 
             rseOnStartTargeting.Call();
             RuntimeManager.PlayOneShot(_targetLockOnSound);
