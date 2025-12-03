@@ -73,6 +73,20 @@ public class S_ConvictionManager : MonoBehaviour
         rseOnDataLoad.action -= SetValueFromData;
     }
 
+    private void Update()
+    {
+        if (_debugPlayer.Value.infiniteConviction == true && _playerCurrentConviction.Value == _playerConvictionData.Value.maxConviction)
+        {
+            StartCoroutine(S_Utils.Delay(0.3f, () =>
+            {
+                _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
+                rseOnPlayerConvictionUpdate.Call(_playerConvictionData.Value.maxConviction);
+            }));
+
+            return;
+        }
+    }
+
     void SetValueFromData()
     {
         _playerCurrentConviction.Value = rsoDataSaved.Value.conviction;
@@ -85,16 +99,7 @@ public class S_ConvictionManager : MonoBehaviour
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
 
-        if (_debugPlayer.Value.infiniteConviction == true)
-        {
-            StartCoroutine(S_Utils.Delay(0.3f, () =>
-            {
-                _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
-                rseOnPlayerConvictionUpdate.Call(_playerConvictionData.Value.maxConviction);
-            }));
-
-            return;
-        }
+        if (_debugPlayer.Value.infiniteConviction == true) return;
 
         DelayWhenConvictionLoss();
     }
@@ -178,16 +183,7 @@ public class S_ConvictionManager : MonoBehaviour
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
 
-        if (_debugPlayer.Value.infiniteConviction == true)
-        {
-            StartCoroutine(S_Utils.Delay(0.3f, () =>
-            {
-                _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
-                rseOnPlayerConvictionUpdate.Call(_playerConvictionData.Value.maxConviction);
-            }));
-            
-            return;
-        }
+        if (_debugPlayer.Value.infiniteConviction == true) return;
 
         if (ammount >= 1)
         {
