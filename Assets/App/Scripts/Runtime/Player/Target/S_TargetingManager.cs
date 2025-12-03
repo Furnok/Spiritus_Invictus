@@ -1,4 +1,5 @@
-﻿using FMODUnity;
+﻿using DG.Tweening;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,11 @@ using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [Title("Time")]
+    [SuffixLabel("s", Overlay = true)]
+    [SerializeField] private float timeFade;
+
     [TabGroup("Settings")]
     [Title("General")]
     [SerializeField] private LayerMask obstacleMask;
@@ -105,6 +111,11 @@ public class S_TargetingManager : MonoBehaviour
     private Transform _swapLeftTargetTransform = null;
     private Transform _swapRightTargetTransform = null;
 
+    private bool _previewGOActive = false;
+    private bool _lockedGOActive = false;
+    private bool _swapLeftGOActive = false;
+    private bool _swapRightGOActive = false;
+
     private void Awake()
     {
         rsoPlayerIsTargeting.Value = false;
@@ -169,13 +180,13 @@ public class S_TargetingManager : MonoBehaviour
                     _previewTargetTransform = selection.transform;
                 }
 
-                _previewGO.SetActive(true);
-                _lockedGO.SetActive(false);
+                DisplayPreviewArrow(_previewGO);
+                UnDisplayLockedArrow(_lockedGO);
 
                 _previewGO.transform.position = _previewTargetTransform.position;
 
-                _swapLeftGO.SetActive(false);
-                _swapRightGO.SetActive(false);
+                UnDisplayLeftArrow(_swapLeftGO);
+                UnDisplayRightArrow(_swapRightGO);
             }
             else if (currentTarget != null)
             {
@@ -188,8 +199,8 @@ public class S_TargetingManager : MonoBehaviour
                     _lockedTargetTransfrom = currentTarget.transform;
                 }
 
-                _previewGO.SetActive(false);
-                _lockedGO.SetActive(true);
+                UnDisplayPreviewArrow(_previewGO);
+                DisplayLockedArrow(_lockedGO);
 
                 _lockedGO.transform.position = _lockedTargetTransfrom.position;
 
@@ -201,14 +212,14 @@ public class S_TargetingManager : MonoBehaviour
 
                 if (leftTarget != null && rightTarget != null && leftTarget == rightTarget)
                 {
-                    _swapLeftGO.SetActive(false);
+                    UnDisplayLeftArrow(_swapLeftGO);
 
                     if (rightTarget.TryGetComponent(out I_Targetable t))
                         _swapRightTargetTransform = t.GetTargetLockOnAnchorTransform();
                     else
                         _swapRightTargetTransform = rightTarget.transform;
 
-                    _swapRightGO.SetActive(true);
+                    DisplayRightArrow(_swapRightGO);
                     _swapRightGO.transform.position = _swapRightTargetTransform.position;
 
                     return;
@@ -221,12 +232,12 @@ public class S_TargetingManager : MonoBehaviour
                     else
                         _swapLeftTargetTransform = leftTarget.transform;
 
-                    _swapLeftGO.SetActive(true);
+                    DisplayLeftArrow(_swapLeftGO);
                     _swapLeftGO.transform.position = _swapLeftTargetTransform.position;
                 }
                 else
                 {
-                    _swapLeftGO.SetActive(false);
+                    UnDisplayLeftArrow(_swapLeftGO);
                 }
 
                 // Right
@@ -237,25 +248,21 @@ public class S_TargetingManager : MonoBehaviour
                     else
                         _swapRightTargetTransform = rightTarget.transform;
 
-                    _swapRightGO.SetActive(true);
+                    DisplayRightArrow(_swapRightGO);
                     _swapRightGO.transform.position = _swapRightTargetTransform.position;
                 }
                 else
                 {
-                    _swapRightGO.SetActive(false);
+                    UnDisplayRightArrow(_swapRightGO);
                 }
             }
         }
         else
         {
-            if (_previewGO.activeInHierarchy || _lockedGO.activeInHierarchy ||
-            _swapLeftGO.activeInHierarchy || _swapRightGO.activeInHierarchy)
-            {
-                _previewGO.SetActive(false);
-                _lockedGO.SetActive(false);
-                _swapLeftGO.SetActive(false);
-                _swapRightGO.SetActive(false);
-            }
+            UnDisplayPreviewArrow(_previewGO);
+            UnDisplayLockedArrow(_lockedGO);
+            UnDisplayLeftArrow(_swapLeftGO);
+            UnDisplayRightArrow(_swapRightGO);
         }
     }
 
@@ -296,6 +303,99 @@ public class S_TargetingManager : MonoBehaviour
                 obstacleTimer = 0f;
             }
         }
+    }
+
+    private void DisplayPreviewArrow(GameObject arrow)
+    {
+        if (!_previewGOActive)
+        {
+            _previewGOActive = true;
+            DisplayTargeting(arrow);
+        }
+    }
+
+    private void UnDisplayPreviewArrow(GameObject arrow)
+    {
+        if (_previewGOActive)
+        {
+            _previewGOActive = false;
+            UnDisplayTargeting(arrow);
+        }
+    }
+
+    private void DisplayLockedArrow(GameObject arrow)
+    {
+        if (!_lockedGOActive)
+        {
+            _lockedGOActive = true;
+            DisplayTargeting(arrow);
+        }
+    }
+
+    private void UnDisplayLockedArrow(GameObject arrow)
+    {
+        if (_lockedGOActive)
+        {
+            _lockedGOActive = false;
+            UnDisplayTargeting(arrow);
+        }
+    }
+
+    private void DisplayLeftArrow(GameObject arrow)
+    {
+        if (!_swapLeftGOActive)
+        {
+            _swapLeftGOActive = true;
+            DisplayTargeting(arrow);
+        }
+    }
+
+    private void UnDisplayLeftArrow(GameObject arrow)
+    {
+        if (_swapLeftGOActive)
+        {
+            _swapLeftGOActive = false;
+            UnDisplayTargeting(arrow);
+        }
+    }
+
+    private void DisplayRightArrow(GameObject arrow)
+    {
+        if (!_swapRightGOActive)
+        {
+            _swapRightGOActive = true;
+            DisplayTargeting(arrow);
+        }
+    }
+
+    private void UnDisplayRightArrow(GameObject arrow)
+    {
+        if (_swapRightGOActive)
+        {
+            _swapRightGOActive = false;
+            UnDisplayTargeting(arrow);
+        }
+    }
+
+    private void DisplayTargeting(GameObject arrow)
+    {
+        CanvasGroup cg = arrow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        arrow.SetActive(true);
+
+        cg.DOFade(1f, timeFade).SetEase(Ease.Linear);
+    }
+
+    private void UnDisplayTargeting(GameObject arrow)
+    {
+        CanvasGroup cg = arrow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        cg.DOFade(0f, 0).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            arrow.SetActive(false);
+        });
     }
 
     private void GetPlayerCenterTransform(Transform playerCenter)
