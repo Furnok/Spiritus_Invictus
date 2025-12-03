@@ -185,17 +185,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 808126147512700865}
-  m_LocalRotation: {x: -0.7825023, y: 0.6107466, z: -0.088653065, w: 0.08258001}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.009999997, y: 0.009999996, z: 0.009999998}
+  m_LocalRotation: {x: -0.6110078, y: -0.082841374, z: -0.088914424, w: 0.78224105}
+  m_LocalPosition: {x: 0, y: 0, z: 0.003}
+  m_LocalScale: {x: 0.009999998, y: 0.009999996, z: 0.009999998}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7580831388117136327}
-  m_Father: {fileID: 5792040827596070758}
+  m_Father: {fileID: 1915771199470057537}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.017, y: 0.457}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5650781648039102707
@@ -456,7 +456,8 @@ Transform:
   m_LocalPosition: {x: 0.08, y: 0.03, z: 0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4633165832728113854}
   m_Father: {fileID: 5792040827596070758}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
 --- !u!33 &8667935775571001258
@@ -771,7 +772,6 @@ Transform:
   - {fileID: 8374319683039607300}
   - {fileID: 4213378777455740176}
   - {fileID: 1915771199470057537}
-  - {fileID: 4633165832728113854}
   m_Father: {fileID: 4710154955606199184}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3147336134365947399
@@ -1310,7 +1310,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7580831388117136327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2273,6 +2273,15 @@ PrefabInstance:
     - target: {fileID: 1039572514723219672, guid: 5d4f05f5ea5eefd4b88eed29797b79bc, type: 3}
       propertyPath: m_Name
       value: Skeleton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886562096679836169, guid: 5d4f05f5ea5eefd4b88eed29797b79bc, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyHAttack1_D1'\n\tFrom
+        animation clip 'A_EnemyHAttack2_D1'\n\tFrom animation clip 'A_EnemyHAttack3_D1'\n\tFrom
+        animation clip 'A_EnemyLAttack1_D3'\n\tFrom animation clip 'A_EnemyLAttack2_D3'\n\tFrom
+        animation clip 'A_EnemyLAttack3_D3'"
       objectReference: {fileID: 0}
     - target: {fileID: 7384311513534882751, guid: 5d4f05f5ea5eefd4b88eed29797b79bc, type: 3}
       propertyPath: m_Name
