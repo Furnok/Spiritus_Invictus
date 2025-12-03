@@ -152,6 +152,7 @@ GameObject:
   - component: {fileID: 2819568101127906853}
   - component: {fileID: 445208566684554611}
   - component: {fileID: 9183690598147176708}
+  - component: {fileID: 8400928163415866521}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -354,6 +355,7 @@ MonoBehaviour:
   enemyHurt: {fileID: 2132075167513657250}
   enemyUI: {fileID: 4394752163360763578}
   enemyMaxTravelZone: {fileID: 5830951658339230131}
+  enemyHeadLookAtIK: {fileID: 8400928163415866521}
   patrolPoints: {fileID: 2395496571129997540}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
@@ -391,6 +393,24 @@ MonoBehaviour:
   onChangeAttackData:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8400928163415866521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039572514723219672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce09c97a1fa629b469373ae096563d0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 1
+  bodyWeight: 0
+  headWeight: 1
+  eyesWeight: 0
+  clampWeight: 0.5
+  animator: {fileID: 5886562096679836169}
 --- !u!1 &1200696667970941585
 GameObject:
   m_ObjectHideFlags: 0

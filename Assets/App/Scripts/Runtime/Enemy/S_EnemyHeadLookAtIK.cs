@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_HeadLookAtIK : MonoBehaviour
+public class S_EnemyHeadLookAtIK : MonoBehaviour
 {
     [TabGroup("Settings")]
     [Title("Weight")]
@@ -23,15 +23,16 @@ public class S_HeadLookAtIK : MonoBehaviour
     [Title("Animator")]
     [SerializeField] private Animator animator;
 
-    [TabGroup("Outputs")]
-    [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
+    private GameObject target = null;
 
-    [TabGroup("Outputs")]
-    [SerializeField] private RSO_TargetPosition rsoTargetPosition;
-
-    void OnAnimatorIK(int layerIndex)
+    public void SetTarget(GameObject targetPos)
     {
-        if (animator == null || !rsoPlayerIsTargeting.Value || rsoTargetPosition.Value == null) return;
+        target = targetPos;
+    }
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (animator == null || target == null) return;
 
         animator.SetLookAtWeight(
             weight,
@@ -41,6 +42,6 @@ public class S_HeadLookAtIK : MonoBehaviour
             clampWeight
         );
 
-        animator.SetLookAtPosition(rsoTargetPosition.Value);
+        animator.SetLookAtPosition(target.GetComponent<S_LookAt>().GetAimPoint());
     }
 }
