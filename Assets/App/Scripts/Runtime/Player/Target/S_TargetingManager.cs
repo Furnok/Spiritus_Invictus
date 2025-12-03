@@ -85,6 +85,9 @@ public class S_TargetingManager : MonoBehaviour
     [SerializeField] private RSO_SettingsSaved rsoSettingsSaved;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_TargetPosition rsoTargetPosition;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerMaxDistanceTargeting ssoPlayerMaxDistanceTargeting;
 
     [TabGroup("Outputs")]
@@ -270,6 +273,8 @@ public class S_TargetingManager : MonoBehaviour
     {
         if (currentTarget != null && rsoPlayerIsTargeting.Value == true)
         {
+            rsoTargetPosition.Value = currentTarget.GetComponent<S_LookAt>().GetAimPoint();
+
             float distance = Vector3.Distance(rsoPlayerPosition.Value, currentTarget.transform.position);
 
             if (distance > ssoPlayerMaxDistanceTargeting.Value && currentTarget != null)
@@ -424,6 +429,8 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnNewTargeting.Call(currentTarget);
             rsoPlayerIsTargeting.Value = true;
+            rsoTargetPosition.Value = currentTarget.GetComponent<S_LookAt>().GetAimPoint();
+            Debug.Log(currentTarget.name);
 
             rseOnStartTargeting.Call();
             RuntimeManager.PlayOneShot(_targetLockOnSound);
@@ -440,6 +447,7 @@ public class S_TargetingManager : MonoBehaviour
     private void CancelTargeting()
     {
         rsoPlayerIsTargeting.Value = false;
+        rsoTargetPosition.Value = Vector3.zero;
 
         if (currentTarget != null)
         {
@@ -461,6 +469,8 @@ public class S_TargetingManager : MonoBehaviour
         if (currentTarget == enemy)
         {
             rsoPlayerIsTargeting.Value = false;
+            rsoTargetPosition.Value = Vector3.zero;
+
             if (currentTarget != null)
             {
                 rseOnPlayerCancelTargeting.Call(currentTarget);
@@ -471,6 +481,7 @@ public class S_TargetingManager : MonoBehaviour
                 {
                     rseOnNewTargeting.Call(currentTarget);
                     rsoPlayerIsTargeting.Value = true;
+                    rsoTargetPosition.Value = currentTarget.GetComponent<S_LookAt>().GetAimPoint();
 
                     RuntimeManager.PlayOneShot(_targetLockOnSound);
                 }

@@ -1170,6 +1170,7 @@ GameObject:
   - component: {fileID: 4845800258510134550}
   - component: {fileID: 3538150392915714149}
   - component: {fileID: 4137787093588038521}
+  - component: {fileID: 502654570337901578}
   m_Layer: 10
   m_Name: P_Player
   m_TagString: Player
@@ -1557,6 +1558,26 @@ MonoBehaviour:
   _playerCurrentConviction: {fileID: 11400000, guid: e9e6e673e8d688d4b96f8309938dbfdc, type: 2}
   _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
+--- !u!114 &502654570337901578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8313228278302547986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9916fd659ac9ede41b3da0631b331c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 1
+  bodyWeight: 0
+  headWeight: 1
+  eyesWeight: 0
+  clampWeight: 0.5
+  animator: {fileID: 7834620151722910443}
+  rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
+  rsoTargetPosition: {fileID: 11400000, guid: 0ac75a93e6bb72c45bd266638c5655fb, type: 2}
 --- !u!1001 &1455555510260808990
 PrefabInstance:
   m_ObjectHideFlags: 0
