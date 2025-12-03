@@ -232,6 +232,13 @@ public class S_ConvictionManager : MonoBehaviour
         if (_convictionConsumptionCoroutine != null)
         {
             StopCoroutine(_convictionConsumptionCoroutine);
+            _convictionConsumptionCoroutine = null;
+        }
+
+        if (_convictionGainOrLossCoroutine != null)
+        {
+            StopCoroutine(_convictionGainOrLossCoroutine);
+            _convictionGainOrLossCoroutine = null;
         }
     }
 }

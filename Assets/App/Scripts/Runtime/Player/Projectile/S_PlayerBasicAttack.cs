@@ -310,6 +310,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
                 float pause = (/*!isFirstBoundaryFromZero && */!isLastBoundary) ? Mathf.Max(0f, _playerStats.Value.timeWaitBetweenSteps) : 0f;
 
+
                 if (pause > 0f)
                 {
                     _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
@@ -327,18 +328,18 @@ public class S_PlayerBasicAttack : MonoBehaviour
                     pauseCarry += pause;
                 }
             }
-
-            if (_reservedConviction >= cap - 0.0001f)
-            {
-                while (_isHolding && !_wasCanceled) yield return null;
-                break;
-            }
         }
-
 
         if (!_wasCanceled)
         {
-            FinalizeAttack();
+            rumbleData = _chargeAttackRumbleData.Value;
+            rumbleData.Duration = 300f;
+            _rseOnRumbleRequested.Call(rumbleData);
+            while (_isHolding && !_wasCanceled)
+                yield return null;
+
+            if (!_wasCanceled)
+                FinalizeAttack();
         }
     }
 
