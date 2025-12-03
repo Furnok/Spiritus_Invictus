@@ -88,6 +88,9 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentChargeStep _rsoCurrentChargeStep;
+
     private Coroutine _attackChargeCoroutine = null;
 
     private bool _isHolding = false;
@@ -104,6 +107,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     private void Awake()
     {
         _preconsumedConviction.Value = 0;
+        _rsoCurrentChargeStep.Value = 0;
 
         _steps = _playerAttackSteps.Value?.OrderBy(s => s.step).ToList() ?? new List<S_StructPlayerAttackStep>();
         if (_steps.Count == 0)
@@ -138,6 +142,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         _onPlayerAttackInputCancel.action -= OnAttackReleased;
 
         _rsoGameInPause.onValueChanged -= OnGamePause;
+
+        _rsoCurrentChargeStep.Value = 0;
     }
 
     private void OnGamePause(bool newPauseValue)
@@ -170,6 +176,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         _wasCanceled = false;
         _reservedConviction = 0f;
         _lastCompletedStep = 0;
+        _rsoCurrentChargeStep.Value = 0;
+
         PublishPreconsume(_reservedConviction);
 
         if (_attackChargeCoroutine != null) StopCoroutine(_attackChargeCoroutine);
@@ -248,6 +256,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
         for (int i = 1; i < _stepTimes.Count; i++)
         {
             if (!_isHolding || _wasCanceled) break;
+            _rsoCurrentChargeStep.Value = i - 1;
 
             float tStart = _stepTimes[i - 1];
             float tEnd = _stepTimes[i];
@@ -320,10 +329,13 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
             if (_reservedConviction >= cap - 0.0001f)
             {
+                _rsoCurrentChargeStep.Value = _lastCompletedStep + 1;
+
                 while (_isHolding && !_wasCanceled) yield return null;
                 break;
             }
         }
+
 
         if (!_wasCanceled)
         {
@@ -369,6 +381,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         _wasCanceled = true;
         _isHolding = false;
+
+        _rsoCurrentChargeStep.Value = 0;
 
         if (_attackChargeCoroutine != null)
         {

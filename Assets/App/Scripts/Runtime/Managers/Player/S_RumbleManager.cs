@@ -56,8 +56,6 @@ public class S_RumbleManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_activeRumbles.Count);
-
         if (!_activeRumble)
             return;
 
