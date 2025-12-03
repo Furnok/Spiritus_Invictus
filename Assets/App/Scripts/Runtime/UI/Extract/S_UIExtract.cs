@@ -24,6 +24,9 @@ public class S_UIExtract : MonoBehaviour
     [SerializeField] private EventReference uiSound;
 
     [TabGroup("References")]
+    [SerializeField] private EventReference uiClick;
+
+    [TabGroup("References")]
     [Title("Text")]
     [SerializeField] private TextMeshProUGUI textContent;
 
@@ -74,7 +77,9 @@ public class S_UIExtract : MonoBehaviour
     private bool isClosing = false;
 
     private int lastSoundFrame = -1;
-    private float lastValue = 0;
+    private float lastValue = -1;
+    private bool startMove = false;
+    private bool isStick = false;
 
     private void OnEnable()
     {
@@ -102,6 +107,52 @@ public class S_UIExtract : MonoBehaviour
         textDisplay = null;
         scrollTween = null;
         isClosing = false;
+    }
+
+    private void Update()
+    {
+        if (EventSystem.current.currentSelectedGameObject == sliderScroll.gameObject && Gamepad.current != null && startMove)
+        {
+            Vector2 dpad = Gamepad.current.dpad.ReadValue();
+            Vector2 leftStick = Gamepad.current.leftStick.ReadValue();
+            Vector2 rightStick = Gamepad.current.rightStick.ReadValue();
+
+            bool stickActive = Mathf.Abs(leftStick.y) > 0.5f;
+            bool stick2Active = Mathf.Abs(rightStick.y) > 0.5f;
+
+            if (stickActive || stick2Active)
+            {
+                Sticks();
+            }
+            else if (isStick)
+            {
+                startMove = false;
+                RuntimeManager.PlayOneShot(uiClick);
+            }
+            else
+            {
+                bool dpadDown = dpad.y < 0;
+                bool dpadUp = dpad.y > 0;
+                DPad(dpadDown, dpadUp);
+            }
+        }
+        else
+        {
+            isStick = false;
+        }
+    }
+
+    private void DPad(bool down, bool up)
+    {
+        if (!down && !up && startMove)
+        {
+            startMove = false;
+        }
+    }
+
+    private void Sticks()
+    {
+        isStick = true;
     }
 
     public void OnScrollChanged()
@@ -162,7 +213,12 @@ public class S_UIExtract : MonoBehaviour
                     {
                         OnScrollChanged();
                         lastValue = roundedValue;
-                        RuntimeManager.PlayOneShot(uiSound);
+
+                        if (!startMove)
+                        {
+                            startMove = true;
+                            RuntimeManager.PlayOneShot(uiClick);
+                        }
                     }
                     break;
                 case MoveDirection.Down:
@@ -173,7 +229,12 @@ public class S_UIExtract : MonoBehaviour
                     {
                         OnScrollChanged();
                         lastValue = roundedValue;
-                        RuntimeManager.PlayOneShot(uiSound);
+
+                        if (!startMove)
+                        {
+                            startMove = true;
+                            RuntimeManager.PlayOneShot(uiClick);
+                        }
                     }
                     break;
                 default:
