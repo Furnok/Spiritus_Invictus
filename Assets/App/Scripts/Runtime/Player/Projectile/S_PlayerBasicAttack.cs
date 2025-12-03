@@ -256,7 +256,6 @@ public class S_PlayerBasicAttack : MonoBehaviour
         for (int i = 1; i < _stepTimes.Count; i++)
         {
             if (!_isHolding || _wasCanceled) break;
-            _rsoCurrentChargeStep.Value = i - 1;
 
             float tStart = _stepTimes[i - 1];
             float tEnd = _stepTimes[i];
@@ -272,6 +271,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
             rumbleData = _chargeAttackRumbleData.Value;
             rumbleData.Duration = _steps[_lastCompletedStep + 1].timeHoldingInput;
             _rseOnRumbleRequested.Call(rumbleData);
+
+            _rsoCurrentChargeStep.Value = _lastCompletedStep + 1;
 
             if (targetEnd <= convStart + 0.0001f)
             {
@@ -329,8 +330,6 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
             if (_reservedConviction >= cap - 0.0001f)
             {
-                _rsoCurrentChargeStep.Value = _lastCompletedStep + 1;
-
                 while (_isHolding && !_wasCanceled) yield return null;
                 break;
             }
