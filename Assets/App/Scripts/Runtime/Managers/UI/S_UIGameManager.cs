@@ -477,8 +477,6 @@ public class S_UIGameManager : MonoBehaviour
             else
             {
                 rseOnPlayerRespawn.Call();
-                rseOnPlayerRespawn.Call();
-                rseOnPlayerRespawn.Call();
             }
         }));
     }
