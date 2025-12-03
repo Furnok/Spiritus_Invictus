@@ -80,7 +80,7 @@ public class S_UIMenu : MonoBehaviour
 
     private void CloseEscape()
     {
-        if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
+        if (rsoCurrentWindows.Value.Count > 0 && rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
         {
             ResumeGame();
         }
