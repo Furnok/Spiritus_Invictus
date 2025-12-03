@@ -75,7 +75,7 @@ public class S_ConvictionManager : MonoBehaviour
 
     private void Update()
     {
-        if (_debugPlayer.Value.infiniteConviction == true && _playerCurrentConviction.Value == _playerConvictionData.Value.maxConviction)
+        if (_debugPlayer.Value.infiniteConviction == true && _playerCurrentConviction.Value != _playerConvictionData.Value.maxConviction)
         {
             StartCoroutine(S_Utils.Delay(0.3f, () =>
             {
