@@ -357,8 +357,11 @@ public class S_Enemy : MonoBehaviour
 
                 if (hit.collider.gameObject != newTarget)
                 {
-                    health = maxhealth;
-                    onUpdateEnemyHealth.Invoke(health);
+                    if (health != maxhealth)
+                    {
+                        health = maxhealth;
+                        onUpdateEnemyHealth.Invoke(health);
+                    }
 
                     behaviorAgent.SetVariableValue<float>("Health", health);
 
@@ -376,8 +379,11 @@ public class S_Enemy : MonoBehaviour
         }
         else
         {
-            health = maxhealth;
-            onUpdateEnemyHealth.Invoke(health);
+            if (health != maxhealth)
+            {
+                health = maxhealth;
+                onUpdateEnemyHealth.Invoke(health);
+            }
 
             behaviorAgent.SetVariableValue<float>("Health", health);
 
