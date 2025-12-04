@@ -24,15 +24,21 @@ public class S_EnemyHeadLookAtIK : MonoBehaviour
     [SerializeField] private Animator animator;
 
     private GameObject target = null;
+    private bool isDead = false;
 
     public void SetTarget(GameObject targetPos)
     {
         target = targetPos;
     }
 
+    public void SetDead()
+    {
+        isDead = true;
+    }
+
     private void OnAnimatorIK(int layerIndex)
     {
-        if (animator == null || target == null) return;
+        if (animator == null || target == null || isDead) return;
 
         animator.SetLookAtWeight(
             weight,

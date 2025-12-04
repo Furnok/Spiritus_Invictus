@@ -289,10 +289,7 @@ public class S_Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (target != null)
-        {
-            enemyHeadLookAtIK.SetTarget(target);
-        }
+        enemyHeadLookAtIK.SetTarget(target);
 
         if (isChase && target != null)
         {
@@ -483,6 +480,7 @@ public class S_Enemy : MonoBehaviour
 
             enemyAttackData.DisableWeaponCollider();
             enemyAttackData.UnDisplayTriggerWarning();
+            enemyHeadLookAtIK.SetDead();
 
             StopAllCoroutines();
             comboCoroutine = null;
