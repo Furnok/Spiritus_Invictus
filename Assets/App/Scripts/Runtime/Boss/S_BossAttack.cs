@@ -58,6 +58,8 @@ public class S_BossAttack : MonoBehaviour
     [TabGroup("Settings")]
     [Title("Waves")]
     [SerializeField, S_AnimationName("animator")] private string waves;
+    [TabGroup("Settings")] [SerializeField] private GameObject wavesPrefabs;
+    [TabGroup("Settings")][SerializeField] private Transform wavesSpawn;
 
     [TabGroup("Settings")]
     [Title("Balls")]
@@ -230,6 +232,7 @@ public class S_BossAttack : MonoBehaviour
     void Waves()
     {
         animator.SetTrigger(waves);
+        Instantiate(wavesPrefabs, wavesSpawn);
     }
     void Balls()
     {
