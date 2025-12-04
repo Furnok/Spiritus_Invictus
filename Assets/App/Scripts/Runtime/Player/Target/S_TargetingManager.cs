@@ -273,7 +273,16 @@ public class S_TargetingManager : MonoBehaviour
     {
         if (currentTarget != null && rsoPlayerIsTargeting.Value == true)
         {
-            rsoTargetPosition.Value = currentTarget.GetComponent<S_LookAt>().GetAimPoint();
+            S_LookAt lookAt = currentTarget.GetComponent<S_LookAt>();
+
+            if (lookAt != null && lookAt.GetAimPoint() != null)
+            {
+                rsoTargetPosition.Value = lookAt.GetAimPoint();
+            }
+            else
+            {
+                rsoTargetPosition.Value = currentTarget.transform.position;
+            }
 
             float distance = Vector3.Distance(rsoPlayerPosition.Value, currentTarget.transform.position);
 
@@ -429,7 +438,17 @@ public class S_TargetingManager : MonoBehaviour
         {
             rseOnNewTargeting.Call(currentTarget);
             rsoPlayerIsTargeting.Value = true;
-            rsoTargetPosition.Value = currentTarget.GetComponent<S_LookAt>().GetAimPoint();
+
+            S_LookAt lookAt = currentTarget.GetComponent<S_LookAt>();
+
+            if (lookAt != null && lookAt.GetAimPoint() != null)
+            {
+                rsoTargetPosition.Value = lookAt.GetAimPoint();
+            }
+            else
+            {
+                rsoTargetPosition.Value = currentTarget.transform.position;
+            }
 
             rseOnStartTargeting.Call();
             RuntimeManager.PlayOneShot(_targetLockOnSound);
@@ -480,7 +499,17 @@ public class S_TargetingManager : MonoBehaviour
                 {
                     rseOnNewTargeting.Call(currentTarget);
                     rsoPlayerIsTargeting.Value = true;
-                    rsoTargetPosition.Value = currentTarget.GetComponent<S_LookAt>().GetAimPoint();
+
+                    S_LookAt lookAt = currentTarget.GetComponent<S_LookAt>();
+
+                    if (lookAt != null && lookAt.GetAimPoint() != null)
+                    {
+                        rsoTargetPosition.Value = lookAt.GetAimPoint();
+                    }
+                    else
+                    {
+                        rsoTargetPosition.Value = currentTarget.transform.position;
+                    }
 
                     RuntimeManager.PlayOneShot(_targetLockOnSound);
                 }
