@@ -271,7 +271,7 @@ public class S_Enemy : MonoBehaviour
     {
         enemyHeadLookAtIK.SetTarget(target);
 
-        if (target != null && !isAttacking)
+        if (target != null && !isAttacking && !isDead)
         {
             Vector3 direction = target.transform.position - transform.position;
             direction.y = 0;
@@ -279,12 +279,12 @@ public class S_Enemy : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(direction);
         }
 
-        if (isChase && target != null)
+        if (isChase && target != null && !isDead)
         {
             Chase();
         }
 
-        if (isFighting && target != null)
+        if (isFighting && target != null && !isDead)
         {
             Fighting();
         }

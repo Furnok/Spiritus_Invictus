@@ -150,6 +150,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &72053698 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 4310562184785814063, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+  m_PrefabInstance: {fileID: 8630298198351531622}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &172254501
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4810,15 +4815,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4482881187451468580, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[2].Rotation.value.x
-      value: -0.00000014305078
+      value: -0.00000014305081
       objectReference: {fileID: 0}
     - target: {fileID: 4482881187451468580, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[2].Rotation.value.y
-      value: -3.230919e-10
+      value: -3.243403e-10
       objectReference: {fileID: 0}
     - target: {fileID: 4482881187451468580, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[2].Rotation.value.z
-      value: -0.0022585753
+      value: -0.0022673025
       objectReference: {fileID: 0}
     - target: {fileID: 4482881187451468580, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[3].Rotation.value.w
@@ -5200,7 +5205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6197051584241607373, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
       propertyPath: haveGameOver
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8056213273916310995, guid: 491dded18362a2244a4f115da8847ffb, type: 3}
       propertyPath: defaultWindow
@@ -5259,6 +5264,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3538150392915714149, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+      propertyPath: _rb
+      value: 
+      objectReference: {fileID: 72053698}
+    - target: {fileID: 6894739736791673346, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+      propertyPath: rseOnPlayerDeath
+      value: 
+      objectReference: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
+    - target: {fileID: 6894739736791673346, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
+      propertyPath: rseOnPlayerRespawn
+      value: 
+      objectReference: {fileID: 11400000, guid: 3b09f2a06394f4642a88a2d57f0cec43, type: 2}
     - target: {fileID: 8313228278302547986, guid: c156732cb46eb1c4f825606c4264be76, type: 3}
       propertyPath: m_Name
       value: P_Player
