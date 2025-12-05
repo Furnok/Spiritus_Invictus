@@ -1,19 +1,19 @@
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class S_RumbleManager : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Active")]
     [SerializeField] private bool _activeRumble = false;
 
-    //[Header("References")]
-
-    [Header("Inputs")]
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnRumbleRequested _onRumbleRequested;
-    [SerializeField] private RSE_OnRumbleStopChannel _onRumbleStopChannel;
 
-    //[Header("Outputs")]
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _onRumbleStopChannel;
 
     private class ActiveRumble
     {

@@ -6,13 +6,23 @@ public class S_PlayerDeath : MonoBehaviour
     [TabGroup("References")]
     [Title("Collider")]
     [SerializeField] private GameObject _playerHurtBoxCollider;
+
+    [TabGroup("References")]
+    [Title("Rigidbody")]
     [SerializeField] Rigidbody _playerRigidbody;
 
     [TabGroup("References")]
     [Title("Aim Point")]
     [SerializeField] private GameObject _aimPointObject;
+
+    [TabGroup("References")]
+    [Title("Others")]
     [SerializeField] GameObject _visuals;
+
+    [TabGroup("References")]
     [SerializeField] GameObject _player;
+
+    [TabGroup("References")]
     [SerializeField] GameObject _colliderMotor;
 
     [TabGroup("Inputs")]

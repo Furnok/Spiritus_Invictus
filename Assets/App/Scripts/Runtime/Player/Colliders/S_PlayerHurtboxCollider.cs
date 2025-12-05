@@ -8,6 +8,7 @@ public class S_PlayerHurtboxCollider : MonoBehaviour
     [SerializeField, S_TagName] private string tagHit;
 
     [TabGroup("References")]
+    [Title("Collider")]
     [SerializeField] private Collider _hurtboxCollider;
 
     [TabGroup("Outputs")]

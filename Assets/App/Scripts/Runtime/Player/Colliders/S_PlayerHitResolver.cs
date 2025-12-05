@@ -5,10 +5,6 @@ using UnityEngine;
 public class S_PlayerHitResolver : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Animation")]
-    [SerializeField, S_AnimationName] private string _hitParam;
-
-    [TabGroup("Settings")]
     [Title("Camera")]
     [SerializeField] private S_ClassCameraShake _cameraShake;
 

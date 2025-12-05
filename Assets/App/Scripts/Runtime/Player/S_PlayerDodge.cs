@@ -40,10 +40,6 @@ public class S_PlayerDodge : MonoBehaviour
     [Title("Audio")]
     [SerializeField] private EventReference _dodgeSound;
 
-    [TabGroup("References")]
-    [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerMove _rseOnPlayerMove;
 
@@ -58,6 +54,9 @@ public class S_PlayerDodge : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDodgeInputCancel _onPlayerDodgeInputCancel;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;

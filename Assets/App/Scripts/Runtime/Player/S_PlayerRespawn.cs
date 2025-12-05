@@ -12,13 +12,22 @@ public class S_PlayerRespawn : MonoBehaviour
     [SerializeField] private GameObject _playerHurtBoxCollider;
 
     [TabGroup("References")]
+    [Title("Rigidbody")]
+    [SerializeField] Rigidbody _playerRigidbody;
+
+    [TabGroup("References")]
     [Title("Aim Point")]
     [SerializeField] private GameObject _aimPointObject;
 
-    [SerializeField] Rigidbody _playerRigidbody;
-    [SerializeField] GameObject _visuals;
-    [SerializeField] GameObject _player;
+    [TabGroup("References")]
+    [Title("Others")]
     [SerializeField] GameObject _colliderMotor;
+
+    [TabGroup("References")]
+    [SerializeField] GameObject _visuals;
+
+    [TabGroup("References")]
+    [SerializeField] GameObject _player;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;

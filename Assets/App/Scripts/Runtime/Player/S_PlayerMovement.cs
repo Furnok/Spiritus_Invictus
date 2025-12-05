@@ -80,16 +80,19 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSO_GameInPause _rsoGameInPause;
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+    [SerializeField] private RSO_GameInPause _rsoGameInPause;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
@@ -99,9 +102,6 @@ public class S_PlayerMovement : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging _playerIsDodging;

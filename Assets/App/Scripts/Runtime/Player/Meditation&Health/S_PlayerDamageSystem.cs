@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class S_PlayerDamageSystem : MonoBehaviour
 {
-    [TabGroup("References")]
-    [SerializeField] private SSO_RumbleData _gettingHitRumbleData;
-
     [TabGroup("Reference")]
+    [Title("Audio")]
     [SerializeField] private EventReference _damageSound;
 
     [TabGroup("Inputs")]
@@ -26,6 +24,12 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
 
     [TabGroup("Outputs")]
@@ -38,11 +42,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [SerializeField] private SSO_PlayerStats _playerStats;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
-
+    [SerializeField] private SSO_RumbleData _gettingHitRumbleData;
 
     private Coroutine _hitReactCoroutine = null;
 
