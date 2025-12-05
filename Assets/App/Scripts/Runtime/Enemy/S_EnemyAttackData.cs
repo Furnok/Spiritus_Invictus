@@ -23,6 +23,10 @@ public class S_EnemyAttackData : MonoBehaviour
     [Title("Image")]
     [SerializeField] private Image warning;
 
+    [TabGroup("References")]
+    [Title("Script")]
+    [SerializeField] private S_Enemy enemy;
+
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData = null;
 
     private S_StructEnemyAttackData attackData;
@@ -80,5 +84,10 @@ public class S_EnemyAttackData : MonoBehaviour
         {
             content.gameObject.SetActive(false);
         });
+    }
+
+    public void Rotate()
+    {
+        enemy.Rotate();
     }
 }

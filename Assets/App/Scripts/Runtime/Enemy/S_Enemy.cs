@@ -273,10 +273,7 @@ public class S_Enemy : MonoBehaviour
 
         if (target != null && !isAttacking && !isDead)
         {
-            Vector3 direction = target.transform.position - transform.position;
-            direction.y = 0;
-
-            transform.rotation = Quaternion.LookRotation(direction);
+            Rotate();
         }
 
         if (isChase && target != null && !isDead)
@@ -301,6 +298,14 @@ public class S_Enemy : MonoBehaviour
     private void RefreshPatrolPoints()
     {
         Refresh();
+    }
+
+    public void Rotate()
+    {
+        Vector3 direction = target.transform.position - transform.position;
+        direction.y = 0;
+
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     private void Refresh()
