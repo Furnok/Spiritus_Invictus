@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
@@ -37,6 +39,14 @@ public class S_Settings : MonoBehaviour
     private Bus audioSounds;
     private Bus audioUI;
 
+    private int step = 1;
+    private float stepFloat = 1f;
+    private bool startMove = false;
+    private float holdTime = 0f;
+    private bool isStick = false;
+    private float maxStep = 3f;
+    private float accelerationTime = 3f;
+
     private void Awake()
     {
         audioMaster = RuntimeManager.GetBus("bus:/");
@@ -54,12 +64,63 @@ public class S_Settings : MonoBehaviour
         isSave = false;
     }
 
+    private void Update()
+    {
+        if (isLoaded && (EventSystem.current.currentSelectedGameObject == listSlidersAudios[0].gameObject || EventSystem.current.currentSelectedGameObject == listSlidersAudios[1].gameObject || EventSystem.current.currentSelectedGameObject == listSlidersAudios[2].gameObject || EventSystem.current.currentSelectedGameObject == listSlidersAudios[3].gameObject) && Gamepad.current != null && startMove)
+        {
+            Vector2 dpad = Gamepad.current.dpad.ReadValue();
+            Vector2 leftStick = Gamepad.current.leftStick.ReadValue();
+            Vector2 rightStick = Gamepad.current.rightStick.ReadValue();
+
+            bool stickActive = Mathf.Abs(leftStick.x) > 0.5f;
+            bool stick2Active = Mathf.Abs(rightStick.x) > 0.5f;
+
+            if (stickActive || stick2Active)
+            {
+                if (!isStick)
+                {
+                    isStick = true;
+                    holdTime = 0f;
+                    step = 1;
+                    stepFloat = 1f;
+                }
+
+                holdTime += Time.unscaledDeltaTime;
+
+                float t = Mathf.Clamp01(holdTime / accelerationTime);
+                stepFloat = Mathf.Lerp(1f, maxStep, t);
+
+                step = (int)Mathf.Clamp(Mathf.FloorToInt(stepFloat), 1, maxStep);
+            }
+            else if (isStick)
+            {
+                startMove = false;
+                step = 1;
+                stepFloat = 1f;
+                holdTime = 0f;
+            }
+            else
+            {
+                step = 1;
+                stepFloat = 1f;
+                holdTime = 0f;
+            }
+        }
+        else
+        {
+            isStick = false;
+            step = 1;
+            stepFloat = 1f;
+            holdTime = 0f;
+        }
+    }
+
     public void Setup(List<Slider> listSlidersVolumes, List<TextMeshProUGUI> listTextVolumes)
     {
-        isLoaded = true;
-
         listSlidersAudios = listSlidersVolumes;
         listTextAudios = listTextVolumes;
+
+        isLoaded = true;
     }
 
     public void UpdateLanguages(int index)
@@ -123,9 +184,17 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[0].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[0].volume = value;
+            startMove = true;
 
-            listTextAudios[0].text = $"{value}%";
+            float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[0].volume);
+            float newValue = Mathf.RoundToInt(diff * step);
+            newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[0].volume + newValue, listSlidersAudios[0].minValue, listSlidersAudios[0].maxValue);
+
+            listSlidersAudios[0].SetValueWithoutNotify(newValue);
+
+            rsoSettingsSaved.Value.listVolumes[0].volume = newValue;
+
+            listTextAudios[0].text = $"{newValue}%";
 
             audioMaster.setVolume(rsoSettingsSaved.Value.listVolumes[0].volume / 100);
         }
@@ -135,9 +204,17 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[1].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[1].volume = value;
+            startMove = true;
 
-            listTextAudios[1].text = $"{value}%";
+            float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[1].volume);
+            float newValue = Mathf.RoundToInt(diff * step);
+            newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[1].volume + newValue, listSlidersAudios[1].minValue, listSlidersAudios[1].maxValue);
+
+            listSlidersAudios[1].SetValueWithoutNotify(newValue);
+
+            rsoSettingsSaved.Value.listVolumes[1].volume = newValue;
+
+            listTextAudios[1].text = $"{newValue}%";
 
             audioMusic.setVolume(rsoSettingsSaved.Value.listVolumes[1].volume / 100);
         }
@@ -147,9 +224,17 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[2].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[2].volume = value;
+            startMove = true;
 
-            listTextAudios[2].text = $"{value}%";
+            float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[2].volume);
+            float newValue = Mathf.RoundToInt(diff * step);
+            newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[2].volume + newValue, listSlidersAudios[2].minValue, listSlidersAudios[2].maxValue);
+
+            listSlidersAudios[2].SetValueWithoutNotify(newValue);
+
+            rsoSettingsSaved.Value.listVolumes[2].volume = newValue;
+
+            listTextAudios[2].text = $"{newValue}%";
 
             audioSounds.setVolume(rsoSettingsSaved.Value.listVolumes[2].volume / 100);
         }
@@ -159,9 +244,17 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[3].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[3].volume = value;
+            startMove = true;
 
-            listTextAudios[3].text = $"{value}%";
+            float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[3].volume);
+            float newValue = Mathf.RoundToInt(diff * step);
+            newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[3].volume + newValue, listSlidersAudios[3].minValue, listSlidersAudios[3].maxValue);
+
+            listSlidersAudios[3].SetValueWithoutNotify(newValue);
+
+            rsoSettingsSaved.Value.listVolumes[3].volume = newValue;
+
+            listTextAudios[3].text = $"{newValue}%";
 
             audioUI.setVolume(rsoSettingsSaved.Value.listVolumes[3].volume / 100);
         }
