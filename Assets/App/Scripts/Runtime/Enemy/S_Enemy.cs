@@ -490,6 +490,7 @@ public class S_Enemy : MonoBehaviour
 
             isPerformingCombo = false;
             isStrafe = false;
+            isAttacking = false;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);
             behaviorAgent.Restart();
@@ -514,6 +515,7 @@ public class S_Enemy : MonoBehaviour
 
             isPerformingCombo = false;
             isStrafe = false;
+            isAttacking = false;
 
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
             behaviorAgent.Restart();
@@ -624,6 +626,7 @@ public class S_Enemy : MonoBehaviour
             isFighting = false;
             isStrafe = false;
             isChase = false;
+            isAttacking = false;
 
             isPerformingCombo = false;
 
@@ -752,6 +755,7 @@ public class S_Enemy : MonoBehaviour
         {
             canAttack = false;
             isStrafe = false;
+            isAttacking = false;
 
             if (comboCoroutine != null)
             {
@@ -772,6 +776,7 @@ public class S_Enemy : MonoBehaviour
             {
                 isFighting = false;
                 isStrafe = false;
+                isAttacking = false;
                 navMeshAgent.speed = ssoEnemyData.Value.speedChase;
 
                 navMeshAgent.ResetPath();
@@ -850,6 +855,7 @@ public class S_Enemy : MonoBehaviour
 
         isPerformingCombo = true;
         animator.SetBool(idleAttack, false);
+        isAttacking = false;
 
         for (int i = 0; i < combo.listAnimationsCombos.Count; i++)
         {
