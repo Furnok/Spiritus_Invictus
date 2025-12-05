@@ -71,6 +71,10 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private GameObject body;
 
     [TabGroup("References")]
+    [Title("Body")]
+    [SerializeField] private GameObject center;
+
+    [TabGroup("References")]
     [Title("Projectile")]
     [SerializeField] private GameObject spawnProjectilePoint;
 
@@ -302,7 +306,7 @@ public class S_Enemy : MonoBehaviour
 
     public void Rotate()
     {
-        Vector3 direction = target.transform.position - transform.position;
+        Vector3 direction = target.transform.position - center.transform.position;
         direction.y = 0;
 
         transform.rotation = Quaternion.LookRotation(direction);
