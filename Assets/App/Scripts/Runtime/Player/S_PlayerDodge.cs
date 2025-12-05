@@ -58,6 +58,9 @@ public class S_PlayerDodge : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerRespawn rseOnPlayerRespawn;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
@@ -135,6 +138,7 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnPlayerCancelTargeting.action += CancelTarget;
         _rseOnPlayerGettingHit.action += CancelDodge;
         _onPlayerDodgeInputCancel.action += CancelInputdodge;
+        rseOnPlayerRespawn.action += ResetDodgeableArea;
 
         _canRunAfterDodge = false;
     }
@@ -147,6 +151,12 @@ public class S_PlayerDodge : MonoBehaviour
         _rseOnPlayerCancelTargeting.action -= CancelTarget;
         _rseOnPlayerGettingHit.action -= CancelDodge;
         _onPlayerDodgeInputCancel.action -= CancelInputdodge;
+        rseOnPlayerRespawn.action -= ResetDodgeableArea;
+    }
+
+    private void ResetDodgeableArea()
+    {
+        _attackDataInDodgeableArea.Value.Clear();
     }
 
     private void ChangeNewTarget(GameObject newTarget)
@@ -353,6 +363,7 @@ public class S_PlayerDodge : MonoBehaviour
         _playerIsDodging.Value = false;
         _canRunAfterDodge = false;
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
+        _attackDataInDodgeableArea.Value.Clear();
     }
 
     private void GetCapsuleWorldEnds(out Vector3 top, out Vector3 bottom, out float radius)
