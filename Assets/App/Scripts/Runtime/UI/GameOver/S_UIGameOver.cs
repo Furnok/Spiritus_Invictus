@@ -70,19 +70,24 @@ public class S_UIGameOver : MonoBehaviour
 
             rseOnHideMouseCursor.Call();
 
+            rseOnCloseAllWindows.Call();
+
             StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
-                gameObject.SetActive(false);
-
-                rseOnFadeIn.Call();
-
                 rseOnGameInputEnabled.Call();
-                rseOnCloseAllWindows.Call();
-                rsoNavigation.Value.selectableDefault = null;
-                rseOnResetFocus.Call();
+
                 rseOnGamePause.Call(false);
 
-                rseOnPlayerRespawn.Call();
+                StartCoroutine(S_Utils.DelayRealTime(1.2f, () =>
+                {
+                    gameObject.SetActive(false);
+                    rsoNavigation.Value.selectableDefault = null;
+                    rseOnResetFocus.Call();
+
+                    rseOnPlayerRespawn.Call();
+
+                    rseOnFadeIn.Call();
+                }));
             }));
         }
     }

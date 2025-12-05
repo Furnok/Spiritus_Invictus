@@ -191,14 +191,6 @@ public class S_UISelectable : MonoBehaviour
         }
     }
 
-    public void SliderAudio(Selectable uiElement)
-    {
-        if (uiElement.interactable && Gamepad.current != null)
-        {
-            RuntimeManager.PlayOneShot(uiClick);
-        }
-    }
-
     public void ClickedWindow(Selectable uiElement)
     {
         rsoNavigation.Value.selectablePressOldWindow = uiElement;

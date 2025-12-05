@@ -16,6 +16,11 @@ MonoBehaviour:
     health: 100
     speedPatrol: 2.5
     speedChase: 4
+    speedStrafe: 1.5
+    strafeWaitTimeMin: 3
+    strafeWaitTimeMax: 5
+    strafeRotationMin: 30
+    strafeRotationMax: 90
     detectionRange: 10
     detectionAggroRangeMax: 50
     attackCooldown: 3
@@ -29,12 +34,12 @@ MonoBehaviour:
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
-      - animation: {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
+      - animation: {fileID: 7400000, guid: c66bbbcb0909f804bbc290381de58812, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 3
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0.3
           knockbackHitDistance: 2
           knockbackOnParryDuration: 0.2
@@ -45,12 +50,12 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
+      - animation: {fileID: 7400000, guid: c66bbbcb0909f804bbc290381de58812, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 3
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0.3
           knockbackHitDistance: 2
           knockbackOnParryDuration: 0.2
@@ -61,12 +66,12 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
+      - animation: {fileID: 7400000, guid: c66bbbcb0909f804bbc290381de58812, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 3
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0.3
           knockbackHitDistance: 2
           knockbackOnParryDuration: 0.2
@@ -77,12 +82,12 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
+      - animation: {fileID: 7400000, guid: c66bbbcb0909f804bbc290381de58812, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 3
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0.3
           knockbackHitDistance: 2
           knockbackOnParryDuration: 0.2
@@ -93,12 +98,12 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: -7717634560727564301, guid: 4007d575d848d6e4495efed78f8721c9, type: 3}
+      - animation: {fileID: 7400000, guid: c66bbbcb0909f804bbc290381de58812, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 3
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0.3
           knockbackHitDistance: 2
           knockbackOnParryDuration: 0.2

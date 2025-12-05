@@ -65,7 +65,7 @@ public class S_LoadUISettings : MonoBehaviour
 
         LoadVolumes();
 
-        StartCoroutine(S_Utils.DelayFrame(() => settings.Setup(listTextsVolume)));
+        StartCoroutine(S_Utils.DelayFrame(() => settings.Setup(listSliderVolume, listTextsVolume)));
     }
 
     private void LoadLanguages()

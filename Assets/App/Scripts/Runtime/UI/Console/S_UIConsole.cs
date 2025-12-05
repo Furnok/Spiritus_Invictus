@@ -26,7 +26,9 @@ public class S_UIConsole : MonoBehaviour
     [SerializeField] private RSO_ConsoleDisplay rsoConsoleDisplay;
 
     private int lastSoundFrame = -1;
-    private float lastValue = 0;
+    private float lastValue = -1;
+    private bool startMove = false;
+    private bool isStick = false;
 
     private void OnEnable()
     {
@@ -38,6 +40,52 @@ public class S_UIConsole : MonoBehaviour
         }
 
         scrollRect.verticalNormalizedPosition = 0;
+    }
+
+    private void Update()
+    {
+        if (EventSystem.current.currentSelectedGameObject == sliderScroll.gameObject && Gamepad.current != null && startMove)
+        {
+            Vector2 dpad = Gamepad.current.dpad.ReadValue();
+            Vector2 leftStick = Gamepad.current.leftStick.ReadValue();
+            Vector2 rightStick = Gamepad.current.rightStick.ReadValue();
+
+            bool stickActive = Mathf.Abs(leftStick.y) > 0.5f;
+            bool stick2Active = Mathf.Abs(rightStick.y) > 0.5f;
+
+            if (stickActive || stick2Active)
+            {
+                Sticks();
+            }
+            else if (isStick)
+            {
+                startMove = false;
+                RuntimeManager.PlayOneShot(uiSound);
+            }
+            else
+            {
+                bool dpadDown = dpad.y < 0;
+                bool dpadUp = dpad.y > 0;
+                DPad(dpadDown, dpadUp);
+            }
+        }
+        else
+        {
+            isStick = false;
+        }
+    }
+
+    private void DPad(bool down, bool up)
+    {
+        if (!down && !up && startMove)
+        {
+            startMove = false;
+        }
+    }
+
+    private void Sticks()
+    {
+        isStick = true;
     }
 
     public void SliderAudio(BaseEventData eventData)
@@ -60,7 +108,12 @@ public class S_UIConsole : MonoBehaviour
                     if (roundedValue != lastValue && sliderScroll.size < 1)
                     {
                         lastValue = roundedValue;
-                        RuntimeManager.PlayOneShot(uiSound);
+
+                        if (!startMove)
+                        {
+                            startMove = true;
+                            RuntimeManager.PlayOneShot(uiSound);
+                        }
                     }
                     break;
                 case MoveDirection.Down:
@@ -70,7 +123,11 @@ public class S_UIConsole : MonoBehaviour
                     if (roundedValue != lastValue && sliderScroll.size < 1)
                     {
                         lastValue = roundedValue;
-                        RuntimeManager.PlayOneShot(uiSound);
+                        if (!startMove)
+                        {
+                            startMove = true;
+                            RuntimeManager.PlayOneShot(uiSound);
+                        }
                     }
                     break;
                 default:

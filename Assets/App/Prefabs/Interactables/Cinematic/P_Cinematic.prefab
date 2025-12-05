@@ -55,7 +55,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 2}
+  m_Size: {x: 2, y: 5, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2167930258668785476
 MonoBehaviour:
@@ -74,6 +74,7 @@ MonoBehaviour:
   content: {fileID: 787140167908487009}
   rseOnPlayerInteract: {fileID: 11400000, guid: 7dddd8b752c27d34f9be002f7e6f2343, type: 2}
   rseOnCameraCinematic: {fileID: 11400000, guid: 5e251c1042b050143a17c9ad024ee11b, type: 2}
+  rseOnSendConsoleMessage: {fileID: 0}
 --- !u!1 &787140167908487009
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,7 +198,7 @@ GameObject:
   - component: {fileID: 5073995662198507348}
   - component: {fileID: 8198151930149079281}
   - component: {fileID: 6206339580466625595}
-  - component: {fileID: 4008391584947641600}
+  - component: {fileID: 1951997823388537055}
   m_Layer: 0
   m_Name: FBX_Goblet
   m_TagString: Untagged
@@ -273,8 +274,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &4008391584947641600
-BoxCollider:
+--- !u!64 &1951997823388537055
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -291,9 +292,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.17451233, y: 0.3688456, z: 0.17853454}
-  m_Center: {x: -0.001801528, y: 0.1844228, z: -0.0014531724}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4944031483388809919, guid: 2e92aab32957afc4fbead3ffdf1808ab, type: 3}
 --- !u!1 &6073930640465596463
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +489,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

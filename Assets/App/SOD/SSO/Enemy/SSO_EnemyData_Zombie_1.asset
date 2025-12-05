@@ -16,6 +16,11 @@ MonoBehaviour:
     health: 100
     speedPatrol: 2.5
     speedChase: 4
+    speedStrafe: 1.5
+    strafeWaitTimeMin: 3
+    strafeWaitTimeMax: 5
+    strafeRotationMin: 30
+    strafeRotationMax: 90
     detectionRange: 5
     detectionAggroRangeMax: 50
     attackCooldown: 3
@@ -29,12 +34,12 @@ MonoBehaviour:
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
-      - animation: {fileID: 7400000, guid: 6aa4562af499b1343834fe78bbf30002, type: 2}
+      - animation: {fileID: 7400000, guid: 7859eea7c0231114c90009acd24092cc, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 1
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0
           knockbackHitDistance: 0
           knockbackOnParryDuration: 0
@@ -45,12 +50,12 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: efa09e1f7a325ed498eb78e10453d1af, type: 2}
+      - animation: {fileID: 7400000, guid: b8eaf54175299594c842a3ee151dd69c, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 1
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0
           knockbackHitDistance: 0
           knockbackOnParryDuration: 0
@@ -61,12 +66,12 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: b85d10920647364408d7a7a27727c07f, type: 2}
+      - animation: {fileID: 7400000, guid: 85b367ff8a33c2a4bb3fc42f52b5520c, type: 2}
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 1
-          damage: 10
+          damage: 20
           knockbackHitDuration: 0
           knockbackHitDistance: 0
           knockbackOnParryDuration: 0
@@ -78,4 +83,4 @@ MonoBehaviour:
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       distanceToChase: 1.2
-      distanceToLoseAttack: 1.5
+      distanceToLoseAttack: 10

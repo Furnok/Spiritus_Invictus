@@ -82,6 +82,9 @@ public class S_PlayerMovement : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSO_GameInPause _rsoGameInPause;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
 
@@ -104,19 +107,22 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private RSO_PlayerIsDodging _playerIsDodging;
 
     [TabGroup("Outputs")]
-    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerCurrentState _playerCurrentState;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private SSO_PlayerStats _playerStats;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerPosition rsoPlayerPosition;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerRotation rsoPlayerRotation;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
 
     private float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
     private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
@@ -158,6 +164,8 @@ public class S_PlayerMovement : MonoBehaviour
         _rseOnPlayerHit.action += DoKnockbackOnHit;
 
         _rsoGameInPause.onValueChanged += OnPauseChange;
+
+        rseOnDataLoad.action += SetValueFromData;
     }
 
     private void OnDisable()
@@ -170,10 +178,19 @@ public class S_PlayerMovement : MonoBehaviour
         _rseOnPlayerHit.action -= DoKnockbackOnHit;
 
         _rsoGameInPause.onValueChanged -= OnPauseChange;
+
+        rseOnDataLoad.action -= SetValueFromData;
+    }
+
+    void SetValueFromData()
+    {
+        transform.position = rsoDataSaved.Value.position;
+        transform.rotation = rsoDataSaved.Value.rotation;
     }
 
     private void FixedUpdate()
     {
+        //return;
         UpdateGround();
 
         if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Moving) == false)

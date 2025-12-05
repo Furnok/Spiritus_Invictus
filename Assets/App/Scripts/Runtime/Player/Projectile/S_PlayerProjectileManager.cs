@@ -37,6 +37,9 @@ public class S_PlayerProjectileManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
     private S_ObjectPool<S_PlayerProjectile> projectilePool = null;
     private Transform target = null;
 
@@ -79,7 +82,7 @@ public class S_PlayerProjectileManager : MonoBehaviour
         var currentStepAttack = stepsUpperCurrentConviction.OrderByDescending(x => x.ammountConvitionNeeded).First();
 
         var projectile = projectilePool.Get();
-        projectile.transform.position = _playerPosition.Value + _playerRotation.Value * new Vector3(0,1.5f,0.5f);
+        projectile.transform.position = _playerPosition.Value + _playerRotation.Value * _playerStats.Value.attackOffset;
         projectile.transform.rotation = _playerRotation.Value;
 
         Transform aimPoint = null;

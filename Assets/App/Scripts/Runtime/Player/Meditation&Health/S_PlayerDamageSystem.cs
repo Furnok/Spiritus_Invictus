@@ -1,8 +1,15 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerDamageSystem : MonoBehaviour
 {
+    [TabGroup("References")]
+    [SerializeField] private SSO_RumbleData _gettingHitRumbleData;
+
+    [TabGroup("Reference")]
+    [SerializeField] private EventReference _damageSound;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
 
@@ -30,6 +37,13 @@ public class S_PlayerDamageSystem : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats _playerStats;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
+
+
     private Coroutine _hitReactCoroutine = null;
 
     private bool _isInvicible = false;
@@ -55,9 +69,13 @@ public class S_PlayerDamageSystem : MonoBehaviour
                 StopCoroutine(_hitReactCoroutine);
             }
 
+            RuntimeManager.PlayOneShot(_damageSound);
             rseOnAnimationTriggerValueChange.Call("isHit");
             _onPlayerAddState.Call(S_EnumPlayerState.HitReact);
             _isInvicible = true;
+
+            _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Hit);
+            _rseOnRumbleRequested.Call(_gettingHitRumbleData.Value);
 
             _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackHitDuration, () =>
             {

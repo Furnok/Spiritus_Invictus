@@ -1,4 +1,6 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMOD.Studio;
+using FMODUnity;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +8,18 @@ using UnityEngine;
 
 public class S_PlayerBasicAttack : MonoBehaviour
 {
+    [TabGroup("References")]
+    [SerializeField] private EventReference _convictionAccumulationSound;
+
+    [TabGroup("References")]
+    [SerializeField] private SSO_RumbleData _chargeAttackRumbleData;
+
+    [TabGroup("References")]
+    [SerializeField] private SSO_RumbleData _chargeAttackBetweenStepRumbleData;
+
     [TabGroup("Settings")]
-    [Title("Offset")]
-    [SerializeField] private Vector3 attackOffset;
+    [Title("Sounds")]
+    [SerializeField] private bool allowFadeoutSoundConvictionAccu = true;
 
     [TabGroup("Settings")]
     [Title("Animation")]
@@ -71,6 +82,15 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_AnimationTransitionDelays _animationTransitionDelays;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentChargeStep _rsoCurrentChargeStep;
+
     private Coroutine _attackChargeCoroutine = null;
 
     private bool _isHolding = false;
@@ -82,9 +102,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
     private float _reservedConviction = 0;
     private int _lastCompletedStep = 0;
 
+    EventInstance _convictionAccumulationInstance;
+
     private void Awake()
     {
         _preconsumedConviction.Value = 0;
+        _rsoCurrentChargeStep.Value = 0;
 
         _steps = _playerAttackSteps.Value?.OrderBy(s => s.step).ToList() ?? new List<S_StructPlayerAttackStep>();
         if (_steps.Count == 0)
@@ -119,6 +142,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         _onPlayerAttackInputCancel.action -= OnAttackReleased;
 
         _rsoGameInPause.onValueChanged -= OnGamePause;
+
+        _rsoCurrentChargeStep.Value = 0;
     }
 
     private void OnGamePause(bool newPauseValue)
@@ -151,6 +176,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         _wasCanceled = false;
         _reservedConviction = 0f;
         _lastCompletedStep = 0;
+        _rsoCurrentChargeStep.Value = 0;
+
         PublishPreconsume(_reservedConviction);
 
         if (_attackChargeCoroutine != null) StopCoroutine(_attackChargeCoroutine);
@@ -165,6 +192,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         rseOnSendConsoleMessage.Call("Player Launch Attack!");
+
+        _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
     }
 
     /*
@@ -208,8 +237,20 @@ public class S_PlayerBasicAttack : MonoBehaviour
     {
         yield return new WaitForSeconds(_animationTransitionDelays.Value.attackStartupDelay);
 
+        if (!_convictionAccumulationSound.IsNull)
+        {
+            _convictionAccumulationInstance = RuntimeManager.CreateInstance(_convictionAccumulationSound);
+            _convictionAccumulationInstance.start();
+        }
+
         float started = Time.time;
         float pauseCarry = 0f;
+
+        _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
+        var rumbleData = _chargeAttackRumbleData.Value;
+        rumbleData.Duration = _steps[_lastCompletedStep].timeHoldingInput;
+        _rseOnRumbleRequested.Call(rumbleData);
 
         // i go in each attackSteps
         for (int i = 1; i < _stepTimes.Count; i++)
@@ -224,6 +265,14 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
             float cap = _playerCurrentConviction.Value;
             float targetEnd = Mathf.Min(convEnd, cap);
+
+            _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
+            rumbleData = _chargeAttackRumbleData.Value;
+            rumbleData.Duration = _steps[_lastCompletedStep + 1].timeHoldingInput;
+            _rseOnRumbleRequested.Call(rumbleData);
+
+            _rsoCurrentChargeStep.Value = _lastCompletedStep + 1;
 
             if (targetEnd <= convStart + 0.0001f)
             {
@@ -261,8 +310,15 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
                 float pause = (/*!isFirstBoundaryFromZero && */!isLastBoundary) ? Mathf.Max(0f, _playerStats.Value.timeWaitBetweenSteps) : 0f;
 
+
                 if (pause > 0f)
                 {
+                    _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
+                    var rumbleBetweenStepData = _chargeAttackBetweenStepRumbleData.Value;
+                    rumbleBetweenStepData.Duration = _playerStats.Value.timeWaitBetweenSteps;
+                    _rseOnRumbleRequested.Call(rumbleData);
+
                     float endPause = Time.time + pause;
                     while (Time.time < endPause)
                     {
@@ -272,24 +328,34 @@ public class S_PlayerBasicAttack : MonoBehaviour
                     pauseCarry += pause;
                 }
             }
-
-            if (_reservedConviction >= cap - 0.0001f)
-            {
-                while (_isHolding && !_wasCanceled) yield return null;
-                break;
-            }
         }
 
         if (!_wasCanceled)
         {
-            FinalizeAttack();
+            rumbleData = _chargeAttackRumbleData.Value;
+            rumbleData.Duration = 300f;
+            _rseOnRumbleRequested.Call(rumbleData);
+            while (_isHolding && !_wasCanceled)
+                yield return null;
+
+            if (!_wasCanceled)
+                FinalizeAttack();
         }
     }
 
     private void FinalizeAttack()
     {
+        if (_convictionAccumulationInstance.isValid())
+        {
+            _convictionAccumulationInstance.stop(allowFadeoutSoundConvictionAccu ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+            _convictionAccumulationInstance.release();
+            _convictionAccumulationInstance = default;
+        }
+
         _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeCastAttack, () =>
         {
+            _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
             rseOnAnimationBoolValueChange.Call(_attackParam, false);
             var value = Mathf.FloorToInt(_reservedConviction);
 
@@ -316,6 +382,8 @@ public class S_PlayerBasicAttack : MonoBehaviour
         _wasCanceled = true;
         _isHolding = false;
 
+        _rsoCurrentChargeStep.Value = 0;
+
         if (_attackChargeCoroutine != null)
         {
             StopCoroutine(_attackChargeCoroutine);
@@ -325,6 +393,9 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         _reservedConviction = 0f;
+
+        _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
         PublishPreconsume(_reservedConviction);
     }
 

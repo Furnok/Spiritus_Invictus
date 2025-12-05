@@ -42,7 +42,7 @@ public class S_DataManagement : MonoBehaviour
 
     private static readonly string EncryptionKey = "ajekoBnPxI9jGbnYCOyvE9alNy9mM/Kw";
     private static readonly string SaveDirectory = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "Saves");
-    private static readonly bool fileCrypted = true;
+    private static readonly bool fileCrypted = false;
 
     private Bus audioMaster;
     private Bus audioMusic;
@@ -269,7 +269,7 @@ public class S_DataManagement : MonoBehaviour
             {
                 rsoDataTempSaved.Value.haveSave = true;
 
-                rseOnDataTemp.Call();
+                StartCoroutine(S_Utils.DelayRealTime(0.1f, () => rseOnDataTemp.Call()));
             }
         }
         catch

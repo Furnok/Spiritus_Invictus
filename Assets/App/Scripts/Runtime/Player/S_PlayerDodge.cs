@@ -1,9 +1,11 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 
 public class S_PlayerDodge : MonoBehaviour
 {
+    #region Variableables
     [TabGroup("Settings")]
     [Title("Animations")]
     [SerializeField, S_AnimationName] private string _dodgeParam;
@@ -34,6 +36,11 @@ public class S_PlayerDodge : MonoBehaviour
     [Title("Rigidbody")]
     [SerializeField] private Rigidbody _rb;
 
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference _dodgeSound;
+
+    [TabGroup("References")]
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDodgeInput rseOnPlayerDodge;
 
@@ -99,6 +106,7 @@ public class S_PlayerDodge : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats _playerStats;
+    #endregion
 
     private float maxSlopeAngle => _playerStats.Value.maxSlopeAngle;
     private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
@@ -159,6 +167,7 @@ public class S_PlayerDodge : MonoBehaviour
 
         rseOnSendConsoleMessage.Call("Player Dodge!");
 
+
         _dodgeUp = false;
         StartCoroutine(S_Utils.Delay(_playerStats.Value.dodgeCooldown, () =>
         {
@@ -170,6 +179,8 @@ public class S_PlayerDodge : MonoBehaviour
         if (isDodgePrefect)
         { 
             Debug.Log("Dodge perfect");
+            RuntimeManager.PlayOneShot(_dodgeSound);
+
             _onPlayerGainConviction.Call(_playerConvictionData.Value.dodgeSuccessGain);
             _rseOnDodgePerfect.Call();
 

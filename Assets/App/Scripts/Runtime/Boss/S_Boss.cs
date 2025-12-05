@@ -41,6 +41,7 @@ public class S_Boss : MonoBehaviour
 
     [TabGroup("Settings")]
     [Title("Strafe Parameters")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float strafeChangeInterval = 1.5f;
 
     [TabGroup("Settings")]
@@ -102,6 +103,9 @@ public class S_Boss : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
@@ -264,6 +268,7 @@ public class S_Boss : MonoBehaviour
                     ChooseAttack();
                     if (currentAttack.bossAttack.isAttackDistance == true)
                     {
+                        Debug.Log("Attack Distance");
                         navMeshAgent.ResetPath();
                         navMeshAgent.velocity = Vector3.zero;
                         behaviorAgent.SetVariableValue("State", S_EnumBossState.Combat);
@@ -387,39 +392,11 @@ public class S_Boss : MonoBehaviour
         {
             if(currentPhaseState == S_EnumBossPhaseState.Phase1)
             {
-                Debug.Log("Phase 1 Finish");
-                isStrafe = false;
-                canChooseAttack = false;
-                listAttackOwneds.Clear();
-                listAttackOwnedPossibilities.Clear();
-
                 StopAllCoroutines();
                 cooldowAttackCoroutine = null;
                 timeChooseAttackCoroutine = null;
+                StartCoroutine(ChangeBossPhase());
 
-                navMeshAgent.ResetPath();
-                navMeshAgent.velocity = Vector3.zero;
-
-                behaviorAgent.SetVariableValue<S_EnumBossPhaseState>("PhaseState", S_EnumBossPhaseState.Phase2);
-                currentPhaseState = S_EnumBossPhaseState.Phase2;
-                behaviorAgent.Restart();
-
-                health = ssoBossData.Value.healthPhase2;
-                maxHealth = ssoBossData.Value.healthPhase2;
-                behaviorAgent.SetVariableValue<float>("Health", health);
-                lastValueHealth = 101f;
-                foreach (var bossAttack in ssoBossData.Value.listAttackPhase2)
-                {
-                    var attackData = new S_ClassAttackOwned
-                    {
-                        bossAttack = bossAttack,
-                        frequency = 0,
-                        score = 0,
-                    };
-                    listAttackOwneds.Add(attackData);
-                }
-                UpdateLastHealthValue();
-                behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
             }
             else
             {
@@ -450,6 +427,39 @@ public class S_Boss : MonoBehaviour
         SetListAttackPossible(minValue, lastValueHealth);
 
         lastValueHealth = minValue;
+    }
+
+    IEnumerator ChangeBossPhase()
+    {
+        Debug.Log("Phase 1 Finish");
+        isStrafe = false;
+        canChooseAttack = false;
+        currentAttack = null;
+        listAttackOwneds.Clear();
+        listAttackOwnedPossibilities.Clear();
+        navMeshAgent.ResetPath();
+        navMeshAgent.velocity = Vector3.zero;
+        yield return new WaitForSeconds(5f);
+        behaviorAgent.SetVariableValue<S_EnumBossPhaseState>("PhaseState", S_EnumBossPhaseState.Phase2);
+        currentPhaseState = S_EnumBossPhaseState.Phase2;
+        health = ssoBossData.Value.healthPhase2;
+        maxHealth = ssoBossData.Value.healthPhase2;
+        behaviorAgent.SetVariableValue<float>("Health", health);
+        lastValueHealth = 101f;
+        foreach (var bossAttack in ssoBossData.Value.listAttackPhase2)
+        {
+            var attackData = new S_ClassAttackOwned
+            {
+                bossAttack = bossAttack,
+                frequency = 0,
+                score = 0,
+            };
+            listAttackOwneds.Add(attackData);
+        }
+        UpdateLastHealthValue();
+        behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
+        canChooseAttack = true;
+        behaviorAgent.Restart();
     }
     #endregion
 
@@ -489,6 +499,7 @@ public class S_Boss : MonoBehaviour
 
     private void ChooseAttack()
     {
+        Debug.Log("Choose Attack");
         canChooseAttack = false;
         isStrafe = false;
         var minAttackFrequency = listAttackOwnedPossibilities.Min(a => a.frequency);
@@ -533,8 +544,9 @@ public class S_Boss : MonoBehaviour
     {
         lastAttack = attack;
         attack.frequency++;
-        animator.SetTrigger(attack.bossAttack.attackName);
-        Debug.Log(attack.bossAttack.attackName);
+        navMeshAgent.ResetPath();
+        navMeshAgent.velocity = Vector3.zero;
+        onExecuteAttack.Call(attack.bossAttack);
     }
 
     private IEnumerator CooldownAttack(S_ClassAttackOwned attack)
@@ -542,7 +554,7 @@ public class S_Boss : MonoBehaviour
         ExecuteAttack(attack);
         Debug.Log("Execute");
         yield return new WaitForSeconds(attack.bossAttack.attackTime);
-        Debug.Log("Finish");
+        Debug.Log("CD Finish");
         navMeshAgent.isStopped = false;
         navMeshAgent.updatePosition = true;
         navMeshAgent.updateRotation = true;

@@ -8,6 +8,13 @@ public class S_PlayerHitResolver : MonoBehaviour
     [Title("Animation")]
     [SerializeField, S_AnimationName] private string _hitParam;
 
+    [TabGroup("Settings")]
+    [Title("Camera")]
+    [SerializeField] private S_ClassCameraShake _cameraShake;
+
+    [TabGroup("References")]
+    [SerializeField] private SSO_RumbleData _parryRumbleData;
+
     [TabGroup("References")]
     [Title("Motor")]
     [SerializeField] private  GameObject _playerMotorGO;
@@ -23,6 +30,9 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerGainConviction _onPlayerGainConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnCameraShake _onCameraShake;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CanParry _canParry;
@@ -41,6 +51,12 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
 
     private void OnEnable()
     {
@@ -64,6 +80,10 @@ public class S_PlayerHitResolver : MonoBehaviour
                     {
                         _rseOnParrySuccess.Call(data);
                         _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
+                        _onCameraShake.Call(_cameraShake);
+
+                        _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
+                        _rseOnRumbleRequested.Call(_parryRumbleData.Value);
                         Debug.Log("Parried!");
                     }
                     else
@@ -93,6 +113,11 @@ public class S_PlayerHitResolver : MonoBehaviour
                 {
                     _rseOnParrySuccess.Call(contact);
                     _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
+
+                    _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
+                    _onCameraShake.Call(_cameraShake);
+
+                    _rseOnRumbleRequested.Call(_parryRumbleData.Value);
 
                     TryReflectProjectile(contact.source);
                     Debug.Log("Parried!");

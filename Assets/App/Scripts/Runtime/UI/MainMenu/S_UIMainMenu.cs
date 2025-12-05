@@ -7,6 +7,11 @@ using UnityEngine.UI;
 public class S_UIMainMenu : MonoBehaviour
 {
     [TabGroup("Settings")]
+    [Title("Save")]
+    [SerializeField, S_SaveName] private string saveName;
+
+    [TabGroup("Settings")]
+    [Title("Time")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeFadeSkip;
 
@@ -47,10 +52,25 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSE_OnQuitGame rseOnQuitGame;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnFadeIn rseOnFadeIn;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnFadeOut rseOnFadeOut;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnHideMouseCursor rseOnHideMouseCursor;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameInputEnabled;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnDisplayUIGame rseOnDisplayUIGame;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnLoadData rseOnLoadData;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_Navigation rsoNavigation;
@@ -121,6 +141,7 @@ public class S_UIMainMenu : MonoBehaviour
             {
                 gameObject.SetActive(false);
                 rsoNavigation.Value.selectableFocus = null;
+
                 rseOnCameraIntro.Call();
                 rsoInGame.Value = true;
             });
@@ -135,12 +156,26 @@ public class S_UIMainMenu : MonoBehaviour
 
             rseOnHideMouseCursor.Call();
 
+            rseOnCloseAllWindows.Call();
+
+            rseOnLoadData.Call(saveName, false);
+
             rseOnFadeOut.Call();
 
             StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
-                rseOnCloseAllWindows.Call();
-                rsoNavigation.Value.selectableFocus = null;
+                rseOnDataLoad.Call();
+                rseOnDisplayUIGame.Call(true);
+                rseOnGameInputEnabled.Call();
+                rsoInGame.Value = true;
+
+                StartCoroutine(S_Utils.DelayRealTime(1.2f, () => 
+                {
+                    gameObject.SetActive(false);
+                    rsoNavigation.Value.selectableFocus = null;
+
+                    rseOnFadeIn.Call();
+                }));
             }));
         }
     }

@@ -6,6 +6,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using UnityEngine.UI;
 
 public class S_Settings : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class S_Settings : MonoBehaviour
     private bool isLoaded = false;
     private bool isSave = false;
 
+    private List<Slider> listSlidersAudios = new();
     private List<TextMeshProUGUI> listTextAudios = new();
 
     private RSO_SettingsSaved rsoSettingsSavedOld;
@@ -52,10 +54,11 @@ public class S_Settings : MonoBehaviour
         isSave = false;
     }
 
-    public void Setup(List<TextMeshProUGUI> listTextVolumes)
+    public void Setup(List<Slider> listSlidersVolumes, List<TextMeshProUGUI> listTextVolumes)
     {
         isLoaded = true;
 
+        listSlidersAudios = listSlidersVolumes;
         listTextAudios = listTextVolumes;
     }
 

@@ -4,6 +4,9 @@ using UnityEngine;
 public class S_ConvictionManager : MonoBehaviour
 {
     [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnHealStart _onHealStart;
 
     [TabGroup("Inputs")]
@@ -36,6 +39,9 @@ public class S_ConvictionManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_ConsoleCheats _debugPlayer;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_DataSaved rsoDataSaved;
+
     private Coroutine _convictionConsumptionCoroutine = null;
     private Coroutine _convictionGainOrLossCoroutine = null;
 
@@ -52,6 +58,8 @@ public class S_ConvictionManager : MonoBehaviour
         _onPlayerGainConviction.action += OnPlayerGainConviction;
         _onSpawnProjectile.action += ReductionConviction;
         _onAttackStartPerformed.action += StopComsuptioncoroutine;
+
+        rseOnDataLoad.action += SetValueFromData;
     }
 
     private void OnDisable()
@@ -61,15 +69,13 @@ public class S_ConvictionManager : MonoBehaviour
         _onPlayerGainConviction.action -= OnPlayerGainConviction;
         _onSpawnProjectile.action -= ReductionConviction;
         _onAttackStartPerformed.action -= StopComsuptioncoroutine;
+
+        rseOnDataLoad.action -= SetValueFromData;
     }
 
-    private void ReduceConvictionOnHealPerformed()
+    private void Update()
     {
-        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - _playerConvictionData.Value.healCost, 0, _playerConvictionData.Value.maxConviction);
-        _playerCurrentConviction.Value = newAmmount;
-        rseOnPlayerConvictionUpdate.Call(newAmmount);
-
-        if (_debugPlayer.Value.infiniteConviction == true)
+        if (_debugPlayer.Value.infiniteConviction == true && _playerCurrentConviction.Value != _playerConvictionData.Value.maxConviction)
         {
             StartCoroutine(S_Utils.Delay(0.3f, () =>
             {
@@ -79,6 +85,21 @@ public class S_ConvictionManager : MonoBehaviour
 
             return;
         }
+    }
+
+    void SetValueFromData()
+    {
+        _playerCurrentConviction.Value = rsoDataSaved.Value.conviction;
+        rseOnPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
+    }
+
+    private void ReduceConvictionOnHealPerformed()
+    {
+        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - _playerConvictionData.Value.healCost, 0, _playerConvictionData.Value.maxConviction);
+        _playerCurrentConviction.Value = newAmmount;
+        rseOnPlayerConvictionUpdate.Call(newAmmount);
+
+        if (_debugPlayer.Value.infiniteConviction == true) return;
 
         DelayWhenConvictionLoss();
     }
@@ -162,16 +183,7 @@ public class S_ConvictionManager : MonoBehaviour
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
 
-        if (_debugPlayer.Value.infiniteConviction == true)
-        {
-            StartCoroutine(S_Utils.Delay(0.3f, () =>
-            {
-                _playerCurrentConviction.Value = _playerConvictionData.Value.maxConviction;
-                rseOnPlayerConvictionUpdate.Call(_playerConvictionData.Value.maxConviction);
-            }));
-            
-            return;
-        }
+        if (_debugPlayer.Value.infiniteConviction == true) return;
 
         if (ammount >= 1)
         {
@@ -220,6 +232,13 @@ public class S_ConvictionManager : MonoBehaviour
         if (_convictionConsumptionCoroutine != null)
         {
             StopCoroutine(_convictionConsumptionCoroutine);
+            _convictionConsumptionCoroutine = null;
+        }
+
+        if (_convictionGainOrLossCoroutine != null)
+        {
+            StopCoroutine(_convictionGainOrLossCoroutine);
+            _convictionGainOrLossCoroutine = null;
         }
     }
 }

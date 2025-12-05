@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public static class S_Utils
@@ -77,6 +78,18 @@ public static class S_Utils
         yield return new WaitUntil(() => asyncLoad.isDone);
 
         onComplete?.Invoke();
+    }
+    #endregion
+
+    #region Controller
+    public static IEnumerator Shake(float lowFreq, float highFreq, float duration)
+    {
+        if (Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(lowFreq, highFreq);
+            yield return new WaitForSeconds(duration);
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
+        }
     }
     #endregion
 }
