@@ -737,6 +737,7 @@ public class S_Enemy : MonoBehaviour
             GetCombo();
             navMeshAgent.speed = ssoEnemyData.Value.speedChase;
             isChase = true;
+            isPatrolling = false;
 
             rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Chasing the Player!");
         }

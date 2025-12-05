@@ -6,6 +6,8 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class S_Settings : MonoBehaviour
 {
@@ -26,6 +28,7 @@ public class S_Settings : MonoBehaviour
     private bool isLoaded = false;
     private bool isSave = false;
 
+    private List<Slider> listSlidersAudios = new();
     private List<TextMeshProUGUI> listTextAudios = new();
 
     private RSO_SettingsSaved rsoSettingsSavedOld;
@@ -52,10 +55,11 @@ public class S_Settings : MonoBehaviour
         isSave = false;
     }
 
-    public void Setup(List<TextMeshProUGUI> listTextVolumes)
+    public void Setup(List<Slider> listSlidersVolumes, List<TextMeshProUGUI> listTextVolumes)
     {
         isLoaded = true;
 
+        listSlidersAudios = listSlidersVolumes;
         listTextAudios = listTextVolumes;
     }
 
@@ -120,6 +124,14 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[0].volume != value)
         {
+            /*float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[0].volume);
+
+            float step = 5f;
+            float newValue = Mathf.Round(value / step) * step;
+
+
+            listSlidersAudios[0].value = Mathf.Clamp(newValue, listSlidersAudios[0].minValue, listSlidersAudios[0].maxValue);
+            */
             rsoSettingsSaved.Value.listVolumes[0].volume = value;
 
             listTextAudios[0].text = $"{value}%";
