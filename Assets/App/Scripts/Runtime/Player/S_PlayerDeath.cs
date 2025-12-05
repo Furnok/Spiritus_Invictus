@@ -13,6 +13,7 @@ public class S_PlayerDeath : MonoBehaviour
     [SerializeField] private GameObject _aimPointObject;
     [SerializeField] GameObject _visuals;
     [SerializeField] GameObject _player;
+    [SerializeField] GameObject _colliderMotor;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath _onPlayerDeathRse;
@@ -34,6 +35,8 @@ public class S_PlayerDeath : MonoBehaviour
     {
         _playerHurtBoxCollider.SetActive(false);
         _aimPointObject.SetActive(false);
+        _colliderMotor.SetActive(false);
+
         _playerRigidbody.linearVelocity = Vector3.zero;
 
         //_visuals.transform.localPosition = new Vector3(0, -1000, 0);
@@ -44,5 +47,6 @@ public class S_PlayerDeath : MonoBehaviour
         //_player.transform.position = newPosition;
 
         _playerRigidbody.useGravity = false;
+
     }
 }

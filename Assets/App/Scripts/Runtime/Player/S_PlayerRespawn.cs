@@ -18,6 +18,7 @@ public class S_PlayerRespawn : MonoBehaviour
     [SerializeField] Rigidbody _playerRigidbody;
     [SerializeField] GameObject _visuals;
     [SerializeField] GameObject _player;
+    [SerializeField] GameObject _colliderMotor;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
@@ -77,11 +78,17 @@ public class S_PlayerRespawn : MonoBehaviour
 
         StartCoroutine(S_Utils.DelayFrame(() => 
         {
+            _playerRigidbody.linearVelocity = Vector3.zero;
+
             _player.transform.position = _playerRespawnPosition.Value.position;
             _player.transform.rotation = _playerRespawnPosition.Value.rotation;
-        }));
 
-        _playerRigidbody.useGravity = true;
+            _colliderMotor.SetActive(true);
+
+            _playerRigidbody.useGravity = true;
+
+            _playerRigidbody.linearVelocity = Vector3.zero;
+        }));
 
         _onAnimationBoolValueChange.Call(_deadParam, false);
         _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
