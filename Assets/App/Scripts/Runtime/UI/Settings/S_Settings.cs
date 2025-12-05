@@ -185,12 +185,12 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[0].volume != value)
         {
-            startMove = true;
-
             float newValue = 0;
 
             if (Gamepad.current != null)
             {
+                startMove = true;
+
                 float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[0].volume);
                 newValue = Mathf.RoundToInt(diff * step);
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[0].volume + newValue, listSlidersAudios[0].minValue, listSlidersAudios[0].maxValue);
@@ -213,12 +213,12 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[1].volume != value)
         {
-            startMove = true;
-
             float newValue = 0;
 
             if (Gamepad.current != null)
             {
+                startMove = true;
+
                 float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[1].volume);
                 newValue = Mathf.RoundToInt(diff * step);
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[1].volume + newValue, listSlidersAudios[1].minValue, listSlidersAudios[1].maxValue);
@@ -241,12 +241,12 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[2].volume != value)
         {
-            startMove = true;
-
             float newValue = 0;
 
             if (Gamepad.current != null)
             {
+                startMove = true;
+
                 float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[2].volume);
                 newValue = Mathf.RoundToInt(diff * step);
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[2].volume + newValue, listSlidersAudios[2].minValue, listSlidersAudios[2].maxValue);
@@ -269,12 +269,12 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[3].volume != value)
         {
-            startMove = true;
-
             float newValue = 0;
 
             if (Gamepad.current != null)
             {
+                startMove = true;
+
                 float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[3].volume);
                 newValue = Mathf.RoundToInt(diff * step);
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[3].volume + newValue, listSlidersAudios[3].minValue, listSlidersAudios[3].maxValue);
