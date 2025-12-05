@@ -1,36 +1,67 @@
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_RootMotionModifier : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Filter")]
+    [SerializeField, S_TagName] private string tagPlayer;
+
+    [TabGroup("Settings")]
+    [Title("Move Multiplicator")]
     [SerializeField] private float rootMotionMultiplier = 2f;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Animator")]
     [SerializeField] private Animator animator;
+
+    [TabGroup("References")]
+    [Title("Rigidbody")]
     [SerializeField] private Rigidbody rb;
 
-    //[Header("Inputs")]
+    [TabGroup("References")]
+    [Title("Body")]
+    [SerializeField] private GameObject body;
 
-    //[Header("Outputs")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_GameInPause isPause;
 
     private void OnAnimatorMove()
     {
-        if(isPause.Value) return;
+        if (isPause.Value)
+            return;
+
+        Vector3 delta = animator.deltaPosition * rootMotionMultiplier;
+        Quaternion deltaRot = animator.deltaRotation;
 
         if (rb != null)
         {
-            Vector3 deltaPosition = animator.deltaPosition * rootMotionMultiplier;
-            Vector3 velocity = deltaPosition / Time.deltaTime;
-            velocity.y = rb.linearVelocity.y;
-            rb.linearVelocity = velocity;
+            if (!CanMove(delta))
+            {
+                return;
+            }
 
-            rb.MoveRotation(rb.rotation * animator.deltaRotation);
+            transform.position += delta;
+            transform.rotation *= deltaRot;
         }
         else
         {
-            transform.position += animator.deltaPosition * rootMotionMultiplier;
-            transform.rotation *= animator.deltaRotation;
+            transform.position += delta;
+            transform.rotation *= deltaRot;
         }
+    }
+
+    private bool CanMove(Vector3 delta)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(body.transform.position, delta.normalized, out hit, 1f))
+        {
+            if (hit.collider.CompareTag(tagPlayer))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

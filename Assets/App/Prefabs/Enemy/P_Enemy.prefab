@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 445208566684554611}
   - component: {fileID: 9183690598147176708}
   - component: {fileID: 8400928163415866521}
+  - component: {fileID: 1882207588305552252}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -273,14 +274,14 @@ Animator:
   m_Controller: {fileID: 9100000, guid: f5c94d77a24f6b844ac35d60bb110bd0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 1
   m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
     are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyHAttack1_D1'\n\tFrom
-    animation clip 'A_EnemyHAttack2_D1'\n\tFrom animation clip 'A_EnemyHAttack3_D1'"
+    by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyLAttack3_D3'\n\tFrom
+    animation clip 'A_EnemyLAttack2_D3'\n\tFrom animation clip 'A_EnemyLAttack1_D3'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -309,9 +310,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &445208566684554611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,11 +371,6 @@ MonoBehaviour:
   onGetHit:
     m_PersistentCalls:
       m_Calls: []
-  speedStrafe: 1.5
-  strafeWaitTimeMin: 3
-  strafeWaitTimeMax: 5
-  strafeRotationMin: 30
-  strafeRotationMax: 90
 --- !u!114 &9183690598147176708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,6 +408,24 @@ MonoBehaviour:
   eyesWeight: 0
   clampWeight: 0.5
   animator: {fileID: 5886562096679836169}
+--- !u!114 &1882207588305552252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039572514723219672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 419917398e6ee2943a97f7ac85b96aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagPlayer: Player
+  rootMotionMultiplier: 2
+  animator: {fileID: 5886562096679836169}
+  rb: {fileID: 2819568101127906853}
+  body: {fileID: 5421673960955687534}
+  isPause: {fileID: 11400000, guid: bdeb21dbb174a4d40baf0b4969e7a47a, type: 2}
 --- !u!1 &1200696667970941585
 GameObject:
   m_ObjectHideFlags: 0

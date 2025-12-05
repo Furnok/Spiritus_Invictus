@@ -1786,9 +1786,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 419917398e6ee2943a97f7ac85b96aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tagPlayer: Player
   rootMotionMultiplier: 2
   animator: {fileID: 652462019}
   rb: {fileID: 1966276039}
+  body: {fileID: 5030054472677269815}
   isPause: {fileID: 11400000, guid: bdeb21dbb174a4d40baf0b4969e7a47a, type: 2}
 --- !u!1 &674293987
 GameObject:
@@ -3927,6 +3929,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 652462020}
   m_SourcePrefab: {fileID: 100100000, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+--- !u!1 &5030054472677269815 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3698455495815254430, guid: 69218949dbb1d6941af8494d9db1df6b, type: 3}
+  m_PrefabInstance: {fileID: 5030054472677269814}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
