@@ -88,6 +88,6 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void Rotate()
     {
-        enemy.Rotate();
+        enemy.RotateEnemy();
     }
 }

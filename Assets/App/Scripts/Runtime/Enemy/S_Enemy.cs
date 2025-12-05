@@ -277,7 +277,7 @@ public class S_Enemy : MonoBehaviour
 
         if (target != null && !isAttacking && !isDead)
         {
-            Rotate();
+            RotateEnemy();
         }
 
         if (isChase && target != null && !isDead)
@@ -304,7 +304,7 @@ public class S_Enemy : MonoBehaviour
         Refresh();
     }
 
-    public void Rotate()
+    public void RotateEnemy()
     {
         Vector3 direction = target.transform.position - center.transform.position;
         direction.y = 0;
