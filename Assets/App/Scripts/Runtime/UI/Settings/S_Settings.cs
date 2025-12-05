@@ -123,14 +123,6 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[0].volume != value)
         {
-            /*float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[0].volume);
-
-            float step = 5f;
-            float newValue = Mathf.Round(value / step) * step;
-
-
-            listSlidersAudios[0].value = Mathf.Clamp(newValue, listSlidersAudios[0].minValue, listSlidersAudios[0].maxValue);
-            */
             rsoSettingsSaved.Value.listVolumes[0].volume = value;
 
             listTextAudios[0].text = $"{value}%";
