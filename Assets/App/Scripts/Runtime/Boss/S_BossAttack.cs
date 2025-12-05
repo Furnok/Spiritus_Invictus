@@ -2,6 +2,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Behavior;
 using Unity.Services.Analytics;
 using UnityEngine;
@@ -58,8 +59,15 @@ public class S_BossAttack : MonoBehaviour
     [TabGroup("Settings")]
     [Title("Waves")]
     [SerializeField, S_AnimationName("animator")] private string waves;
-    [TabGroup("Settings")] [SerializeField] private GameObject wavesPrefabs;
-    [TabGroup("Settings")][SerializeField] private Transform wavesSpawn;
+    [TabGroup("Settings")]
+    [SerializeField] private GameObject wavesPrefabs;
+    [TabGroup("Settings")]
+    [SerializeField] private List<GameObject> wavesSpawn = new List<GameObject>();
+    [TabGroup("Settings")]
+    [SerializeField] private GameObject middle;
+    [TabGroup("Settings")]
+    [SerializeField] private float timeBetweenWaves;
+    private Coroutine rotateWavesCoroutine;
 
     [TabGroup("Settings")]
     [Title("Balls")]
@@ -83,6 +91,10 @@ public class S_BossAttack : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private Animator animatorEcho;
+
+    [TabGroup("References")]
+    [Title("Boss")]
+    [SerializeField] private GameObject boss;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
@@ -231,8 +243,45 @@ public class S_BossAttack : MonoBehaviour
     }
     void Waves()
     {
-        animator.SetTrigger(waves);
-        Instantiate(wavesPrefabs, wavesSpawn);
+        StartCoroutine(StopWaves(currentAttack.attackTime));
+        boss.transform.DOMove(middle.transform.position, 0.5f).OnComplete(() =>
+        {
+            animator.SetTrigger(waves);
+            if(rotateWavesCoroutine!=null)
+            {
+                StopCoroutine(rotateWavesCoroutine);
+                rotateWavesCoroutine = null;
+            }
+            rotateWavesCoroutine = StartCoroutine(RotateWavesSpawn());
+        });  
+    }
+    IEnumerator RotateWavesSpawn()
+    {
+        middle.transform.rotation = Quaternion.Euler(0, 0, 0);
+        foreach (GameObject wavesSpawn in wavesSpawn)
+        {
+            Instantiate(wavesPrefabs, wavesSpawn.transform.position, wavesSpawn.transform.rotation);
+        }
+        yield return new WaitForSeconds(timeBetweenWaves);
+        middle.transform.rotation = Quaternion.Euler(0, 45, 0);
+        foreach (GameObject wavesSpawn in wavesSpawn)
+        {
+            Instantiate(wavesPrefabs, wavesSpawn.transform.position, wavesSpawn.transform.rotation);
+        }
+        yield return new WaitForSeconds(timeBetweenWaves);
+        if (rotateWavesCoroutine != null)
+        {
+            StopCoroutine(rotateWavesCoroutine);
+            rotateWavesCoroutine = null;
+        }
+        rotateWavesCoroutine = StartCoroutine(RotateWavesSpawn());
+    }
+    IEnumerator StopWaves(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StopCoroutine(rotateWavesCoroutine);
+        rotateWavesCoroutine = null;
+
     }
     void Balls()
     {
