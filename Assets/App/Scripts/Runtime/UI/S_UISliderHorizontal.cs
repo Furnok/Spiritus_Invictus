@@ -20,11 +20,6 @@ public class S_UISliderHorizontal : MonoBehaviour
     private bool startMove = false;
     private bool isStick = false;
 
-    private float holdTime = 0f;
-    [SerializeField] private float baseSpeed = 1f;   // vitesse au début
-    [SerializeField] private float maxSpeed = 3f;       // vitesse max après accélération
-    [SerializeField] private float accelTime = 1.5f;
-
     private void Update()
     {
         if (EventSystem.current.currentSelectedGameObject == slider.gameObject && Gamepad.current != null && startMove)
@@ -77,8 +72,6 @@ public class S_UISliderHorizontal : MonoBehaviour
         {
             if (lastSoundFrame == Time.frameCount)
                 return;
-
-            eventData.Use();
 
             AxisEventData axisData = eventData as AxisEventData;
             MoveDirection direction = axisData.moveDir;

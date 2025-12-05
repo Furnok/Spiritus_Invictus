@@ -6,7 +6,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class S_Settings : MonoBehaviour
