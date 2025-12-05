@@ -190,6 +190,7 @@ public class S_PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //return;
         UpdateGround();
 
         if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Moving) == false)

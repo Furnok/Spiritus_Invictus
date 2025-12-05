@@ -15,6 +15,10 @@ public class S_PlayerRespawn : MonoBehaviour
     [Title("Aim Point")]
     [SerializeField] private GameObject _aimPointObject;
 
+    [SerializeField] Rigidbody _playerRigidbody;
+    [SerializeField] GameObject _visuals;
+    [SerializeField] GameObject _player;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
 
@@ -63,7 +67,21 @@ public class S_PlayerRespawn : MonoBehaviour
         _playerHurtBoxCollider.SetActive(true);
         _aimPointObject.SetActive(true);
 
-        transform.SetPositionAndRotation(_playerRespawnPosition.Value.position, _playerRespawnPosition.Value.rotation);
+        _playerRigidbody.linearVelocity = Vector3.zero;
+
+        _player.transform.SetPositionAndRotation(_playerRespawnPosition.Value.position, _playerRespawnPosition.Value.rotation);
+        _player.transform.position = _playerRespawnPosition.Value.position;
+        _player.transform.rotation = _playerRespawnPosition.Value.rotation;
+
+        //_visuals.transform.localPosition = new Vector3(0, 0, 0);
+
+        StartCoroutine(S_Utils.DelayFrame(() => 
+        {
+            _player.transform.position = _playerRespawnPosition.Value.position;
+            _player.transform.rotation = _playerRespawnPosition.Value.rotation;
+        }));
+
+        _playerRigidbody.useGravity = true;
 
         _onAnimationBoolValueChange.Call(_deadParam, false);
         _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
