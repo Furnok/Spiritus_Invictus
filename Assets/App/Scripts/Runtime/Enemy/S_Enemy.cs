@@ -509,7 +509,7 @@ public class S_Enemy : MonoBehaviour
             behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
             behaviorAgent.Restart();
 
-            StartCoroutine(ResetAttack());
+            resetCoroutine = StartCoroutine(ResetAttack());
 
             rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Stun!");
         }
