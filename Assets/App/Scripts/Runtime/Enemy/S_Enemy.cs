@@ -854,6 +854,7 @@ public class S_Enemy : MonoBehaviour
         for (int i = 0; i < combo.listAnimationsCombos.Count; i++)
         {
             isAttacking = true;
+            RotateEnemy();
 
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
             overrideController[overrideKey] = combo.listAnimationsCombos[i].animation;
@@ -872,6 +873,7 @@ public class S_Enemy : MonoBehaviour
             yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length / 2);
 
             isAttacking = false;
+            RotateEnemy();
 
             float distance = Vector3.Distance(body.transform.position, target.transform.position);
             if (distance > combo.distanceToLoseAttack)
