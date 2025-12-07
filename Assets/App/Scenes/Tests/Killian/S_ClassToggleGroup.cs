@@ -9,9 +9,14 @@ namespace UnityEngine.UI
     [DisallowMultipleComponent]
     public class S_ClassToggleGroup : UIBehaviour
     {
+        [Header("Settings")]
         [SerializeField] private bool m_AllowSwitchOff = false;
 
-        public bool allowSwitchOff { get { return m_AllowSwitchOff; } set { m_AllowSwitchOff = value; } }
+        public bool allowSwitchOff
+        {
+            get => m_AllowSwitchOff;
+            set => m_AllowSwitchOff = value;
+        }
 
         protected List<S_ClassToggle> m_Toggles = new();
 
@@ -19,14 +24,14 @@ namespace UnityEngine.UI
 
         protected override void Start()
         {
-            EnsureValidState();
             base.Start();
+            EnsureValidState();
         }
 
         protected override void OnEnable()
         {
-            EnsureValidState();
             base.OnEnable();
+            EnsureValidState();
         }
 
         private void ValidateToggleIsInGroup(S_ClassToggle toggle)
@@ -39,69 +44,53 @@ namespace UnityEngine.UI
         {
             ValidateToggleIsInGroup(toggle);
 
-            for (var i = 0; i < m_Toggles.Count; i++)
+            foreach (var t in m_Toggles)
             {
-                if (m_Toggles[i] == toggle)
-                    continue;
-
-                if (sendCallback)
-                    m_Toggles[i].isOn = false;
-                else
-                    m_Toggles[i].SetIsOnWithoutNotify(false);
+                if (t == toggle) continue;
+                if (sendCallback) t.isOn = false;
+                else t.SetIsOnWithoutNotify(false);
             }
-        }
-
-        public void UnregisterToggle(S_ClassToggle toggle)
-        {
-            if (m_Toggles.Contains(toggle))
-                m_Toggles.Remove(toggle);
         }
 
         public void RegisterToggle(S_ClassToggle toggle)
         {
-            if (!m_Toggles.Contains(toggle))
-                m_Toggles.Add(toggle);
+            if (toggle != null && !m_Toggles.Contains(toggle)) m_Toggles.Add(toggle);
+        }
+
+        public void UnregisterToggle(S_ClassToggle toggle)
+        {
+            if (toggle != null) m_Toggles.Remove(toggle);
         }
 
         public void EnsureValidState()
         {
-            if (!allowSwitchOff && !AnyTogglesOn() && m_Toggles.Count != 0)
+            if (!allowSwitchOff && !m_Toggles.Any(t => t.isOn) && m_Toggles.Count > 0)
             {
                 m_Toggles[0].isOn = true;
                 NotifyToggleOn(m_Toggles[0]);
             }
 
-            IEnumerable<S_ClassToggle> activeToggles = ActiveToggles();
+            var activeToggles = m_Toggles.Where(t => t.isOn).ToList();
+            if (activeToggles.Count <= 1) return;
 
-            if (activeToggles.Count() > 1)
-            {
-                S_ClassToggle firstActive = GetFirstActiveToggle();
-
-                foreach (S_ClassToggle toggle in activeToggles)
-                {
-                    if (toggle == firstActive)
-                    {
-                        continue;
-                    }
-                    toggle.isOn = false;
-                }
-            }
+            var firstActive = activeToggles.First();
+            foreach (var toggle in activeToggles.Skip(1))
+                toggle.isOn = false;
         }
 
         public bool AnyTogglesOn()
         {
-            return m_Toggles.Find(x => x.isOn) != null;
+            return m_Toggles.Any(t => t.isOn);
         }
 
         public IEnumerable<S_ClassToggle> ActiveToggles()
         {
-            return m_Toggles.Where(x => x.isOn);
+            return m_Toggles.Where(t => t.isOn);
         }
 
         public S_ClassToggle GetFirstActiveToggle()
         {
-            IEnumerable<S_ClassToggle> activeToggles = ActiveToggles();
-            return activeToggles.Count() > 0 ? activeToggles.First() : null;
+            return m_Toggles.FirstOrDefault(t => t.isOn);
         }
 
         public void SetAllTogglesOff(bool sendCallback = true)
@@ -109,15 +98,10 @@ namespace UnityEngine.UI
             bool oldAllowSwitchOff = m_AllowSwitchOff;
             m_AllowSwitchOff = true;
 
-            if (sendCallback)
+            foreach (var toggle in m_Toggles)
             {
-                for (var i = 0; i < m_Toggles.Count; i++)
-                    m_Toggles[i].isOn = false;
-            }
-            else
-            {
-                for (var i = 0; i < m_Toggles.Count; i++)
-                    m_Toggles[i].SetIsOnWithoutNotify(false);
+                if (sendCallback) toggle.isOn = false;
+                else toggle.SetIsOnWithoutNotify(false);
             }
 
             m_AllowSwitchOff = oldAllowSwitchOff;
