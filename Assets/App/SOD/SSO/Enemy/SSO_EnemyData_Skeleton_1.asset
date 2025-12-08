@@ -24,6 +24,7 @@ MonoBehaviour:
     detectionRange: 5
     detectionAggroRangeMax: 50
     attackCooldown: 3
+    waitStun: 0.6
     chanceForEasterEgg: 1
     patrolPointWaitMin: 1
     patrolPointWaitMax: 3
@@ -35,6 +36,7 @@ MonoBehaviour:
     listCombos:
     - listAnimationsCombos:
       - animation: {fileID: 7400000, guid: 73f0a4f99c3191a4da6b4baa1477cc8c, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
@@ -51,6 +53,7 @@ MonoBehaviour:
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 42b135111bbe964408a1e9d68bfd7e40, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
@@ -67,6 +70,7 @@ MonoBehaviour:
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: c34ce13b5bc91fd429de665691f34f7d, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
