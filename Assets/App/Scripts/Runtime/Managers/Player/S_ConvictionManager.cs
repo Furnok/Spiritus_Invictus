@@ -21,6 +21,9 @@ public class S_ConvictionManager : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnAttackStartPerformed _onAttackStartPerformed;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
 
@@ -60,6 +63,8 @@ public class S_ConvictionManager : MonoBehaviour
         _onAttackStartPerformed.action += StopComsuptioncoroutine;
 
         rseOnDataLoad.action += SetValueFromData;
+
+        _rseOnPlayerHit.action += ReductionConviction;
     }
 
     private void OnDisable()
@@ -71,6 +76,8 @@ public class S_ConvictionManager : MonoBehaviour
         _onAttackStartPerformed.action -= StopComsuptioncoroutine;
 
         rseOnDataLoad.action -= SetValueFromData;
+
+        _rseOnPlayerHit.action -= ReductionConviction;
     }
 
     private void Update()
@@ -179,6 +186,26 @@ public class S_ConvictionManager : MonoBehaviour
 
     private void ReductionConviction(float ammount)
     {
+        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
+        _playerCurrentConviction.Value = newAmmount;
+        rseOnPlayerConvictionUpdate.Call(newAmmount);
+
+        if (_debugPlayer.Value.infiniteConviction == true) return;
+
+        if (ammount >= 1)
+        {
+            DelayWhenConvictionLoss();
+        }
+        else
+        {
+            StartConvitionConsumption();
+        }
+    }
+
+    private void ReductionConviction(S_StructAttackContact attacqueContactInfo)
+    {   
+        float ammount = attacqueContactInfo.data.convictionReduction;
+
         var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - ammount, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = newAmmount;
         rseOnPlayerConvictionUpdate.Call(newAmmount);
