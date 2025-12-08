@@ -19,9 +19,6 @@ public class S_PlayerHealthManager : MonoBehaviour
     [SerializeField] private RSE_OnPlayerHealthUpdate rseOnPlayerHealthUpdate;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnAnimationBoolValueChange _rseOnAnimationBoolValueChange;
-
-    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
     [TabGroup("Outputs")]
@@ -85,7 +82,6 @@ public class S_PlayerHealthManager : MonoBehaviour
         {
             if (_debugPlayer.Value.cantDie == true) return;
             rseOnPlayerDeath.Call();
-            _rseOnAnimationBoolValueChange.Call("isDead", true);
             _onPlayerAddState.Call(S_EnumPlayerState.Dying);
         }
     }

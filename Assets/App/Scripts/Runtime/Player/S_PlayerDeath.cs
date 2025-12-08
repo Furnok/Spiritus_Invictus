@@ -35,6 +35,9 @@ public class S_PlayerDeath : MonoBehaviour
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnAnimationBoolValueChange _rseOnAnimationBoolValueChange;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerDead _PlayerDead;
 
     private void OnEnable()
@@ -50,6 +53,7 @@ public class S_PlayerDeath : MonoBehaviour
     private void HandlePlayerDeath()
     {
         _PlayerDead.Value = true;
+        _rseOnAnimationBoolValueChange.Call("isDead", true);
 
         _playerHurtBoxCollider.SetActive(false);
         _aimPointObject.SetActive(false);
