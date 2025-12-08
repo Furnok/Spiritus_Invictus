@@ -34,6 +34,9 @@ public class S_PlayerDeath : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerDead _PlayerDead;
+
     private void OnEnable()
     {
         _onPlayerDeathRse.action += HandlePlayerDeath;
@@ -46,6 +49,8 @@ public class S_PlayerDeath : MonoBehaviour
 
     private void HandlePlayerDeath()
     {
+        _PlayerDead.Value = true;
+
         _playerHurtBoxCollider.SetActive(false);
         _aimPointObject.SetActive(false);
 

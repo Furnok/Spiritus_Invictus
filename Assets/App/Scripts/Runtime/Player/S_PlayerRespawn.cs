@@ -58,6 +58,9 @@ public class S_PlayerRespawn : MonoBehaviour
     [SerializeField] private RSO_PlayerCurrentConviction _playerCurrentConviction;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerDead _PlayerDead;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats _playerStats;
 
     [TabGroup("Outputs")]
@@ -103,5 +106,7 @@ public class S_PlayerRespawn : MonoBehaviour
 
         _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
         _onPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
+
+        _PlayerDead.Value = false;
     }
 }
