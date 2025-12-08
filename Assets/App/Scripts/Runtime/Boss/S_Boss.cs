@@ -66,6 +66,10 @@ public class S_Boss : MonoBehaviour
     [TabGroup("Settings")]
     [SerializeField, S_AnimationName("animator")] private string stunParam;
 
+    [TabGroup("Settings")]
+    [Title("Mask")]
+    [SerializeField] private LayerMask obstacleMask;
+
     [TabGroup("References")]
     [Title("Agent")]
     [SerializeField] private BehaviorGraphAgent behaviorAgent;
@@ -98,6 +102,9 @@ public class S_Boss : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_EnemyHurt bossHurt;
 
+    [TabGroup("References")]
+    [SerializeField] private S_BossAttack bossAttack;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
 
@@ -126,6 +133,7 @@ public class S_Boss : MonoBehaviour
     private float initDistance = 0;
 
     private GameObject target = null;
+    private Transform aimPoint = null;
     private BlackboardVariable<bool> isChasing = null;
 
     private bool isDead = false;
@@ -240,14 +248,60 @@ public class S_Boss : MonoBehaviour
         behaviorAgent.SetVariableValue<GameObject>("Target", newTarget);
         if(target != null)
         {
-            behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
-            canChooseAttack = true;
-            StartCoroutine(GainDifficultyLevel());
+            newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
+            aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
+            bossAttack.aimPoint = aimPoint;
+            float distance = Vector3.Distance(transform.position, newTarget.transform.position);
+            Vector3 dir = (newTarget.transform.position - transform.position).normalized;
+
+            if (Physics.Raycast(transform.position, dir, out RaycastHit hit, distance, obstacleMask))
+            {
+                Debug.DrawLine(transform.position, newTarget.transform.position, Color.yellow);
+
+                if (hit.collider.gameObject != newTarget)
+                {
+                    if (health != maxHealth)
+                    {
+                        health = maxHealth;
+                        onUpdateBossHealth.Invoke(health);
+                    }
+
+                    behaviorAgent.SetVariableValue<float>("Health", health);
+
+                    behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Idle);
+                }
+                else
+                {
+                    behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
+                    canChooseAttack = true;
+                    StartCoroutine(GainDifficultyLevel());
+                }
+            }
+            else
+            {
+                behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Chase);
+                canChooseAttack = true;
+                StartCoroutine(GainDifficultyLevel());
+            }
         }
         else
         {
+            if (health != maxHealth)
+            {
+                health = maxHealth;
+                onUpdateBossHealth.Invoke(health);
+            }
+
+            behaviorAgent.SetVariableValue<float>("Health", health);
+
+            aimPoint = null;
+
+            detectionCollider.enabled = false;
+
             behaviorAgent.SetVariableValue<S_EnumBossState>("State", S_EnumBossState.Idle);
         }
+        navMeshAgent.ResetPath();
+        navMeshAgent.velocity = Vector3.zero;
     }
 
     #region Chase

@@ -45,8 +45,6 @@ public class S_BossAttack : MonoBehaviour
     [TabGroup("Settings")]
     [Title("Simon")]
     [SerializeField, S_AnimationName("animator")] private string simon;
-    [TabGroup("Settings")][SerializeField] private float timeEchoSimon = 1f;
-    [TabGroup("Settings")][SerializeField] private GameObject echoSimonWeapon;
 
     [TabGroup("Settings")]
     [Title("Dualliste")]
@@ -55,7 +53,8 @@ public class S_BossAttack : MonoBehaviour
     [TabGroup("Settings")]
     [Title("PingPong")]
     [SerializeField, S_AnimationName("animator")] private string pingPong;
-
+    [TabGroup("Settings")]
+    [SerializeField] private GameObject projectilePingPongSpawn;
     [TabGroup("Settings")]
     [Title("Waves")]
     [SerializeField, S_AnimationName("animator")] private string waves;
@@ -86,11 +85,15 @@ public class S_BossAttack : MonoBehaviour
     [SerializeField, S_AnimationName("animator")] private string wingsOfHell;
 
     [TabGroup("References")]
+    [Title("Colliders")]
+    [SerializeField] private Collider bodyCollider;
+
+    [TabGroup("References")]
     [Title("Animator")]
     [SerializeField] private Animator animator;
 
     [TabGroup("References")]
-    [SerializeField] private Animator animatorEcho;
+    [SerializeField] private S_BossProjectile bossProjectile;
 
     [TabGroup("References")]
     [Title("Boss")]
@@ -98,6 +101,8 @@ public class S_BossAttack : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
+
+    public Transform aimPoint;
 
     private S_ClassBossAttack currentAttack;
     private void OnEnable()
@@ -217,20 +222,6 @@ public class S_BossAttack : MonoBehaviour
     void Simon()
     {
         animator.SetTrigger(simon);
-        StartCoroutine(PlayEchoAnimation());
-    }
-
-    IEnumerator PlayEchoAnimation()
-    {
-        yield return new WaitForSeconds(timeEchoSimon);
-        echoSimonWeapon.SetActive(true);
-        animatorEcho.SetTrigger(simon);
-        StartCoroutine(DisableEchoWeaponAfterDelay(currentAttack.attackTime));
-    }
-    IEnumerator DisableEchoWeaponAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay-1);
-        echoSimonWeapon.SetActive(false);
     }
 
     void Dualliste()
@@ -239,7 +230,15 @@ public class S_BossAttack : MonoBehaviour
     }
     void PingPong()
     {
-        animator.SetTrigger(pingPong);
+        for(int i=0; i< currentAttack.listComboData.Count; i++)
+        {
+            animator.SetTrigger(pingPong);
+            if (currentAttack.listComboData[i].attackType == S_EnumEnemyAttackType.Projectile)
+            {
+                S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
+                projectileInstance.Initialize(bodyCollider.transform, aimPoint, currentAttack.listComboData[i]);
+            }
+        }
     }
     void Waves()
     {
@@ -258,16 +257,10 @@ public class S_BossAttack : MonoBehaviour
     IEnumerator RotateWavesSpawn()
     {
         middle.transform.rotation = Quaternion.Euler(0, 0, 0);
-        foreach (GameObject wavesSpawn in wavesSpawn)
-        {
-            Instantiate(wavesPrefabs, wavesSpawn.transform.position, wavesSpawn.transform.rotation);
-        }
+        SpawnWaves();
         yield return new WaitForSeconds(timeBetweenWaves);
         middle.transform.rotation = Quaternion.Euler(0, 45, 0);
-        foreach (GameObject wavesSpawn in wavesSpawn)
-        {
-            Instantiate(wavesPrefabs, wavesSpawn.transform.position, wavesSpawn.transform.rotation);
-        }
+        SpawnWaves();
         yield return new WaitForSeconds(timeBetweenWaves);
         if (rotateWavesCoroutine != null)
         {
@@ -282,6 +275,13 @@ public class S_BossAttack : MonoBehaviour
         StopCoroutine(rotateWavesCoroutine);
         rotateWavesCoroutine = null;
 
+    }
+    void SpawnWaves()
+    {
+        foreach (GameObject wavesSpawn in wavesSpawn)
+        {
+            Instantiate(wavesPrefabs, wavesSpawn.transform.position, Quaternion.identity);
+        }
     }
     void Balls()
     {
