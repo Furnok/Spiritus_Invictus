@@ -21,7 +21,11 @@ public class S_PlayerRespawn : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Others")]
-    [SerializeField] GameObject _colliderMotor;
+    [SerializeField] GameObject _colliderMotorGO;
+
+    [TabGroup("References")]
+    [Title("Others")]
+    [SerializeField] Collider _colliderMotor;
 
     [TabGroup("References")]
     [SerializeField] GameObject _visuals;
@@ -92,7 +96,10 @@ public class S_PlayerRespawn : MonoBehaviour
             {
                 _aimPointObject.SetActive(true);
                 _playerHurtBoxCollider.SetActive(true);
-                _colliderMotor.SetActive(true);
+                _colliderMotorGO.SetActive(true);
+
+                _colliderMotor.providesContacts = true;
+                _colliderMotor.enabled = true;
 
                 _playerRigidbody.useGravity = true;
 
