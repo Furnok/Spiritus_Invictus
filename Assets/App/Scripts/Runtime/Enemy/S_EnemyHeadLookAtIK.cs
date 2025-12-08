@@ -31,9 +31,9 @@ public class S_EnemyHeadLookAtIK : MonoBehaviour
         target = targetPos;
     }
 
-    public void SetDead()
+    public void IsDead(bool value)
     {
-        isDead = true;
+        isDead = value;
     }
 
     private void OnAnimatorIK(int layerIndex)

@@ -39,10 +39,6 @@ public class S_ClassEnemyData
     [SuffixLabel("s", Overlay = true)]
     public float waitStun = 0;
 
-    [Title("Secret")]
-    [SuffixLabel("%", Overlay = true)]
-    public float chanceForEasterEgg = 0;
-
     [Title("Delay")]
     [SuffixLabel("s", Overlay = true)]
     public float patrolPointWaitMin = 0;

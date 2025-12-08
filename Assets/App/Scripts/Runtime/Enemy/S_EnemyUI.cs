@@ -26,22 +26,11 @@ public class S_EnemyUI : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private Slider sliderHealth;
 
-    [TabGroup("References")]
-    [Title("Script")]
-    [SerializeField] private S_Enemy enemy;
-
     private Coroutine displayHealthBar;
     private Tween healthTween;
 
-    private void OnEnable()
-    {
-        enemy.onUpdateEnemyHealth.AddListener(UpdateHealthBar);
-    }
-
     private void OnDisable()
     {
-        enemy.onUpdateEnemyHealth.RemoveListener(UpdateHealthBar);
-
         healthTween?.Kill();
     }
 
@@ -67,7 +56,7 @@ public class S_EnemyUI : MonoBehaviour
         }
     }
 
-    private void UpdateHealthBar(float healthValue)
+    public void UpdateHealthBar(float healthValue)
     {
         CanvasGroup cg = content.GetComponent<CanvasGroup>();
         cg.DOKill();

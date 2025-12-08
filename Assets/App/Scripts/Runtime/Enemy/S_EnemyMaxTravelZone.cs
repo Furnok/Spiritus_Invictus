@@ -1,6 +1,5 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class S_EnemyMaxTravelZone : MonoBehaviour
 {
@@ -12,22 +11,15 @@ public class S_EnemyMaxTravelZone : MonoBehaviour
     [Title("Collider")]
     [SerializeField] private BoxCollider box;
 
-    [HideInInspector] public UnityEvent<GameObject> onTargetDetected = null;
-    [HideInInspector] public UnityEvent<GameObject> onTarget = null;
-
-    private GameObject targetDetected = null;
-
-    public void Setup(SSO_EnemyData enemyData)
-    {
-        box.size = new Vector3(enemyData.Value.detectionAggroRangeMax, enemyData.Value.detectionAggroRangeMax, enemyData.Value.detectionAggroRangeMax);
-    }
+    [TabGroup("References")]
+    [Title("Script")]
+    [SerializeField] private S_Enemy enemy;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(playerTag))
         {
-            targetDetected = other.gameObject;
-            onTarget.Invoke(targetDetected);
+            enemy.SetTargetInMaxTravelZone(other.gameObject);
         }
     }
 
@@ -35,9 +27,13 @@ public class S_EnemyMaxTravelZone : MonoBehaviour
     {
         if (other.CompareTag(playerTag))
         {
-            targetDetected = null;
-            onTargetDetected.Invoke(targetDetected);
-            onTarget.Invoke(targetDetected);
+            enemy.SetTargetInMaxTravelZone(null);
+            enemy.SetTarget(null);
         }
+    }
+
+    public void Setup(SSO_EnemyData enemyData)
+    {
+        box.size = new Vector3(enemyData.Value.detectionAggroRangeMax, enemyData.Value.detectionAggroRangeMax, enemyData.Value.detectionAggroRangeMax);
     }
 }

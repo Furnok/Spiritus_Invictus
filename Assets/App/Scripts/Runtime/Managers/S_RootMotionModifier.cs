@@ -8,6 +8,9 @@ public class S_RootMotionModifier : MonoBehaviour
     [SerializeField, S_TagName] private string tagPlayer;
 
     [TabGroup("Settings")]
+    [SerializeField, S_TagName] private string tagObstacle;
+
+    [TabGroup("Settings")]
     [Title("Move Multiplicator")]
     [SerializeField] private float rootMotionMultiplier = 2f;
 
@@ -28,8 +31,7 @@ public class S_RootMotionModifier : MonoBehaviour
 
     private void OnAnimatorMove()
     {
-        if (isPause.Value)
-            return;
+        if (isPause.Value) return;
 
         Vector3 delta = animator.deltaPosition * rootMotionMultiplier;
         Quaternion deltaRot = animator.deltaRotation;
@@ -53,10 +55,7 @@ public class S_RootMotionModifier : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(body.transform.position, delta.normalized, out hit, 1f))
         {
-            if (hit.collider.CompareTag(tagPlayer))
-            {
-                return false;
-            }
+            if (hit.collider.CompareTag(tagPlayer) || hit.collider.CompareTag(tagObstacle)) return false;
         }
 
         return true;

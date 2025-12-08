@@ -1,10 +1,8 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 
 public class S_Enemy : MonoBehaviour
 {
@@ -31,21 +29,11 @@ public class S_Enemy : MonoBehaviour
     [SerializeField, S_AnimationName("animator")] private string hitHeavyParam;
 
     [TabGroup("Settings")]
-    [SerializeField, S_AnimationName("animator")] private string tBagParam;
-
-    [TabGroup("Settings")]
-    [Title("Mask")]
-    [SerializeField] private LayerMask obstacleMask;
-
-    [TabGroup("Settings")]
     [Title("Patrol Points")]
     [SerializeField] private List<GameObject> patrolPointsList;
 
     [TabGroup("References")]
     [Title("Agent")]
-    [SerializeField] private BehaviorGraphAgent behaviorAgent;
-
-    [TabGroup("References")]
     [SerializeField] private NavMeshAgent navMeshAgent;
 
     [TabGroup("References")]
@@ -105,13 +93,13 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private Transform patrolPoints;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
-
-    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
@@ -125,48 +113,44 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_EnemyData ssoEnemyData;
 
-    [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth = null;
-    [HideInInspector] public UnityEvent onGetHit = null;
-
     private float health = 0;
-    private float maxhealth = 0;
 
     private int currentPatrolIndex = 0;
 
     private Transform aimPoint = null;
 
-    private BlackboardVariable<bool> isPatroling = null;
-    private BlackboardVariable<bool> isChasing = null;
-
     private AnimatorOverrideController overrideController = null;
-
-    private Coroutine comboCoroutine = null;
-    private Coroutine resetAttack = null;
-    private Coroutine patrolCoroutine = null;
-
-    private bool isPerformingCombo = false;
-    private S_EnumEnemyState? pendingState = null;
-    private GameObject pendingTarget = null;
-
-    private bool isPlayerDead = false;
 
     private GameObject targetInZone = null;
     private GameObject target = null;
 
-    private bool isChase = false;
-    private bool isPatrolling = false;
-    private bool isDead = false;
-    private bool isStrafe = false;
-    private bool isFighting = false;
-    private bool canAttack = true;
-    private bool waiting = false;
-    private bool isAttacking = false;
-
+    private S_EnumEnemyState currentState = S_EnumEnemyState.Idle;
     private S_ClassAnimationsCombos combo = null;
 
     private float nextChangeTime = 0f;
     private float nextWaitEndTime = 0f;
     private int strafeDirection = 1;
+
+    private Coroutine comboCoroutine = null;
+    private Coroutine stunCoroutine = null;
+    private Coroutine resetAttack = null;
+    private Coroutine patrolingCoroutine = null;
+
+    private bool isPerformingCombo = false;
+    private S_EnumEnemyState? pendingState = null;
+    private GameObject pendingTarget = null;
+
+    private bool isPatroling = false;
+    private bool isChasing = false;
+    private bool isFighting = false;
+    private bool isHeavyHit = false;
+    private bool isDead = false;
+
+    private bool canAttack = false;
+    private bool isPlayerDeath = false;
+    private bool isAttacking = false;
+    private bool isStrafe = false;
+    private bool isWaiting = false;
 
     private void Awake()
     {
@@ -186,27 +170,8 @@ public class S_Enemy : MonoBehaviour
 
         overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
 
-        behaviorAgent.SetVariableValue<GameObject>("Body", body);
-        behaviorAgent.SetVariableValue<List<GameObject>>("PatrolPoints", patrolPointsList);
-        behaviorAgent.SetVariableValue<Animator>("Animator", animator);
-        behaviorAgent.SetVariableValue<Collider>("BodyCollider", bodyCollider);
-        behaviorAgent.SetVariableValue<Collider>("DetectionRangeCollider", detectionCollider);
-        behaviorAgent.SetVariableValue<Collider>("HurtBox", hurtCollider);
-
         health = ssoEnemyData.Value.health;
-        maxhealth = ssoEnemyData.Value.health;
         navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
-        behaviorAgent.SetVariableValue<float>("Health", ssoEnemyData.Value.health);
-        behaviorAgent.SetVariableValue<float>("StartPatrolWaitMin", ssoEnemyData.Value.startPatrolWaitMin);
-        behaviorAgent.SetVariableValue<float>("StartPatrolWaitMax", ssoEnemyData.Value.startPatrolWaitMax);
-        behaviorAgent.SetVariableValue<float>("TimeBeforeChaseMin", ssoEnemyData.Value.timeBeforeChaseMin);
-        behaviorAgent.SetVariableValue<float>("TimeBeforeChaseMax", ssoEnemyData.Value.timeBeforeChaseMax);
-
-        behaviorAgent.SetVariableValue<string>("MoveParam", moveParam);
-        behaviorAgent.SetVariableValue<string>("DeathParam", deathParam);
-        behaviorAgent.SetVariableValue<string>("AttackIdleParam", idleAttack);
-        behaviorAgent.SetVariableValue<string>("AttackParam", attackParam);
-        behaviorAgent.SetVariableValue<string>("HitHeavyParam", hitHeavyParam);
 
         enemyDetectionRange.Setup(ssoEnemyData);
         enemyUI.Setup(ssoEnemyData);
@@ -215,49 +180,16 @@ public class S_Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        enemyDetectionRange.onTargetDetected.AddListener(SetTarget);
-        enemyHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
-        enemyMaxTravelZone.onTargetDetected.AddListener(SetTarget);
-        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
-
-        rseOnPlayerDeath.action += PlayerDied;
+        rseOnPlayerDeath.action += PlayerDeath;
         rseOnPlayerRespawn.action += PlayerRespawn;
         rseOnDataLoad.action += LoadEnemy;
-
-        if (behaviorAgent.GetVariable("IsPatroling", out isPatroling))
-        {
-            isPatroling.OnValueChanged += Patroling;
-        }
-
-        if (behaviorAgent.GetVariable("IsChasing", out isChasing))
-        {
-            isChasing.OnValueChanged += Chasing;
-        }
     }
 
     private void OnDisable()
     {
-        enemyDetectionRange.onTargetDetected.RemoveListener(SetTarget);
-        enemyHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
-        enemyMaxTravelZone.onTargetDetected.RemoveListener(SetTarget);
-        enemyMaxTravelZone.onTarget.AddListener(SetInsideBox);
-
-        rseOnPlayerDeath.action -= PlayerDied;
+        rseOnPlayerDeath.action -= PlayerDeath;
         rseOnPlayerRespawn.action -= PlayerRespawn;
         rseOnDataLoad.action -= LoadEnemy;
-
-        if (isPatroling != null)
-        {
-            isPatroling.OnValueChanged -= Patroling;
-        }
-
-        if (isChasing != null)
-        {
-            isChasing.OnValueChanged -= Chasing;
-        }
-
-        overrideController["AttackAnimation"] = null;
-        overrideController["AttackAnimation2"] = null;
     }
 
     private void Start()
@@ -269,26 +201,19 @@ public class S_Enemy : MonoBehaviour
         };
 
         rsoDataSaved.Value.enemy.Add(enemy);
+
+        UpdateState(S_EnumEnemyState.Idle);
     }
 
     private void Update()
     {
         enemyHeadLookAtIK.SetTarget(target);
 
-        if (target != null && !isAttacking && !isDead)
-        {
-            RotateEnemy();
-        }
+        if (target != null && !isAttacking && !isDead) RotateEnemy();
 
-        if (isChase && target != null && !isDead)
-        {
-            Chase();
-        }
+        if (isChasing) Chase();
 
-        if (isFighting && target != null && !isDead)
-        {
-            Fighting();
-        }
+        if (isFighting) Fight();
     }
 
     private void FixedUpdate()
@@ -297,19 +222,20 @@ public class S_Enemy : MonoBehaviour
         animator.SetBool(moveParam, isMoving);
     }
 
-    [TabGroup("Settings")]
-    [Button(ButtonSizes.Medium)]
-    private void RefreshPatrolPoints()
-    {
-        Refresh();
-    }
-
     public void RotateEnemy()
     {
         Vector3 direction = target.transform.position - center.transform.position;
         direction.y = 0;
 
         transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    #region Patrol Points
+    [TabGroup("Settings")]
+    [Button(ButtonSizes.Medium)]
+    private void RefreshPatrolPoints()
+    {
+        Refresh();
     }
 
     private void Refresh()
@@ -321,88 +247,121 @@ public class S_Enemy : MonoBehaviour
             patrolPointsList.Add(child.gameObject);
         }
     }
+    #endregion
 
-    private void SetInsideBox(GameObject newTarget)
+    #region States
+    private void UpdateState(S_EnumEnemyState newState)
     {
+        ResetEnemy();
+
+        currentState = newState;
+
+        switch (currentState)
+        {
+            case S_EnumEnemyState.Idle:
+                Idle();
+                break;
+            case S_EnumEnemyState.Patroling:
+                Patroling();
+                break;
+            case S_EnumEnemyState.Chasing:
+                Chasing();
+                break;
+            case S_EnumEnemyState.Fighting:
+                Fighting();
+                break;
+            case S_EnumEnemyState.HeavyHit:
+                HeavyHit();
+                break;
+            case S_EnumEnemyState.Death:
+                Death();
+                break;
+        }
+    }
+
+    private void ResetEnemy()
+    {
+        enemyAttackData.DisableWeaponCollider();
+        enemyAttackData.UnDisplayTriggerWarning();
+
+        if (comboCoroutine != null)
+        {
+            StopCoroutine(comboCoroutine);
+            comboCoroutine = null;
+        }
+
+        if (stunCoroutine != null)
+        {
+            StopCoroutine(stunCoroutine);
+            stunCoroutine = null;
+        }
+
+        if (patrolingCoroutine != null)
+        {
+            StopCoroutine(patrolingCoroutine);
+            patrolingCoroutine = null;
+        }
+
+        isPerformingCombo = false;
+        isPatroling = false;
+        isChasing = false;
+        isFighting = false;
+        isHeavyHit = false;
+        isStrafe = false;
+        isAttacking = false;
+        isWaiting = false;
+
+        navMeshAgent.ResetPath();
+        navMeshAgent.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
+    }
+    #endregion
+
+    #region Target
+    public void SetTargetInMaxTravelZone(GameObject newTarget)
+    {
+        if (isDead) return;
+
         targetInZone = newTarget;
     }
 
-    private void SetTarget(GameObject newTarget)
+    public void SetTarget(GameObject newTarget)
     {
-        if (newTarget == target || isDead)
-        {
-            return;
-        }
+        if (newTarget == target || isDead || newTarget != targetInZone) return;
 
         target = newTarget;
 
-        if (isPerformingCombo)
+        if (isPerformingCombo || isHeavyHit)
         {
-            pendingTarget = newTarget;
-            pendingState = (newTarget == null) ? S_EnumEnemyState.Patrol : S_EnumEnemyState.Chase;
+            pendingTarget = target;
+            pendingState = (target == null) ? S_EnumEnemyState.Patroling : S_EnumEnemyState.Chasing;
             return;
         }
 
-        behaviorAgent.SetVariableValue<GameObject>("Target", newTarget);
-
-        if (newTarget != null)
+        if (target != null)
         {
             newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
 
-            float distance = Vector3.Distance(transform.position, newTarget.transform.position);
-            Vector3 dir = (newTarget.transform.position - transform.position).normalized;
-
-            if (Physics.Raycast(transform.position, dir, out RaycastHit hit, distance, obstacleMask))
-            {
-                Debug.DrawLine(transform.position, newTarget.transform.position, Color.yellow);
-
-                if (hit.collider.gameObject != newTarget)
-                {
-                    if (health != maxhealth)
-                    {
-                        health = maxhealth;
-                        onUpdateEnemyHealth.Invoke(health);
-                    }
-
-                    behaviorAgent.SetVariableValue<float>("Health", health);
-
-                    behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
-                }
-                else
-                {
-                    behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
-                }
-            }
-            else
-            {
-                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
-            }
+            UpdateState(S_EnumEnemyState.Chasing);
         }
         else
         {
-            if (health != maxhealth)
+            if (health != ssoEnemyData.Value.health)
             {
-                health = maxhealth;
-                onUpdateEnemyHealth.Invoke(health);
+                health = ssoEnemyData.Value.health;
+                enemyUI.UpdateHealthBar(health);
             }
 
-            behaviorAgent.SetVariableValue<float>("Health", health);
-
             aimPoint = null;
-
             detectionCollider.enabled = false;
 
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
+            UpdateState(S_EnumEnemyState.Patroling);
         }
-
-        navMeshAgent.ResetPath();
-        navMeshAgent.velocity = Vector3.zero;
-
-        behaviorAgent.Restart();
     }
+    #endregion
 
-    #region Load Enemy
+    #region Load
     private void LoadEnemy()
     {
         int index = 0;
@@ -418,277 +377,144 @@ public class S_Enemy : MonoBehaviour
 
         if (rsoDataSaved.Value.enemy[index].isDead)
         {
-            isDead = true;
-
-            var list = rsoDataSaved.Value.enemy;
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i].entity == gameObject)
-                {
-                    list[i].isDead = true;
-                    break;
-                }
-            }
-
-            enemyAttackData.DisableWeaponCollider();
-
-            StopAllCoroutines();
-            comboCoroutine = null;
-            resetAttack = null;
-            patrolCoroutine = null;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);
-            behaviorAgent.Restart();
-
-            rseOnEnemyTargetDied.Call(body);
+            UpdateState(S_EnumEnemyState.Death);
         }
     }
     #endregion
 
-    #region Health System
-    private void SetHealth(float damage)
+    #region Damage & Health
+    public void TakeDamage(float damage)
     {
-        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Take " + damage + " Damage!");
+        if (isDead) return;
 
-        health = Mathf.Max(health - damage, 0);
-        onUpdateEnemyHealth.Invoke(health);
-
-        behaviorAgent.SetVariableValue<float>("Health", health);
-        onGetHit.Invoke();
-
-        if (health <= 0)
+        if (target != null)
         {
-            isDead = true;
-
-            var list = rsoDataSaved.Value.enemy;
-
-            for (int i = 0; i < list.Count; i++)
+            UpdateHealth(damage);
+        }
+        else
+        {
+            if (targetInZone != null)
             {
-                if (list[i].entity == gameObject)
+                UpdateHealth(damage);
+
+                if (!isDead)
                 {
-                    list[i].isDead = true;
-                    break;
+                    SetTarget(targetInZone);
+
+                    UpdateState(S_EnumEnemyState.Chasing);
                 }
             }
-
-            enemyAttackData.DisableWeaponCollider();
-            enemyAttackData.UnDisplayTriggerWarning();
-            enemyHeadLookAtIK.SetDead();
-
-            StopAllCoroutines();
-            comboCoroutine = null;
-            resetAttack = null;
-            patrolCoroutine = null;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-            rb.linearVelocity = Vector3.zero;
-
-            isPerformingCombo = false;
-            isStrafe = false;
-            isAttacking = false;
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Death);
-            behaviorAgent.Restart();
-
-            rseOnEnemyTargetDied.Call(body);
-
-            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Dead!");
-        }
-        else if (damage >= maxhealth / 2)
-        {
-            enemyAttackData.DisableWeaponCollider();
-            enemyAttackData.UnDisplayTriggerWarning();
-
-            StopAllCoroutines();
-            comboCoroutine = null;
-            resetAttack = null;
-            patrolCoroutine = null;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-            rb.linearVelocity = Vector3.zero;
-
-            isPerformingCombo = false;
-            isStrafe = false;
-            isAttacking = false;
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.HeavyHit);
-            behaviorAgent.Restart();
-
-            resetAttack = StartCoroutine(ResetAttack());
-
-            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Stun!");
         }
     }
 
     private void UpdateHealth(float damage)
     {
-        if (target == null)
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Take " + damage + " Damage!");
+
+        health = Mathf.Max(health - damage, 0);
+
+        enemyUI.UpdateHealthBar(health);
+
+        if (health <= 0)
         {
-            if (targetInZone != null)
-            {
-                SetTarget(targetInZone);
-
-                SetHealth(damage);
-
-                if (!isDead)
-                {
-                    behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Chase);
-                    behaviorAgent.Restart();
-                }
-            }
+            UpdateState(S_EnumEnemyState.Death);
         }
-        else
+        else if (damage >= (ssoEnemyData.Value.health / 2))
         {
-            SetHealth(damage);
+            UpdateState(S_EnumEnemyState.HeavyHit);
         }
     }
     #endregion
 
-    #region Player Death
-    private void TBag()
+    #region Player
+    private void PlayerDeath()
     {
-        if (isPlayerDead)
+        if (target == null) return;
+
+        if (health != ssoEnemyData.Value.health)
         {
-            float rnd = Random.Range(0f, 100f);
-            float chance = ssoEnemyData.Value.chanceForEasterEgg;
-
-            if (rnd < chance)
-            {
-                animator.SetTrigger(tBagParam);
-
-                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
-                behaviorAgent.Restart();
-            }
-            else
-            {
-                animator.SetBool(idleAttack, false);
-
-                behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Idle);
-                behaviorAgent.Restart();
-            }
-        }
-    }
-
-    private void PlayerDied()
-    {
-        if (target == null)
-        {
-            return;
+            health = ssoEnemyData.Value.health;
+            enemyUI.UpdateHealthBar(health);
         }
 
-        isPlayerDead = true;
+        aimPoint = null;
+        detectionCollider.enabled = false;
+        isPlayerDeath = true;
 
         if (isPerformingCombo)
         {
-            pendingState = S_EnumEnemyState.Idle;
-            return;
+            pendingState = S_EnumEnemyState.Patroling;
         }
+        else
+        {
+            target = null;
+            targetInZone = null;
 
-        TBag();
+            UpdateState(S_EnumEnemyState.Patroling);
+        }
     }
 
     private void PlayerRespawn()
     {
-        if (isPlayerDead == true)
+        if (isPlayerDeath)
         {
-            isPlayerDead = false;
+            isPlayerDeath = false;
 
-            if (health != maxhealth)
-            {
-                health = maxhealth;
-                onUpdateEnemyHealth.Invoke(health);
-            }
-
-            behaviorAgent.SetVariableValue<float>("Health", health);
-
-            aimPoint = null;
             target = null;
+            targetInZone = null;
 
-            detectionCollider.enabled = false;
+            if (currentState != S_EnumEnemyState.Patroling)
+            {
+                animator.SetTrigger(stopAttackParam);
+                animator.SetBool(idleAttack, false);
 
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", S_EnumEnemyState.Patrol);
+                UpdateState(S_EnumEnemyState.Patroling);
 
-            enemyAttackData.DisableWeaponCollider();
-            enemyAttackData.UnDisplayTriggerWarning();
+                if (resetAttack != null)
+                {
+                    StopCoroutine(resetAttack);
+                    resetAttack = null;
+                }
 
-            StopAllCoroutines();
-            comboCoroutine = null;
-            resetAttack = null;
-            patrolCoroutine = null;
-            animator.SetTrigger(stopAttackParam);
-
-            isFighting = false;
-            isStrafe = false;
-            isChase = false;
-            isAttacking = false;
-
-            isPerformingCombo = false;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-            rb.linearVelocity = Vector3.zero;
-
-            behaviorAgent.Restart();
-            resetAttack = StartCoroutine(ResetAttack());
+                resetAttack = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.attackCooldown, () => canAttack = true));
+            }
         }
     }
     #endregion
 
-    #region Patrol System
-    public void Patroling()
+    #region Idle
+    private void Idle()
     {
-        if (isPatroling != null && isPatroling.Value)
-        {
-            if (patrolPointsList == null || patrolPointsList.Count == 0)
-                return;
+        float waitTime = Random.Range(ssoEnemyData.Value.startPatrolWaitMin, ssoEnemyData.Value.startPatrolWaitMax );
 
-            if (patrolCoroutine != null)
-            {
-                StopCoroutine(patrolCoroutine);
-                patrolCoroutine = null;
-            }
+        StartCoroutine(S_Utils.Delay(waitTime, () => UpdateState(S_EnumEnemyState.Patroling)));
+    }
+    #endregion
 
-            patrolCoroutine = StartCoroutine(PatrolRoutine());
+    #region Patroling
+    private void Patroling()
+    {
+        isPatroling = true;
 
-            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Start Patroling!");
-        }
-        else
-        {
-            isPatrolling = false;
+        if (patrolPointsList == null || patrolPointsList.Count == 0) return;
 
-            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Stop Patroling!");
-        }
+        navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
+
+        patrolingCoroutine = StartCoroutine(PatrolingRoutine());
+
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Start Patroling!");
     }
 
-    private IEnumerator PatrolRoutine()
+    private IEnumerator PatrolingRoutine()
     {
-        isPatrolling = true;
-
-        while (isPatrolling)
+        while (isPatroling)
         {
             GameObject targetPoint = patrolPointsList[currentPatrolIndex];
 
-            if (targetPoint == null)
-            {
-                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPointsList.Count;
-                yield return null;
-                continue;
-            }
-
             navMeshAgent.SetDestination(targetPoint.transform.position);
 
-            while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance)
-            {
-                yield return null;
-            }
+            while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance) yield return null;
 
-            navMeshAgent.speed = ssoEnemyData.Value.speedPatrol;
             detectionCollider.enabled = true;
 
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
@@ -700,7 +526,18 @@ public class S_Enemy : MonoBehaviour
     }
     #endregion
 
-    #region Chase System
+    #region Chasing
+    private void Chasing()
+    {
+        isChasing = true;
+
+        SetCombo();
+
+        navMeshAgent.speed = ssoEnemyData.Value.speedChase;
+
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Chasing the Player!");
+    }
+
     private void Chase()
     {
         float distance = Vector3.Distance(body.transform.position, target.transform.position);
@@ -713,51 +550,30 @@ public class S_Enemy : MonoBehaviour
         }
         else if (destinationReached)
         {
-            isChase = false;
-
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
-            behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Fighting);
-            behaviorAgent.Restart();
-
-            isFighting = true;
-        }
-    }
-
-    public void Chasing()
-    {
-        if (isChasing != null && isChasing.Value)
-        {
-            if (patrolCoroutine != null)
-            {
-                StopCoroutine(patrolCoroutine);
-                patrolCoroutine = null;
-            }
-
-            GetCombo();
-            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
-            isChase = true;
-            isPatrolling = false;
-
-            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Chasing the Player!");
-        }
-        else
-        {
-            isChase = false;
-
-            rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " Stop Chasing the Player!");
+            UpdateState(S_EnumEnemyState.Fighting);
         }
     }
     #endregion
 
+    #region Fighting
+    private void SetCombo()
+    {
+        int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
+
+        combo = ssoEnemyData.Value.listCombos[rnd];
+    }
+
     private void Fighting()
     {
-        if (canAttack)
-        {
-            canAttack = false;
-            isStrafe = false;
-            isAttacking = false;
+        isFighting = true;
 
+        animator.SetBool(idleAttack, true);
+    }
+
+    private void Fight()
+    {
+        if (canAttack && !isStrafe)
+        {
             if (comboCoroutine != null)
             {
                 StopCoroutine(comboCoroutine);
@@ -775,20 +591,17 @@ public class S_Enemy : MonoBehaviour
 
             if (distance > combo.distanceToLoseAttack)
             {
-                isFighting = false;
-                isStrafe = false;
-                isAttacking = false;
                 navMeshAgent.speed = ssoEnemyData.Value.speedChase;
 
-                navMeshAgent.ResetPath();
-                navMeshAgent.velocity = Vector3.zero;
-                behaviorAgent.SetVariableValue("State", S_EnumEnemyState.Chase);
-                behaviorAgent.Restart();
+                animator.SetBool(idleAttack, false);
+
+                UpdateState(S_EnumEnemyState.Chasing);
 
                 return;
             }
-            else
+            else if (!isStrafe)
             {
+                //isStrafe = true;
                 //navMeshAgent.speed = ssoEnemyData.Value.speedStrafe;
                 //Strafing();
             }
@@ -797,12 +610,12 @@ public class S_Enemy : MonoBehaviour
 
     private void Strafing()
     {
-        if (waiting)
+        if (isWaiting)
         {
             if (Time.time < nextWaitEndTime)
                 return;
 
-            waiting = false;
+            isWaiting = false;
             nextChangeTime = Time.time;
         }
 
@@ -831,21 +644,11 @@ public class S_Enemy : MonoBehaviour
 
             if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= 0.01f)
             {
-                waiting = true;
+                isWaiting = true;
                 navMeshAgent.velocity = Vector3.zero;
                 nextWaitEndTime = Time.time + strafeWaitTime;
             }
         }
-    }
-
-    #region Combo System
-    private void GetCombo()
-    {
-        int rnd = Random.Range(0, ssoEnemyData.Value.listCombos.Count);
-
-        combo = ssoEnemyData.Value.listCombos[rnd];
-
-        behaviorAgent.SetVariableValue<float>("DistanceToLoseAttack", combo.distanceToLoseAttack);
     }
 
     private IEnumerator PlayComboSequence()
@@ -854,6 +657,7 @@ public class S_Enemy : MonoBehaviour
 
         rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Attacking with a Combo!");
 
+        canAttack = false;
         isPerformingCombo = true;
         animator.SetBool(idleAttack, false);
         isAttacking = false;
@@ -903,10 +707,7 @@ public class S_Enemy : MonoBehaviour
         {
             animator.SetBool(idleAttack, false);
 
-            TBag();
-
-            behaviorAgent.SetVariableValue<S_EnumEnemyState>("State", pendingState.Value);
-            behaviorAgent.Restart();
+            UpdateState(pendingState.Value);
 
             pendingState = null;
         }
@@ -917,7 +718,13 @@ public class S_Enemy : MonoBehaviour
             pendingTarget = null;
         }
 
-        GetCombo();
+        if (isPlayerDeath)
+        {
+            target = null;
+            targetInZone = null;
+        }
+
+        SetCombo();
 
         if (resetAttack != null)
         {
@@ -925,14 +732,86 @@ public class S_Enemy : MonoBehaviour
             resetAttack = null;
         }
 
-        resetAttack = StartCoroutine(ResetAttack());
+        resetAttack = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.attackCooldown, () => canAttack = true));
     }
+    #endregion
 
-    private IEnumerator ResetAttack()
+    #region HeavyHit
+    private void HeavyHit()
     {
-        yield return new WaitForSeconds(ssoEnemyData.Value.attackCooldown);
+        isHeavyHit = true;
 
-        canAttack = true;
+        animator.SetTrigger(hitHeavyParam);
+
+        if (resetAttack != null)
+        {
+            StopCoroutine(resetAttack);
+            resetAttack = null;
+        }
+
+        resetAttack = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.attackCooldown, () => canAttack = true));
+
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Stun!");
+
+        stunCoroutine = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.waitStun, () =>
+        {
+            if (pendingState.HasValue)
+            {
+                UpdateState(pendingState.Value);
+
+                pendingState = null;
+
+                if (pendingTarget != null)
+                {
+                    SetTarget(pendingTarget);
+                    pendingTarget = null;
+                }
+            }
+            else
+            {
+                UpdateState(S_EnumEnemyState.Chasing);
+            }
+        }));
+    }
+    #endregion
+
+    #region Death
+    private void Death()
+    {
+        isDead = true;
+
+        animator.SetTrigger(deathParam);
+
+        var list = rsoDataSaved.Value.enemy;
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i].entity == gameObject)
+            {
+                list[i].isDead = isDead;
+                break;
+            }
+        }
+
+        if (resetAttack != null)
+        {
+            StopCoroutine(resetAttack);
+            resetAttack = null;
+        }
+
+        canAttack = false;
+        target = null;
+        targetInZone = null;
+
+        bodyCollider.enabled = false;
+        detectionCollider.enabled = false;
+        hurtCollider.enabled = false;
+
+        enemyHeadLookAtIK.IsDead(true);
+
+        rseOnEnemyTargetDied.Call(body);
+
+        rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Dead!");
     }
     #endregion
 
@@ -957,7 +836,7 @@ public class S_Enemy : MonoBehaviour
 
         if (Application.isPlaying && patrolPointsList.Count > 0)
         {
-            if (isPatrolling && currentPatrolIndex >= 0 && currentPatrolIndex < patrolPointsList.Count)
+            if (isPatroling && currentPatrolIndex >= 0 && currentPatrolIndex < patrolPointsList.Count)
             {
                 GameObject target = patrolPointsList[currentPatrolIndex];
                 if (target != null)

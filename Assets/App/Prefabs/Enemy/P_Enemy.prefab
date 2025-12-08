@@ -146,7 +146,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5276679289733621114}
-  - component: {fileID: 495233547217921218}
   - component: {fileID: 1431773725924121066}
   - component: {fileID: 5886562096679836169}
   - component: {fileID: 2819568101127906853}
@@ -183,62 +182,6 @@ Transform:
   - {fileID: 5653424367057378731}
   m_Father: {fileID: 7972417589024532759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &495233547217921218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1039572514723219672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Graph: {fileID: -5220076518644376077, guid: a566134b34cd5af4db6a0b36060ab9e4, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 1782279377370218675
-  - rid: 1782279384782340417
-  - rid: 1782279384782340418
-  - rid: 1782279384782340419
-  m_OriginalGraph: {fileID: -5220076518644376077, guid: a566134b34cd5af4db6a0b36060ab9e4, type: 2}
-  m_IsInitialised: 0
-  m_IsStarted: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: 1782279377370218675
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 1039572514723219672}
-    - rid: 1782279384782340417
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 10709882196661903837
-          m_Value1: 4776474814362636866
-        Name: Animator
-        m_Value: {fileID: 5886562096679836169}
-    - rid: 1782279384782340418
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Collider, UnityEngine.PhysicsModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 13340731359774197594
-          m_Value1: 12469853372035151632
-        Name: BodyCollider
-        m_Value: {fileID: 6217138946037749130}
-    - rid: 1782279384782340419
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Collider, UnityEngine.PhysicsModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1859283804656063814
-          m_Value1: 1069021853067057833
-        Name: DetectionRangeCollider
-        m_Value: {fileID: 1536210782470915829}
 --- !u!195 &1431773725924121066
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -278,10 +221,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 1
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyLAttack3_D3'\n\tFrom
-    animation clip 'A_EnemyLAttack2_D3'\n\tFrom animation clip 'A_EnemyLAttack1_D3'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -332,7 +272,6 @@ MonoBehaviour:
   comboParam: IsCombo
   stopAttackParam: IsStopAttack
   hitHeavyParam: IsHeavyHit
-  tBagParam: T-Bag
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4096
@@ -341,7 +280,6 @@ MonoBehaviour:
   - {fileID: 4238934561793798638}
   - {fileID: 3932769474522726717}
   - {fileID: 481751962266192794}
-  behaviorAgent: {fileID: 495233547217921218}
   navMeshAgent: {fileID: 1431773725924121066}
   rb: {fileID: 2819568101127906853}
   bodyCollider: {fileID: 6217138946037749130}
@@ -359,19 +297,13 @@ MonoBehaviour:
   enemyMaxTravelZone: {fileID: 5830951658339230131}
   enemyHeadLookAtIK: {fileID: 8400928163415866521}
   patrolPoints: {fileID: 2395496571129997540}
-  rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
   rseOnDataLoad: {fileID: 11400000, guid: d8401e7eeb710344ca47f8e9df92d71d, type: 2}
+  rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
   rseOnPlayerRespawn: {fileID: 11400000, guid: 3b09f2a06394f4642a88a2d57f0cec43, type: 2}
   rsoDataSaved: {fileID: 11400000, guid: db0edbbd21d7571419860daa092a7506, type: 2}
   ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
-  onUpdateEnemyHealth:
-    m_PersistentCalls:
-      m_Calls: []
-  onGetHit:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &9183690598147176708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,6 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tagPlayer: Player
+  tagObstacle: Obstacle
   rootMotionMultiplier: 2
   animator: {fileID: 5886562096679836169}
   rb: {fileID: 2819568101127906853}
@@ -831,9 +764,6 @@ MonoBehaviour:
   playerTag: Player
   detectionCollider: {fileID: 1536210782470915829}
   enemy: {fileID: 445208566684554611}
-  onTargetDetected:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5199276408535089712
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,9 +863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f3e7e40379da74bb437b27a8eedd05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onUpdateEnemyHealth:
-    m_PersistentCalls:
-      m_Calls: []
+  enemy: {fileID: 445208566684554611}
 --- !u!1 &5421673960955687534
 GameObject:
   m_ObjectHideFlags: 0
@@ -1399,7 +1327,6 @@ MonoBehaviour:
   animationSlider: 0.4
   content: {fileID: 1861027275683421439}
   sliderHealth: {fileID: 7257551419699715195}
-  enemy: {fileID: 445208566684554611}
 --- !u!1 &8944502541329920824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,12 +1395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   box: {fileID: 7837490951314405229}
-  onTargetDetected:
-    m_PersistentCalls:
-      m_Calls: []
-  onTarget:
-    m_PersistentCalls:
-      m_Calls: []
+  enemy: {fileID: 445208566684554611}
 --- !u!1 &9149232510415803103
 GameObject:
   m_ObjectHideFlags: 0

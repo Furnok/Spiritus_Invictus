@@ -1,7 +1,4 @@
-﻿using Unity.Behavior;
-
-[BlackboardEnum]
-public enum S_EnumEnemyState
+﻿public enum S_EnumEnemyState
 {
     Idle,
 	Patroling,
