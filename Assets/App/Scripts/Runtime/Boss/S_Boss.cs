@@ -100,7 +100,7 @@ public class S_Boss : MonoBehaviour
     [SerializeField] private S_BossDetectionRange bossDetectionRange;
 
     [TabGroup("References")]
-    [SerializeField] private S_EnemyHurt bossHurt;
+    [SerializeField] private S_BossHurt bossHurt;
 
     [TabGroup("References")]
     [SerializeField] private S_BossAttack bossAttack;

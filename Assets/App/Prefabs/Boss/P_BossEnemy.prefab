@@ -1587,7 +1587,7 @@ MonoBehaviour:
   animator: {fileID: 2596308680460028465}
   body: {fileID: 5201943651732942732}
   bossDetectionRange: {fileID: 2409691922618655963}
-  bossHurt: {fileID: 4648933286139395769}
+  bossHurt: {fileID: 0}
   bossAttack: {fileID: 0}
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
@@ -2425,7 +2425,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1210918856678710765}
   - component: {fileID: 8566467838276575292}
-  - component: {fileID: 4648933286139395769}
+  - component: {fileID: 6912579266337418209}
   m_Layer: 15
   m_Name: HurtBox
   m_TagString: Hurtbox
@@ -2471,7 +2471,7 @@ CapsuleCollider:
   m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 1.5, z: 0}
---- !u!114 &4648933286139395769
+--- !u!114 &6912579266337418209
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2480,7 +2480,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7933388346049707803}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53f3e7e40379da74bb437b27a8eedd05, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fb9241c366443941a0df1132e134461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   onUpdateEnemyHealth:
