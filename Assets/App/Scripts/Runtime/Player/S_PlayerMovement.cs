@@ -31,6 +31,9 @@ public class S_PlayerMovement : MonoBehaviour
     [TabGroup("Settings")]
     [SerializeField] private float groundCheckDist = 0.5f;
 
+    [TabGroup("Settings")]
+    [SerializeField] private float stopFromWall = 0.03f;
+
     /*
     [TabGroup("Settings")]
     [SerializeField] private float skin = 0.02f;
@@ -574,10 +577,26 @@ public class S_PlayerMovement : MonoBehaviour
     {
         GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
 
-        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, maxDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        bool overlapping = Physics.CheckCapsule(
+        bottom, top, radius,
+        obstacleMask, QueryTriggerInteraction.Ignore
+        );
+
+        if (overlapping)
         {
-            return Mathf.Max(0f, hit.distance - 0.03f);
+            return 0f;
         }
+
+        float castDist = maxDist + stopFromWall;
+
+        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, castDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        {
+            float allowed = hit.distance - stopFromWall;
+            if (allowed < 0f) allowed = 0f;
+
+            return Mathf.Min(maxDist, allowed);
+        }
+
         return maxDist;
     }
 
