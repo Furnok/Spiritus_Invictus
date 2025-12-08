@@ -574,6 +574,8 @@ public class S_Enemy : MonoBehaviour
     {
         if (canAttack && !isStrafe)
         {
+            canAttack = false;
+
             if (comboCoroutine != null)
             {
                 StopCoroutine(comboCoroutine);
@@ -657,7 +659,6 @@ public class S_Enemy : MonoBehaviour
 
         rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Attacking with a Combo!");
 
-        canAttack = false;
         isPerformingCombo = true;
         animator.SetBool(idleAttack, false);
         isAttacking = false;
