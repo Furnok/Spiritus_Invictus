@@ -74,13 +74,8 @@ public class S_PlayerRespawn : MonoBehaviour
 
     private void HandlePlayerRespawn()
     {
-        _aimPointObject.SetActive(true);
 
         _playerRigidbody.linearVelocity = Vector3.zero;
-
-        _player.transform.SetPositionAndRotation(_playerRespawnPosition.Value.position, _playerRespawnPosition.Value.rotation);
-        _player.transform.position = _playerRespawnPosition.Value.position;
-        _player.transform.rotation = _playerRespawnPosition.Value.rotation;
 
         //_visuals.transform.localPosition = new Vector3(0, 0, 0);
 
@@ -91,21 +86,27 @@ public class S_PlayerRespawn : MonoBehaviour
             _player.transform.position = _playerRespawnPosition.Value.position;
             _player.transform.rotation = _playerRespawnPosition.Value.rotation;
 
-            _playerHurtBoxCollider.SetActive(true);
-            _colliderMotor.SetActive(true);
-
-            _playerRigidbody.useGravity = true;
-
             _playerRigidbody.linearVelocity = Vector3.zero;
+
+            StartCoroutine(S_Utils.DelayRealTime(0.1f, () =>
+            {
+                _aimPointObject.SetActive(true);
+                _playerHurtBoxCollider.SetActive(true);
+                _colliderMotor.SetActive(true);
+
+                _playerRigidbody.useGravity = true;
+
+                _playerRigidbody.linearVelocity = Vector3.zero;
+
+                _onAnimationBoolValueChange.Call(_deadParam, false);
+                _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
+
+                _playerCurrentHealth.Value = _playerStats.Value.maxHealth;
+                _onPlayerHealthUpdate.Call(_playerCurrentHealth.Value);
+
+                _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
+                _onPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
+            }));
         }));
-
-        _onAnimationBoolValueChange.Call(_deadParam, false);
-        _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
-
-        _playerCurrentHealth.Value = _playerStats.Value.maxHealth;
-        _onPlayerHealthUpdate.Call(_playerCurrentHealth.Value);
-
-        _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
-        _onPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
     }
 }
