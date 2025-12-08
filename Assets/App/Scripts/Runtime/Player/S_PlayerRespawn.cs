@@ -78,42 +78,30 @@ public class S_PlayerRespawn : MonoBehaviour
 
     private void HandlePlayerRespawn()
     {
+        _player.transform.position = _playerRespawnPosition.Value.position;
+        _player.transform.rotation = _playerRespawnPosition.Value.rotation;
+
+        Physics.SyncTransforms();
+
+        _playerRigidbody.useGravity = true;
+
+        _aimPointObject.SetActive(true);
+        _playerHurtBoxCollider.SetActive(true);
+
+        _colliderMotorGO.SetActive(true);
+        _colliderMotor.providesContacts = true;
+        _colliderMotor.enabled = true;
 
         _playerRigidbody.linearVelocity = Vector3.zero;
 
-        //_visuals.transform.localPosition = new Vector3(0, 0, 0);
+        _onAnimationBoolValueChange.Call(_deadParam, false);
 
-        StartCoroutine(S_Utils.DelayRealTime(0.1f, () => 
-        {
-            _playerRigidbody.linearVelocity = Vector3.zero;
+        _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
 
-            _player.transform.position = _playerRespawnPosition.Value.position;
-            _player.transform.rotation = _playerRespawnPosition.Value.rotation;
+        _playerCurrentHealth.Value = _playerStats.Value.maxHealth;
+        _onPlayerHealthUpdate.Call(_playerCurrentHealth.Value);
 
-            _playerRigidbody.linearVelocity = Vector3.zero;
-
-            StartCoroutine(S_Utils.DelayRealTime(0.1f, () =>
-            {
-                _aimPointObject.SetActive(true);
-                _playerHurtBoxCollider.SetActive(true);
-                _colliderMotorGO.SetActive(true);
-
-                _colliderMotor.providesContacts = true;
-                _colliderMotor.enabled = true;
-
-                _playerRigidbody.useGravity = true;
-
-                _playerRigidbody.linearVelocity = Vector3.zero;
-
-                _onAnimationBoolValueChange.Call(_deadParam, false);
-                _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
-
-                _playerCurrentHealth.Value = _playerStats.Value.maxHealth;
-                _onPlayerHealthUpdate.Call(_playerCurrentHealth.Value);
-
-                _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
-                _onPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
-            }));
-        }));
+        _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
+        _onPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
     }
 }

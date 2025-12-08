@@ -56,14 +56,8 @@ public class S_PlayerDeath : MonoBehaviour
 
         _colliderMotorGO.SetActive(false);
 
-        //_visuals.transform.localPosition = new Vector3(0, -1000, 0);
-
-        //float posY = _player.transform.position.y + 1000;
-        //Vector3 newPosition = transform.position;
-        //newPosition.y += posY;
-        //_player.transform.position = newPosition;
-
         _playerRigidbody.useGravity = false;
 
+        Physics.SyncTransforms();
     }
 }
