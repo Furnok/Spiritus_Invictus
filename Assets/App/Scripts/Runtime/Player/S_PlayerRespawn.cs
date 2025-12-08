@@ -74,7 +74,6 @@ public class S_PlayerRespawn : MonoBehaviour
 
     private void HandlePlayerRespawn()
     {
-        _playerHurtBoxCollider.SetActive(true);
         _aimPointObject.SetActive(true);
 
         _playerRigidbody.linearVelocity = Vector3.zero;
@@ -85,13 +84,14 @@ public class S_PlayerRespawn : MonoBehaviour
 
         //_visuals.transform.localPosition = new Vector3(0, 0, 0);
 
-        StartCoroutine(S_Utils.DelayFrame(() => 
+        StartCoroutine(S_Utils.DelayRealTime(0.1f, () => 
         {
             _playerRigidbody.linearVelocity = Vector3.zero;
 
             _player.transform.position = _playerRespawnPosition.Value.position;
             _player.transform.rotation = _playerRespawnPosition.Value.rotation;
 
+            _playerHurtBoxCollider.SetActive(true);
             _colliderMotor.SetActive(true);
 
             _playerRigidbody.useGravity = true;

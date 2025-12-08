@@ -333,9 +333,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         if (!_wasCanceled)
         {
+            _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
             rumbleData = _chargeAttackRumbleData.Value;
             rumbleData.Duration = 300f;
             _rseOnRumbleRequested.Call(rumbleData);
+
             while (_isHolding && !_wasCanceled)
                 yield return null;
 
