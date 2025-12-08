@@ -36,10 +36,7 @@ public class S_RootMotionModifier : MonoBehaviour
 
         if (rb != null)
         {
-            if (!CanMove(delta))
-            {
-                return;
-            }
+            if (!CanMove(delta)) return;
 
             transform.position += delta;
             transform.rotation *= deltaRot;
