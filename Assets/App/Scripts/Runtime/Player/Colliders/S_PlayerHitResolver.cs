@@ -26,6 +26,9 @@ public class S_PlayerHitResolver : MonoBehaviour
     [SerializeField] private EventReference _parrySoundEffect;
 
     [TabGroup("References")]
+    [SerializeField] private EventReference _parryReverbSoundEffect;
+
+    [TabGroup("References")]
     [Title("Motor")]
     [SerializeField] private  GameObject _playerMotorGO;
     
@@ -115,13 +118,32 @@ public class S_PlayerHitResolver : MonoBehaviour
                         _rseOnRumbleRequested.Call(_parryRumbleData.Value);
                         Debug.Log("Parried!");
 
-                        EventInstance _parryEventInstanceSFX;
+                        bool isLastAttack = attackData.lastAttack;
 
-                        _currentPitchParrySFX += _pitchParryGainEachParry;
-                        _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
-                        _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
-                        _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
-                        _parryEventInstanceSFX.start();
+                        
+
+                        if (!isLastAttack)
+                        {
+                            EventInstance _parryEventInstanceSFX;
+
+                            _currentPitchParrySFX += _pitchParryGainEachParry;
+                            _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
+                            _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
+                            _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
+                            _parryEventInstanceSFX.setParameterByName("LastHit", 0);
+                            _parryEventInstanceSFX.start();
+                        }
+                        else
+                        {
+                            EventInstance _parryReverbEventInstanceSFX;
+
+                            _currentPitchParrySFX += _pitchParryGainEachParry;
+                            _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
+                            _parryReverbEventInstanceSFX = RuntimeManager.CreateInstance(_parryReverbSoundEffect);
+                            _parryReverbEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
+                            _parryReverbEventInstanceSFX.setParameterByName("LastHit", 1);
+                            _parryReverbEventInstanceSFX.start();
+                        }
                     }
                     else
                     {
