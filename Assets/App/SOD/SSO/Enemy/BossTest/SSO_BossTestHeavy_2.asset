@@ -25,6 +25,7 @@ MonoBehaviour:
     detectionAggroRangeMax: 50
     attackCooldown: 1
     waitStun: 0
+    rotationTime: 0
     patrolPointWaitMin: 1
     patrolPointWaitMax: 3
     startPatrolWaitMin: 1
@@ -34,12 +35,13 @@ MonoBehaviour:
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
-      - animation: {fileID: 7400000, guid: 522cadce2a766b9488f3d7df802d82cc, type: 2}
-        rootMotionMultiplier: 2
+      - animation: {fileID: 7400000, guid: ec30b70bb3289964fa6f7fe196c358de, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -51,12 +53,13 @@ MonoBehaviour:
           convictionReduction: 20
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: c3830364c1dedd048ab61e3a6f1786e7, type: 2}
-        rootMotionMultiplier: 2
+      - animation: {fileID: 7400000, guid: a149d07955efa4d49b24432ae6fec287, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -68,12 +71,13 @@ MonoBehaviour:
           convictionReduction: 20
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: cc0d0bd4e6798bb4ebfba4c60ea10c74, type: 2}
-        rootMotionMultiplier: 2
+      - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -85,12 +89,13 @@ MonoBehaviour:
           convictionReduction: 20
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: 53ad5fb40b18ceb4796751c5c9d5c39a, type: 2}
-        rootMotionMultiplier: 2
+      - animation: {fileID: 7400000, guid: a149d07955efa4d49b24432ae6fec287, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -102,12 +107,13 @@ MonoBehaviour:
           convictionReduction: 20
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: e0e12f60eb0054c468a788a4b4554def, type: 2}
-        rootMotionMultiplier: 2
+      - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -119,17 +125,18 @@ MonoBehaviour:
           convictionReduction: 20
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: 1d1885aa4cf4b2a459b110917509eeef, type: 2}
-        rootMotionMultiplier: 2
+      - animation: {fileID: 7400000, guid: ebdf1bdda47d25843bb798694cf649ba, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
           knockbackOnParryDuration: 0.2
-          knockbackOnParrryDistance: 10
+          knockbackOnParrryDistance: 0.1
           parryToleranceBeforeHit: 0.06
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
