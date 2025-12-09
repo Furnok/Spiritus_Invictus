@@ -9,7 +9,7 @@ public class S_ClassAnimation
     public AnimationClip animation = null;
 
     [Title("Animation Root")]
-    [Range(1, 100)] public float rootMotionMultiplier = 1;
+    [Range(0, 100)] public float rootMotionMultiplier = 1;
 
     [Title("Data")]
     public S_StructEnemyAttackData attackData;
