@@ -25,7 +25,7 @@ MonoBehaviour:
     detectionAggroRangeMax: 50
     attackCooldown: 3
     waitStun: 0.6
-    chanceForEasterEgg: 1
+    rotationTime: 0.6
     patrolPointWaitMin: 1
     patrolPointWaitMax: 3
     startPatrolWaitMin: 1
@@ -35,12 +35,13 @@ MonoBehaviour:
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
-      - animation: {fileID: 7400000, guid: 7859eea7c0231114c90009acd24092cc, type: 2}
+      - animation: {fileID: 7400000, guid: ebe3ceceda982024d9acaa3062a07c5d, type: 2}
         rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 1
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0
           knockbackHitDistance: 0
@@ -52,12 +53,13 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: b8eaf54175299594c842a3ee151dd69c, type: 2}
+      - animation: {fileID: 7400000, guid: 3db714165ef93ec409e7c8c76503093a, type: 2}
         rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 1
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0
           knockbackHitDistance: 0
@@ -69,12 +71,13 @@ MonoBehaviour:
           convictionReduction: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      - animation: {fileID: 7400000, guid: 85b367ff8a33c2a4bb3fc42f52b5520c, type: 2}
+      - animation: {fileID: 7400000, guid: 7cf43363318563945bf17ec289351ba9, type: 2}
         rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 1
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0
           knockbackHitDistance: 0
