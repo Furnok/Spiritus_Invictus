@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMODUnity;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 
@@ -7,6 +8,14 @@ public class S_PlayerHitResolver : MonoBehaviour
     [TabGroup("Settings")]
     [Title("Camera")]
     [SerializeField] private S_ClassCameraShake _cameraShake;
+
+    [TabGroup("Settings")]
+    [Title("PitchParrySFX")]
+    [SerializeField] private float _pitchParryMinSFX = 0f;
+    [TabGroup("Settings")]
+    [SerializeField] private float _pitchParryMaxSFX = 20f;
+    [TabGroup("Settings")]
+    [SerializeField] private float _pitchParryGainEachParry = 2f;
 
     [TabGroup("References")]
     [SerializeField] private SSO_RumbleData _parryRumbleData;
@@ -54,6 +63,13 @@ public class S_PlayerHitResolver : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
 
+    private float _currentPitchParrySFX = 0f;
+
+    private void Awake()
+    {
+        _currentPitchParrySFX = _pitchParryMinSFX;
+    }
+
     private void OnEnable()
     {
         _onAttackCollide.action += ResolveHit;
@@ -81,10 +97,17 @@ public class S_PlayerHitResolver : MonoBehaviour
                         _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
                         _rseOnRumbleRequested.Call(_parryRumbleData.Value);
                         Debug.Log("Parried!");
+                        
+                        _currentPitchParrySFX += _pitchParryGainEachParry;
+                        _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
+                        RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
                     }
                     else
                     {
                         _rseOnPlayerHit.Call(data);
+
+                        _currentPitchParrySFX = _pitchParryMinSFX;
+                        RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
                     }
             }, contact));
         }
@@ -117,6 +140,10 @@ public class S_PlayerHitResolver : MonoBehaviour
 
                     TryReflectProjectile(contact.source);
                     Debug.Log("Parried!");
+
+                    _currentPitchParrySFX += _pitchParryGainEachParry;
+                    _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
+                    RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
                 }
                 else
                 {
@@ -124,6 +151,9 @@ public class S_PlayerHitResolver : MonoBehaviour
                     {
                         Destroy(contact.source.gameObject);
                         _rseOnPlayerHit.Call(contact);
+
+                        _currentPitchParrySFX = _pitchParryMinSFX;
+                        RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
                     }
                 }
             }, contact));
