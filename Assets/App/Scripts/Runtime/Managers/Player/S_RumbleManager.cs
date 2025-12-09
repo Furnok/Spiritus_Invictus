@@ -15,6 +15,9 @@ public class S_RumbleManager : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnRumbleStopChannel _onRumbleStopChannel;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_SettingsSaved _rsoSettingsSaved;
+
     private class ActiveRumble
     {
         public S_StructRumbleData data;
@@ -44,8 +47,7 @@ public class S_RumbleManager : MonoBehaviour
 
     private void OnRumbleRequested(S_StructRumbleData rumbleData)
     {
-        if (Gamepad.current == null)
-            return;
+        if (Gamepad.current == null || !_rsoSettingsSaved.Value.controllerRumble) return;
 
         _activeRumbles.Add(new ActiveRumble
         {
@@ -104,6 +106,8 @@ public class S_RumbleManager : MonoBehaviour
 
     private void StopAllRumble()
     {
+        if (Gamepad.current == null || !_rsoSettingsSaved.Value.controllerRumble) return;
+
         _activeRumbles.Clear();
         var pad = Gamepad.current;
         if (pad != null)
@@ -112,6 +116,8 @@ public class S_RumbleManager : MonoBehaviour
 
     private void OnRumbleStopChannel(S_EnumRumbleChannel channel)
     {
+        if (Gamepad.current == null || !_rsoSettingsSaved.Value.controllerRumble) return;
+
         for (int i = _activeRumbles.Count - 1; i >= 0; i--)
         {
             if (_activeRumbles[i].data.Channel == channel)

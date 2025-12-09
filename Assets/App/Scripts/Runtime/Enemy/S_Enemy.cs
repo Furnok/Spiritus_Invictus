@@ -1,12 +1,9 @@
 ﻿using DG.Tweening;
-using FMOD.Studio;
-using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class S_Enemy : MonoBehaviour
 {
@@ -784,6 +781,8 @@ public class S_Enemy : MonoBehaviour
         }
 
         resetAttack = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.attackCooldown, () => canAttack = true));
+
+        rootMotionModifier.Setup(1);
 
         rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Stun!");
 
