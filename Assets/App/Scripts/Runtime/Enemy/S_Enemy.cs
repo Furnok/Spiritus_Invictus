@@ -135,6 +135,7 @@ public class S_Enemy : MonoBehaviour
     private float nextWaitEndTime = 0f;
     private int strafeDirection = 1;
 
+    private Coroutine idleCoroutine = null;
     private Coroutine comboCoroutine = null;
     private Coroutine stunCoroutine = null;
     private Coroutine resetAttack = null;
@@ -301,6 +302,12 @@ public class S_Enemy : MonoBehaviour
     {
         enemyAttackData.DisableWeaponCollider();
         enemyAttackData.UnDisplayTriggerWarning();
+
+        if (idleCoroutine != null)
+        {
+            StopCoroutine(idleCoroutine);
+            idleCoroutine = null;
+        }
 
         if (comboCoroutine != null)
         {
@@ -506,7 +513,7 @@ public class S_Enemy : MonoBehaviour
     {
         float waitTime = Random.Range(ssoEnemyData.Value.startPatrolWaitMin, ssoEnemyData.Value.startPatrolWaitMax );
 
-        StartCoroutine(S_Utils.Delay(waitTime, () => UpdateState(S_EnumEnemyState.Patroling)));
+        idleCoroutine = StartCoroutine(S_Utils.Delay(waitTime, () => UpdateState(S_EnumEnemyState.Patroling)));
     }
     #endregion
 
