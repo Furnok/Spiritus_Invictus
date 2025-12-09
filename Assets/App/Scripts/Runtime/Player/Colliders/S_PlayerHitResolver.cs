@@ -1,4 +1,5 @@
-﻿using FMODUnity;
+﻿using FMOD.Studio;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
@@ -21,11 +22,18 @@ public class S_PlayerHitResolver : MonoBehaviour
     [SerializeField] private SSO_RumbleData _parryRumbleData;
 
     [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference _parrySoundEffect;
+
+    [TabGroup("References")]
     [Title("Motor")]
     [SerializeField] private  GameObject _playerMotorGO;
     
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnAttackCollide _onAttackCollide;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnResetParryPitchSFX _rseOnResetParryPitchSFX;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnParrySuccess _rseOnParrySuccess;
@@ -65,6 +73,7 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     private float _currentPitchParrySFX = 0f;
 
+
     private void Awake()
     {
         _currentPitchParrySFX = _pitchParryMinSFX;
@@ -73,13 +82,21 @@ public class S_PlayerHitResolver : MonoBehaviour
     private void OnEnable()
     {
         _onAttackCollide.action += ResolveHit;
+
+        _rseOnResetParryPitchSFX.action += ResetPichParrySFX;
     }
 
     private void OnDisable()
     {
         _onAttackCollide.action -= ResolveHit;
+
+        _rseOnResetParryPitchSFX.action -= ResetPichParrySFX;
     }
 
+    private void ResetPichParrySFX()
+    {
+        _currentPitchParrySFX = _pitchParryMinSFX;
+    }
     private void ResolveHit(S_StructAttackContact contact)
     {
         var attackData = contact.data;
@@ -97,17 +114,20 @@ public class S_PlayerHitResolver : MonoBehaviour
                         _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
                         _rseOnRumbleRequested.Call(_parryRumbleData.Value);
                         Debug.Log("Parried!");
-                        
+
+                        EventInstance _parryEventInstanceSFX;
+
                         _currentPitchParrySFX += _pitchParryGainEachParry;
                         _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
-                        RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
+                        _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
+                        _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
+                        _parryEventInstanceSFX.start();
                     }
                     else
                     {
                         _rseOnPlayerHit.Call(data);
 
                         _currentPitchParrySFX = _pitchParryMinSFX;
-                        RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
                     }
             }, contact));
         }
@@ -141,9 +161,13 @@ public class S_PlayerHitResolver : MonoBehaviour
                     TryReflectProjectile(contact.source);
                     Debug.Log("Parried!");
 
+                    EventInstance _parryEventInstanceSFX;
+
                     _currentPitchParrySFX += _pitchParryGainEachParry;
                     _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
-                    RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
+                    _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
+                    _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
+                    _parryEventInstanceSFX.start();
                 }
                 else
                 {
@@ -153,7 +177,6 @@ public class S_PlayerHitResolver : MonoBehaviour
                         _rseOnPlayerHit.Call(contact);
 
                         _currentPitchParrySFX = _pitchParryMinSFX;
-                        RuntimeManager.StudioSystem.setParameterByName("AttackParried", _currentPitchParrySFX);
                     }
                 }
             }, contact));
