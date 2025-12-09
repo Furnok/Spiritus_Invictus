@@ -154,6 +154,7 @@ public class S_Enemy : MonoBehaviour
     private bool isAttacking = false;
     private bool isStrafe = false;
     private bool isWaiting = false;
+    private bool unlockRotate = false;
 
     private void Awake()
     {
@@ -212,7 +213,7 @@ public class S_Enemy : MonoBehaviour
     {
         enemyHeadLookAtIK.SetTarget(target);
 
-        if (target != null && !isAttacking && !isDead) RotateEnemy();
+        if (target != null && (unlockRotate || !isAttacking) && !isDead) RotateEnemy();
 
         if (isChasing) Chase();
 
@@ -231,6 +232,16 @@ public class S_Enemy : MonoBehaviour
         direction.y = 0;
 
         transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    public void RotateEnemyAnim()
+    {
+        unlockRotate = true;
+    }
+
+    public void StopRotateEnemyAnim()
+    {
+        unlockRotate = false;
     }
 
     #region Patrol Points
@@ -313,6 +324,7 @@ public class S_Enemy : MonoBehaviour
         isStrafe = false;
         isAttacking = false;
         isWaiting = false;
+        unlockRotate = false;
 
         navMeshAgent.ResetPath();
         navMeshAgent.velocity = Vector3.zero;
@@ -709,6 +721,7 @@ public class S_Enemy : MonoBehaviour
 
         isPerformingCombo = false;
         isAttacking = false;
+        unlockRotate = false;
 
         if (pendingState.HasValue)
         {
