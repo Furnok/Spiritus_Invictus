@@ -23,6 +23,9 @@ public class S_LoadUISettings : MonoBehaviour
     [SerializeField] private Toggle toggleHoldLockTarget;
 
     [TabGroup("References")]
+    [SerializeField] private Toggle toggleControllerRumble;
+
+    [TabGroup("References")]
     [SerializeField] private TMP_Dropdown dropDownResolutions;
 
     [TabGroup("References")]
@@ -59,6 +62,8 @@ public class S_LoadUISettings : MonoBehaviour
 
         LoadHoldLockTarget();
 
+        LoadControllerRumble();
+
         LoadResolutions();
 
         LoadFullScreen();
@@ -76,6 +81,11 @@ public class S_LoadUISettings : MonoBehaviour
     private void LoadHoldLockTarget()
     {
         toggleHoldLockTarget.isOn = rsoSettingsSaved.Value.holdLockTarget;
+    }
+
+    private void LoadControllerRumble()
+    {
+        toggleControllerRumble.isOn = rsoSettingsSaved.Value.controllerRumble;
     }
 
     private int GetResolutions(int index)

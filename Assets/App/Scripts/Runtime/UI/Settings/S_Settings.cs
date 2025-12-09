@@ -4,7 +4,6 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -137,6 +136,14 @@ public class S_Settings : MonoBehaviour
         if (isLoaded && rsoSettingsSaved.Value.holdLockTarget != value)
         {
             rsoSettingsSaved.Value.holdLockTarget = value;
+        }
+    }
+
+    public void UpdateControllerRumble(bool value)
+    {
+        if (isLoaded && rsoSettingsSaved.Value.controllerRumble != value)
+        {
+            rsoSettingsSaved.Value.controllerRumble = value;
         }
     }
 
