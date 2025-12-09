@@ -112,6 +112,10 @@ public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_Reflectabl
         }
     }
 
+    public bool CanReflect()
+    {
+        return true;
+    }
     void CalculateControlPoint()
     {
         this._startPos = transform.position;

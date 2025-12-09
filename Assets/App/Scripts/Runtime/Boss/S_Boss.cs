@@ -201,7 +201,7 @@ public class S_Boss : MonoBehaviour
     private void OnDisable()
     {
         bossDetectionRange.onTargetDetected.RemoveListener(SetTarget);
-        bossHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
+        bossHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         rseOnPlayerGettingHit.action -= LoseDifficultyLevel;
 
         if (isChasing != null)
@@ -250,7 +250,7 @@ public class S_Boss : MonoBehaviour
         {
             newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
-            bossAttack.aimPoint = aimPoint;
+            bossAttack.aimPointPlayer = aimPoint;
             float distance = Vector3.Distance(transform.position, newTarget.transform.position);
             Vector3 dir = (newTarget.transform.position - transform.position).normalized;
 

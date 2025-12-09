@@ -96,13 +96,16 @@ public class S_BossAttack : MonoBehaviour
     [SerializeField] private S_BossProjectile bossProjectile;
 
     [TabGroup("References")]
+    [SerializeField] private Transform aimPointBoss;
+
+    [TabGroup("References")]
     [Title("Boss")]
     [SerializeField] private GameObject boss;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
-    public Transform aimPoint;
+    [HideInInspector] public Transform aimPointPlayer;
 
     private S_ClassBossAttack currentAttack;
     private void OnEnable()
@@ -230,15 +233,10 @@ public class S_BossAttack : MonoBehaviour
     }
     void PingPong()
     {
-        for(int i=0; i< currentAttack.listComboData.Count; i++)
-        {
-            animator.SetTrigger(pingPong);
-            if (currentAttack.listComboData[i].attackType == S_EnumEnemyAttackType.Projectile)
-            {
-                S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
-                projectileInstance.Initialize(bodyCollider.transform, aimPoint, currentAttack.listComboData[i]);
-            }
-        }
+        animator.SetTrigger(pingPong);
+        S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
+        projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[0]);
+
     }
     void Waves()
     {

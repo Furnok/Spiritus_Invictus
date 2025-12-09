@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using Sirenix.OdinInspector;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -5,6 +6,8 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
 {
+    [SerializeField] private int reflectMax;
+    private int reflectCount = 0;
     [TabGroup("Settings")]
     [Title("Filter")]
     [SerializeField, S_TagName] private string tagHurt;
@@ -12,6 +15,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     [TabGroup("Settings")]
     [Title("Layer")]
     [SerializeField] private string playerLayer;
+    [SerializeField] private string enemyLayer;
 
     [TabGroup("Settings")]
     [SerializeField] private LayerMask blockLayer;
@@ -49,6 +53,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     [TabGroup("Outputs")]
     [SerializeField] private SSO_ProjectileData ssoProjectileData;
     private Transform owner = null;
+    private Transform player = null;
 
     private float timeAlive = 0f;
 
@@ -62,6 +67,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     private Vector3 controlPoint = Vector3.zero;
     private Vector3 origin = Vector3.zero;
     private Transform startAimPoint = null;
+    private bool _canReflect = true;
 
     private float arcHeightMultiplier => ssoProjectileData.Value.arcHeightMultiplier;
     private float arcDirection => ssoProjectileData.Value.arcDirection;
@@ -72,11 +78,17 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     public void Initialize(Transform owner, Transform target = null, S_StructEnemyAttackData attackData = new())
     {
         this.target = target;
+        this.player = target;
         this.direction = transform.forward;
         this.attackData = attackData;
         isInitialized = true;
         this.owner = owner;
         origin = target.position;
+
+        if(reflectMax <= 0)
+        {
+            _canReflect = false;
+        }
 
         owner.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
         startAimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : null;
@@ -132,20 +144,59 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
             direction = tangent;
         }
     }
+
+    public bool CanReflect()
+    {
+        return _canReflect;
+    }
+
+
     public void Reflect(Transform reflectOwner)
     {
+
         attackData.damage *= reflectDmgMul;
         speed *= reflectSpeedMul;
         timeAlive = 0;
 
-        gameObject.layer = LayerMask.NameToLayer(playerLayer);
-        if (rendered && playerMat) rendered.material = playerMat;
-
-        if (owner != null && owner.gameObject.activeInHierarchy)
+        if(gameObject.layer == LayerMask.NameToLayer(enemyLayer))
         {
-            owner.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
-            target = aimPointProvider != null ? aimPointProvider.GetAimPoint() : owner;
+            gameObject.layer = LayerMask.NameToLayer(playerLayer);
 
+            if (rendered && playerMat) rendered.material = playerMat;
+        }
+        else
+        {
+            if (_canReflect == false) return;
+
+            reflectCount++;
+
+            if (reflectCount >= reflectMax)
+            {
+                _canReflect = false;
+            }
+
+            gameObject.layer = LayerMask.NameToLayer(enemyLayer);
+            if (rendered && playerMat) rendered.material = enemyMat;
+        }
+
+
+        if (owner != null && owner.gameObject.activeInHierarchy || player != null && player.gameObject.activeInHierarchy)
+        {
+            Transform targetReflect;
+
+            if (target == owner)
+            {
+                targetReflect = player;
+            }
+            else
+            {
+                targetReflect = owner;
+            }
+
+            targetReflect.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
+
+            target = aimPointProvider != null ? aimPointProvider.GetAimPoint() : targetReflect;
+            
             CalculateControlPoint();
         }
         else

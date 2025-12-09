@@ -704,6 +704,89 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3930356419278591376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3091132502595619331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5151548247521878060}
+  - component: {fileID: 5617872666858244739}
+  - component: {fileID: 6155769446912292787}
+  - component: {fileID: 8821789999260247263}
+  m_Layer: 0
+  m_Name: PingPongSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5151548247521878060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3091132502595619331}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2489892158747749883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &5617872666858244739
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3091132502595619331}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.1
+  m_Height: 3.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &6155769446912292787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3091132502595619331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5a40d0b4af39c8478375ecc1ed3bea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body: {fileID: 5201943651732942732}
+--- !u!114 &8821789999260247263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3091132502595619331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85115176fcdb0464fb0025332d10b4c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aimPointObject: {fileID: 3698455495815254430}
 --- !u!1 &3205292657962823445
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +960,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4176086166988214756}
   m_Layer: 10
-  m_Name: AimPoint
+  m_Name: AimPointBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1222,6 +1305,37 @@ Transform:
   - {fileID: 2248914341036245935}
   m_Father: {fileID: 6738094750926758153}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4218956360422304025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1521849054035900991}
+  m_Layer: 0
+  m_Name: PingPongSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1521849054035900991
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4218956360422304025}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 47433026332228212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4220508766348015150
 GameObject:
   m_ObjectHideFlags: 0
@@ -1511,6 +1625,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1521849054035900991}
   - {fileID: 311098395130872473}
   - {fileID: 3046840273518797855}
   - {fileID: 4176086166988214756}
@@ -1587,8 +1702,8 @@ MonoBehaviour:
   animator: {fileID: 2596308680460028465}
   body: {fileID: 5201943651732942732}
   bossDetectionRange: {fileID: 2409691922618655963}
-  bossHurt: {fileID: 0}
-  bossAttack: {fileID: 0}
+  bossHurt: {fileID: 6912579266337418209}
+  bossAttack: {fileID: 5724000438557377284}
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   onExecuteAttack: {fileID: 11400000, guid: 3da07f09686258c4f84c0ab1889d9bcd, type: 2}
@@ -1645,7 +1760,7 @@ MonoBehaviour:
   simon: Simon
   dualliste: Dualliste
   pingPong: PingPong
-  projectilePingPongSpawn: {fileID: 0}
+  projectilePingPongSpawn: {fileID: 4218956360422304025}
   waves: Waves
   wavesPrefabs: {fileID: 5481117354628149224, guid: 58d6cd12a4369b04a9ee0d9a2ca04185, type: 3}
   wavesSpawn:
@@ -1659,12 +1774,13 @@ MonoBehaviour:
   genion: Genion
   gathering: Gathering
   wingsOfHell: Wing of Hells
-  bodyCollider: {fileID: 0}
+  bodyCollider: {fileID: 3702001950805451078}
   animator: {fileID: 2596308680460028465}
-  bossProjectile: {fileID: 0}
+  bossProjectile: {fileID: 8140121101017001052, guid: f1fb51f3df4ed10408671800bfdcfdc4, type: 3}
+  aimPointBoss: {fileID: 4176086166988214756}
   boss: {fileID: 4965557393169002088}
   onExecuteAttack: {fileID: 11400000, guid: 3da07f09686258c4f84c0ab1889d9bcd, type: 2}
-  aimPoint: {fileID: 0}
+  aimPointPlayer: {fileID: 0}
 --- !u!54 &9081862306820079209
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1705,7 +1821,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tagPlayer: Player
-  rootMotionMultiplier: 2
+  tagObstacle: Obstacle
   animator: {fileID: 2596308680460028465}
   rb: {fileID: 9081862306820079209}
   body: {fileID: 3698455495815254430}
@@ -1746,7 +1862,7 @@ GameObject:
   - component: {fileID: 2392123037400280116}
   - component: {fileID: 6191942472144899176}
   m_Layer: 11
-  m_Name: Body
+  m_Name: BodyBoss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1764,7 +1880,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5151548247521878060}
   m_Father: {fileID: 311098395130872473}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &3702001950805451078
