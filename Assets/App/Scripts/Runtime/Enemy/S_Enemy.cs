@@ -737,8 +737,6 @@ public class S_Enemy : MonoBehaviour
         isAttacking = false;
         unlockRotate = false;
 
-        RuntimeManager.StudioSystem.setParameterByName("LastHit", 0);
-
         if (pendingState.HasValue)
         {
             animator.SetBool(idleAttack, false);
