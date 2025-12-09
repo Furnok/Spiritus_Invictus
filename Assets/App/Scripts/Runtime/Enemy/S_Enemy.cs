@@ -694,11 +694,6 @@ public class S_Enemy : MonoBehaviour
 
         for (int i = 0; i < combo.listAnimationsCombos.Count; i++)
         {
-            if (i == combo.listAnimationsCombos.Count - 1)
-            {
-                RuntimeManager.StudioSystem.setParameterByName("LastHit", 1);
-            }
-
             isAttacking = true;
             RotateEnemy();
 

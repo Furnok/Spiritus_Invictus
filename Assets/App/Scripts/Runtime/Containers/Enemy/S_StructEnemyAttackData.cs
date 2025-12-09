@@ -55,6 +55,10 @@ public struct S_StructEnemyAttackData
     [ShowIf("isTyped")]
     public float convictionParryGain;
 
+    [Title("Attack")]
+    [ShowIf("isTyped")]
+    public bool lastAttack;
+
     [HideInInspector] public Vector3 attackDirection;
 
     [HideInInspector] public Vector3 contactPoint;
