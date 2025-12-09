@@ -694,11 +694,6 @@ public class S_Enemy : MonoBehaviour
 
         for (int i = 0; i < combo.listAnimationsCombos.Count; i++)
         {
-            if (i == combo.listAnimationsCombos.Count - 1)
-            {
-                RuntimeManager.StudioSystem.setParameterByName("LastHit", 1);
-            }
-
             isAttacking = true;
             RotateEnemy();
 
@@ -732,6 +727,11 @@ public class S_Enemy : MonoBehaviour
             }
 
             yield return null;
+
+            if (i == combo.listAnimationsCombos.Count - 2)
+            {
+                RuntimeManager.StudioSystem.setParameterByName("LastHit", 1);
+            }
         }
 
         rootMotionModifier.Setup(1);
@@ -741,6 +741,8 @@ public class S_Enemy : MonoBehaviour
         isPerformingCombo = false;
         isAttacking = false;
         unlockRotate = false;
+
+        RuntimeManager.StudioSystem.setParameterByName("LastHit", 0);
 
         if (pendingState.HasValue)
         {
