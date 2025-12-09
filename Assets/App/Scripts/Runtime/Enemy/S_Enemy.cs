@@ -679,15 +679,15 @@ public class S_Enemy : MonoBehaviour
             enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
-            yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length / 2);
+            yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length);
 
             if (combo.listAnimationsCombos[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
             {
+                yield return new WaitForSeconds(combo.listAnimationsCombos[i].attackData.timeCast);
+
                 S_EnemyProjectile projectileInstance = Instantiate(enemyProjectile, spawnProjectilePoint.transform.position, Quaternion.identity);
                 projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo.listAnimationsCombos[i].attackData);
             }
-
-            yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length / 2);
 
             isAttacking = false;
             RotateEnemy();
