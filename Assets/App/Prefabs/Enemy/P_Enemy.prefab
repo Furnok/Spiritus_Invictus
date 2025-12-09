@@ -272,9 +272,6 @@ MonoBehaviour:
   comboParam: IsCombo
   stopAttackParam: IsStopAttack
   hitHeavyParam: IsHeavyHit
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4096
   patrolPointsList:
   - {fileID: 5199276408535089712}
   - {fileID: 4238934561793798638}
@@ -296,6 +293,7 @@ MonoBehaviour:
   enemyUI: {fileID: 4394752163360763578}
   enemyMaxTravelZone: {fileID: 5830951658339230131}
   enemyHeadLookAtIK: {fileID: 8400928163415866521}
+  rootMotionModifier: {fileID: 1882207588305552252}
   patrolPoints: {fileID: 2395496571129997540}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
   rseOnDataLoad: {fileID: 11400000, guid: d8401e7eeb710344ca47f8e9df92d71d, type: 2}
@@ -356,7 +354,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tagPlayer: Player
   tagObstacle: Obstacle
-  rootMotionMultiplier: 2
   animator: {fileID: 5886562096679836169}
   rb: {fileID: 2819568101127906853}
   body: {fileID: 5421673960955687534}

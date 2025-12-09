@@ -89,6 +89,9 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private S_EnemyHeadLookAtIK enemyHeadLookAtIK;
 
     [TabGroup("References")]
+    [SerializeField] private S_RootMotionModifier rootMotionModifier;
+
+    [TabGroup("References")]
     [Title("Patrol Points Parent")]
     [SerializeField] private Transform patrolPoints;
 
@@ -671,6 +674,8 @@ public class S_Enemy : MonoBehaviour
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
             overrideController[overrideKey] = combo.listAnimationsCombos[i].animation;
 
+            rootMotionModifier.Setup(combo.listAnimationsCombos[i].rootMotionMultiplier);
+
             enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
@@ -698,6 +703,7 @@ public class S_Enemy : MonoBehaviour
             yield return null;
         }
 
+        rootMotionModifier.Setup(1);
         animator.SetTrigger(stopAttackParam);
         animator.SetBool(idleAttack, true);
 

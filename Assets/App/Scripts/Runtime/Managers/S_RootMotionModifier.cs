@@ -10,10 +10,6 @@ public class S_RootMotionModifier : MonoBehaviour
     [TabGroup("Settings")]
     [SerializeField, S_TagName] private string tagObstacle;
 
-    [TabGroup("Settings")]
-    [Title("Move Multiplicator")]
-    [SerializeField] private float rootMotionMultiplier = 2f;
-
     [TabGroup("References")]
     [Title("Animator")]
     [SerializeField] private Animator animator;
@@ -28,6 +24,8 @@ public class S_RootMotionModifier : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_GameInPause isPause;
+
+    private float rootMotionMultiplier = 1f;
 
     private void OnAnimatorMove()
     {
@@ -48,6 +46,11 @@ public class S_RootMotionModifier : MonoBehaviour
             transform.position += delta;
             transform.rotation *= deltaRot;
         }
+    }
+
+    public void Setup(float value)
+    {
+        rootMotionMultiplier = value;
     }
 
     private bool CanMove(Vector3 delta)
