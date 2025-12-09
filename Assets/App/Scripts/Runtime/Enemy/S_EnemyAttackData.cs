@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using FMOD;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -94,5 +96,10 @@ public class S_EnemyAttackData : MonoBehaviour
     public void StopRotate()
     {
         enemy.StopRotateEnemyAnim();
+    }
+
+    public void PlayFmod(string eventName)
+    {
+        RuntimeManager.PlayOneShot(eventName);
     }
 }

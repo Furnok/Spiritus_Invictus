@@ -43,6 +43,9 @@ public class S_CameraManager : MonoBehaviour
     [Title("Player")]
     [SerializeField] private Material materialPlayer;
 
+    [TabGroup("References")]
+    [SerializeField] private Material materialLantern;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
 
@@ -180,6 +183,10 @@ public class S_CameraManager : MonoBehaviour
         Color color = materialPlayer.color;
         color.a = 1;
         materialPlayer.color = color;
+
+        color = materialLantern.color;
+        color.a = 1;
+        materialLantern.color = color;
     }
 
     private void Update()
@@ -528,6 +535,10 @@ public class S_CameraManager : MonoBehaviour
         var color = materialPlayer.color;
         color.a = currentAlpha;
         materialPlayer.color = color;
+
+        color = materialLantern.color;
+        color.a = currentAlpha;
+        materialLantern.color = color;
     }
 
     private void HandleSkipHold()
