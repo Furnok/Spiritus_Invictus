@@ -39,6 +39,9 @@ public class S_ClassEnemyData
     [SuffixLabel("s", Overlay = true)]
     public float waitStun = 0;
 
+    [SuffixLabel("s", Overlay = true)]
+    public float rotationTime = 0;
+
     [Title("Delay")]
     [SuffixLabel("s", Overlay = true)]
     public float patrolPointWaitMin = 0;
