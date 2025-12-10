@@ -106,8 +106,6 @@ public class S_RumbleManager : MonoBehaviour
 
     private void StopAllRumble()
     {
-        if (Gamepad.current == null || !_rsoSettingsSaved.Value.controllerRumble) return;
-
         _activeRumbles.Clear();
         var pad = Gamepad.current;
         if (pad != null)
