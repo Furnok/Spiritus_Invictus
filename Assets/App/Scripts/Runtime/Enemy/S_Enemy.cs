@@ -641,8 +641,7 @@ public class S_Enemy : MonoBehaviour
     {
         if (isWaiting)
         {
-            if (Time.time < nextWaitEndTime)
-                return;
+            if (Time.time < nextWaitEndTime) return;
 
             isWaiting = false;
             nextChangeTime = Time.time;

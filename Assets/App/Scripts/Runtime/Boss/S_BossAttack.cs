@@ -1,88 +1,15 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Behavior;
-using Unity.Services.Analytics;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class S_BossAttack : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Ichimanji")]
-    [SerializeField, S_AnimationName("animator")] private string ichimanji;
-
-    [TabGroup("Settings")]
-    [Title("Makashi")]
-    [SerializeField, S_AnimationName("animator")] private string makashi;
-
-    [TabGroup("Settings")]
-    [Title("Margit")]
-    [SerializeField, S_AnimationName("animator")] private string margit;
-
-    [TabGroup("Settings")]
-    [Title("Valkyrie")]
-    [SerializeField, S_AnimationName("animator")] private string valkyrie;
-
-    [TabGroup("Settings")]
-    [Title("Makashi Special")]
-    [SerializeField, S_AnimationName("animator")] private string makashiSpe;
-
-    [TabGroup("Settings")]
-    [Title("Ataru")]
-    [SerializeField, S_AnimationName("animator")] private string ataru;
-
-    [TabGroup("Settings")]
-    [Title("Vaapad")]
-    [SerializeField, S_AnimationName("animator")] private string vaapad;
-
-    [TabGroup("Settings")]
-    [Title("Genichiro")]
-    [SerializeField, S_AnimationName("animator")] private string genichiro;
-
-    [TabGroup("Settings")]
-    [Title("Simon")]
-    [SerializeField, S_AnimationName("animator")] private string simon;
-
-    [TabGroup("Settings")]
-    [Title("Dualliste")]
-    [SerializeField, S_AnimationName("animator")] private string dualliste;
-
-    [TabGroup("Settings")]
-    [Title("PingPong")]
-    [SerializeField, S_AnimationName("animator")] private string pingPong;
-    [TabGroup("Settings")]
-    [SerializeField] private GameObject projectilePingPongSpawn;
-    [TabGroup("Settings")]
     [Title("Waves")]
-    [SerializeField, S_AnimationName("animator")] private string waves;
-    [TabGroup("Settings")]
-    [SerializeField] private GameObject wavesPrefabs;
-    [TabGroup("Settings")]
-    [SerializeField] private List<GameObject> wavesSpawn = new List<GameObject>();
-    [TabGroup("Settings")]
-    [SerializeField] private GameObject middle;
-    [TabGroup("Settings")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeBetweenWaves;
-    private Coroutine rotateWavesCoroutine;
-
-    [TabGroup("Settings")]
-    [Title("Balls")]
-    [SerializeField, S_AnimationName("animator")] private string balls;
-
-    [TabGroup("Settings")]
-    [Title("Genion")]
-    [SerializeField, S_AnimationName("animator")] private string genion;
-
-    [TabGroup("Settings")]
-    [Title("Gathering")]
-    [SerializeField, S_AnimationName("animator")] private string gathering;
-
-    [TabGroup("Settings")]
-    [Title("WingsOfHell")]
-    [SerializeField, S_AnimationName("animator")] private string wingsOfHell;
 
     [TabGroup("References")]
     [Title("Colliders")]
@@ -93,9 +20,73 @@ public class S_BossAttack : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [TabGroup("References")]
+    [Title("Animation Parameters")]
+    [SerializeField, S_AnimationName("animator")] private string ichimanji;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string makashi;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string margit;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string valkyrie;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string makashiSpe;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string ataru;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string vaapad;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string genichiro;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string simon;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string dualliste;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string pingPong;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string waves;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string balls;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string genion;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string gathering;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string wingsOfHell;
+
+    [TabGroup("References")]
+    [Title("Projectile")]
     [SerializeField] private S_BossProjectile bossProjectile;
 
     [TabGroup("References")]
+    [SerializeField] private GameObject projectilePingPongSpawn;
+
+    [TabGroup("References")]
+    [Title("Waves")]
+    [SerializeField] private GameObject wavesPrefabs;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject middle;
+
+    [TabGroup("References")]
+    [SerializeField] private List<GameObject> wavesSpawn = new List<GameObject>();
+
+    [TabGroup("References")]
+    [Title("Center")]
     [SerializeField] private Transform aimPointBoss;
 
     [TabGroup("References")]
@@ -105,195 +96,209 @@ public class S_BossAttack : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
-    [HideInInspector] public Transform aimPointPlayer;
+    [HideInInspector] public Transform aimPointPlayer = null;
 
-    private S_ClassBossAttack currentAttack;
+    private S_ClassBossAttack currentAttack = null;
+
+    private Coroutine rotateWavesCoroutine = null;
+
     private void OnEnable()
     {
         onExecuteAttack.action += DoAttackChoose;
     }
+
     private void OnDisable()
     {
         onExecuteAttack.action -= DoAttackChoose;
     }
 
-    void DoAttackChoose(S_ClassBossAttack attack)
+    private void DoAttackChoose(S_ClassBossAttack attack)
     {
         currentAttack = attack;
 
-        if (currentAttack.attackName=="Ichimanji")
+        switch (currentAttack.attackName)
         {
-            Ichimanji();
-        }
-        else if(currentAttack.attackName=="Makashi")
-        {
-            Makashi();
-        }
-        else if(currentAttack.attackName=="Margit")
-        {
-            Margit();
-        }
-        else if(currentAttack.attackName=="Valkyrie")
-        {
-            Valkyrie();
-        }
-        else if(currentAttack.attackName=="MakashiSpe")
-        {
-            MakashiSpe();
-        }
-        else if(currentAttack.attackName=="Ataru")
-        {
-            Ataru();
-        }
-        else if(currentAttack.attackName=="Vaapad")
-        {
-            Vaapad();
-        }
-        else if(currentAttack.attackName=="Genichiro")
-        {
-            Genichiro();
-        }
-        else if(currentAttack.attackName=="Simon")
-        {
-            Simon();
-        }
-        else if(currentAttack.attackName=="Dualliste")
-        {
-            Dualliste();
-        }
-        else if(currentAttack.attackName=="PingPong")
-        {
-            PingPong();
-        }
-        else if(currentAttack.attackName=="Waves")
-        {
-            Waves();
-        }
-        else if(currentAttack.attackName=="Balls")
-        {
-            Balls();
-        }
-        else if(currentAttack.attackName=="Genion")
-        {
-            Genion();
-        }
-        else if(currentAttack.attackName=="Gathering")
-        {
-            Gathering();
-        }
-        else if(currentAttack.attackName=="WingsOfHell")
-        {
-            WingsOfHell();
+            case "Ichimanji":
+                Ichimanji();
+                break;
+            case "Makashi":
+                Makashi();
+                break;
+            case "Margit":
+                Margit();
+                break;
+            case "Valkyrie":
+                Valkyrie();
+                break;
+            case "MakashiSpe":
+                MakashiSpe();
+                break;
+            case "Ataru":
+                Ataru();
+                break;
+            case "Vaapad":
+                Vaapad();
+                break;
+            case "Genichiro":
+                Genichiro();
+                break;
+            case "Simon":
+                Simon();
+                break;
+            case "Dualliste":
+                Dualliste();
+                break;
+            case "PingPong":
+                PingPong();
+                break;
+            case "Waves":
+                Waves();
+                break;
+            case "Balls":
+                Balls();
+                break;
+            case "Genion":
+                Genion();
+                break;
+            case "Gathering":
+                Gathering();
+                break;
+            case "WingsOfHell":
+                WingsOfHell();
+                break;
         }
     }
+
     #region Attack Phase 1
-    void Ichimanji()
+    private void Ichimanji()
     {
         animator.SetTrigger(ichimanji);
     }
-    void Makashi()
+
+    private void Makashi()
     {
         animator.SetTrigger(makashi);
     }
-    void Margit()
+
+    private void Margit()
     {
         animator.SetTrigger(margit);
     }
-    void Valkyrie()
+
+    private void Valkyrie()
     {
         animator.SetTrigger(valkyrie);
     }
-    void MakashiSpe()
+
+    private void MakashiSpe()
     {
         animator.SetTrigger(makashiSpe);
     }
-    void Ataru()
+
+    private void Ataru()
     {
         animator.SetTrigger(ataru);
     }
     #endregion
 
     #region Attack Phase 2
-    void Vaapad()
+    private void Vaapad()
     {
         animator.SetTrigger(vaapad);
     }
-    void Genichiro()
+
+    private void Genichiro()
     {
         animator.SetTrigger(genichiro);
     }
-    void Simon()
+
+    private void Simon()
     {
         animator.SetTrigger(simon);
     }
 
-    void Dualliste()
+    private void Dualliste()
     {
         animator.SetTrigger(dualliste);
     }
-    void PingPong()
+
+    private void PingPong()
     {
         animator.SetTrigger(pingPong);
+
         S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
         projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[0]);
-
     }
-    void Waves()
+
+    private void Waves()
     {
         StartCoroutine(StopWaves(currentAttack.attackTime));
+
         boss.transform.DOMove(middle.transform.position, 0.5f).OnComplete(() =>
         {
             animator.SetTrigger(waves);
-            if(rotateWavesCoroutine!=null)
+
+            if (rotateWavesCoroutine != null)
             {
                 StopCoroutine(rotateWavesCoroutine);
                 rotateWavesCoroutine = null;
             }
+
             rotateWavesCoroutine = StartCoroutine(RotateWavesSpawn());
         });  
     }
-    IEnumerator RotateWavesSpawn()
+
+    private IEnumerator RotateWavesSpawn()
     {
         middle.transform.rotation = Quaternion.Euler(0, 0, 0);
         SpawnWaves();
+
         yield return new WaitForSeconds(timeBetweenWaves);
+
         middle.transform.rotation = Quaternion.Euler(0, 45, 0);
         SpawnWaves();
+
         yield return new WaitForSeconds(timeBetweenWaves);
+
         if (rotateWavesCoroutine != null)
         {
             StopCoroutine(rotateWavesCoroutine);
             rotateWavesCoroutine = null;
         }
+
         rotateWavesCoroutine = StartCoroutine(RotateWavesSpawn());
     }
-    IEnumerator StopWaves(float delay)
+
+    private IEnumerator StopWaves(float delay)
     {
         yield return new WaitForSeconds(delay);
+
         StopCoroutine(rotateWavesCoroutine);
         rotateWavesCoroutine = null;
 
     }
-    void SpawnWaves()
+
+    private void SpawnWaves()
     {
-        foreach (GameObject wavesSpawn in wavesSpawn)
-        {
-            Instantiate(wavesPrefabs, wavesSpawn.transform.position, Quaternion.identity);
-        }
+        foreach (GameObject wavesSpawn in wavesSpawn) Instantiate(wavesPrefabs, wavesSpawn.transform.position, Quaternion.identity);
     }
-    void Balls()
+
+    private void Balls()
     {
         animator.SetTrigger(balls);
     }
-    void Genion()
+
+    private void Genion()
     {
         animator.SetTrigger(genion);
     }
-    void Gathering()
+
+    private void Gathering()
     {
         animator.SetTrigger(gathering);
     }
-    void WingsOfHell()
+
+    private void WingsOfHell()
     {
         animator.SetTrigger(wingsOfHell);
     }

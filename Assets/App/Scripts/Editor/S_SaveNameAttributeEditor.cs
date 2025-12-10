@@ -46,7 +46,7 @@ public class S_SaveNameAttributeEditor : PropertyDrawer
         // String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [SaveName] with a string field.");
+            EditorGUI.LabelField(position, label.text, "Use [SaveName] with a String Field.");
             EditorGUI.EndProperty();
             return;
         }

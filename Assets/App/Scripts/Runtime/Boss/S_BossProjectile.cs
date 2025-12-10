@@ -1,25 +1,8 @@
-using DG.Tweening.Core.Easing;
 using Sirenix.OdinInspector;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
 {
-    [SerializeField] private int reflectMax;
-    private int reflectCount = 0;
-    [TabGroup("Settings")]
-    [Title("Filter")]
-    [SerializeField, S_TagName] private string tagHurt;
-
-    [TabGroup("Settings")]
-    [Title("Layer")]
-    [SerializeField] private string playerLayer;
-    [SerializeField] private string enemyLayer;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask blockLayer;
-
     [TabGroup("Settings")]
     [Title("Projectile")]
     [SerializeField] private float speed;
@@ -34,6 +17,23 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
 
     [TabGroup("Settings")]
     [SerializeField] private float reflectDmgMul;
+
+    [TabGroup("Settings")]
+    [SerializeField] private int reflectMax;
+
+    [TabGroup("References")]
+    [Title("Filter")]
+    [SerializeField, S_TagName] private string tagHurt;
+
+    [TabGroup("References")]
+    [Title("Mask")]
+    [SerializeField] private LayerMask blockLayer;
+
+    [TabGroup("References")]
+    [SerializeField, S_LayerName] private int playerLayer;
+
+    [TabGroup("References")]
+    [SerializeField, S_LayerName] private int enemyLayer;
 
     [TabGroup("References")]
     [Title("Rigidbody")]
@@ -52,10 +52,12 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_ProjectileData ssoProjectileData;
+
     private Transform owner = null;
     private Transform player = null;
 
     private float timeAlive = 0f;
+    private int reflectCount = 0;
 
     private Transform target = null;
 
@@ -75,6 +77,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     private float arcRandomDirectionMin => ssoProjectileData.Value.arcRandomDirectionMin;
     private float arcRandomDirectionMax => ssoProjectileData.Value.arcRandomDirectionMax;
     private float travelTime => ssoProjectileData.Value.travelTime;
+
     public void Initialize(Transform owner, Transform target = null, S_StructEnemyAttackData attackData = new())
     {
         this.target = target;
@@ -85,7 +88,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
         this.owner = owner;
         origin = target.position;
 
-        if(reflectMax <= 0)
+        if (reflectMax <= 0)
         {
             _canReflect = false;
         }
@@ -150,7 +153,6 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
         return _canReflect;
     }
 
-
     public void Reflect(Transform reflectOwner)
     {
 
@@ -158,9 +160,9 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
         speed *= reflectSpeedMul;
         timeAlive = 0;
 
-        if(gameObject.layer == LayerMask.NameToLayer(enemyLayer))
+        if (gameObject.layer == enemyLayer)
         {
-            gameObject.layer = LayerMask.NameToLayer(playerLayer);
+            gameObject.layer = playerLayer;
 
             if (rendered && playerMat) rendered.material = playerMat;
         }
@@ -170,12 +172,10 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
 
             reflectCount++;
 
-            if (reflectCount >= reflectMax)
-            {
-                _canReflect = false;
-            }
+            if (reflectCount >= reflectMax) _canReflect = false;
 
-            gameObject.layer = LayerMask.NameToLayer(enemyLayer);
+            gameObject.layer = enemyLayer;
+
             if (rendered && playerMat) rendered.material = enemyMat;
         }
 
@@ -184,14 +184,8 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
         {
             Transform targetReflect;
 
-            if (target == owner)
-            {
-                targetReflect = player;
-            }
-            else
-            {
-                targetReflect = owner;
-            }
+            if (target == owner) targetReflect = player;
+            else targetReflect = owner;
 
             targetReflect.gameObject.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
 
@@ -206,18 +200,19 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
             transform.forward = direction;
         }
     }
+
     private void CalculateControlPoint()
     {
         this.startPos = transform.position;
 
         Vector3 toTarget = target != null ? (target.position - startPos) : transform.forward * 10f;
         Vector3 midPoint = startPos + toTarget * 0.5f;
-
         Vector3 arcDir = Vector3.up;
 
         if (arcDirection != 0f || randomizeArc == true)
         {
             Vector3 side = Vector3.Cross(Vector3.up, toTarget.normalized).normalized;
+
             if (randomizeArc)
             {
                 side *= Random.Range(arcRandomDirectionMin, arcRandomDirectionMax);
@@ -233,6 +228,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
         float arcHeight = toTarget.magnitude * 0.25f * arcHeightMultiplier;
         controlPoint = midPoint + arcDir * arcHeight;
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(tagHurt) && other.TryGetComponent(out I_Damageable damageable))
@@ -244,6 +240,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
             }
         }
     }
+
     public ref S_StructEnemyAttackData GetAttackData()
     {
         return ref attackData;

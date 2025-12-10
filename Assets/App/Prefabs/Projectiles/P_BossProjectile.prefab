@@ -181,17 +181,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ed838c4473ff4f4fa8f30b97cfd2ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reflectMax: 1
-  tagHurt: Hurtbox
-  playerLayer: PlayerProjectile
-  enemyLayer: EnemyProjectile
-  blockLayer:
-    serializedVersion: 2
-    m_Bits: 4224
   speed: 5
   lifeTime: 3
   reflectSpeedMul: 1.5
   reflectDmgMul: 1.5
+  reflectMax: 1
+  tagHurt: Hurtbox
+  blockLayer:
+    serializedVersion: 2
+    m_Bits: 4224
+  playerLayer: 8
+  enemyLayer: 9
   rb: {fileID: 4349038876630830940}
   enemyMat: {fileID: 2100000, guid: 46fd367f7816d434ba541584b0a91a9f, type: 2}
   playerMat: {fileID: 2100000, guid: 6548b5bace388d2448daab8c8e3e506b, type: 2}

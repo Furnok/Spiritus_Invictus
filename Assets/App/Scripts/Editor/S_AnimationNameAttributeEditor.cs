@@ -12,14 +12,14 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
         // String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
-            DrawError(position, label, "Use [S_AnimationName] with a string field.");
+            DrawError(position, label, "Use [S_AnimationName] with a String Field.");
             return;
         }
 
         // MonoBehaviour Check
         if (!(property.serializedObject.targetObject is MonoBehaviour mb))
         {
-            DrawError(position, label, "Target must be a MonoBehaviour.");
+            DrawError(position, label, "Target Must be a MonoBehaviour.");
             return;
         }
 
@@ -34,7 +34,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
             
         if (animator == null)
         {
-            DrawError(position, label, "No Animator found.");
+            DrawError(position, label, "No Animator Found.");
             return;
         }
 
@@ -42,7 +42,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
         AnimatorController controller = GetAnimatorController(animator);
         if (controller == null)
         {
-            DrawError(position, label, "Animator has no valid AnimatorController.");
+            DrawError(position, label, "Animator has no Valid AnimatorController.");
             return;
         }
 
@@ -50,7 +50,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
         AnimatorControllerParameter[] parameters = controller.parameters;
         if (parameters == null || parameters.Length == 0)
         {
-            DrawError(position, label, "Animator has no parameters.");
+            DrawError(position, label, "Animator has no Parameters.");
             return;
         }
 
