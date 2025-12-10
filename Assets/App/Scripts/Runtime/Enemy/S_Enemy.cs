@@ -609,6 +609,10 @@ public class S_Enemy : MonoBehaviour
 
                 return;
             }
+            else if (distance < combo.distanceMin)
+            {
+
+            }
             else if (!isStrafe)
             {
                 //isStrafe = true;
