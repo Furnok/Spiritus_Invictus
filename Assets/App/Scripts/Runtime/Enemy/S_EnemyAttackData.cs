@@ -112,6 +112,8 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void VFXStart()
     {
+        if (particles == null || particles.Count == 0) return;
+
         vfx.SetActive(true);
 
         foreach (ParticleSystem particle in particles)
@@ -122,6 +124,8 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void VFXStop()
     {
+        if (particles == null || particles.Count == 0) return;
+
         foreach (ParticleSystem particle in particles)
         {
             particle.Stop();
