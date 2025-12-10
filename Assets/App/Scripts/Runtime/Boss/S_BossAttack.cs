@@ -227,7 +227,7 @@ public class S_BossAttack : MonoBehaviour
         animator.SetTrigger(pingPong);
 
         S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
-        projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[0]);
+        projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[0].attackData);
     }
 
     private void Waves()
