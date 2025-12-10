@@ -6,13 +6,19 @@ public class S_LayerNameAttributeEditor : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        if (property.propertyType == SerializedPropertyType.Integer)
+        EditorGUI.BeginProperty(position, label, property);
+
+        // Int Field Check
+        if (property.propertyType != SerializedPropertyType.Integer)
         {
-            property.intValue = EditorGUI.LayerField(position, label, property.intValue);
+            EditorGUI.LabelField(position, label.text, "Use [LayerName] with a Int Field.");
         }
         else
         {
-            EditorGUI.LabelField(position, label.text, "Use [LayerName] with Int Field.");
+            // Popup & Apply Result
+            property.intValue = EditorGUI.LayerField(position, label, property.intValue);
         }
+
+        EditorGUI.EndProperty();
     }
 }
