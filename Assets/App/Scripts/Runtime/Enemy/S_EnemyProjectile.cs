@@ -1,19 +1,9 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
-public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
+public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
-    [TabGroup("Settings")]
-    [Title("Filter")]
-    [SerializeField, S_TagName] private string tagHurt;
-
-    [TabGroup("Settings")]
-    [Title("Layer")]
-    [SerializeField] private string playerLayer;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask blockLayer;
-
     [TabGroup("Settings")]
     [Title("Projectile")]
     [SerializeField] private float speed;
@@ -28,6 +18,17 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
 
     [TabGroup("Settings")]
     [SerializeField] private float reflectDmgMul;
+
+    [TabGroup("References")]
+    [Title("Filters")]
+    [SerializeField, S_TagName] private string tagHurt;
+
+    [TabGroup("References")]
+    [Title("Masks")]
+    [SerializeField] private LayerMask blockLayer;
+
+    [TabGroup("References")]
+    [SerializeField, S_LayerName] private int playerLayer;
 
     [TabGroup("References")]
     [Title("Rigidbody")]
@@ -83,6 +84,11 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
         startAimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : null;
 
         CalculateControlPoint();
+    }
+
+    public Transform GetEnemyTransform()
+    {
+        return owner;
     }
 
     private void Update()
@@ -141,7 +147,7 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
         speed *= reflectSpeedMul;
         timeAlive = 0;
 
-        gameObject.layer = LayerMask.NameToLayer(playerLayer);
+        gameObject.layer = playerLayer;
         if (rendered && playerMat) rendered.material = playerMat;
 
         if (owner != null && owner.gameObject.activeInHierarchy)

@@ -1229,6 +1229,7 @@ GameObject:
   - component: {fileID: 8099197439811798300}
   - component: {fileID: 3689603790669669594}
   - component: {fileID: 2982200486232965919}
+  - component: {fileID: 5831755448759667653}
   m_Layer: 17
   m_Name: FBX_Halberd
   m_TagString: Hitbox
@@ -1340,6 +1341,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   S_EnemyAttackData: {fileID: 190640458559319546}
+--- !u!114 &5831755448759667653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5824946563659099584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f547c771bbe9da4498e19b73fc9f51b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyTransform: {fileID: 1402299550822366697}
 --- !u!1 &5849475613203025633
 GameObject:
   m_ObjectHideFlags: 0
@@ -2375,5 +2389,10 @@ MonoBehaviour:
 --- !u!4 &686056609450167981 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8382064584298650195, guid: 5d4f05f5ea5eefd4b88eed29797b79bc, type: 3}
+  m_PrefabInstance: {fileID: 9067522369879725310}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1402299550822366697 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7972417589024532759, guid: 5d4f05f5ea5eefd4b88eed29797b79bc, type: 3}
   m_PrefabInstance: {fileID: 9067522369879725310}
   m_PrefabAsset: {fileID: 0}

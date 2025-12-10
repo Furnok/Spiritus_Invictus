@@ -232,13 +232,16 @@ public class S_Enemy : MonoBehaviour
 
     public void RotateEnemy()
     {
-        Vector3 direction = target.transform.position - center.transform.position;
-        direction.y = 0;
+        if (target != null)
+        {
+            Vector3 direction = target.transform.position - center.transform.position;
+            direction.y = 0;
 
-        Quaternion targetRot = Quaternion.LookRotation(direction);
+            Quaternion targetRot = Quaternion.LookRotation(direction);
 
-        transform.DOKill();
-        transform.DORotateQuaternion(targetRot, ssoEnemyData.Value.rotationTime);
+            transform.DOKill();
+            transform.DORotateQuaternion(targetRot, ssoEnemyData.Value.rotationTime);
+        }
     }
 
     public void RotateEnemyAnim()
