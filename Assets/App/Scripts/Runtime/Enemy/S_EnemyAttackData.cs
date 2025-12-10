@@ -27,9 +27,6 @@ public class S_EnemyAttackData : MonoBehaviour
 
     [TabGroup("References")]
     [Title("VFX")]
-    [SerializeField] private GameObject vfx;
-
-    [TabGroup("References")]
     [SerializeField] private List<ParticleSystem> particles;
 
     [TabGroup("References")]
@@ -114,8 +111,6 @@ public class S_EnemyAttackData : MonoBehaviour
     {
         if (particles == null || particles.Count == 0) return;
 
-        vfx.SetActive(true);
-
         foreach (ParticleSystem particle in particles)
         {
             particle.Play();
@@ -130,7 +125,5 @@ public class S_EnemyAttackData : MonoBehaviour
         {
             particle.Stop();
         }
-
-        vfx.SetActive(false);
     }
 }
