@@ -1,13 +1,8 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
-    [TabGroup("Settings")]
-    [Title("Projectile")]
-    [SerializeField] private float speed;
-
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float lifeTime;
@@ -144,7 +139,6 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
     public void Reflect(Transform reflectOwner)
     {
         attackData.damage *= reflectDmgMul;
-        speed *= reflectSpeedMul;
         timeAlive = 0;
 
         gameObject.layer = playerLayer;

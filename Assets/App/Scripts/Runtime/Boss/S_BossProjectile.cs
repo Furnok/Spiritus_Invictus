@@ -1,12 +1,8 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
+public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
-    [TabGroup("Settings")]
-    [Title("Projectile")]
-    [SerializeField] private float speed;
-
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float lifeTime;
@@ -98,6 +94,12 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
 
         CalculateControlPoint();
     }
+
+    public Transform GetEnemyTransform()
+    {
+        return owner;
+    }
+
     private void Update()
     {
         if (!isInitialized) return;
@@ -157,7 +159,6 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     {
 
         attackData.damage *= reflectDmgMul;
-        speed *= reflectSpeedMul;
         timeAlive = 0;
 
         if (gameObject.layer == enemyLayer)
