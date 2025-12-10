@@ -93,6 +93,7 @@ public class S_Enemy : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_EnemyRootMotionModifier rootMotionModifier;
 
+
     [TabGroup("References")]
     [SerializeField] private S_EnemyProjectile enemyProjectile;
 
@@ -673,7 +674,7 @@ public class S_Enemy : MonoBehaviour
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
             overrideController[overrideKey] = combo.listAnimationsCombos[i].animation;
 
-            rootMotionModifier.Setup(combo.listAnimationsCombos[i].rootMotionMultiplier);
+            rootMotionModifier.Setup(combo.listAnimationsCombos[i].rootMotionMultiplier, combo.distanceMin);
 
             enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
@@ -702,7 +703,7 @@ public class S_Enemy : MonoBehaviour
             yield return null;
         }
 
-        rootMotionModifier.Setup(1);
+        rootMotionModifier.Setup(1, 0);
         animator.SetTrigger(stopAttackParam);
         animator.SetBool(idleAttack, true);
 
@@ -758,7 +759,7 @@ public class S_Enemy : MonoBehaviour
 
         resetAttack = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.attackCooldown, () => canAttack = true));
 
-        rootMotionModifier.Setup(1);
+        rootMotionModifier.Setup(1, 0);
 
         rseOnSendConsoleMessage.Call(gameObject.transform.parent.name + " is Stun!");
 

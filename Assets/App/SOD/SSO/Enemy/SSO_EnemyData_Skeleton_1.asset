@@ -25,13 +25,14 @@ MonoBehaviour:
     detectionAggroRangeMax: 50
     attackCooldown: 3
     waitStun: 0.6
-    chanceForEasterEgg: 1
+    rotationTime: 0
     patrolPointWaitMin: 1
     patrolPointWaitMax: 3
     startPatrolWaitMin: 1
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
+    timeDisplay: 3
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
@@ -41,6 +42,7 @@ MonoBehaviour:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -50,6 +52,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.05
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 42b135111bbe964408a1e9d68bfd7e40, type: 2}
@@ -58,6 +62,7 @@ MonoBehaviour:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -67,6 +72,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.05
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: c34ce13b5bc91fd429de665691f34f7d, type: 2}
@@ -75,6 +82,7 @@ MonoBehaviour:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -84,6 +92,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.05
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 1
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       distanceToChase: 1.5

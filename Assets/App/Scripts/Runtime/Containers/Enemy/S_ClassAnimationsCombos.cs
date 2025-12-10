@@ -9,6 +9,8 @@ public class S_ClassAnimationsCombos
     public List<S_ClassAnimation> listAnimationsCombos = new();
 
     [Title("Distances")]
+    public float distanceMin = 0;
+
     public float distanceToChase = 0;
 
     public float distanceToLoseAttack = 0;

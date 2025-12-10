@@ -26,6 +26,7 @@ public class S_EnemyRootMotionModifier : MonoBehaviour
     [SerializeField] private RSO_GameInPause isPause;
 
     private float rootMotionMultiplier = 1f;
+    private float distanceMin = 0;
 
     private void OnAnimatorMove()
     {
@@ -48,15 +49,16 @@ public class S_EnemyRootMotionModifier : MonoBehaviour
         }
     }
 
-    public void Setup(float value)
+    public void Setup(float newMultiplicator, float newDistanceMin)
     {
-        rootMotionMultiplier = value;
+        rootMotionMultiplier = newMultiplicator;
+        distanceMin = newDistanceMin;
     }
 
     private bool CanMove(Vector3 delta)
     {
         RaycastHit hit;
-        if (Physics.Raycast(body.transform.position, delta.normalized, out hit, 1f))
+        if (Physics.Raycast(body.transform.position, delta.normalized, out hit, distanceMin))
         {
             if (hit.collider.CompareTag(tagPlayer) || hit.collider.CompareTag(tagObstacle)) return false;
         }
