@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using FMODUnity;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -23,6 +24,13 @@ public class S_EnemyAttackData : MonoBehaviour
     [TabGroup("References")]
     [Title("Image")]
     [SerializeField] private Image warning;
+
+    [TabGroup("References")]
+    [Title("VFX")]
+    [SerializeField] private GameObject vfx;
+
+    [TabGroup("References")]
+    [SerializeField] private List<ParticleSystem> particles;
 
     [TabGroup("References")]
     [Title("Scripts")]
@@ -100,5 +108,25 @@ public class S_EnemyAttackData : MonoBehaviour
     public void PlayFmod(string eventName)
     {
         RuntimeManager.PlayOneShot(eventName, transform.position);
+    }
+
+    public void VFXStart()
+    {
+        vfx.SetActive(true);
+
+        foreach (ParticleSystem particle in particles)
+        {
+            particle.Play();
+        }
+    }
+
+    public void VFXStop()
+    {
+        foreach (ParticleSystem particle in particles)
+        {
+            particle.Stop();
+        }
+
+        vfx.SetActive(false);
     }
 }
