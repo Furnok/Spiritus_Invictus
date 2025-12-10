@@ -32,6 +32,7 @@ MonoBehaviour:
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
+    timeDisplay: 3
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
@@ -51,6 +52,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
@@ -69,6 +72,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
@@ -87,6 +92,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
@@ -105,6 +112,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
@@ -123,6 +132,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
@@ -141,7 +152,10 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
+      distanceMin: 0
       distanceToChase: 1.5
       distanceToLoseAttack: 3

@@ -32,7 +32,7 @@ MonoBehaviour:
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
-    timeDisplay: 0
+    timeDisplay: 3
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
@@ -156,5 +156,6 @@ MonoBehaviour:
           lastAttack: 1
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
+      distanceMin: 0
       distanceToChase: 3
       distanceToLoseAttack: 3.5
