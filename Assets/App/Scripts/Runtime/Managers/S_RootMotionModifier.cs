@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class S_RootMotionModifier : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Filter")]
+    [TabGroup("References")]
+    [Title("Filters")]
     [SerializeField, S_TagName] private string tagPlayer;
 
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [SerializeField, S_TagName] private string tagObstacle;
 
     [TabGroup("References")]

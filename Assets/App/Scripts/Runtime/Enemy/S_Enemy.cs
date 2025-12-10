@@ -8,26 +8,8 @@ using UnityEngine.AI;
 public class S_Enemy : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Animations Parameters")]
-    [SerializeField, S_AnimationName("animator")] private string moveParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName("animator")] private string deathParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName("animator")] private string idleAttack;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName("animator")] private string attackParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName("animator")] private string comboParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName("animator")] private string stopAttackParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName("animator")] private string hitHeavyParam;
+    [Title("Enemy Data")]
+    [SerializeField] private SSO_EnemyData ssoEnemyData;
 
     [TabGroup("Settings")]
     [Title("Patrol Points")]
@@ -56,19 +38,38 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [TabGroup("References")]
+    [Title("Animation Parameters")]
+    [SerializeField, S_AnimationName("animator")] private string moveParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string deathParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string idleAttack;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string attackParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string comboParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string stopAttackParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string hitHeavyParam;
+
+    [TabGroup("References")]
     [Title("Body")]
     [SerializeField] private GameObject body;
 
     [TabGroup("References")]
-    [Title("Body")]
+    [Title("Center")]
     [SerializeField] private GameObject center;
 
     [TabGroup("References")]
     [Title("Projectile")]
     [SerializeField] private GameObject spawnProjectilePoint;
-
-    [TabGroup("References")]
-    [SerializeField] private S_EnemyProjectile enemyProjectile;
 
     [TabGroup("References")]
     [Title("Scripts")]
@@ -93,6 +94,9 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private S_RootMotionModifier rootMotionModifier;
 
     [TabGroup("References")]
+    [SerializeField] private S_EnemyProjectile enemyProjectile;
+
+    [TabGroup("References")]
     [Title("Patrol Points Parent")]
     [SerializeField] private Transform patrolPoints;
 
@@ -113,9 +117,6 @@ public class S_Enemy : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_DataSaved rsoDataSaved;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private SSO_EnemyData ssoEnemyData;
 
     private float health = 0;
 
@@ -566,7 +567,7 @@ public class S_Enemy : MonoBehaviour
 
     private void Chase()
     {
-        float distance = Vector3.Distance(body.transform.position, target.transform.position);
+        float distance = Vector3.Distance(center.transform.position, target.transform.position);
 
         bool destinationReached = distance <= (combo.distanceToChase);
 
@@ -615,7 +616,7 @@ public class S_Enemy : MonoBehaviour
 
         if (!isPerformingCombo)
         {
-            float distance = Vector3.Distance(body.transform.position, target.transform.position);
+            float distance = Vector3.Distance(center.transform.position, target.transform.position);
 
             if (distance > combo.distanceToLoseAttack)
             {
@@ -715,7 +716,7 @@ public class S_Enemy : MonoBehaviour
             isAttacking = false;
             RotateEnemy();
 
-            float distance = Vector3.Distance(body.transform.position, target.transform.position);
+            float distance = Vector3.Distance(center.transform.position, target.transform.position);
             if (distance > combo.distanceToLoseAttack)
             {
                 enemyAttackData.DisableWeaponCollider();
