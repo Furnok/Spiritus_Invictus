@@ -61,6 +61,10 @@ public class S_ClassEnemyData
     [SuffixLabel("s", Overlay = true)]
     public float timeBeforeChaseMax = 0;
 
+    [Title("UI")]
+    [SuffixLabel("s", Overlay = true)]
+    public float timeDisplay = 0;
+
     [Title("Animations")]
     public AnimatorOverrideController controllerOverride = null;
 

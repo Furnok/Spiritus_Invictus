@@ -13,10 +13,6 @@ public class S_EnemyUI : MonoBehaviour
 
     [TabGroup("Settings")]
     [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeDisplayHealthBar;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float animationSlider;
 
     [TabGroup("References")]
@@ -26,8 +22,10 @@ public class S_EnemyUI : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private Slider sliderHealth;
 
-    private Coroutine displayHealthBar;
-    private Tween healthTween;
+    private Coroutine displayHealthBar = null;
+    private Tween healthTween = null;
+
+    private float timeDisplay = 0;
 
     private void OnDisable()
     {
@@ -43,6 +41,7 @@ public class S_EnemyUI : MonoBehaviour
     {
         sliderHealth.maxValue = ssoEnemyData.Value.health;
         sliderHealth.value = ssoEnemyData.Value.health;
+        timeDisplay = ssoEnemyData.Value.timeDisplay;
 
         if (content.activeInHierarchy)
         {
@@ -90,7 +89,7 @@ public class S_EnemyUI : MonoBehaviour
 
     private IEnumerator DisplayHealthBar()
     {
-        yield return new WaitForSeconds(timeDisplayHealthBar);
+        yield return new WaitForSeconds(timeDisplay);
 
         CanvasGroup cg = content.GetComponent<CanvasGroup>();
         cg.DOKill();
