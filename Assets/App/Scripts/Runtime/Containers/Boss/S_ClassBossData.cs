@@ -21,5 +21,6 @@ public class S_ClassBossData
 
     [Title("Animations")]
     public List<S_ClassBossAttack> listAttackPhase1 = new();
+
     public List<S_ClassBossAttack> listAttackPhase2 = new();
 }
