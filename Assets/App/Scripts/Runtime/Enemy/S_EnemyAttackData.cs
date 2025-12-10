@@ -99,6 +99,6 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void PlayFmod(string eventName)
     {
-        RuntimeManager.PlayOneShot(eventName);
+        RuntimeManager.PlayOneShot(eventName, transform.position);
     }
 }
