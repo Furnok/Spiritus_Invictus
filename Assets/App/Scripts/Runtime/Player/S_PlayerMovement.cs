@@ -376,6 +376,14 @@ public class S_PlayerMovement : MonoBehaviour
     private IEnumerator KnockbackCoroutine(S_StructAttackContact contact, bool fromParry)
     {
         var data = contact.data;
+
+        contact.source.TryGetComponent(out I_EnemyTransformProvider transformProfider);
+
+        Transform enemyTransform = transformProfider != null ? transformProfider.GetEnemyTransform() : null;
+        //enemyTransform = null;
+
+        bool isNull = enemyTransform == null;
+
         float duration = fromParry ? data.knockbackOnParryDuration : data.knockbackHitDuration;
         float distance = fromParry ? data.knockbackOnParrryDistance : data.knockbackHitDistance;
 
@@ -384,13 +392,20 @@ public class S_PlayerMovement : MonoBehaviour
 
         Vector3 dir;
 
-        if (contact.data.attackDirection != Vector3.zero)
+        if(enemyTransform != null)
         {
-            dir = contact.data.attackDirection.normalized;
+            dir = (transform.position - enemyTransform.position).normalized;
         }
         else
         {
-            dir = (transform.position - contact.source.transform.position).normalized;
+            if (contact.data.attackDirection != Vector3.zero)
+            {
+                dir = contact.data.attackDirection.normalized;
+            }
+            else
+            {
+                dir = (transform.position - contact.source.transform.position).normalized;
+            }
         }
 
         dir = Vector3.ProjectOnPlane(dir, groundNormal).normalized;

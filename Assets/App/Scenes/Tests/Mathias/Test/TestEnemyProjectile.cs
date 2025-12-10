@@ -1,7 +1,7 @@
 ﻿using DG.Tweening.Plugins.Core.PathCore;
 using UnityEngine;
 
-public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
+public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
     [Header("Settings")]
     [SerializeField] private float _speed = 5f;
@@ -88,6 +88,11 @@ public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_Reflectabl
             transform.forward = _direction;
             _target = null;
         }
+    }
+
+    public Transform GetEnemyTransform()
+    {
+        return _owner;
     }
 
     public void Reflect(Transform reflectOwner)

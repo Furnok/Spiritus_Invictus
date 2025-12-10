@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: 2107885951710166933}
   - component: {fileID: 1998883248826507302}
   - component: {fileID: 8190062428597092117}
+  - component: {fileID: 4746301301437281081}
   m_Layer: 17
   m_Name: Cylinder_01
   m_TagString: Hitbox
@@ -185,6 +186,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _testAttackData: {fileID: 11400000, guid: 7900ebf563543a24d9f3aca2a6dd0a00, type: 2}
+--- !u!114 &4746301301437281081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6086903266409093197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f547c771bbe9da4498e19b73fc9f51b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyTransform: {fileID: 3468046265871300582}
 --- !u!1 &7802813562094525882
 GameObject:
   m_ObjectHideFlags: 0
