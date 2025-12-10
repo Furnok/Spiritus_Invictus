@@ -91,7 +91,7 @@ public class S_Enemy : MonoBehaviour
     [SerializeField] private S_EnemyHeadLookAtIK enemyHeadLookAtIK;
 
     [TabGroup("References")]
-    [SerializeField] private S_RootMotionModifier rootMotionModifier;
+    [SerializeField] private S_BossRootMotionModifier rootMotionModifier;
 
     [TabGroup("References")]
     [SerializeField] private S_EnemyProjectile enemyProjectile;

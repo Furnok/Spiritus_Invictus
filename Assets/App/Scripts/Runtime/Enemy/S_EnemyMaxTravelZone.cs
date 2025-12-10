@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class S_EnemyMaxTravelZone : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Filters")]
     [SerializeField, S_TagName] private string playerTag;
 
     [TabGroup("References")]
-    [Title("Collider")]
+    [Title("Colliders")]
     [SerializeField] private BoxCollider box;
 
     [TabGroup("References")]
-    [Title("Script")]
+    [Title("Scripts")]
     [SerializeField] private S_Enemy enemy;
 
     private void OnTriggerEnter(Collider other)

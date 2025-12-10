@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_RootMotionModifier : MonoBehaviour
+public class S_EnemyRootMotionModifier : MonoBehaviour
 {
     [TabGroup("References")]
     [Title("Filters")]

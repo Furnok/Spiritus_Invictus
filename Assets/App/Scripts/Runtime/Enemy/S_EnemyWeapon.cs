@@ -4,7 +4,7 @@ using UnityEngine;
 public class S_EnemyWeapon : MonoBehaviour, I_AttackProvider
 {
     [TabGroup("References")]
-    [Title("Enemy")]
+    [Title("Scripts")]
     [SerializeField] private S_EnemyAttackData S_EnemyAttackData;
 
     private S_StructEnemyAttackData AttackData;

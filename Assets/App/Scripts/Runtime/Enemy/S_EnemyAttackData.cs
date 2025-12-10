@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using FMOD;
 using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -9,16 +8,16 @@ using UnityEngine.UI;
 public class S_EnemyAttackData : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Time")]
+    [Title("Times")]
     [SuffixLabel("s", Overlay = true)]
     [SerializeField] private float timeDisplay;
 
     [TabGroup("References")]
-    [Title("Collider")]
+    [Title("Colliders")]
     [SerializeField] private Collider weaponCollider;
 
     [TabGroup("References")]
-    [Title("Image")]
+    [Title("Content")]
     [SerializeField] private GameObject content;
 
     [TabGroup("References")]
@@ -26,7 +25,7 @@ public class S_EnemyAttackData : MonoBehaviour
     [SerializeField] private Image warning;
 
     [TabGroup("References")]
-    [Title("Script")]
+    [Title("Scripts")]
     [SerializeField] private S_Enemy enemy;
 
     [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData = null;

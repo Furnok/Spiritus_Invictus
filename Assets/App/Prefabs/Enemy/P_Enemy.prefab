@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 445208566684554611}
   - component: {fileID: 9183690598147176708}
   - component: {fileID: 8400928163415866521}
-  - component: {fileID: 1882207588305552252}
+  - component: {fileID: 963565435278829898}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -265,13 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05545dc5093041448b8d4d00c2b5f96e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveParam: IsMoving
-  deathParam: IsDead
-  idleAttack: IsIdleAttack
-  attackParam: IsAttack
-  comboParam: IsCombo
-  stopAttackParam: IsStopAttack
-  hitHeavyParam: IsHeavyHit
+  ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
   patrolPointsList:
   - {fileID: 5199276408535089712}
   - {fileID: 4238934561793798638}
@@ -283,17 +277,24 @@ MonoBehaviour:
   detectionCollider: {fileID: 1536210782470915829}
   hurtCollider: {fileID: 6177182004407894465}
   animator: {fileID: 5886562096679836169}
+  moveParam: IsMoving
+  deathParam: IsDead
+  idleAttack: IsIdleAttack
+  attackParam: IsAttack
+  comboParam: IsCombo
+  stopAttackParam: IsStopAttack
+  hitHeavyParam: IsHeavyHit
   body: {fileID: 6905421159853868602}
   center: {fileID: 5421673960955687534}
   spawnProjectilePoint: {fileID: 1872526195975783811}
-  enemyProjectile: {fileID: 7501301468289437560, guid: 2ed9513c34b0abb4facaadc6e39513ea, type: 3}
   enemyAttackData: {fileID: 9183690598147176708}
   enemyDetectionRange: {fileID: 2811589338267356800}
   enemyHurt: {fileID: 2132075167513657250}
   enemyUI: {fileID: 4394752163360763578}
   enemyMaxTravelZone: {fileID: 5830951658339230131}
   enemyHeadLookAtIK: {fileID: 8400928163415866521}
-  rootMotionModifier: {fileID: 1882207588305552252}
+  rootMotionModifier: {fileID: 0}
+  enemyProjectile: {fileID: 7501301468289437560, guid: 2ed9513c34b0abb4facaadc6e39513ea, type: 3}
   patrolPoints: {fileID: 2395496571129997540}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
   rseOnDataLoad: {fileID: 11400000, guid: d8401e7eeb710344ca47f8e9df92d71d, type: 2}
@@ -301,7 +302,6 @@ MonoBehaviour:
   rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
   rseOnPlayerRespawn: {fileID: 11400000, guid: 3b09f2a06394f4642a88a2d57f0cec43, type: 2}
   rsoDataSaved: {fileID: 11400000, guid: db0edbbd21d7571419860daa092a7506, type: 2}
-  ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
 --- !u!114 &9183690598147176708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,13 +334,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce09c97a1fa629b469373ae096563d0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 1
-  bodyWeight: 0
-  headWeight: 1
-  eyesWeight: 0
-  clampWeight: 0.5
   animator: {fileID: 5886562096679836169}
---- !u!114 &1882207588305552252
+  ssoEnemyHead: {fileID: 11400000, guid: e9937c2ede5a94048bf95b7bb105728e, type: 2}
+--- !u!114 &963565435278829898
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -349,7 +345,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1039572514723219672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 419917398e6ee2943a97f7ac85b96aa6, type: 3}
+  m_Script: {fileID: 11500000, guid: c2328b772e9072e49adadad652aefd9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tagPlayer: Player
@@ -1319,9 +1315,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ea4abc89a559048b3a6537ee91a02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeFade: 0.4
+  timeFade: 0.2
   timeDisplayHealthBar: 3
-  animationSlider: 0.4
+  animationSlider: 0.2
   content: {fileID: 1861027275683421439}
   sliderHealth: {fileID: 7257551419699715195}
 --- !u!1 &8944502541329920824
