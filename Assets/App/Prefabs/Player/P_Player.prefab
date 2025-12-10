@@ -1012,6 +1012,7 @@ GameObject:
   - component: {fileID: 8153173563361757933}
   - component: {fileID: 4236493625650689256}
   - component: {fileID: 8454201312215265849}
+  - component: {fileID: 8182592598006089659}
   m_Layer: 10
   m_Name: VFX
   m_TagString: Untagged
@@ -1054,7 +1055,6 @@ MonoBehaviour:
   _upwardOffsetParry: 0.2
   _particleEffectParent: {fileID: 6828950947144670064}
   _chargingEffectParent: {fileID: 7407941331798223579}
-  _chargingGainEffectParent: {fileID: 3390883126647606021}
   _targetAttract: {fileID: 1412784281321942352}
   _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
   _prefabParryEffect: {fileID: 7037283364390755613, guid: f671b5c181719594aaad66529f73ace8, type: 3}
@@ -1082,6 +1082,27 @@ MonoBehaviour:
   _ghostMaterial: {fileID: 2100000, guid: 10143c9d825b21f42b99717bf2230f9f, type: 2}
   _onPerfectDodge: {fileID: 11400000, guid: 1c5a008ba8b4091499ebda621df96bc9, type: 2}
   _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
+--- !u!114 &8182592598006089659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3486870078301174081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67972fdd2703d6a48b7cd976e71c82ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minLightIntensity: 0
+  maxLightIntensity: 3000
+  minEmissiveIntensityIntensity: 18
+  maxEmissiveIntensityIntensity: 25
+  lanternLight: {fileID: 4639738580571710216}
+  lanternMeshRenderer: {fileID: 7480568998992607705}
+  _lanternMaterial: {fileID: 2100000, guid: ccafcc69c94846b4cb9c52a2149ce234, type: 2}
+  _currentPlayerConviction: {fileID: 11400000, guid: e9e6e673e8d688d4b96f8309938dbfdc, type: 2}
+  _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
 --- !u!1 &3630292079689624107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2663,7 +2684,7 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 1, g: 0.8258382, b: 0, a: 1}
-  m_Intensity: 24195
+  m_Intensity: 3183.0989
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
