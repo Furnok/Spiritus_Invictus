@@ -3,20 +3,6 @@ using UnityEngine;
 
 public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float lifeTime;
-
-    [TabGroup("Settings")]
-    [Title("Reflect")]
-    [SerializeField] private float reflectSpeedMul;
-
-    [TabGroup("Settings")]
-    [SerializeField] private float reflectDmgMul;
-
-    [TabGroup("Settings")]
-    [SerializeField] private int reflectMax;
-
     [TabGroup("References")]
     [Title("Filter")]
     [SerializeField, S_TagName] private string tagHurt;
@@ -84,7 +70,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
         this.owner = owner;
         origin = target.position;
 
-        if (reflectMax <= 0)
+        if (ssoProjectileData.Value.reflectMax <= 0)
         {
             _canReflect = false;
         }
@@ -107,7 +93,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
         timeAlive += Time.deltaTime;
         float t = timeAlive / travelTime;
 
-        if (timeAlive >= lifeTime)
+        if (timeAlive >= ssoProjectileData.Value.lifeTime)
         {
             Destroy(gameObject);
             return;
@@ -158,7 +144,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     public void Reflect(Transform reflectOwner)
     {
 
-        attackData.damage *= reflectDmgMul;
+        attackData.damage *= ssoProjectileData.Value.reflectDmgMul;
         timeAlive = 0;
 
         if (gameObject.layer == enemyLayer)
@@ -173,7 +159,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
 
             reflectCount++;
 
-            if (reflectCount >= reflectMax) _canReflect = false;
+            if (reflectCount >= ssoProjectileData.Value.reflectMax) _canReflect = false;
 
             gameObject.layer = enemyLayer;
 

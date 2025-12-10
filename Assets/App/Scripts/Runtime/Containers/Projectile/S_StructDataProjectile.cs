@@ -16,17 +16,18 @@ public struct S_StructDataProjectile
 
     [Range(-5, 5)] public float arcRandomDirectionMax;
 
-    [Title("Time")]
+    [Title("Times")]
     [SuffixLabel("s", Overlay = true)]
     public float travelTime;
+
+    [SuffixLabel("s", Overlay = true)]
+    public float lifeTime;
 
     [Title("Curve")]
     public AnimationCurve speedAnimationCurve;
 
-    [Title("Projectile Visual")]
-    public float trailTime;
+    [Title("Reflect")]
+    public float reflectDmgMul;
 
-    public float trailSize;
-
-    public Color trailColor;
+    public int reflectMax;
 }

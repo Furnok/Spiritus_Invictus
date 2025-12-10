@@ -1,15 +1,11 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_EnemyTransformProvider : MonoBehaviour, I_EnemyTransformProvider
 {
-    //[Header("Settings")]
-
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Enemy")]
     [SerializeField] Transform _enemyTransform;
-    
-    //[Header("Inputs")]
-
-    //[Header("Outputs")]
 
     public Transform GetEnemyTransform()
     {

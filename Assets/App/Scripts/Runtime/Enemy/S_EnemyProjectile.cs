@@ -3,17 +3,6 @@ using UnityEngine;
 
 public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float lifeTime;
-
-    [TabGroup("Settings")]
-    [Title("Reflect")]
-    [SerializeField] private float reflectSpeedMul;
-
-    [TabGroup("Settings")]
-    [SerializeField] private float reflectDmgMul;
-
     [TabGroup("References")]
     [Title("Filters")]
     [SerializeField, S_TagName] private string tagHurt;
@@ -93,7 +82,7 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
         timeAlive += Time.deltaTime;
         float t = timeAlive / travelTime;
 
-        if (timeAlive >= lifeTime)
+        if (timeAlive >= ssoProjectileData.Value.lifeTime)
         {
             Destroy(gameObject);
             return;
@@ -138,7 +127,7 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
 
     public void Reflect(Transform reflectOwner)
     {
-        attackData.damage *= reflectDmgMul;
+        attackData.damage *= ssoProjectileData.Value.reflectDmgMul;
         timeAlive = 0;
 
         gameObject.layer = playerLayer;
