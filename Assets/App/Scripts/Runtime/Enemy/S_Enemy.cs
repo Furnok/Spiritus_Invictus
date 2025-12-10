@@ -262,10 +262,7 @@ public class S_Enemy : MonoBehaviour
     {
         patrolPointsList.Clear();
 
-        foreach (Transform child in patrolPoints)
-        {
-            patrolPointsList.Add(child.gameObject);
-        }
+        foreach (Transform child in patrolPoints) patrolPointsList.Add(child.gameObject);
     }
     #endregion
 
@@ -402,10 +399,7 @@ public class S_Enemy : MonoBehaviour
             }
         }
 
-        if (rsoDataSaved.Value.enemy[index].isDead)
-        {
-            UpdateState(S_EnumEnemyState.Death);
-        }
+        if (rsoDataSaved.Value.enemy[index].isDead) UpdateState(S_EnumEnemyState.Death);
     }
     #endregion
 
@@ -414,10 +408,7 @@ public class S_Enemy : MonoBehaviour
     {
         if (isDead) return;
 
-        if (target != null)
-        {
-            UpdateHealth(damage);
-        }
+        if (target != null) UpdateHealth(damage);
         else
         {
             if (targetInZone != null)
@@ -442,14 +433,8 @@ public class S_Enemy : MonoBehaviour
 
         enemyUI.UpdateHealthBar(health);
 
-        if (health <= 0)
-        {
-            UpdateState(S_EnumEnemyState.Death);
-        }
-        else if (damage >= (ssoEnemyData.Value.health / 2))
-        {
-            UpdateState(S_EnumEnemyState.HeavyHit);
-        }
+        if (health <= 0) UpdateState(S_EnumEnemyState.Death);
+        else if (damage >= (ssoEnemyData.Value.health / 2)) UpdateState(S_EnumEnemyState.HeavyHit);
     }
     #endregion
 
@@ -468,10 +453,7 @@ public class S_Enemy : MonoBehaviour
         detectionCollider.enabled = false;
         isPlayerDeath = true;
 
-        if (isPerformingCombo)
-        {
-            pendingState = S_EnumEnemyState.Patroling;
-        }
+        if (isPerformingCombo) pendingState = S_EnumEnemyState.Patroling;
         else
         {
             target = null;
@@ -571,14 +553,8 @@ public class S_Enemy : MonoBehaviour
 
         bool destinationReached = distance <= (combo.distanceToChase);
 
-        if (!destinationReached)
-        {
-            navMeshAgent.SetDestination(target.transform.position);
-        }
-        else if (destinationReached)
-        {
-            UpdateState(S_EnumEnemyState.Fighting);
-        }
+        if (!destinationReached) navMeshAgent.SetDestination(target.transform.position);
+        else if (destinationReached) UpdateState(S_EnumEnemyState.Fighting);
     }
     #endregion
 
@@ -800,10 +776,7 @@ public class S_Enemy : MonoBehaviour
                     pendingTarget = null;
                 }
             }
-            else
-            {
-                UpdateState(S_EnumEnemyState.Chasing);
-            }
+            else UpdateState(S_EnumEnemyState.Chasing);
         }));
     }
     #endregion

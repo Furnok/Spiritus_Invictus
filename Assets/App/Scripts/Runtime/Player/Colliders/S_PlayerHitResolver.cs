@@ -35,9 +35,6 @@ public class S_PlayerHitResolver : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnAttackCollide _onAttackCollide;
 
-    [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnResetParryPitchSFX _rseOnResetParryPitchSFX;
-
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnParrySuccess _rseOnParrySuccess;
 
@@ -76,6 +73,7 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     private float _currentPitchParrySFX = 0f;
 
+    private Coroutine coroutineParry = null;
 
     private void Awake()
     {
@@ -85,21 +83,13 @@ public class S_PlayerHitResolver : MonoBehaviour
     private void OnEnable()
     {
         _onAttackCollide.action += ResolveHit;
-
-        _rseOnResetParryPitchSFX.action += ResetPichParrySFX;
     }
 
     private void OnDisable()
     {
         _onAttackCollide.action -= ResolveHit;
-
-        _rseOnResetParryPitchSFX.action -= ResetPichParrySFX;
     }
 
-    private void ResetPichParrySFX()
-    {
-        _currentPitchParrySFX = _pitchParryMinSFX;
-    }
     private void ResolveHit(S_StructAttackContact contact)
     {
         var attackData = contact.data;
@@ -130,7 +120,6 @@ public class S_PlayerHitResolver : MonoBehaviour
                             _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
                             _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
                             _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
-                            _parryEventInstanceSFX.setParameterByName("LastHit", 0);
                             _parryEventInstanceSFX.start();
                         }
                         else
@@ -140,16 +129,28 @@ public class S_PlayerHitResolver : MonoBehaviour
                             _currentPitchParrySFX += _pitchParryGainEachParry;
                             _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
                             _parryReverbEventInstanceSFX = RuntimeManager.CreateInstance(_parryReverbSoundEffect);
-                            _parryReverbEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
-                            _parryReverbEventInstanceSFX.setParameterByName("LastHit", 1);
                             _parryReverbEventInstanceSFX.start();
                         }
+
+                        if (coroutineParry != null)
+                        {
+                            StopCoroutine(coroutineParry);
+                            coroutineParry = null;
+                        }
+
+                        coroutineParry = StartCoroutine(ResetParry());
                     }
                     else
                     {
                         _rseOnPlayerHit.Call(data);
 
                         _currentPitchParrySFX = _pitchParryMinSFX;
+
+                        if (coroutineParry != null)
+                        {
+                            StopCoroutine(coroutineParry);
+                            coroutineParry = null;
+                        }
                     }
             }, contact));
         }
@@ -190,6 +191,14 @@ public class S_PlayerHitResolver : MonoBehaviour
                     _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
                     _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
                     _parryEventInstanceSFX.start();
+
+                    if (coroutineParry != null)
+                    {
+                        StopCoroutine(coroutineParry);
+                        coroutineParry = null;
+                    }
+
+                    coroutineParry = StartCoroutine(ResetParry());
                 }
                 else
                 {
@@ -199,10 +208,23 @@ public class S_PlayerHitResolver : MonoBehaviour
                         _rseOnPlayerHit.Call(contact);
 
                         _currentPitchParrySFX = _pitchParryMinSFX;
+
+                        if (coroutineParry != null)
+                        {
+                            StopCoroutine(coroutineParry);
+                            coroutineParry = null;
+                        }
                     }
                 }
             }, contact));
         }
+    }
+
+    private IEnumerator ResetParry()
+    {
+        yield return new WaitForSeconds(0.8f);
+
+        _currentPitchParrySFX = _pitchParryMinSFX;
     }
 
     private IEnumerator IsWithinParryWindowCoroutine(System.Action<bool, S_StructAttackContact> callback, S_StructAttackContact enemyAttackData)
