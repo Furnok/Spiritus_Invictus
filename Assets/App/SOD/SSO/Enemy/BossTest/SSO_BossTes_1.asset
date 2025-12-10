@@ -24,21 +24,25 @@ MonoBehaviour:
     detectionRange: 5
     detectionAggroRangeMax: 50
     attackCooldown: 3
-    chanceForEasterEgg: 1
+    waitStun: 0
+    rotationTime: 0
     patrolPointWaitMin: 1
     patrolPointWaitMax: 3
     startPatrolWaitMin: 1
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
+    timeDisplay: 3
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
       - animation: {fileID: 7400000, guid: 3b96b433f9be3904f99ce00b262645f4, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -48,13 +52,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: d9c0b09fc8d5b56478fcf398aca973f7, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -64,13 +72,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 71478fd09adcdd64bae62cbf2831ccb0, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -80,7 +92,10 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
+      distanceMin: 0
       distanceToChase: 1.5
       distanceToLoseAttack: 3
