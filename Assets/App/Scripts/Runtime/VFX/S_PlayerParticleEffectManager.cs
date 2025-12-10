@@ -14,6 +14,8 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     [Title("Parent")]
     [SerializeField] private Transform _particleEffectParent;
     [SerializeField] private Transform _chargingEffectParent;
+    [SerializeField] private Transform _targetAttract;
+
 
     [Header("References")]
     [Title("Stats")]
@@ -22,6 +24,7 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     [Header("References")]
     [Title("Prefab")]
     [SerializeField] private GameObject _prefabParryEffect;
+    [SerializeField] private S_ParticlesAttract _prefabParticlesAttract;
     //[SerializeField] private GameObject _prefabChargingEffect;
 
     [Header("Inputs")]
@@ -59,7 +62,10 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
 
         var spawnPoint = contact.data.contactPoint + offset;
 
-        var parryeffect = Instantiate(_prefabParryEffect, spawnPoint, _particleEffectParent.rotation);
+        var parryeffect = Instantiate(_prefabParryEffect, spawnPoint, Quaternion.identity, _particleEffectParent);
+        var attract = Instantiate(_prefabParticlesAttract, spawnPoint, Quaternion.identity, _targetAttract);
+
+        attract.InitializeTransform(_targetAttract);
 
         Destroy(parryeffect, 2f);
     }

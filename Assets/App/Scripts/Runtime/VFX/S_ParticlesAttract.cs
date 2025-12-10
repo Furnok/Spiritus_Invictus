@@ -3,7 +3,7 @@ using UnityEngine;
 public class S_ParticlesAttract : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField, Range(0f, 1f)] private float attractStartLife01 = 0.7f;           // at 70% of lifetime atrtract to the target transform
+    [SerializeField, Range(0f, 1f)] private float attractStartLife = 0.1f;           // at 70% of lifetime atrtract to the target transform
     [SerializeField] private float attractionStrength = 8f;
     [SerializeField] private float attractionLerp = 10f;
     [SerializeField] private float killRadius = 0.1f;
@@ -17,6 +17,12 @@ public class S_ParticlesAttract : MonoBehaviour
     //[Header("Outputs")]
 
     private ParticleSystem.Particle[] _particles;
+
+    public void InitializeTransform(Transform transformToAttract)
+    {
+        _ps.Play();
+        target = transformToAttract;
+    }
 
     void LateUpdate()
     {
@@ -39,7 +45,7 @@ public class S_ParticlesAttract : MonoBehaviour
 
             float life01 = 1f - (p.remainingLifetime / p.startLifetime);
 
-            if (life01 < attractStartLife01)
+            if (life01 < attractStartLife)
             {
                 _particles[i] = p;
                 continue;
@@ -75,5 +81,10 @@ public class S_ParticlesAttract : MonoBehaviour
         }
 
         _ps.SetParticles(_particles, count);
+
+        if (count == 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
