@@ -6,21 +6,21 @@ using UnityEngine.UI;
 
 public class S_EnemyUI : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Time")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFade;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float animationSlider;
-
     [TabGroup("References")]
     [Title("Content")]
     [SerializeField] private GameObject content;
 
     [TabGroup("References")]
     [SerializeField] private Slider sliderHealth;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_Display ssoDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_UnDisplay ssoUnDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_AnimationSlider ssoAnimationSlider;
 
     private Coroutine displayHealthBar = null;
     private Tween healthTween = null;
@@ -48,7 +48,7 @@ public class S_EnemyUI : MonoBehaviour
             CanvasGroup cg = content.GetComponent<CanvasGroup>();
             cg.DOKill();
 
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
             {
                 content.SetActive(false);
             });
@@ -62,7 +62,7 @@ public class S_EnemyUI : MonoBehaviour
 
         if (healthValue <= 0)
         {
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
             {
                 content.SetActive(false);
             });
@@ -71,12 +71,12 @@ public class S_EnemyUI : MonoBehaviour
         {
             content.gameObject.SetActive(true);
 
-            cg.DOFade(1f, timeFade).SetEase(Ease.Linear);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
         }
 
         healthTween?.Kill();
 
-        healthTween = sliderHealth.DOValue(healthValue, animationSlider).SetEase(Ease.OutCubic);
+        healthTween = sliderHealth.DOValue(healthValue, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
 
         if (displayHealthBar != null)
         {
@@ -94,7 +94,7 @@ public class S_EnemyUI : MonoBehaviour
         CanvasGroup cg = content.GetComponent<CanvasGroup>();
         cg.DOKill();
 
-        cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+        cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
         {
             content.SetActive(false);
         });
