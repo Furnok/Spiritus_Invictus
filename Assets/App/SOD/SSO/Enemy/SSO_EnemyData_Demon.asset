@@ -32,6 +32,7 @@ MonoBehaviour:
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
+    timeDisplay: 3
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
@@ -51,6 +52,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1d36c61374118ed428af765b224937d7, type: 2}
@@ -69,6 +72,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 48ca1dcbc112c7a43b806b9a0df5db3d, type: 2}
@@ -87,6 +92,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 348c9aeec081fb74f86aba7e2f2e2409, type: 2}
@@ -105,6 +112,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1d36c61374118ed428af765b224937d7, type: 2}
@@ -123,6 +132,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 48ca1dcbc112c7a43b806b9a0df5db3d, type: 2}
@@ -141,6 +152,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 348c9aeec081fb74f86aba7e2f2e2409, type: 2}
@@ -159,6 +172,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1d36c61374118ed428af765b224937d7, type: 2}
@@ -177,6 +192,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 48ca1dcbc112c7a43b806b9a0df5db3d, type: 2}
@@ -195,6 +212,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 348c9aeec081fb74f86aba7e2f2e2409, type: 2}
@@ -213,6 +232,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1d36c61374118ed428af765b224937d7, type: 2}
@@ -231,6 +252,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 48ca1dcbc112c7a43b806b9a0df5db3d, type: 2}
@@ -249,6 +272,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 348c9aeec081fb74f86aba7e2f2e2409, type: 2}
@@ -267,6 +292,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1d36c61374118ed428af765b224937d7, type: 2}
@@ -285,6 +312,8 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 48ca1dcbc112c7a43b806b9a0df5db3d, type: 2}
@@ -303,7 +332,10 @@ MonoBehaviour:
           parryToleranceAfterHit: 0
           invicibilityDuration: 0
           convictionReduction: 0
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
+      distanceMin: 1
       distanceToChase: 5
       distanceToLoseAttack: 6.5

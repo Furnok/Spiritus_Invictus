@@ -301,6 +301,7 @@ public class S_Enemy : MonoBehaviour
     {
         enemyAttackData.DisableWeaponCollider();
         enemyAttackData.UnDisplayTriggerWarning();
+        enemyAttackData.VFXStop();
 
         if (idleCoroutine != null)
         {
@@ -697,6 +698,7 @@ public class S_Enemy : MonoBehaviour
             {
                 enemyAttackData.DisableWeaponCollider();
                 enemyAttackData.UnDisplayTriggerWarning();
+                enemyAttackData.VFXStop();
                 break;
             }
 
