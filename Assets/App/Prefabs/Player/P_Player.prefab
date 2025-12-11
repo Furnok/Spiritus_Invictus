@@ -1035,6 +1035,7 @@ Transform:
   m_Children:
   - {fileID: 6828950947144670064}
   - {fileID: 3390883126647606021}
+  - {fileID: 6934696179385131823}
   - {fileID: 8456373266874895494}
   - {fileID: 7407941331798223579}
   m_Father: {fileID: 3473314807466382836}
@@ -1056,13 +1057,17 @@ MonoBehaviour:
   _particleEffectParent: {fileID: 6828950947144670064}
   _chargingEffectParent: {fileID: 7407941331798223579}
   _targetAttract: {fileID: 1412784281321942352}
+  _convictionDodgeEffectParent: {fileID: 6934696179385131823}
   _playerStats: {fileID: 11400000, guid: 672a77f2978d3824b90e0f910ab84268, type: 2}
+  _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
   _prefabParryEffect: {fileID: 7037283364390755613, guid: f671b5c181719594aaad66529f73ace8, type: 3}
-  _prefabParticlesAttract: {fileID: 1152194846502239585, guid: 5238e56734a7a574a8057cfb620f4ed2, type: 3}
+  _prefabParticlesAttractParryGain: {fileID: 1152194846502239585, guid: 5238e56734a7a574a8057cfb620f4ed2, type: 3}
+  _prefabParticlesAttractDodgeGain: {fileID: 2074886211305848230, guid: f65df37676b0bdb4f8622148fa8afcae, type: 3}
   _onParrySuccess: {fileID: 11400000, guid: 3328b726d20642440a7825c060ff63d7, type: 2}
   _onAttackStartPerformed: {fileID: 11400000, guid: 995ec1e0339518542872ee761d2b0eb8, type: 2}
   _rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   rseOnSpawnProjectile: {fileID: 11400000, guid: 908a575ef5f3d5145b1903cb17a80456, type: 2}
+  _rseOnDodgePerfect: {fileID: 11400000, guid: 1c5a008ba8b4091499ebda621df96bc9, type: 2}
 --- !u!114 &8454201312215265849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1100,7 +1105,6 @@ MonoBehaviour:
   maxEmissiveIntensityIntensity: 25
   lanternLight: {fileID: 4639738580571710216}
   lanternMeshRenderer: {fileID: 7480568998992607705}
-  _lanternMaterial: {fileID: 2100000, guid: ccafcc69c94846b4cb9c52a2149ce234, type: 2}
   _currentPlayerConviction: {fileID: 11400000, guid: e9e6e673e8d688d4b96f8309938dbfdc, type: 2}
   _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
 --- !u!1 &3630292079689624107
@@ -3686,6 +3690,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1453899878754902423}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9015243627191895788
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6934696179385131823}
+  m_Layer: 10
+  m_Name: ConvictionDodgeGainEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6934696179385131823
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9015243627191895788}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8153173563361757933}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9021565313452392712
 GameObject:

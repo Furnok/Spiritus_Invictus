@@ -12939,7 +12939,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 524902392957673428, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1093908816537765865, guid: 709123c95f2726c46b4bf0178217e257, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13481,9 +13481,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 181747235036715547, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 181747235036715547, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
+      propertyPath: lengthInSec
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 181747235036715547, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 181747235036715547, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 181747235036715547, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 181747235036715547, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].cycleCount
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4243634215079191966, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
       propertyPath: m_Name
-      value: P_Trail
+      value: P_TrailDodgePerfect
       objectReference: {fileID: 0}
     - target: {fileID: 4976697315467143773, guid: c0ef439b1d5245244944c55d1f5b9006, type: 3}
       propertyPath: m_LocalPosition.x
