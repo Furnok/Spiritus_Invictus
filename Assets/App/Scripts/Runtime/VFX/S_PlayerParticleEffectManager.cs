@@ -63,7 +63,7 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         var spawnPoint = contact.data.contactPoint + offset;
 
         var parryeffect = Instantiate(_prefabParryEffect, spawnPoint, Quaternion.identity, _particleEffectParent);
-        var attract = Instantiate(_prefabParticlesAttract, spawnPoint, Quaternion.identity, _targetAttract);
+        var attract = Instantiate(_prefabParticlesAttract, spawnPoint, _targetAttract.rotation, _targetAttract);
 
         attract.InitializeTransform(_targetAttract);
 
