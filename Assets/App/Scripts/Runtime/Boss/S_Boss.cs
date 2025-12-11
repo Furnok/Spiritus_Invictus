@@ -1,6 +1,8 @@
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -65,9 +67,11 @@ public class S_Boss : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
 
-    //[Header("Outputs")]
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
-    [HideInInspector] public UnityEvent<float> onUpdateBossHealth = null;
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnEnemyTargetDied rseOnEnemyTargetDied;
 
     private List<S_ClassAttackOwned> listAttackOwneds = new();
     private List<S_ClassAttackOwned> listAttackOwnedPossibilities = new();
@@ -88,6 +92,7 @@ public class S_Boss : MonoBehaviour
     private float health = 0;
     private float maxHealth = 0;
     private float lastValueHealth = 0;
+    private float bossDifficultyLevel = 0;
     private float initDistance = 0;
     private float nextChangeTime = 0f;
     private int strafeDirection = 1;
@@ -146,27 +151,33 @@ public class S_Boss : MonoBehaviour
 
             listAttackOwneds.Add(attackData);
         }
+
+        UpdateLastHealthValue();
     }
 
     private void OnEnable()
     {
         bossDetectionRange.onTargetDetected.AddListener(SetTarget);
+        rseOnPlayerGettingHit.action += LoseDifficultyLevel;
     }
     private void OnDisable()
     {
         bossDetectionRange.onTargetDetected.RemoveListener(SetTarget);
+        rseOnPlayerGettingHit.action -= LoseDifficultyLevel;
     }
     private void Start()
     {
+        UpdateLastHealthValue();
         UpdateState(S_EnumBossState.Idle);
         UpdatePhaseState(S_EnumBossPhaseState.Phase1);
+        bossDifficultyLevel = ssoBossData.Value.initialBossDifficultyLevel;
     }
     
     private void Update()
     {
         if (target != null && (unlockRotate || !isAttacking) && !isDead) RotateEnemy();
 
-        //if (isChasing) Chase();
+        if (isChasing) Chase();
 
         //if (isFighting) Fight();
     }
@@ -205,8 +216,10 @@ public class S_Boss : MonoBehaviour
         switch (currentState)
         {
             case S_EnumBossState.Idle:
+                Idle();
                 break;
             case S_EnumBossState.Chase:
+                Chasing();
                 break;
             case S_EnumBossState.Combat:
                 break;
@@ -266,13 +279,13 @@ public class S_Boss : MonoBehaviour
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
 
             UpdateState(S_EnumBossState.Chase);
+            StartCoroutine(GainDifficultyLevel());
         }
         else
         {
             if (health != maxHealth)
             {
                 health = maxHealth;
-                onUpdateBossHealth.Invoke(health);
             }
 
             aimPoint = null;
@@ -280,19 +293,238 @@ public class S_Boss : MonoBehaviour
 
             UpdateState(S_EnumBossState.Idle);
         }
+    }
+    #endregion
+
+    #region Chase
+    private void Chasing()
+    {
+        isChasing = true;
+
+        ChooseAttack();
+
+        navMeshAgent.speed = ssoBossData.Value.walkSpeed;
+        initDistance = Vector3.Distance(body.transform.position, target.transform.position);
+    }
+
+    private void Chase()
+    {
+        float distanceToTarget = Vector3.Distance(body.transform.position, target.transform.position);
+        bool destinationReached = distanceToTarget <= (ssoBossData.Value.distanceToChase);
+        if (!destinationReached)
+        {
+            navMeshAgent.SetDestination(target.transform.position);
+
+            if (distanceToTarget <= initDistance * (ssoBossData.Value.distanceToRun / 100f))
+            {
+                if (canChooseAttack)
+                {
+                    ChooseAttack();
+                    if (currentAttack.bossAttack.isAttackDistance)
+                    {
+                        navMeshAgent.ResetPath();
+                        navMeshAgent.velocity = Vector3.zero;
+                        isChasing = false;
+                        UpdateState(S_EnumBossState.Combat);
+                        ExecuteAttack(currentAttack);
+                    }
+                    else
+                    {
+                        navMeshAgent.speed = ssoBossData.Value.runSpeed;
+                        animator.SetFloat("MoveSpeed", ssoBossData.Value.runSpeed);
+                    }
+                }
+            }
+        }
+        else if (destinationReached)
+        {
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
+            isChasing = false;
+            UpdateState(S_EnumBossState.Combat);
+            ExecuteAttack(currentAttack);
+        }
+    }
+    #endregion
+
+    #region Idle
+    private void Idle()
+    {
+        if (target != null && isChasing)
+        {
+            UpdateState(S_EnumBossState.Chase);
+        }
     } 
     #endregion
 
+    #region Health/Death
     public void TakeDamage(float damage)
     {
         if (isDead) return;
 
-        if(target != null) UpdateHealth(damage);
+        if (target != null) UpdateHealth(damage);
 
     }
 
     private void UpdateHealth(float damage)
     {
         health = Mathf.Max(health - damage, 0);
+
+        UpdateLastHealthValue();
+
+        if (health <= 0)
+        {
+            if (currentPhaseState == S_EnumBossPhaseState.Phase1)
+            {
+                UpdateState(S_EnumBossState.Death);
+                DeathPhase1();
+            }
+            else
+            {
+                UpdateState(S_EnumBossState.Death);
+                DeathPhase2();
+            }
+        }
     }
+    private void UpdateLastHealthValue()
+    {
+        var minValue = (health / maxHealth) * 100;
+
+        SetListAttackPossible(minValue, lastValueHealth);
+
+        lastValueHealth = minValue;
+    }
+    private void DeathPhase1()
+    {
+        StopAllCoroutines();
+
+        ResetBoss();
+        canChooseAttack = false;
+        currentAttack = null;
+
+        listAttackOwneds.Clear();
+        listAttackOwnedPossibilities.Clear();
+
+        currentPhaseState = S_EnumBossPhaseState.Phase2;
+        currentState = S_EnumBossState.Idle;
+        health = ssoBossData.Value.healthPhase2;
+        maxHealth = ssoBossData.Value.healthPhase2;
+        lastValueHealth = 101f;
+
+        foreach (var bossAttack in ssoBossData.Value.listAttackPhase2)
+        {
+            var attackData = new S_ClassAttackOwned
+            {
+                bossAttack = bossAttack,
+                frequency = 0,
+                score = 0,
+            };
+            listAttackOwneds.Add(attackData);
+        }
+
+        UpdateLastHealthValue();
+
+        canChooseAttack = true;
+    }
+    private void DeathPhase2()
+    {
+        isDead = true;
+        animator.SetTrigger(deathParam);
+
+        canAttack = false;
+        canChooseAttack = false;
+        target = null;
+
+        bodyCollider.enabled = false;
+        detectionCollider.enabled = false;
+        hurtCollider.enabled = false;
+
+    }
+    #endregion
+
+    #region Difficulty
+    private void LoseDifficultyLevel()
+    {
+        bossDifficultyLevel -= ssoBossData.Value.difficultyLoseWhenPlayerHit;
+        bossDifficultyLevel = Mathf.Clamp(bossDifficultyLevel, 0, ssoBossData.Value.maxDifficultyLevel);
+    }
+
+    private IEnumerator GainDifficultyLevel()
+    {
+        bossDifficultyLevel += ssoBossData.Value.difficultyGainPerSecond;
+        bossDifficultyLevel = Mathf.Clamp(bossDifficultyLevel, 0, ssoBossData.Value.maxDifficultyLevel);
+
+        yield return new WaitForSeconds(1);
+
+        StartCoroutine(GainDifficultyLevel());
+    }
+    #endregion
+
+    #region Attack
+    private void AddListAttackPossible(S_ClassAttackOwned bossAttack)
+    {
+        listAttackOwnedPossibilities.Add(bossAttack);
+    }
+
+    private void SetListAttackPossible(float minValue, float maxValue)
+    {
+        foreach (var attack in listAttackOwneds)
+        {
+            if (attack.bossAttack.pvBossUnlock >= minValue && attack.bossAttack.pvBossUnlock < maxValue) AddListAttackPossible(attack);
+        }
+    }
+
+    private void ChooseAttack()
+    {
+        canChooseAttack = false;
+        isStrafe = false;
+
+        var minAttackFrequency = listAttackOwnedPossibilities.Min(a => a.frequency);
+        int roundDifficulty = Mathf.RoundToInt(bossDifficultyLevel);
+
+        foreach (var attack in listAttackOwnedPossibilities)
+        {
+            if (attack.bossAttack.difficultyLevel == roundDifficulty) attack.score += difficultyScore;
+
+            if (attack.frequency == minAttackFrequency) attack.score += frequencyScore;
+
+            if (lastAttack == null) continue;
+
+            if (attack.bossAttack.listComboData[0].attackData.attackType != lastAttack.bossAttack.listComboData[^1].attackData.attackType) attack.score += synergieScore;
+        }
+
+        var maxScore = listAttackOwnedPossibilities.Max(a => a.score);
+
+        var bestAttacks = listAttackOwnedPossibilities
+            .Where(a => a.score == maxScore)
+            .ToList();
+
+        var chosenAttack = bestAttacks[Random.Range(0, bestAttacks.Count)];
+
+        currentAttack = chosenAttack;
+
+        foreach (var attack in listAttackOwnedPossibilities) attack.score = 0;
+    }
+    private void ExecuteAttack(S_ClassAttackOwned attack)
+    {
+        lastAttack = attack;
+        attack.frequency++;
+
+        navMeshAgent.ResetPath();
+        navMeshAgent.velocity = Vector3.zero;
+
+        onExecuteAttack.Call(attack.bossAttack);
+    }
+
+    private IEnumerator TimeForChooseAttack()
+    {
+        float rndTime = Random.Range(ssoBossData.Value.minTimeChooseAttack, ssoBossData.Value.maxTimeChooseAttack);
+
+        yield return new WaitForSeconds(rndTime);
+
+        ChooseAttack();
+
+        ExecuteAttack(currentAttack);
+    } 
+    #endregion
 }

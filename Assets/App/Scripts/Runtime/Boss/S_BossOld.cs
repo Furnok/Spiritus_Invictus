@@ -120,7 +120,6 @@ public class S_BossOld : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_BossData ssoBossData;
 
-    [HideInInspector] public UnityEvent<float> onUpdateBossHealth = null;
     [HideInInspector] public UnityEvent onGetHit = null;
 
     private List<S_ClassAttackOwned> listAttackOwneds = new();
@@ -191,7 +190,7 @@ public class S_BossOld : MonoBehaviour
     private void OnEnable()
     {
         bossDetectionRange.onTargetDetected.AddListener(SetTarget);
-        bossHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
+        //bossHurt.onUpdateEnemyHealth.AddListener(UpdateHealth);
         rseOnPlayerGettingHit.action += LoseDifficultyLevel;
 
         if (behaviorAgent.GetVariable("IsChasing", out isChasing)) isChasing.OnValueChanged += Chasing;
@@ -200,7 +199,7 @@ public class S_BossOld : MonoBehaviour
     private void OnDisable()
     {
         bossDetectionRange.onTargetDetected.RemoveListener(SetTarget);
-        bossHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
+        //bossHurt.onUpdateEnemyHealth.RemoveListener(UpdateHealth);
         rseOnPlayerGettingHit.action -= LoseDifficultyLevel;
 
         if (isChasing != null) isChasing.OnValueChanged -= Chasing;
@@ -253,7 +252,7 @@ public class S_BossOld : MonoBehaviour
                     if (health != maxHealth)
                     {
                         health = maxHealth;
-                        onUpdateBossHealth.Invoke(health);
+                        //onUpdateBossHealth.Invoke(health);
                     }
 
                     behaviorAgent.SetVariableValue<float>("Health", health);
@@ -281,7 +280,7 @@ public class S_BossOld : MonoBehaviour
             if (health != maxHealth)
             {
                 health = maxHealth;
-                onUpdateBossHealth.Invoke(health);
+                //onUpdateBossHealth.Invoke(health);
             }
 
             behaviorAgent.SetVariableValue<float>("Health", health);
@@ -435,7 +434,7 @@ public class S_BossOld : MonoBehaviour
     private void UpdateHealth(float damage)
     {
         health = Mathf.Max(health - damage, 0);
-        onUpdateBossHealth.Invoke(health);
+        //onUpdateBossHealth.Invoke(health);
 
         behaviorAgent.SetVariableValue<float>("Health", health);
         onGetHit.Invoke();

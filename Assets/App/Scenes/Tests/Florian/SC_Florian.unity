@@ -3237,9 +3237,6 @@ MonoBehaviour:
   stunParam: Stun
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
-  onUpdateBossHealth:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!54 &1128583823
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3973,9 +3970,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fb9241c366443941a0df1132e134461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onUpdateEnemyHealth:
-    m_PersistentCalls:
-      m_Calls: []
+  boss: {fileID: 1128583822}
 --- !u!136 &1351031396
 CapsuleCollider:
   m_ObjectHideFlags: 0

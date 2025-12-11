@@ -31,7 +31,7 @@ public class S_ClassBossData
     public float rotationSpeed = 6f;
 
     [Title("Combat")]
-    public float bossDifficultyLevel;
+    public float initialBossDifficultyLevel;
 
     public float maxDifficultyLevel;
 
