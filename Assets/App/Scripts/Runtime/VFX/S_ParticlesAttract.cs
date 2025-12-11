@@ -25,10 +25,11 @@ public class S_ParticlesAttract : MonoBehaviour
     public void InitializeTransform(Transform transformToAttract, float ammountConvictionGain)
     {
         _ps.Play();
-        target = transformToAttract;
         _ammountTotalConvictionGain = ammountConvictionGain;
         _totalParticles = _ps.emission.burstCount > 0 ? (int)_ps.emission.GetBurst(0).count.constant : 0;
-        Debug.Log("Total Particles Emitted: " + _totalParticles);
+        //Debug.Log("Total Particles Emitted: " + _totalParticles);
+
+        target = transformToAttract;
     }
 
     void LateUpdate()

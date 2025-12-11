@@ -190,7 +190,7 @@ public class S_PlayerDodge : MonoBehaviour
             Debug.Log("Dodge perfect");
             RuntimeManager.PlayOneShot(_dodgeSound);
 
-            _onPlayerGainConviction.Call(_playerConvictionData.Value.dodgeSuccessGain);
+            //_onPlayerGainConviction.Call(_playerConvictionData.Value.dodgeSuccessGain);
             _rseOnDodgePerfect.Call();
 
             foreach (var attackData in _attackDataInDodgeableArea.Value)

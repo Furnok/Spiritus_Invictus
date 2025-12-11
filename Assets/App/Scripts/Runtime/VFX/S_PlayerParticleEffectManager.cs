@@ -15,16 +15,19 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     [SerializeField] private Transform _particleEffectParent;
     [SerializeField] private Transform _chargingEffectParent;
     [SerializeField] private Transform _targetAttract;
+    [SerializeField] private Transform _convictionDodgeEffectParent;
 
 
     [Header("References")]
     [Title("Stats")]
     [SerializeField] private SSO_PlayerStats _playerStats;
+    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
 
     [Header("References")]
     [Title("Prefab")]
     [SerializeField] private GameObject _prefabParryEffect;
-    [SerializeField] private S_ParticlesAttract _prefabParticlesAttract;
+    [SerializeField] private S_ParticlesAttract _prefabParticlesAttractParryGain;
+    [SerializeField] private S_ParticlesAttract _prefabParticlesAttractDodgeGain;
     //[SerializeField] private GameObject _prefabChargingEffect;
 
     [Header("Inputs")]
@@ -32,6 +35,8 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     [SerializeField] private RSE_OnAttackStartPerformed _onAttackStartPerformed;
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
     [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
+    [SerializeField] private RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
+
 
     private void Awake()
     {
@@ -45,6 +50,7 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         _onAttackStartPerformed.action += ActiveChargeEffect;
         _rseOnPlayerGettingHit.action += DeactiveChargeEffect;
         rseOnSpawnProjectile.action += DeactiveChargeEffect;
+        _rseOnDodgePerfect.action += ActiveDodgeEffect;
     }
 
     private void OnDisable()
@@ -54,6 +60,7 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         _onAttackStartPerformed.action -= ActiveChargeEffect;
         _rseOnPlayerGettingHit.action -= DeactiveChargeEffect;
         rseOnSpawnProjectile.action -= DeactiveChargeEffect;
+        _rseOnDodgePerfect.action -= ActiveDodgeEffect;
     }
 
     private void ActiveParryEffect(S_StructAttackContact contact)
@@ -63,11 +70,18 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         var spawnPoint = contact.data.contactPoint + offset;
 
         var parryeffect = Instantiate(_prefabParryEffect, spawnPoint, Quaternion.identity, _particleEffectParent);
-        var attract = Instantiate(_prefabParticlesAttract, spawnPoint, _targetAttract.rotation, _targetAttract);
+        var attract = Instantiate(_prefabParticlesAttractParryGain, spawnPoint, _targetAttract.rotation, _targetAttract);
 
         attract.InitializeTransform(_targetAttract, contact.data.convictionParryGain);
 
         Destroy(parryeffect, 2f);
+    }
+
+    private void ActiveDodgeEffect()
+    {
+        var attract = Instantiate(_prefabParticlesAttractDodgeGain, _convictionDodgeEffectParent.position, _convictionDodgeEffectParent.rotation, _convictionDodgeEffectParent);
+
+        attract.InitializeTransform(_targetAttract, _playerConvictionData.Value.dodgeSuccessGain);
     }
 
     void ActiveChargeEffect()
