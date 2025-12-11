@@ -484,13 +484,13 @@ public class S_Boss : MonoBehaviour
 
         foreach (var attack in listAttackOwnedPossibilities)
         {
-            if (attack.bossAttack.difficultyLevel == roundDifficulty) attack.score += difficultyScore;
+            //if (attack.bossAttack.difficultyLevel == roundDifficulty) attack.score += difficultyScore;
 
-            if (attack.frequency == minAttackFrequency) attack.score += frequencyScore;
+            //if (attack.frequency == minAttackFrequency) attack.score += frequencyScore;
 
             if (lastAttack == null) continue;
 
-            if (attack.bossAttack.listComboData[0].attackData.attackType != lastAttack.bossAttack.listComboData[^1].attackData.attackType) attack.score += synergieScore;
+            //if (attack.bossAttack.listComboData[0].attackData.attackType != lastAttack.bossAttack.listComboData[^1].attackData.attackType) attack.score += synergieScore;
         }
 
         var maxScore = listAttackOwnedPossibilities.Max(a => a.score);
