@@ -29,14 +29,16 @@ public class S_EnemyAttackData : MonoBehaviour
     [Title("Scripts")]
     [SerializeField] private S_Enemy enemy;
 
-    [HideInInspector] public UnityEvent<S_StructEnemyAttackData> onChangeAttackData = null;
+    [TabGroup("References")]
+    [SerializeField] private S_EnemyWeapon enemyWeapon;
 
     private S_StructEnemyAttackData attackData;
 
     public void SetAttackMode(S_StructEnemyAttackData enemyAttackData)
     {
         attackData = enemyAttackData;
-        onChangeAttackData.Invoke(enemyAttackData);
+
+        if (enemyWeapon != null) enemyWeapon.ChangeAttackData(attackData);
     }
 
     public void EnableWeaponCollider()

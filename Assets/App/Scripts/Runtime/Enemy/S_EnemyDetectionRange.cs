@@ -17,10 +17,7 @@ public class S_EnemyDetectionRange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(playerTag))
-        {
-            enemy.SetTarget(other.gameObject);
-        }
+        if (other.CompareTag(playerTag)) enemy.SetTarget(other.gameObject);
     }
 
     public void Setup(SSO_EnemyData enemyData)

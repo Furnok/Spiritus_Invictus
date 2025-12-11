@@ -47,7 +47,6 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
     private Vector3 origin = Vector3.zero;
     private Transform startAimPoint = null;
 
-    
     private float arcHeightMultiplier => ssoProjectileData.Value.arcHeightMultiplier;
     private float arcDirection => ssoProjectileData.Value.arcDirection;
     private bool randomizeArc => ssoProjectileData.Value.randomizeArc;
@@ -153,7 +152,6 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
         return true;
     }
 
-
     private void CalculateControlPoint()
     {
         this.startPos = transform.position;
@@ -172,10 +170,7 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
                 arcDir = (Vector3.up + side).normalized;
 
             }
-            else
-            {
-                arcDir = (Vector3.up + side * arcDirection).normalized;
-            }
+            else arcDir = (Vector3.up + side * arcDirection).normalized;
         }
 
         float arcHeight = toTarget.magnitude * 0.25f * arcHeightMultiplier;

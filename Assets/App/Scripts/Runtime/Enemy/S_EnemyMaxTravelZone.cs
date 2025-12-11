@@ -17,10 +17,7 @@ public class S_EnemyMaxTravelZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(playerTag))
-        {
-            enemy.SetTargetInMaxTravelZone(other.gameObject);
-        }
+        if (other.CompareTag(playerTag)) enemy.SetTargetInMaxTravelZone(other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)

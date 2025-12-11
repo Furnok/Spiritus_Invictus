@@ -9,22 +9,12 @@ public class S_EnemyWeapon : MonoBehaviour, I_AttackProvider
 
     private S_StructEnemyAttackData AttackData;
 
-    private void OnEnable()
-    {
-        S_EnemyAttackData.onChangeAttackData.AddListener(ChangeAttackData);
-    }
-
-    private void OnDisable()
-    {
-        S_EnemyAttackData.onChangeAttackData.RemoveListener(ChangeAttackData);
-    }
-
     public ref S_StructEnemyAttackData GetAttackData()
     {
         return ref AttackData;
     }
 
-    private void ChangeAttackData(S_StructEnemyAttackData enemyAttackData)
+    public void ChangeAttackData(S_StructEnemyAttackData enemyAttackData)
     {
         AttackData = enemyAttackData;
     }
