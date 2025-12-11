@@ -101,7 +101,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                     if (canParry == true)
                     {
                         _rseOnParrySuccess.Call(data);
-                        _onPlayerGainConviction.Call(attackData.convictionParryGain);
+                        //_onPlayerGainConviction.Call(attackData.convictionParryGain);
                         _onCameraShake.Call(_cameraShake);
 
                         _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
@@ -174,7 +174,7 @@ public class S_PlayerHitResolver : MonoBehaviour
                 if (canParry == true)
                 {
                     _rseOnParrySuccess.Call(contact);
-                    _onPlayerGainConviction.Call(attackData.convictionParryGain);
+                    //_onPlayerGainConviction.Call(attackData.convictionParryGain);
 
                     _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
                     _onCameraShake.Call(_cameraShake);

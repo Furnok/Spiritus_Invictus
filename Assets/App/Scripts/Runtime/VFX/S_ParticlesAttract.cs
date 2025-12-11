@@ -14,14 +14,21 @@ public class S_ParticlesAttract : MonoBehaviour
 
     //[Header("Inputs")]
 
-    //[Header("Outputs")]
+    [Header("Outputs")]
+    [SerializeField] private RSE_OnPlayerGainConviction _onPlayerGainConviction;
 
     private ParticleSystem.Particle[] _particles;
+    private float _ammountTotalConvictionGain = 0f;
+    private int _totalParticles = 0;
+    private float _convictionPerParticle => _totalParticles > 0 ? _ammountTotalConvictionGain / _totalParticles : 0;
 
-    public void InitializeTransform(Transform transformToAttract)
+    public void InitializeTransform(Transform transformToAttract, float ammountConvictionGain)
     {
         _ps.Play();
         target = transformToAttract;
+        _ammountTotalConvictionGain = ammountConvictionGain;
+        _totalParticles = _ps.emission.burstCount > 0 ? (int)_ps.emission.GetBurst(0).count.constant : 0;
+        Debug.Log("Total Particles Emitted: " + _totalParticles);
     }
 
     void LateUpdate()
@@ -61,6 +68,7 @@ public class S_ParticlesAttract : MonoBehaviour
             {
                 p.remainingLifetime = 0f;
                 _particles[i] = p;
+                _onPlayerGainConviction.Call(_convictionPerParticle);
                 continue;
             }
 

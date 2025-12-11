@@ -65,7 +65,7 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         var parryeffect = Instantiate(_prefabParryEffect, spawnPoint, Quaternion.identity, _particleEffectParent);
         var attract = Instantiate(_prefabParticlesAttract, spawnPoint, _targetAttract.rotation, _targetAttract);
 
-        attract.InitializeTransform(_targetAttract);
+        attract.InitializeTransform(_targetAttract, contact.data.convictionParryGain);
 
         Destroy(parryeffect, 2f);
     }
