@@ -85894,8 +85894,15 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 1
   m_Events:
+  - time: 0
+    functionName: VFXAttackType
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.1
-    functionName: VFXStart
+    functionName: VFXStartTrail
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -85916,7 +85923,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.4333334
-    functionName: VFXStop
+    functionName: VFXStopTrail
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -85937,7 +85944,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.8
-    functionName: VFXStop
+    functionName: VFXStopTrail
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
