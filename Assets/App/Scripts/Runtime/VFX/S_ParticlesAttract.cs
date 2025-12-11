@@ -26,7 +26,24 @@ public class S_ParticlesAttract : MonoBehaviour
     {
         _ps.Play();
         _ammountTotalConvictionGain = ammountConvictionGain;
-        _totalParticles = _ps.emission.burstCount > 0 ? (int)_ps.emission.GetBurst(0).count.constant : 0;
+
+        var emission = _ps.emission;
+
+        if (emission.burstCount == 0) { _totalParticles = 0; }
+
+        var bursts = new ParticleSystem.Burst[emission.burstCount];
+        emission.GetBursts(bursts);
+
+        int total = 0;
+
+        foreach (var b in bursts)
+        {
+            int cycles = Mathf.Max(1, b.cycleCount);
+            total += (int)b.count.constant * cycles;
+        }
+
+        _totalParticles = total;
+
         //Debug.Log("Total Particles Emitted: " + _totalParticles);
 
         target = transformToAttract;
