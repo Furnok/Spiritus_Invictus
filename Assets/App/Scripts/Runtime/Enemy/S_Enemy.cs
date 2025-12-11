@@ -509,6 +509,7 @@ public class S_Enemy : MonoBehaviour
     private void Patroling()
     {
         isPatroling = true;
+        target = null;
 
         if (patrolPointsList == null || patrolPointsList.Count == 0) return;
 
