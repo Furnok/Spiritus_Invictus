@@ -611,10 +611,12 @@ public class S_Enemy : MonoBehaviour
             }
             else if (distance < combo.distanceMin)
             {
-
+                // TO CLOSE
             }
             else if (!isStrafe)
             {
+                // STRAFE
+
                 //isStrafe = true;
                 //navMeshAgent.speed = ssoEnemyData.Value.speedStrafe;
                 //Strafing();
