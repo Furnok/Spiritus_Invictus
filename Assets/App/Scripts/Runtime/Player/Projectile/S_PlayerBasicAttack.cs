@@ -398,6 +398,13 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         _reservedConviction = 0f;
 
+        if (_convictionAccumulationInstance.isValid())
+        {
+            _convictionAccumulationInstance.stop(allowFadeoutSoundConvictionAccu ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+            _convictionAccumulationInstance.release();
+            _convictionAccumulationInstance = default;
+        }
+
         _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
 
         PublishPreconsume(_reservedConviction);
