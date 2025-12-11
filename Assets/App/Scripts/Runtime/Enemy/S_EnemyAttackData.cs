@@ -1,10 +1,8 @@
-﻿using DG.Tweening;
-using FMODUnity;
+﻿using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class S_EnemyAttackData : MonoBehaviour
 {
@@ -18,16 +16,14 @@ public class S_EnemyAttackData : MonoBehaviour
     [SerializeField] private Collider weaponCollider;
 
     [TabGroup("References")]
-    [Title("Content")]
-    [SerializeField] private GameObject content;
-
-    [TabGroup("References")]
-    [Title("Image")]
-    [SerializeField] private Image warning;
-
-    [TabGroup("References")]
     [Title("VFX")]
-    [SerializeField] private List<ParticleSystem> particles;
+    [SerializeField] private ParticleSystem particleDodgeType;
+
+    [TabGroup("References")]
+    [SerializeField] private ParticleSystem particleParryType;
+
+    [TabGroup("References")]
+    [SerializeField] private List<ParticleSystem> particlesTrail;
 
     [TabGroup("References")]
     [Title("Scripts")]
@@ -37,8 +33,6 @@ public class S_EnemyAttackData : MonoBehaviour
 
     private S_StructEnemyAttackData attackData;
 
-    private Tween fadeTween = null;
-
     public void SetAttackMode(S_StructEnemyAttackData enemyAttackData)
     {
         attackData = enemyAttackData;
@@ -47,49 +41,24 @@ public class S_EnemyAttackData : MonoBehaviour
 
     public void EnableWeaponCollider()
     {
-        if (weaponCollider != null)
-        {
-            weaponCollider.enabled = true;
-        }
+        if (weaponCollider != null) weaponCollider.enabled = true;
     }
 
     public void DisableWeaponCollider()
     {
-        if (weaponCollider != null)
-        {
-            weaponCollider.enabled = false;
-        }
+        if (weaponCollider != null) weaponCollider.enabled = false;
     }
 
-    public void DisplayTriggerWarning()
+    public void VFXAttackType()
     {
-        if (warning != null)
+        if (attackData.attackType == S_EnumEnemyAttackType.Parryable || attackData.attackType == S_EnumEnemyAttackType.Projectile)
         {
-            fadeTween?.Kill();
-
-            if (attackData.attackType == S_EnumEnemyAttackType.Parryable || attackData.attackType == S_EnumEnemyAttackType.Projectile)
-            {
-                warning.color = Color.yellow;
-            }
-            else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
-            {
-                warning.color = Color.red;
-            }
-
-            content.gameObject.gameObject.SetActive(true);
-
-            fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(1f, timeDisplay).SetEase(Ease.Linear);
+            if (particleParryType != null) particleParryType.Play();
         }
-    }
-
-    public void UnDisplayTriggerWarning()
-    {
-        fadeTween?.Kill();
-
-        fadeTween = content.gameObject.GetComponent<CanvasGroup>().DOFade(0f, timeDisplay).SetEase(Ease.Linear).OnComplete(() =>
+        else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
         {
-            content.gameObject.SetActive(false);
-        });
+            if (particleDodgeType == null) particleDodgeType.Play();
+        }
     }
 
     public void Rotate()
@@ -107,23 +76,17 @@ public class S_EnemyAttackData : MonoBehaviour
         RuntimeManager.PlayOneShot(eventName, transform.position);
     }
 
-    public void VFXStart()
+    public void VFXStartTrail()
     {
-        if (particles == null || particles.Count == 0) return;
+        if (particlesTrail == null || particlesTrail.Count == 0) return;
 
-        foreach (ParticleSystem particle in particles)
-        {
-            particle.Play();
-        }
+        foreach (ParticleSystem particle in particlesTrail) particle.Play();
     }
 
-    public void VFXStop()
+    public void VFXStopTrail()
     {
-        if (particles == null || particles.Count == 0) return;
+        if (particlesTrail == null || particlesTrail.Count == 0) return;
 
-        foreach (ParticleSystem particle in particles)
-        {
-            particle.Stop();
-        }
+        foreach (ParticleSystem particle in particlesTrail) particle.Stop();
     }
 }

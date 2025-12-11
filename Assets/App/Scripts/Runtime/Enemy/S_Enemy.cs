@@ -303,8 +303,7 @@ public class S_Enemy : MonoBehaviour
     private void ResetEnemy()
     {
         enemyAttackData.DisableWeaponCollider();
-        enemyAttackData.UnDisplayTriggerWarning();
-        enemyAttackData.VFXStop();
+        enemyAttackData.VFXStopTrail();
 
         if (idleCoroutine != null)
         {
@@ -705,8 +704,7 @@ public class S_Enemy : MonoBehaviour
             if (distance > combo.distanceToLoseAttack)
             {
                 enemyAttackData.DisableWeaponCollider();
-                enemyAttackData.UnDisplayTriggerWarning();
-                enemyAttackData.VFXStop();
+                enemyAttackData.VFXStopTrail();
                 break;
             }
 

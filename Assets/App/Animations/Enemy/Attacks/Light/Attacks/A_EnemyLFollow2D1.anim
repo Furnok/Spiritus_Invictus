@@ -78947,7 +78947,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 1
   m_Events:
   - time: 0
-    functionName: DisplayTriggerWarning
+    functionName: VFXAttackType
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -78955,13 +78955,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.1
     functionName: Rotate
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.2
-    functionName: UnDisplayTriggerWarning
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -78976,6 +78969,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.43333334
     functionName: DisableWeaponCollider
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.53333336
+    functionName: StopRotate
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

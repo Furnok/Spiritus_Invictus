@@ -316,10 +316,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeDisplay: 0.2
   weaponCollider: {fileID: 0}
-  content: {fileID: 0}
-  warning: {fileID: 0}
-  vfx: {fileID: 0}
-  particles: []
+  particleDodgeType: {fileID: 0}
+  particleParryType: {fileID: 0}
+  particlesTrail: []
   enemy: {fileID: 445208566684554611}
   onChangeAttackData:
     m_PersistentCalls:
@@ -1119,7 +1118,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5276679289733621114}
