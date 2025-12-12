@@ -3,6 +3,7 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -56,6 +57,9 @@ public class S_Boss : MonoBehaviour
     [SerializeField, S_AnimationName("animator")] private string deathParam;
 
     [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string idleAttack;
+
+    [TabGroup("References")]
     [SerializeField, S_AnimationName("animator")] private string attackParam;
 
     [TabGroup("References")]
@@ -88,6 +92,7 @@ public class S_Boss : MonoBehaviour
     private Coroutine idleCoroutine = null;
     private Coroutine comboCoroutine = null;
     private Coroutine stunCoroutine = null;
+    private Coroutine timeChooseAttackCoroutine = null;
 
     private float health = 0;
     private float maxHealth = 0;
@@ -135,12 +140,12 @@ public class S_Boss : MonoBehaviour
         overrideController = animator.runtimeAnimatorController as AnimatorOverrideController;
         lastValueHealth = 101f;
 
-        health = ssoBossData.Value.healthPhase1;
-        maxHealth = ssoBossData.Value.healthPhase1;
+        health = ssoBossData.Value.health;
+        maxHealth = ssoBossData.Value.health;
         navMeshAgent.speed = ssoBossData.Value.walkSpeed;
-        currentPhaseState = S_EnumBossPhaseState.Phase1;
+        currentPhaseState = ssoBossData.Value.phaseState;
 
-        foreach (var bossAttack in ssoBossData.Value.listAttackPhase1)
+        foreach (var bossAttack in ssoBossData.Value.listAttack)
         {
             var attackData = new S_ClassAttackOwned
             {
@@ -169,7 +174,6 @@ public class S_Boss : MonoBehaviour
     {
         UpdateLastHealthValue();
         UpdateState(S_EnumBossState.Idle);
-        UpdatePhaseState(S_EnumBossPhaseState.Phase1);
         bossDifficultyLevel = ssoBossData.Value.initialBossDifficultyLevel;
     }
     
@@ -224,20 +228,10 @@ public class S_Boss : MonoBehaviour
             case S_EnumBossState.Combat:
                 break;
             case S_EnumBossState.Stun:
+                Stun();
                 break;
             case S_EnumBossState.Death:
-                break;
-        }
-    }
-    private void UpdatePhaseState(S_EnumBossPhaseState newPhaseState)
-    {
-        currentPhaseState = newPhaseState;
-
-        switch (currentPhaseState)
-        {
-            case S_EnumBossPhaseState.Phase1:
-                break;
-            case S_EnumBossPhaseState.Phase2:
+                Death();
                 break;
         }
     }
@@ -326,7 +320,7 @@ public class S_Boss : MonoBehaviour
                         navMeshAgent.velocity = Vector3.zero;
                         isChasing = false;
                         UpdateState(S_EnumBossState.Combat);
-                        ExecuteAttack(currentAttack);
+                        //ExecuteAttack(currentAttack);
                     }
                     else
                     {
@@ -342,7 +336,7 @@ public class S_Boss : MonoBehaviour
             navMeshAgent.velocity = Vector3.zero;
             isChasing = false;
             UpdateState(S_EnumBossState.Combat);
-            ExecuteAttack(currentAttack);
+            //ExecuteAttack(currentAttack);
         }
     }
     #endregion
@@ -354,6 +348,13 @@ public class S_Boss : MonoBehaviour
         {
             UpdateState(S_EnumBossState.Chase);
         }
+    }
+    #endregion
+
+    #region Stun
+    private void Stun()
+    {
+        Debug.Log("Boss Stun!");
     } 
     #endregion
 
@@ -372,19 +373,7 @@ public class S_Boss : MonoBehaviour
 
         UpdateLastHealthValue();
 
-        if (health <= 0)
-        {
-            if (currentPhaseState == S_EnumBossPhaseState.Phase1)
-            {
-                UpdateState(S_EnumBossState.Death);
-                DeathPhase1();
-            }
-            else
-            {
-                UpdateState(S_EnumBossState.Death);
-                DeathPhase2();
-            }
-        }
+        if (health <= 0) UpdateState(S_EnumBossState.Death);
     }
     private void UpdateLastHealthValue()
     {
@@ -394,51 +383,21 @@ public class S_Boss : MonoBehaviour
 
         lastValueHealth = minValue;
     }
-    private void DeathPhase1()
+    private void Death()
     {
+        isDead = true;
+        animator.SetTrigger(deathParam);
+
         StopAllCoroutines();
 
         ResetBoss();
         canChooseAttack = false;
         currentAttack = null;
-
-        listAttackOwneds.Clear();
-        listAttackOwnedPossibilities.Clear();
-
-        currentPhaseState = S_EnumBossPhaseState.Phase2;
-        currentState = S_EnumBossState.Idle;
-        health = ssoBossData.Value.healthPhase2;
-        maxHealth = ssoBossData.Value.healthPhase2;
-        lastValueHealth = 101f;
-
-        foreach (var bossAttack in ssoBossData.Value.listAttackPhase2)
-        {
-            var attackData = new S_ClassAttackOwned
-            {
-                bossAttack = bossAttack,
-                frequency = 0,
-                score = 0,
-            };
-            listAttackOwneds.Add(attackData);
-        }
-
-        UpdateLastHealthValue();
-
-        canChooseAttack = true;
-    }
-    private void DeathPhase2()
-    {
-        isDead = true;
-        animator.SetTrigger(deathParam);
-
-        canAttack = false;
-        canChooseAttack = false;
         target = null;
 
         bodyCollider.enabled = false;
         detectionCollider.enabled = false;
         hurtCollider.enabled = false;
-
     }
     #endregion
 
@@ -484,13 +443,13 @@ public class S_Boss : MonoBehaviour
 
         foreach (var attack in listAttackOwnedPossibilities)
         {
-            //if (attack.bossAttack.difficultyLevel == roundDifficulty) attack.score += difficultyScore;
+            if (attack.bossAttack.difficultyLevel == roundDifficulty) attack.score += ssoBossData.Value.difficultyScore;
 
-            //if (attack.frequency == minAttackFrequency) attack.score += frequencyScore;
+            if (attack.frequency == minAttackFrequency) attack.score += ssoBossData.Value.frequencyScore;
 
             if (lastAttack == null) continue;
 
-            //if (attack.bossAttack.listComboData[0].attackData.attackType != lastAttack.bossAttack.listComboData[^1].attackData.attackType) attack.score += synergieScore;
+            if (attack.bossAttack.listComboData[0].attackData.attackType != lastAttack.bossAttack.listComboData[^1].attackData.attackType) attack.score += ssoBossData.Value.synergieScore;
         }
 
         var maxScore = listAttackOwnedPossibilities.Max(a => a.score);
@@ -515,7 +474,73 @@ public class S_Boss : MonoBehaviour
 
         onExecuteAttack.Call(attack.bossAttack);
     }
+    private IEnumerator PlayComboSequence()
+    {
+        yield return null;
 
+        isPerformingCombo = true;
+        animator.SetBool(idleAttack, false);
+        isAttacking = false;
+
+        for (int i = 0; i < currentAttack.bossAttack.listComboData.Count; i++)
+        {
+            isAttacking = true;
+            RotateEnemy();
+
+            string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+            overrideController[overrideKey] = currentAttack.bossAttack.listComboData[i].animation;
+
+            //rootMotionModifier.Setup(currentAttack.bossAttack.listComboData[i].rootMotionMultiplier, combo.distanceMin);
+
+            //enemyAttackData.SetAttackMode(currentAttack.bossAttack.listComboData[i].attackData);
+            //animator.SetTrigger(i == 0 ? attackParam : comboParam);
+
+            yield return new WaitForSeconds(currentAttack.bossAttack.listComboData[i].animation.length);
+
+            //if (combo.listAnimationsCombos[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            //{
+            //    yield return new WaitForSeconds(combo.listAnimationsCombos[i].attackData.timeCast);
+
+            //    S_EnemyProjectile projectileInstance = Instantiate(enemyProjectile, spawnProjectilePoint.transform.position, Quaternion.identity);
+            //    projectileInstance.Initialize(bodyCollider.transform, aimPoint, combo.listAnimationsCombos[i].attackData);
+            //}
+
+            isAttacking = false;
+            RotateEnemy();
+
+            yield return null;
+        }
+
+        //rootMotionModifier.Setup(1, 0);
+        animator.SetBool(idleAttack, true);
+
+        isPerformingCombo = false;
+        isAttacking = false;
+        unlockRotate = false;
+
+        if (pendingState.HasValue)
+        {
+            animator.SetBool(idleAttack, false);
+
+            UpdateState(pendingState.Value);
+
+            pendingState = null;
+        }
+
+        if (pendingTarget != null)
+        {
+            SetTarget(pendingTarget);
+            pendingTarget = null;
+        }
+
+        if (isPlayerDeath)
+        {
+            target = null;
+        }
+
+        //SetCombo();
+
+    }
     private IEnumerator TimeForChooseAttack()
     {
         float rndTime = Random.Range(ssoBossData.Value.minTimeChooseAttack, ssoBossData.Value.maxTimeChooseAttack);
@@ -524,7 +549,62 @@ public class S_Boss : MonoBehaviour
 
         ChooseAttack();
 
-        ExecuteAttack(currentAttack);
-    } 
+        //ExecuteAttack(currentAttack);
+    }
+
+    private void Strafing()
+    {
+        if (target == null) return;
+
+        if (canChooseAttack)
+        {
+            canChooseAttack = false;
+            if (timeChooseAttackCoroutine != null)
+            {
+                StopCoroutine(timeChooseAttackCoroutine);
+                timeChooseAttackCoroutine = null;
+            }
+            timeChooseAttackCoroutine = StartCoroutine(TimeForChooseAttack());
+        }
+
+        if (Time.time >= nextChangeTime)
+        {
+            strafeDirection *= -1;
+            nextChangeTime = Time.time + ssoBossData.Value.strafeChangeInterval;
+        }
+
+
+        Vector3 offsetPlayer = transform.position - target.transform.position;
+        offsetPlayer.y = 0;
+
+
+        if (offsetPlayer.sqrMagnitude < 0.01f)
+            offsetPlayer = transform.right * 1f;
+
+
+        Vector3 offsetAtRadius = offsetPlayer.normalized * ssoBossData.Value.strafeRadius;
+
+
+        Vector3 dir = Vector3.Cross(offsetAtRadius, Vector3.up).normalized * strafeDirection;
+
+
+        Vector3 finalPos = target.transform.position + offsetAtRadius + dir * ssoBossData.Value.strafeDistance;
+
+
+        navMeshAgent.isStopped = false;
+        navMeshAgent.speed = ssoBossData.Value.walkSpeed;
+        navMeshAgent.SetDestination(finalPos);
+
+
+        Vector3 lookPos = target.transform.position - transform.position;
+        lookPos.y = 0;
+        if (lookPos.sqrMagnitude > 0.01f)
+        {
+            Quaternion rotation = Quaternion.LookRotation(lookPos);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * ssoBossData.Value.rotationSpeed);
+        }
+
+        animator.SetFloat("MoveSpeed", ssoBossData.Value.walkSpeed);
+    }
     #endregion
 }

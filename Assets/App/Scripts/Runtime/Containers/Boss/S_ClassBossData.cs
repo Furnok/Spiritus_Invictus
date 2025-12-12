@@ -7,13 +7,13 @@ using UnityEngine;
 public class S_ClassBossData
 {
     [Title("General Settings")]
-    public float healthPhase1 = 0;
-
-    public float healthPhase2 = 0;
+    public float health = 0;
 
     public float walkSpeed = 0;
 
     public float runSpeed = 0;
+
+    public S_EnumBossPhaseState phaseState;
 
     [Title("Chase")]
     public float distanceToChase = 0;
@@ -57,7 +57,5 @@ public class S_ClassBossData
     [Title("Animations")]
     public AnimatorOverrideController controllerOverride = null;
 
-    public List<S_ClassBossAttack> listAttackPhase1 = new();
-
-    public List<S_ClassBossAttack> listAttackPhase2 = new();
+    public List<S_ClassBossAttack> listAttack = new();
 }
