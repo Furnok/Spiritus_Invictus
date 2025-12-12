@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class S_PlayerParry : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Animation")]
     [SerializeField, S_AnimationName] string _parryParam;
 
@@ -64,14 +64,12 @@ public class S_PlayerParry : MonoBehaviour
     private void TryParry()
     {
         if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Parrying) == false || _parryUp == false) return;
+
         _onPlayerAddState.Call(S_EnumPlayerState.Parrying);
 
         rseOnSendConsoleMessage.Call("Player Pary!");
 
-        if (_parryCoroutine != null)
-        {
-            StopCoroutine(_parryCoroutine);
-        }
+        if (_parryCoroutine != null)  StopCoroutine(_parryCoroutine);
 
         _parryUp = false;
         StartCoroutine(S_Utils.Delay(_playerStats.Value.parryCooldown, () =>
@@ -91,6 +89,7 @@ public class S_PlayerParry : MonoBehaviour
                 _canParry.Value = false;
 
                 if (_parryCoroutine != null) StopCoroutine(_parryCoroutine);
+
                 rseOnAnimationBoolValueChange.Call(_parryParam, false);
 
                 _parryCoroutine = StartCoroutine(S_Utils.Delay(_animationTransitionDelays.Value.parryRecoveryDelay, () =>
@@ -106,6 +105,7 @@ public class S_PlayerParry : MonoBehaviour
     private void CancelParry()
     {
         if (_parryCoroutine == null) return;
+
         StopCoroutine(_parryCoroutine);
 
         ResetValue();

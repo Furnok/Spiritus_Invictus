@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class S_PlayerHurtboxCollider : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Filter")]
+    [TabGroup("References")]
+    [Title("Filters")]
     [SerializeField, S_TagName] private string tagHit;
 
     [TabGroup("References")]

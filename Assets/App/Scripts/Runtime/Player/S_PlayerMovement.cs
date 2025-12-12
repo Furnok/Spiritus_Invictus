@@ -6,29 +6,6 @@ using UnityEngine;
 public class S_PlayerMovement : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Animations")]
-    [SerializeField, S_AnimationName] private string moveParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string speedParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string _strafXParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string _strafYParam;
-
-    [TabGroup("Settings")]
-    [Title("Grounding")]
-    [SerializeField] private CapsuleCollider capsule;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask groundMask;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask obstacleMask;
-
-    [TabGroup("Settings")]
     [SerializeField] private float groundCheckDist = 0.5f;
 
     [TabGroup("Settings")]
@@ -62,6 +39,30 @@ public class S_PlayerMovement : MonoBehaviour
 
     [TabGroup("Settings")]
     [SerializeField, Range(0f, 0.9f)] private float slopeSlowAtMax = 0.10f;
+
+    [TabGroup("References")]
+    [Title("Animations")]
+    [SerializeField, S_AnimationName] private string moveParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string speedParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string _strafXParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string _strafYParam;
+
+    [TabGroup("References")]
+    [Title("Layers")]
+    [SerializeField] private LayerMask groundMask;
+
+    [TabGroup("References")]
+    [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("References")]
+    [Title("Grounding")]
+    [SerializeField] private CapsuleCollider capsule;
 
     [TabGroup("References")]
     [Title("Rigidbody")]

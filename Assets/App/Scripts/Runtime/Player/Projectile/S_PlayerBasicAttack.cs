@@ -8,11 +8,7 @@ using UnityEngine;
 
 public class S_PlayerBasicAttack : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Sounds")]
-    [SerializeField] private bool allowFadeoutSoundConvictionAccu = true;
-
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Animation")]
     [SerializeField, S_AnimationName] private string _attackParam;
 
@@ -351,7 +347,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     {
         if (_convictionAccumulationInstance.isValid())
         {
-            _convictionAccumulationInstance.stop(allowFadeoutSoundConvictionAccu ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+            _convictionAccumulationInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             _convictionAccumulationInstance.release();
             _convictionAccumulationInstance = default;
         }
@@ -400,7 +396,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         if (_convictionAccumulationInstance.isValid())
         {
-            _convictionAccumulationInstance.stop(allowFadeoutSoundConvictionAccu ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+            _convictionAccumulationInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             _convictionAccumulationInstance.release();
             _convictionAccumulationInstance = default;
         }

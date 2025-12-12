@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class S_PlayerRespawn : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Animation")]
     [SerializeField, S_AnimationName] private string _deadParam;
 
@@ -13,7 +13,7 @@ public class S_PlayerRespawn : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Rigidbody")]
-    [SerializeField] Rigidbody _playerRigidbody;
+    [SerializeField] private Rigidbody _playerRigidbody;
 
     [TabGroup("References")]
     [Title("Aim Point")]
@@ -21,17 +21,17 @@ public class S_PlayerRespawn : MonoBehaviour
 
     [TabGroup("References")]
     [Title("Others")]
-    [SerializeField] GameObject _colliderMotorGO;
+    [SerializeField] private GameObject _colliderMotorGO;
 
     [TabGroup("References")]
     [Title("Others")]
-    [SerializeField] Collider _colliderMotor;
+    [SerializeField] private Collider _colliderMotor;
 
     [TabGroup("References")]
-    [SerializeField] GameObject _visuals;
+    [SerializeField] private GameObject _visuals;
 
     [TabGroup("References")]
-    [SerializeField] GameObject _player;
+    [SerializeField] private GameObject _player;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;

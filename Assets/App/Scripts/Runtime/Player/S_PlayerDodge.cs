@@ -7,30 +7,31 @@ public class S_PlayerDodge : MonoBehaviour
 {
     #region Variableables
     [TabGroup("Settings")]
-    [Title("Animations")]
-    [SerializeField, S_AnimationName] private string _dodgeParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string _dodgeDirXParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private  string _dodgeDirYParam;
-
-    [TabGroup("Settings")]
-    [Title("World / Collision")]
-    [SerializeField] private CapsuleCollider _capsule;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask groundMask;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask obstacleMask;
-
-    [TabGroup("Settings")]
     [SerializeField] private float edgeProbeHeight = 0.5f;
 
     [TabGroup("Settings")]
     [SerializeField] private float stopFromWall = 0.03f;
+
+    [TabGroup("References")]
+    [Title("Layers")]
+    [SerializeField] private LayerMask groundMask;
+
+    [TabGroup("References")]
+    [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("References")]
+    [Title("Animations")]
+    [SerializeField, S_AnimationName] private string _dodgeParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string _dodgeDirXParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string _dodgeDirYParam;
+
+    [TabGroup("References")]
+    [Title("World / Collision")]
+    [SerializeField] private CapsuleCollider _capsule;
 
     [TabGroup("References")]
     [Title("Rigidbody")]
@@ -172,6 +173,7 @@ public class S_PlayerDodge : MonoBehaviour
     private void TryDodge()
     {
         if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Dodging) == false || _dodgeUp == false) return;
+
         _onPlayerAddState.Call(S_EnumPlayerState.Dodging);
 
         rseOnSendConsoleMessage.Call("Player Dodge!");
@@ -193,27 +195,15 @@ public class S_PlayerDodge : MonoBehaviour
             //_onPlayerGainConviction.Call(_playerConvictionData.Value.dodgeSuccessGain);
             _rseOnDodgePerfect.Call();
 
-            foreach (var attackData in _attackDataInDodgeableArea.Value)
-            {
-                _attackCanHitPlayer.Value.Remove(attackData.Key);
-            }
+            foreach (var attackData in _attackDataInDodgeableArea.Value) _attackCanHitPlayer.Value.Remove(attackData.Key);
         }
 
         Vector3 dodgeDirection = Vector3.zero;
 
-        if (_playerIsTargeting.Value == false)
-        {
-            dodgeDirection = transform.forward;
-        }
-        else
-        {
-            dodgeDirection = transform.forward * _moveInput.y + transform.right * _moveInput.x;
-        }
+        if (_playerIsTargeting.Value == false) dodgeDirection = transform.forward;
+        else dodgeDirection = transform.forward * _moveInput.y + transform.right * _moveInput.x;
 
-        if (dodgeDirection == Vector3.zero)
-        {
-            dodgeDirection = -transform.forward;
-        }
+        if (dodgeDirection == Vector3.zero) dodgeDirection = -transform.forward;
 
         dodgeDirection.Normalize();
 
@@ -225,16 +215,14 @@ public class S_PlayerDodge : MonoBehaviour
         _playerIsDodging.Value = true;
 
         if (_dodgeCoroutine != null) StopCoroutine(_dodgeCoroutine);
+
         _dodgeCoroutine = StartCoroutine(StartupAndDash(dodgeDirection));
     }
 
     private IEnumerator StartupAndDash(Vector3 dodgeDir)
     {
         float startup = _animationTransitionDelays.Value.dodgeStartupDelay;
-        if (startup > 0f)
-        {
-            yield return new WaitForSeconds(startup);
-        }
+        if (startup > 0f) yield return new WaitForSeconds(startup);
 
         _rb.linearDamping = 0f;
         _rb.angularVelocity = Vector3.zero;
@@ -247,14 +235,8 @@ public class S_PlayerDodge : MonoBehaviour
 
         Vector3 groundNormal;
         bool onGround = CheckGround(out groundNormal);
-        if (onGround)
-        {
-            dodgeDir = Vector3.ProjectOnPlane(dodgeDir, groundNormal).normalized;
-        }
-        else
-        {
-            dodgeDir = dodgeDir.normalized;
-        }
+        if (onGround) dodgeDir = Vector3.ProjectOnPlane(dodgeDir, groundNormal).normalized;
+        else dodgeDir = dodgeDir.normalized;
 
         float elapsed = 0f;
         float travelled = 0f;
@@ -274,28 +256,20 @@ public class S_PlayerDodge : MonoBehaviour
 
             onGround = CheckGround(out groundNormal);
             Vector3 stepDir = dodgeDir;
-            if (onGround)
-            {
-                stepDir = Vector3.ProjectOnPlane(stepDir, groundNormal).normalized;
-            }
+            if (onGround) stepDir = Vector3.ProjectOnPlane(stepDir, groundNormal).normalized;
 
             float allowed = ProbeObstacle(stepDir, frameDist);
-            if (allowed <= 0f)
-            {
-                break;
-            }
+            if (allowed <= 0f) break;
 
             allowed = ProbeGroundAhead(stepDir, allowed, groundNormal);
-            if (allowed <= 0f)
-            {
-                break;
-            }
+            if (allowed <= 0f) break;
 
             Vector3 nextPos = transform.position + stepDir * allowed;
             _rb.MovePosition(nextPos);
 
             travelled += allowed;
             elapsed += Time.deltaTime;
+
             yield return null;
         }
 
@@ -305,14 +279,12 @@ public class S_PlayerDodge : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
 
         float rec = _animationTransitionDelays.Value.dodgeRecoveryDelay;
-        if (rec > 0f)
-        {
-            yield return new WaitForSeconds(rec);
-        }
+        if (rec > 0f) yield return new WaitForSeconds(rec);
 
         _onPlayerAddState.Call(S_EnumPlayerState.None);
 
         yield return new WaitForSeconds(_playerStats.Value.delayBeforeRunningAfterDodge);
+
         if (_canRunAfterDodge && _playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Running))
         {
             _onPlayerAddState.Call(S_EnumPlayerState.Running);
@@ -332,6 +304,7 @@ public class S_PlayerDodge : MonoBehaviour
         _playerIsDodging.Value = false;
 
         if (_dodgeCoroutine != null) StopCoroutine(_dodgeCoroutine);
+
         _rb.linearDamping = _linearDamping;
         rseOnAnimationBoolValueChange.Call(_dodgeParam, false);
 
@@ -352,10 +325,7 @@ public class S_PlayerDodge : MonoBehaviour
         }
         */
         
-        if(_playerCurrentState.Value == S_EnumPlayerState.Running /*&& _dodgeCoroutine != null*/)
-        {
-            _onPlayerAddState.Call(S_EnumPlayerState.None);
-        }
+        if(_playerCurrentState.Value == S_EnumPlayerState.Running /*&& _dodgeCoroutine != null*/) _onPlayerAddState.Call(S_EnumPlayerState.None);
     }
 
     private void ResetValue()
@@ -392,6 +362,7 @@ public class S_PlayerDodge : MonoBehaviour
             }
         }
         normal = Vector3.up;
+
         return false;
     }
 
@@ -401,13 +372,9 @@ public class S_PlayerDodge : MonoBehaviour
 
         bool overlapping = Physics.CheckCapsule(
         bottom, top, radius,
-        obstacleMask, QueryTriggerInteraction.Ignore
-    );
+        obstacleMask, QueryTriggerInteraction.Ignore);
 
-        if (overlapping)
-        {
-            return 0f;
-        }
+        if (overlapping) return 0f;
 
         float castDist = maxDist + stopFromWall;
 
@@ -429,8 +396,10 @@ public class S_PlayerDodge : MonoBehaviour
         {
             float ang = Vector3.Angle(hit.normal, Vector3.up);
             if (ang > maxDownStepAngle) return 0f;
+
             return maxDist;
         }
+
         return 0f;
     }
 }

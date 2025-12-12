@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class S_TargetDetector : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Filter")]
     [SerializeField, S_TagName] private string tagEnemy;
 
@@ -42,10 +42,7 @@ public class S_TargetDetector : MonoBehaviour
     {
         if (other.CompareTag(tagEnemy))
         {
-            if (rseOnEnemyEnterTargetingRange != null)
-            {
-                rseOnEnemyEnterTargetingRange.Call(other.gameObject);
-            }
+            if (rseOnEnemyEnterTargetingRange != null) rseOnEnemyEnterTargetingRange.Call(other.gameObject);
         }
     }
 
@@ -53,18 +50,12 @@ public class S_TargetDetector : MonoBehaviour
     {
         if (other.CompareTag(tagEnemy))
         {
-            if (rseOnEnemyExitTargetingRange != null)
-            {
-                rseOnEnemyExitTargetingRange.Call(other.gameObject);
-            }
+            if (rseOnEnemyExitTargetingRange != null) rseOnEnemyExitTargetingRange.Call(other.gameObject);
         }
     }
 
     private void OnEnemyTargetDied(GameObject enemyObject)
     {
-        if(enemyObject != null)
-        {
-            rseOnEnemyExitTargetingRange.Call(enemyObject);
-        }
+        if (enemyObject != null) rseOnEnemyExitTargetingRange.Call(enemyObject);
     }
 }
