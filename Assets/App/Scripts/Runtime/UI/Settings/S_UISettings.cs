@@ -3,15 +3,10 @@ using FMODUnity;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class S_UISettings : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFadeSkip;
-
     [TabGroup("References")]
     [Title("Audio")]
     [SerializeField] private EventReference uiSoundClick;
@@ -93,6 +88,12 @@ public class S_UISettings : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private RSO_InConsole rsoInConsole;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_Display ssoDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_UnDisplay ssoUnDisplay;
+
     private GameObject currentPanelSet = null;
 
     private bool isClosing = false;
@@ -110,7 +111,7 @@ public class S_UISettings : MonoBehaviour
 
             defaultPanelSet.SetActive(true);
 
-            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = defaultPanelSet;
 
@@ -187,10 +188,7 @@ public class S_UISettings : MonoBehaviour
             if (blocker != null)
             {
                 Button button = blocker.GetComponent<Button>();
-                if (button != null)
-                {
-                    button.onClick.AddListener(CloseDropDown);
-                }
+                if (button != null) button.onClick.AddListener(CloseDropDown);
             }
         }
     }
@@ -209,10 +207,7 @@ public class S_UISettings : MonoBehaviour
 
         if (!isClosing)
         {
-            if (rsoCurrentWindows.Value[^1] == gameObject)
-            {
-                Close();
-            }
+            if (rsoCurrentWindows.Value[^1] == gameObject) Close();
         }
     }
 
@@ -227,10 +222,7 @@ public class S_UISettings : MonoBehaviour
 
             rseOnCloseWindow.Call(gameObject);
 
-            if (rsoNavigation.Value.selectablePressOldWindow == null)
-            {
-                rsoNavigation.Value.selectableFocus = null;
-            }
+            if (rsoNavigation.Value.selectablePressOldWindow == null) rsoNavigation.Value.selectableFocus = null;
             else
             {
                 rsoNavigation.Value.selectablePressOldWindow?.Select();
@@ -253,7 +245,7 @@ public class S_UISettings : MonoBehaviour
 
             GameObject oldpanel = currentPanelSet;
 
-            cg.DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 oldpanel.SetActive(false);
             });
@@ -294,7 +286,7 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
 
-            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -358,7 +350,7 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
 
-            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 
@@ -422,7 +414,7 @@ public class S_UISettings : MonoBehaviour
 
             panelSet.SetActive(true);
 
-            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
 
             currentPanelSet = panelSet;
 

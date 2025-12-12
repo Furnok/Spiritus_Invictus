@@ -34,10 +34,7 @@ public class S_UIConsole : MonoBehaviour
     {
         rsoConsoleDisplay.Value = true;
 
-        if (Gamepad.current == null)
-        {
-            rseOnShowMouseCursor.Call();
-        }
+        if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
         scrollRect.verticalNormalizedPosition = 0;
     }
@@ -53,10 +50,7 @@ public class S_UIConsole : MonoBehaviour
             bool stickActive = Mathf.Abs(leftStick.y) > 0.5f;
             bool stick2Active = Mathf.Abs(rightStick.y) > 0.5f;
 
-            if (stickActive || stick2Active)
-            {
-                Sticks();
-            }
+            if (stickActive || stick2Active) isStick = true;
             else if (isStick)
             {
                 startMove = false;
@@ -66,34 +60,17 @@ public class S_UIConsole : MonoBehaviour
             {
                 bool dpadDown = dpad.y < 0;
                 bool dpadUp = dpad.y > 0;
-                DPad(dpadDown, dpadUp);
+                if (!dpadDown && !dpadUp && startMove) startMove = false;
             }
         }
-        else
-        {
-            isStick = false;
-        }
-    }
-
-    private void DPad(bool down, bool up)
-    {
-        if (!down && !up && startMove)
-        {
-            startMove = false;
-        }
-    }
-
-    private void Sticks()
-    {
-        isStick = true;
+        else isStick = false;
     }
 
     public void SliderAudio(BaseEventData eventData)
     {
         if (Gamepad.current != null)
         {
-            if (lastSoundFrame == Time.frameCount)
-                return;
+            if (lastSoundFrame == Time.frameCount) return;
 
             AxisEventData axisData = eventData as AxisEventData;
             MoveDirection direction = axisData.moveDir;

@@ -20,33 +20,21 @@ public class S_UISelectableScroll : MonoBehaviour, IScrollHandler, IBeginDragHan
 
     public void OnScroll(PointerEventData eventData)
     {
-        if (parentScrollRect != null)
-        {
-            parentScrollRect.OnScroll(eventData);
-        }
+        if (parentScrollRect != null) parentScrollRect.OnScroll(eventData);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!isScrollBar)
-        {
-            parentScrollRect.OnBeginDrag(eventData);
-        }
+        if (!isScrollBar) parentScrollRect.OnBeginDrag(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!isScrollBar)
-        {
-            parentScrollRect.OnDrag(eventData);
-        }
+        if (!isScrollBar) parentScrollRect.OnDrag(eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!isScrollBar)
-        {
-            parentScrollRect.OnEndDrag(eventData);
-        }
+        if (!isScrollBar) parentScrollRect.OnEndDrag(eventData);
     }
 }

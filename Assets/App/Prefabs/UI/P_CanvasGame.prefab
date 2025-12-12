@@ -3938,7 +3938,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 322bb1fe95d1dcd4f95b45baf7ad8126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeFadeSkip: 0.2
   uiSoundClick:
     Guid:
       Data1: 690468075
@@ -3976,6 +3975,8 @@ MonoBehaviour:
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
   rsoCurrentWindows: {fileID: 11400000, guid: 4f6db46974f57594082b5f18f257f781, type: 2}
   rsoInConsole: {fileID: 11400000, guid: e1beabb5f0d65584fb5f954d5250ed63, type: 2}
+  ssoDisplay: {fileID: 11400000, guid: 67fbeef0288ea2244886151a8aa34e0b, type: 2}
+  ssoUnDisplay: {fileID: 11400000, guid: 1d2d0d22aca811741860c3d7bcf11210, type: 2}
 --- !u!114 &3868484168872521359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3988,7 +3989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6221eb411957e724aa96e8ba76e37509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveSettingsName: 
+  saveSettingsName: Settings
   settings: {fileID: 3677968079688610705}
   dropDownLanguages: {fileID: 3643773589439469079}
   toggleHoldLockTarget: {fileID: 7219313009325069503}
@@ -26218,7 +26219,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveName: Save
-  timeFadeSkip: 0.2
   uiSound:
     Guid:
       Data1: 847927044
@@ -26247,6 +26247,7 @@ MonoBehaviour:
   rsoInGame: {fileID: 11400000, guid: 943dbfd29f5e329458fb1745ff11f0ba, type: 2}
   rsoDataTempSaved: {fileID: 11400000, guid: c86295f8a712dd04cabb231d43590851, type: 2}
   ssoFadeTime: {fileID: 11400000, guid: 611e366585d4976458e7989ec5477367, type: 2}
+  ssoUnDisplay: {fileID: 11400000, guid: 1d2d0d22aca811741860c3d7bcf11210, type: 2}
 --- !u!1 &7201042659565471638
 GameObject:
   m_ObjectHideFlags: 0

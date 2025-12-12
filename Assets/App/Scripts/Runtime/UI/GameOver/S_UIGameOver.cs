@@ -48,10 +48,7 @@ public class S_UIGameOver : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Gamepad.current == null)
-        {
-            rseOnShowMouseCursor.Call();
-        }
+        if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
         isTransit = false;
     }

@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public class S_Settings : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Save")]
     [SerializeField, S_SaveName] private string saveSettingsName;
 
@@ -125,26 +125,17 @@ public class S_Settings : MonoBehaviour
 
     public void UpdateLanguages(int index)
     {
-        if (isLoaded && rsoSettingsSaved.Value.languageIndex != index)
-        {
-            rsoSettingsSaved.Value.languageIndex = index;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.languageIndex != index) rsoSettingsSaved.Value.languageIndex = index;
     }
 
     public void UpdateHoldLockTarget(bool value)
     {
-        if (isLoaded && rsoSettingsSaved.Value.holdLockTarget != value)
-        {
-            rsoSettingsSaved.Value.holdLockTarget = value;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.holdLockTarget != value) rsoSettingsSaved.Value.holdLockTarget = value;
     }
 
     public void UpdateControllerRumble(bool value)
     {
-        if (isLoaded && rsoSettingsSaved.Value.controllerRumble != value)
-        {
-            rsoSettingsSaved.Value.controllerRumble = value;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.controllerRumble != value) rsoSettingsSaved.Value.controllerRumble = value;
     }
 
     private Resolution GetResolutions(int index)
@@ -163,10 +154,7 @@ public class S_Settings : MonoBehaviour
         {
             Resolution res = resolutionsPC[i];
 
-            if (i == index)
-            {
-                resolution = res;
-            }
+            if (i == index) resolution = res;
         }
 
         return resolution;
@@ -174,18 +162,12 @@ public class S_Settings : MonoBehaviour
 
     public void UpdateResolutions(int index)
     {
-        if (isLoaded && rsoSettingsSaved.Value.resolutionIndex != index)
-        {
-            rsoSettingsSaved.Value.resolutionIndex = index;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.resolutionIndex != index) rsoSettingsSaved.Value.resolutionIndex = index;
     }
 
     public void UpdateFullscreen(bool value)
     {
-        if (isLoaded && rsoSettingsSaved.Value.fullScreen != value)
-        {
-            rsoSettingsSaved.Value.fullScreen = value;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.fullScreen != value) rsoSettingsSaved.Value.fullScreen = value;
     }
 
     public void UpdateMainVolume(float value)
@@ -203,10 +185,7 @@ public class S_Settings : MonoBehaviour
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[0].volume + newValue, listSlidersAudios[0].minValue, listSlidersAudios[0].maxValue);
                 listSlidersAudios[0].SetValueWithoutNotify(newValue);
             }
-            else
-            {
-                newValue = value;
-            }
+            else newValue = value;
 
             rsoSettingsSaved.Value.listVolumes[0].volume = newValue;
 
@@ -231,10 +210,7 @@ public class S_Settings : MonoBehaviour
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[1].volume + newValue, listSlidersAudios[1].minValue, listSlidersAudios[1].maxValue);
                 listSlidersAudios[1].SetValueWithoutNotify(newValue);
             }
-            else
-            {
-                newValue = value;
-            }
+            else newValue = value;
 
             rsoSettingsSaved.Value.listVolumes[1].volume = newValue;
 
@@ -259,10 +235,7 @@ public class S_Settings : MonoBehaviour
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[2].volume + newValue, listSlidersAudios[2].minValue, listSlidersAudios[2].maxValue);
                 listSlidersAudios[2].SetValueWithoutNotify(newValue);
             }
-            else
-            {
-                newValue = value;
-            }
+            else newValue = value;
 
             rsoSettingsSaved.Value.listVolumes[2].volume = newValue;
 
@@ -287,10 +260,7 @@ public class S_Settings : MonoBehaviour
                 newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[3].volume + newValue, listSlidersAudios[3].minValue, listSlidersAudios[3].maxValue);
                 listSlidersAudios[3].SetValueWithoutNotify(newValue);
             }
-            else
-            {
-                newValue = value;
-            }
+            else newValue = value;
 
             rsoSettingsSaved.Value.listVolumes[3].volume = newValue;
 
@@ -310,14 +280,8 @@ public class S_Settings : MonoBehaviour
 
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
 
-        if (rsoSettingsSaved.Value.fullScreen)
-        {
-            Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-        }
-        else
-        {
-            Screen.fullScreenMode = FullScreenMode.Windowed;
-        }
+        if (rsoSettingsSaved.Value.fullScreen) Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+        else Screen.fullScreenMode = FullScreenMode.Windowed;
 
         Screen.fullScreen = rsoSettingsSaved.Value.fullScreen;
 

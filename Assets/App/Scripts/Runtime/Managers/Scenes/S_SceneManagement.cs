@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class S_SceneManagement : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Levels")]
     [SerializeField] private S_SceneReference[] levelsName;
 

@@ -21,10 +21,7 @@ public class S_UIContent : MonoBehaviour
         {
             rsoNavigation.Value.selectableDefault = defaultFocusSelectable;
 
-            if (Gamepad.current != null && rsoNavigation.Value.selectableFocus == null)
-            {
-                defaultFocusSelectable?.Select();
-            }
+            if (Gamepad.current != null && rsoNavigation.Value.selectableFocus == null) defaultFocusSelectable?.Select();
         }));
     }
 

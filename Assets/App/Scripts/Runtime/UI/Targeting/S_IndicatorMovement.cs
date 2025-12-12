@@ -29,9 +29,6 @@ public class S_IndicatorMovement : MonoBehaviour
     {
         floatTween?.Kill();
 
-        floatTween = transform
-            .DOBlendableLocalMoveBy(new Vector3(0, _amplitude, 0), _duration / 2)
-            .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+        floatTween = transform.DOBlendableLocalMoveBy(new Vector3(0, _amplitude, 0), _duration / 2).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
     }
 }
