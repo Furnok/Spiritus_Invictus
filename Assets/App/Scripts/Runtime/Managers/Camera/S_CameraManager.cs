@@ -143,10 +143,7 @@ public class S_CameraManager : MonoBehaviour
         currentMode = ModeCamera.Rail;
         cinemachineCameraBridge.Target.TrackingTarget = playerPoint;
 
-        if (cinemachineThirdPersonFollow != null)
-        {
-            cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
-        }
+        if (cinemachineThirdPersonFollow != null) cinemachineThirdPersonFollow.ShoulderOffset = ssoCameraData.Value.targetShoulderOffsetPositive;
     }
 
     private void OnEnable()
@@ -203,14 +200,8 @@ public class S_CameraManager : MonoBehaviour
     {
         if (target != null)
         {
-            if (currentTarget == target.transform)
-            {
-                currentTarget = null;
-            }
-            else
-            {
-                currentTarget = target.transform;
-            }
+            if (currentTarget == target.transform) currentTarget = null;
+            else currentTarget = target.transform;
         }
     }
 
@@ -235,10 +226,7 @@ public class S_CameraManager : MonoBehaviour
                 lastDirection = move.x;
             }
         }
-        else
-        {
-            shoulderTween?.Kill();
-        }
+        else shoulderTween?.Kill();
     }
 
     #region Camera System
@@ -285,14 +273,8 @@ public class S_CameraManager : MonoBehaviour
                     newMode = ModeCamera.Rail;
                 }
 
-                if (targetCam == oldCam)
-                {
-                    targetCam = newCam;
-                }
-                else
-                {
-                    targetCam = oldCam;
-                }
+                if (targetCam == oldCam) targetCam = newCam;
+                else targetCam = oldCam;
 
                 if (targetCam == null) return;
 
@@ -349,6 +331,7 @@ public class S_CameraManager : MonoBehaviour
             { 
                 moveDone = true;
                 cinemachineCameraBridge.transform.position = current;
+
                 if (rotateDone) OnTransitionComplete(to); 
             }
         }).SetEase(Ease.Linear);
@@ -364,6 +347,7 @@ public class S_CameraManager : MonoBehaviour
             {
                 rotateDone = true;
                 cinemachineCameraBridge.transform.rotation = current;
+
                 if (moveDone) OnTransitionComplete(to);
             }
         }).SetEase(Ease.Linear);
@@ -488,10 +472,7 @@ public class S_CameraManager : MonoBehaviour
     #region Handle Systems
     private void HandleCameraRotation()
     {
-        if (currentMode == ModeCamera.Rail)
-        {
-            cinemachineCameraBridge.transform.position = cinemachineCameraRail.transform.position;
-        }
+        if (currentMode == ModeCamera.Rail) cinemachineCameraBridge.transform.position = cinemachineCameraRail.transform.position;
 
         if (currentMode == ModeCamera.Rail)
         {
@@ -549,10 +530,7 @@ public class S_CameraManager : MonoBehaviour
 
         rseOnSkipHold.Call(skipHold);
 
-        if (skipHold >= ssoCameraData.Value.holdSkipTime + 0.35f)
-        {
-            SkipCinematic();
-        }
+        if (skipHold >= ssoCameraData.Value.holdSkipTime + 0.35f) SkipCinematic();
     }
 
     private void StartSkipTimer()
@@ -589,9 +567,9 @@ public class S_CameraManager : MonoBehaviour
         {
             StopCoroutine(skipRoutine);
             skipRoutine = null;
-        }
 
-        RuntimeManager.PlayOneShot(uiSound);
+            RuntimeManager.PlayOneShot(uiSound);
+        }
 
         skipHold = 0f;
         isSkipping = false;
@@ -614,10 +592,13 @@ public class S_CameraManager : MonoBehaviour
     private IEnumerator InstantBlendlessSwitch()
     {
         var brain = cameraMain.GetComponent<CinemachineBrain>();
+
         if (brain == null) yield break;
 
         brain.enabled = false;
+
         yield return null;
+
         brain.enabled = true;
     }
 

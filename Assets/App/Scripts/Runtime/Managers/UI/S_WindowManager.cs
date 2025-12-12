@@ -87,6 +87,9 @@ public class S_WindowManager : MonoBehaviour
     [SerializeField] private RSE_OnResetFocus rseOnResetFocus;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnGameInputEnabled rseOnGameActionInputEnabled;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_GameInPause rsoGameInPause;
 
     [TabGroup("Outputs")]
@@ -172,6 +175,7 @@ public class S_WindowManager : MonoBehaviour
         {
             rsoInGame.Value = true;
             DisplayUIGame(true);
+            rseOnGameActionInputEnabled.Call();
         }
     }
 

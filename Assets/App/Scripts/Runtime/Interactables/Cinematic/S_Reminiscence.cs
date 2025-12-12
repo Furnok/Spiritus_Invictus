@@ -26,10 +26,7 @@ public class S_Reminiscence : MonoBehaviour
 
     private void OnValidate()
     {
-        if (cameraIndex < 0)
-        {
-            cameraIndex = 0;
-        }
+        if (cameraIndex < 0) cameraIndex = 0;
     }
 
     private void OnDisable()

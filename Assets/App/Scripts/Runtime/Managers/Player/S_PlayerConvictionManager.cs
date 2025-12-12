@@ -1,7 +1,7 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_ConvictionManager : MonoBehaviour
+public class S_PlayerConvictionManager : MonoBehaviour
 {
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
@@ -23,6 +23,9 @@ public class S_ConvictionManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDisplayUIGame _rseOnDisplayUIGame;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
@@ -51,7 +54,6 @@ public class S_ConvictionManager : MonoBehaviour
     private void Awake()
     {
         _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
-        StartConvitionConsumption(); //change it when the player are playing and not pause the game
     }
 
     private void OnEnable()
@@ -61,6 +63,7 @@ public class S_ConvictionManager : MonoBehaviour
         _onPlayerGainConviction.action += OnPlayerGainConviction;
         _onSpawnProjectile.action += ReductionConviction;
         _onAttackStartPerformed.action += StopComsuptioncoroutine;
+        _rseOnDisplayUIGame.action += ManageConviction;
 
         rseOnDataLoad.action += SetValueFromData;
 
@@ -74,6 +77,7 @@ public class S_ConvictionManager : MonoBehaviour
         _onPlayerGainConviction.action -= OnPlayerGainConviction;
         _onSpawnProjectile.action -= ReductionConviction;
         _onAttackStartPerformed.action -= StopComsuptioncoroutine;
+        _rseOnDisplayUIGame.action -= ManageConviction;
 
         rseOnDataLoad.action -= SetValueFromData;
 
@@ -94,7 +98,13 @@ public class S_ConvictionManager : MonoBehaviour
         }
     }
 
-    void SetValueFromData()
+    private void ManageConviction(bool value)
+    {
+        if (value) StartConvitionConsumption();
+        else StopComsuptioncoroutine();
+    }
+
+    private void SetValueFromData()
     {
         _playerCurrentConviction.Value = rsoDataSaved.Value.conviction;
         rseOnPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
@@ -140,29 +150,6 @@ public class S_ConvictionManager : MonoBehaviour
         DelayWhenConvictionLoss();
     }
 
-    /*
-    private void ReduceConvitionOnAttackPerform(int attaqueStep)
-    {
-        var step = _playerAttackSteps.Value.Find(x => x.step == attaqueStep);
-
-        var newAmmount = Mathf.Clamp(_playerCurrentConviction.Value - step.ammountConvitionNeeded, 0, _playerConvictionData.Value.maxConviction);
-
-        if (step.ammountConvitionNeeded != 0)
-        {
-            _playerCurrentConviction.Value = newAmmount;
-            rseOnPlayerConvictionUpdate.Call(newAmmount);
-
-            DelayWhenConvictionLoss();
-        }
-        else
-        {
-            StartConvitionConsumption();
-        }
-
-        DelayWhenConvictionLoss();
-    }
-    */
-
     private void OnPlayerGainConviction(float ammountGain)
     {
         var ammount = Mathf.Clamp(ammountGain + _playerCurrentConviction.Value, 0, _playerConvictionData.Value.maxConviction);
@@ -192,14 +179,8 @@ public class S_ConvictionManager : MonoBehaviour
 
         if (_debugPlayer.Value.infiniteConviction == true) return;
 
-        if (ammount >= 1)
-        {
-            DelayWhenConvictionLoss();
-        }
-        else
-        {
-            StartConvitionConsumption();
-        }
+        if (ammount >= 1) DelayWhenConvictionLoss();
+        else StartConvitionConsumption();
     }
 
     private void ReductionConviction(S_StructAttackContact attacqueContactInfo)
@@ -212,14 +193,8 @@ public class S_ConvictionManager : MonoBehaviour
 
         if (_debugPlayer.Value.infiniteConviction == true) return;
 
-        if (ammount >= 1)
-        {
-            DelayWhenConvictionLoss();
-        }
-        else
-        {
-            StartConvitionConsumption();
-        }
+        if (ammount >= 1) DelayWhenConvictionLoss();
+        else StartConvitionConsumption();
     }
 
     private void ReductionConsumptionOnConsuption(float ammount)
@@ -236,10 +211,7 @@ public class S_ConvictionManager : MonoBehaviour
 
         _convictionGainOrLossCoroutine = StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterLoss, () =>
         {
-            if (_playerCurrentConviction.Value > 0)
-            {
-                StartConvitionConsumption();
-            }
+            if (_playerCurrentConviction.Value > 0) StartConvitionConsumption();
         }));
     }
 

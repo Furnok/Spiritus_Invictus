@@ -12,11 +12,11 @@ using UnityEngine.Localization.Settings;
 
 public class S_DataManagement : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Saves")]
     [SerializeField, S_SaveName] private string saveSettingsName;
 
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [SerializeField, S_SaveName] private string saveNames;
 
     [TabGroup("Inputs")]
@@ -85,20 +85,11 @@ public class S_DataManagement : MonoBehaviour
 
         if (saveSettingsName != null)
         {
-            if (FileAlreadyExist(saveSettingsName))
-            {
-                LoadFromJson(saveSettingsName, true);
-            }
-            else
-            {
-                SaveToJson(saveSettingsName, true);
-            }
+            if (FileAlreadyExist(saveSettingsName)) LoadFromJson(saveSettingsName, true);
+            else SaveToJson(saveSettingsName, true);
         }
 
-        if (FileAlreadyExist(saveNames))
-        {
-            LoadTempFromJson(saveNames);
-        }
+        if (FileAlreadyExist(saveNames)) LoadTempFromJson(saveNames);
     }
 
     #region Encryption
@@ -112,8 +103,7 @@ public class S_DataManagement : MonoBehaviour
         memoryStream.Write(aes.IV, 0, aes.IV.Length);
 
         using (CryptoStream cryptoStream = new(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
-        using (StreamWriter writer = new(cryptoStream))
-            writer.Write(plainText);
+        using (StreamWriter writer = new(cryptoStream)) writer.Write(plainText);
 
         return Convert.ToBase64String(memoryStream.ToArray());
     }
@@ -162,14 +152,8 @@ public class S_DataManagement : MonoBehaviour
 
         string dataToSave = "";
 
-        if (isSetting)
-        {
-            dataToSave = JsonUtility.ToJson(rsoSettingsSaved.Value);
-        }
-        else
-        {
-            dataToSave = JsonUtility.ToJson(rsoDataSaved.Value);
-        }
+        if (isSetting) dataToSave = JsonUtility.ToJson(rsoSettingsSaved.Value);
+        else dataToSave = JsonUtility.ToJson(rsoDataSaved.Value);
 
         File.WriteAllText(filePath, fileCrypted ? Encrypt(dataToSave) : dataToSave);
     }
@@ -185,15 +169,9 @@ public class S_DataManagement : MonoBehaviour
         {
             jsonContent = File.ReadAllText(filePath);
 
-            if (fileCrypted)
-            {
-                jsonContent = Decrypt(jsonContent);
-            }
+            if (fileCrypted) jsonContent = Decrypt(jsonContent);
 
-            if (string.IsNullOrWhiteSpace(jsonContent))
-            {
-                throw new Exception();
-            }    
+            if (string.IsNullOrWhiteSpace(jsonContent)) throw new Exception(); 
         }
         catch
         {
@@ -207,10 +185,7 @@ public class S_DataManagement : MonoBehaviour
             {
                 rsoSettingsSaved.Value = JsonUtility.FromJson<S_ClassSettingsSaved>(jsonContent);
 
-                if (rsoSettingsSaved.Value == null)
-                {
-                    throw new Exception();
-                }
+                if (rsoSettingsSaved.Value == null) throw new Exception();
 
                 StartCoroutine(S_Utils.DelayFrame(() => LoadSettings()));
             }
@@ -218,18 +193,12 @@ public class S_DataManagement : MonoBehaviour
             {
                 rsoDataSaved.Value = JsonUtility.FromJson<S_ClassDataSaved>(jsonContent);
 
-                if (rsoDataSaved.Value == null)
-                {
-                    throw new Exception();
-                }
+                if (rsoDataSaved.Value == null) throw new Exception();
             }
         }
         catch
         {
-            if (isSettings)
-            {
-                SaveToJson(name, isSettings);
-            }
+            if (isSettings) SaveToJson(name, isSettings);
         }
     }
 
@@ -244,15 +213,9 @@ public class S_DataManagement : MonoBehaviour
         {
             jsonContent = File.ReadAllText(filePath);
 
-            if (fileCrypted)
-            {
-                jsonContent = Decrypt(jsonContent);
-            }
+            if (fileCrypted) jsonContent = Decrypt(jsonContent);
 
-            if (string.IsNullOrWhiteSpace(jsonContent))
-            {
-                throw new Exception();
-            }
+            if (string.IsNullOrWhiteSpace(jsonContent)) throw new Exception();
         }
         catch
         {
@@ -261,10 +224,7 @@ public class S_DataManagement : MonoBehaviour
 
         try
         {
-            if (JsonUtility.FromJson<S_ClassDataSaved>(jsonContent) == null)
-            {
-                throw new Exception();
-            }
+            if (JsonUtility.FromJson<S_ClassDataSaved>(jsonContent) == null) throw new Exception();
             else
             {
                 rsoDataTempSaved.Value.haveSave = true;
@@ -309,10 +269,7 @@ public class S_DataManagement : MonoBehaviour
                     resolution = res;
                 }
             }
-            else if (i == index)
-            {
-                resolution = res;
-            }
+            else if (i == index) resolution = res;
         }
 
         return resolution;
@@ -326,14 +283,8 @@ public class S_DataManagement : MonoBehaviour
 
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
 
-        if (rsoSettingsSaved.Value.fullScreen)
-        {
-            Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-        }
-        else
-        {
-            Screen.fullScreenMode = FullScreenMode.Windowed;
-        }
+        if (rsoSettingsSaved.Value.fullScreen) Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+        else Screen.fullScreenMode = FullScreenMode.Windowed;
 
         Screen.fullScreen = rsoSettingsSaved.Value.fullScreen;
 

@@ -5,10 +5,6 @@ using UnityEngine.InputSystem;
 
 public class S_RumbleManager : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Active")]
-    [SerializeField] private bool _activeRumble = false;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnRumbleRequested _onRumbleRequested;
 
@@ -58,8 +54,7 @@ public class S_RumbleManager : MonoBehaviour
 
     private void Update()
     {
-        if (!_activeRumble)
-            return;
+        if (!_rsoSettingsSaved.Value.controllerRumble) return;
 
         if (_activeRumbles.Count == 0)
         {
@@ -107,9 +102,9 @@ public class S_RumbleManager : MonoBehaviour
     private void StopAllRumble()
     {
         _activeRumbles.Clear();
+
         var pad = Gamepad.current;
-        if (pad != null)
-            pad.SetMotorSpeeds(0f, 0f);
+        if (pad != null) pad.SetMotorSpeeds(0f, 0f);
     }
 
     private void OnRumbleStopChannel(S_EnumRumbleChannel channel)
@@ -125,7 +120,6 @@ public class S_RumbleManager : MonoBehaviour
             }
         }
 
-        if (_activeRumbles.Count == 0)
-            ApplyMotorSpeeds(0f, 0f);
+        if (_activeRumbles.Count == 0) ApplyMotorSpeeds(0f, 0f);
     }
 }

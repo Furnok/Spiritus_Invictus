@@ -16,17 +16,11 @@ public class S_CameraPosition : MonoBehaviour
 
     private void Update()
     {
-        if (rsoInGame.Value)
-        {
-            CameraRotation();
-        } 
+        if (rsoInGame.Value) CameraRotation();
     }
 
     private void CameraRotation()
     {
-        if (rsoCameraRotation != null)
-        {
-            rsoCameraRotation.Value = transform.rotation;
-        }
+        if (rsoCameraRotation != null) rsoCameraRotation.Value = transform.rotation;
     }
 }

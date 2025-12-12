@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-public class S_PlayerInputsManager : MonoBehaviour
+public class S_InputsManager : MonoBehaviour
 {
     [TabGroup("References")]
     [Title("Player Input")]
@@ -109,8 +109,6 @@ public class S_PlayerInputsManager : MonoBehaviour
         rseOnCinematicInputEnabled.action += ActivateCinematicActionInput;
         rseOnGameActionInputEnabled.action += ActivateGameActionInput;
         rseOnUiActionInputEnabled.action += ActivateUIActionInput;
-
-        ActivateGameActionInput();
 
         _onPlayerDeathRse.action += DeactivateInput;
         _onPlayerRespawnRse.action += ActivateGameActionInput;
