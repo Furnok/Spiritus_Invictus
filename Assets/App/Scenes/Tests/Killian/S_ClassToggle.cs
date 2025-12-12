@@ -7,7 +7,7 @@ namespace UnityEngine.UI
 {
     [AddComponentMenu("UI/Custom Toggle")]
     [RequireComponent(typeof(RectTransform))]
-    public class S_ClassToggle : Selectable, IPointerClickHandler, ISubmitHandler, ICanvasElement, ISelectHandler
+    public class S_ClassToggle : Selectable, IPointerClickHandler, ISubmitHandler, ISelectHandler
     {
         public enum ToggleTransition
         {
@@ -67,16 +67,6 @@ namespace UnityEngine.UI
 
             SetIsOnWithoutNotify(m_IsOn);
             PlayEffect(true);
-
-            if (!PrefabUtility.IsPartOfPrefabAsset(this) && !Application.isPlaying)
-            {
-                CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
-            }
-        }
-
-        public virtual void Rebuild(CanvasUpdate executing)
-        {
-            if (executing == CanvasUpdate.Prelayout) onValueChanged?.Invoke(m_IsOn);
         }
         #endif
 
