@@ -7,17 +7,9 @@ using UnityEngine;
 
 public class S_TargetingManager : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Time")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFade;
-
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("General")]
     [SerializeField] private LayerMask obstacleMask;
-
-    [TabGroup("Settings")]
-    [SerializeField] private bool drawGizmos;
 
     [TabGroup("References")]
     [Title("Indicators")]
@@ -98,6 +90,9 @@ public class S_TargetingManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_Display ssoDisplay;
 
     private GameObject currentTarget = null;
     private HashSet<GameObject> targetsPossible = new();
@@ -398,7 +393,7 @@ public class S_TargetingManager : MonoBehaviour
 
         arrow.SetActive(true);
 
-        cg.DOFade(1f, timeFade).SetEase(Ease.Linear);
+        cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
     }
 
     private void UnDisplayTargeting(GameObject arrow)
@@ -782,9 +777,11 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (currentTarget != null && rsoPlayerIsTargeting != null && rsoPlayerIsTargeting.Value && drawGizmos == true)
+        var playerPos = Vector3.zero;
+
+        if (currentTarget != null && rsoPlayerIsTargeting != null && rsoPlayerIsTargeting.Value)
         {
-            var playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
+            playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
 
             Gizmos.color = Color.green;
             Gizmos.DrawLine(playerPos, currentTarget.transform.position);
@@ -801,26 +798,23 @@ public class S_TargetingManager : MonoBehaviour
             }
         }
 
-        if (drawGizmos == true)
-        {
-            var playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
-            if (rsoPlayerPosition == null || ssoPlayerTargetRangeRadius == null) return;
+        playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
+        if (rsoPlayerPosition == null || ssoPlayerTargetRangeRadius == null) return;
 
-            Vector3 origin = playerPos;
-            float radius = ssoPlayerTargetRangeRadius.Value;
+        Vector3 origin = playerPos;
+        float radius = ssoPlayerTargetRangeRadius.Value;
 
-            float halfAngle = ssoFrontConeAngle.Value * 0.5f;
+        float halfAngle = ssoFrontConeAngle.Value * 0.5f;
 
-            Quaternion leftRot = Quaternion.AngleAxis(-halfAngle, Vector3.up);
-            Quaternion rightRot = Quaternion.AngleAxis(halfAngle, Vector3.up);
+        Quaternion leftRot = Quaternion.AngleAxis(-halfAngle, Vector3.up);
+        Quaternion rightRot = Quaternion.AngleAxis(halfAngle, Vector3.up);
 
-            if (_playerCenterTransform == null) return;
-            Vector3 leftDir = leftRot * _playerCenterTransform.forward;
-            Vector3 rightDir = rightRot * _playerCenterTransform.forward;
+        if (_playerCenterTransform == null) return;
+        Vector3 leftDir = leftRot * _playerCenterTransform.forward;
+        Vector3 rightDir = rightRot * _playerCenterTransform.forward;
 
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(origin, origin + leftDir * radius);
-            Gizmos.DrawLine(origin, origin + rightDir * radius);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(origin, origin + leftDir * radius);
+        Gizmos.DrawLine(origin, origin + rightDir * radius);
     }
 }

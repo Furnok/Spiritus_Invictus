@@ -4,34 +4,6 @@ using UnityEngine;
 
 public class S_TargetsDebug : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("General")]
-    [SerializeField] private Color gizmoColor;
-
-    [TabGroup("Settings")]
-    [SerializeField] private Color gizmoTargetColor;
-
-    [TabGroup("Settings")]
-    [SerializeField] private Color gizmoPreTargetColor;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask obstacleMask;
-
-    [TabGroup("Settings")]
-    [SerializeField] private float gizmoRadius;
-
-    [TabGroup("Settings")]
-    [SerializeField] private float gizmoTargetRadius;
-
-    [TabGroup("Settings")]
-    [SerializeField] private float gizmoPreTargetRadius;
-
-    [TabGroup("Settings")]
-    [SerializeField] private float gizmoHeightOffset;
-
-    [TabGroup("Settings")]
-    [SerializeField] private bool drawGizmos;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyEnterTargetingRange rseOnEnemyEnterTargetingRange;
 
@@ -55,6 +27,9 @@ public class S_TargetsDebug : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FrontConeAngle ssoFrontConeAngle;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_TargetsDebug ssoTargetsDebug;
 
     private HashSet<Transform> targets = new();
     private bool canDrawTarget = false;
@@ -105,25 +80,25 @@ public class S_TargetsDebug : MonoBehaviour
             if (rsoPlayerIsTargeting.Value == true && canDrawTarget == true && target == this.target || target == null) continue;
 
             
-            Gizmos.color = gizmoColor;
-            Vector3 pos = new Vector3(target.position.x, target.position.y + gizmoHeightOffset, target.position.z);
-            Gizmos.DrawSphere(pos, gizmoRadius);
+            Gizmos.color = ssoTargetsDebug.Value.gizmoColor;
+            Vector3 pos = new Vector3(target.position.x, target.position.y + ssoTargetsDebug.Value.gizmoHeightOffset, target.position.z);
+            Gizmos.DrawSphere(pos, ssoTargetsDebug.Value.gizmoRadius);
         }
     }
 
     private void DrawTarget()
     {
         if (target == null) return;
-        Gizmos.color = gizmoTargetColor;
-        Vector3 pos = new Vector3(target.position.x, target.position.y + gizmoHeightOffset, target.position.z);
-        Gizmos.DrawSphere(pos, gizmoTargetRadius);
+        Gizmos.color = ssoTargetsDebug.Value.gizmoTargetColor;
+        Vector3 pos = new Vector3(target.position.x, target.position.y + ssoTargetsDebug.Value.gizmoHeightOffset, target.position.z);
+        Gizmos.DrawSphere(pos, ssoTargetsDebug.Value.gizmoTargetRadius);
     }
 
     private void DrawPreSelectedTarget()
     {
-        Gizmos.color = gizmoPreTargetColor;
-        Vector3 pos = new Vector3(_preSelectedTarget.position.x, _preSelectedTarget.position.y + gizmoHeightOffset, _preSelectedTarget.position.z);
-        Gizmos.DrawSphere(pos, gizmoPreTargetRadius);
+        Gizmos.color = ssoTargetsDebug.Value.gizmoPreTargetColor;
+        Vector3 pos = new Vector3(_preSelectedTarget.position.x, _preSelectedTarget.position.y + ssoTargetsDebug.Value.gizmoHeightOffset, _preSelectedTarget.position.z);
+        Gizmos.DrawSphere(pos, ssoTargetsDebug.Value.gizmoPreTargetRadius);
     }
 
     private void OnNewTargeting(GameObject target)
@@ -169,7 +144,7 @@ public class S_TargetsDebug : MonoBehaviour
                 float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
 
                 Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
-                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
+                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, ssoTargetsDebug.Value.obstacleMask))
                 {
                     continue;
                 }
@@ -186,7 +161,7 @@ public class S_TargetsDebug : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!enabled || !drawGizmos) return;
+        if (!enabled) return;
 
         DrawAll();
 
