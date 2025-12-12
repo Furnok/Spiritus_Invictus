@@ -117,9 +117,19 @@ public class S_ConsoleManager : MonoBehaviour
         }));
     }
 
+    private string CapitalizeFirst(string message)
+    {
+        if (message.Length < 2) return message;
+
+        return message[0].ToString() + char.ToUpper(message[1]).ToString() + message.Substring(2);
+    }
+
     private void CheckCommand(string message)
     {
-        var cmd = ssoConsoleHelper.Value.FirstOrDefault(x => x.command == message);
+        string messageCapital = CapitalizeFirst(message);
+        Debug.Log(messageCapital);
+
+        var cmd = ssoConsoleHelper.Value.FirstOrDefault(x => x.command == messageCapital);
 
         if (cmd != null)
         {
