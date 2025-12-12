@@ -6,14 +6,9 @@ using UnityEngine.UI;
 
 public class S_UIMainMenu : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Save")]
     [SerializeField, S_SaveName] private string saveName;
-
-    [TabGroup("Settings")]
-    [Title("Time")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFadeSkip;
 
     [TabGroup("References")]
     [Title("Audio")]
@@ -84,6 +79,9 @@ public class S_UIMainMenu : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_UnDisplay ssoUnDisplay;
+
     private bool isTransit = true;
 
     private void OnEnable()
@@ -137,7 +135,7 @@ public class S_UIMainMenu : MonoBehaviour
             CanvasGroup cg = gameObject.GetComponent<CanvasGroup>();
             cg.DOKill();
 
-            cg.DOFade(0f, timeFadeSkip).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 gameObject.SetActive(false);
                 rsoNavigation.Value.selectableFocus = null;

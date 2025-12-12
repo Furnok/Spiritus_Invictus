@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class S_PlayerRespawn : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Animation")]
     [SerializeField, S_AnimationName] private string _deadParam;
 
@@ -12,13 +12,26 @@ public class S_PlayerRespawn : MonoBehaviour
     [SerializeField] private GameObject _playerHurtBoxCollider;
 
     [TabGroup("References")]
+    [Title("Rigidbody")]
+    [SerializeField] private Rigidbody _playerRigidbody;
+
+    [TabGroup("References")]
     [Title("Aim Point")]
     [SerializeField] private GameObject _aimPointObject;
 
-    [SerializeField] Rigidbody _playerRigidbody;
-    [SerializeField] GameObject _visuals;
-    [SerializeField] GameObject _player;
-    [SerializeField] GameObject _colliderMotor;
+    [TabGroup("References")]
+    [Title("Others")]
+    [SerializeField] private GameObject _colliderMotorGO;
+
+    [TabGroup("References")]
+    [Title("Others")]
+    [SerializeField] private Collider _colliderMotor;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject _visuals;
+
+    [TabGroup("References")]
+    [SerializeField] private GameObject _player;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerRespawn _onPlayerRespawnRse;
@@ -45,6 +58,9 @@ public class S_PlayerRespawn : MonoBehaviour
     [SerializeField] private RSO_PlayerCurrentConviction _playerCurrentConviction;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerDead _PlayerDead;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats _playerStats;
 
     [TabGroup("Outputs")]
@@ -65,32 +81,24 @@ public class S_PlayerRespawn : MonoBehaviour
 
     private void HandlePlayerRespawn()
     {
-        _playerHurtBoxCollider.SetActive(true);
-        _aimPointObject.SetActive(true);
-
-        _playerRigidbody.linearVelocity = Vector3.zero;
-
-        _player.transform.SetPositionAndRotation(_playerRespawnPosition.Value.position, _playerRespawnPosition.Value.rotation);
         _player.transform.position = _playerRespawnPosition.Value.position;
         _player.transform.rotation = _playerRespawnPosition.Value.rotation;
 
-        //_visuals.transform.localPosition = new Vector3(0, 0, 0);
+        Physics.SyncTransforms();
 
-        StartCoroutine(S_Utils.DelayFrame(() => 
-        {
-            _playerRigidbody.linearVelocity = Vector3.zero;
+        _playerRigidbody.useGravity = true;
 
-            _player.transform.position = _playerRespawnPosition.Value.position;
-            _player.transform.rotation = _playerRespawnPosition.Value.rotation;
+        _aimPointObject.SetActive(true);
+        _playerHurtBoxCollider.SetActive(true);
 
-            _colliderMotor.SetActive(true);
+        _colliderMotorGO.SetActive(true);
+        _colliderMotor.providesContacts = true;
+        _colliderMotor.enabled = true;
 
-            _playerRigidbody.useGravity = true;
-
-            _playerRigidbody.linearVelocity = Vector3.zero;
-        }));
+        _playerRigidbody.linearVelocity = Vector3.zero;
 
         _onAnimationBoolValueChange.Call(_deadParam, false);
+
         _onPlayerAddStateRse.Call(S_EnumPlayerState.None);
 
         _playerCurrentHealth.Value = _playerStats.Value.maxHealth;
@@ -98,5 +106,7 @@ public class S_PlayerRespawn : MonoBehaviour
 
         _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
         _onPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
+
+        _PlayerDead.Value = false;
     }
 }

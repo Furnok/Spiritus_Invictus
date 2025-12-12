@@ -1,23 +1,21 @@
-using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_Waves : MonoBehaviour
 {
     [Header("Settings")]
+    [Title("Parameters")]
     [SerializeField] private float lifeTime;
+
+    [Header("Settings")]
     [SerializeField] private float speed;
-
-    //[Header("References")]
-
-    //[Header("Inputs")]
-
-    //[Header("Outputs")]
 
     private void Start()
     {
         Destroy(gameObject, lifeTime);
     }
-    void Update()
+
+    private void Update()
     {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }

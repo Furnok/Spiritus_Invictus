@@ -1,23 +1,35 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMOD.Studio;
+using FMODUnity;
+using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
 
 public class S_PlayerHitResolver : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Animation")]
-    [SerializeField, S_AnimationName] private string _hitParam;
-
-    [TabGroup("Settings")]
     [Title("Camera")]
     [SerializeField] private S_ClassCameraShake _cameraShake;
 
+    [TabGroup("Settings")]
+    [Title("PitchParrySFX")]
+    [SerializeField] private float _pitchParryMinSFX = 0f;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float _pitchParryMaxSFX = 20f;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float _pitchParryGainEachParry = 2f;
+
     [TabGroup("References")]
-    [SerializeField] private SSO_RumbleData _parryRumbleData;
+    [Title("Audio")]
+    [SerializeField] private EventReference _parrySoundEffect;
+
+    [TabGroup("References")]
+    [SerializeField] private EventReference _parryReverbSoundEffect;
 
     [TabGroup("References")]
     [Title("Motor")]
-    [SerializeField] private  GameObject _playerMotorGO;
+    [SerializeField] private GameObject _playerMotorGO;
     
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnAttackCollide _onAttackCollide;
@@ -33,6 +45,12 @@ public class S_PlayerHitResolver : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCameraShake _onCameraShake;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CanParry _canParry;
@@ -53,10 +71,16 @@ public class S_PlayerHitResolver : MonoBehaviour
     [SerializeField] private SSO_PlayerStats _playerStats;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+    [SerializeField] private SSO_RumbleData _parryRumbleData;
 
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
+    private float _currentPitchParrySFX = 0f;
+
+    private Coroutine coroutineParry = null;
+
+    private void Awake()
+    {
+        _currentPitchParrySFX = _pitchParryMinSFX;
+    }
 
     private void OnEnable()
     {
@@ -76,19 +100,57 @@ public class S_PlayerHitResolver : MonoBehaviour
         {
             StartCoroutine(IsWithinParryWindowCoroutine((canParry, data) =>
             {
-                    if (canParry == true)
+                    if (canParry)
                     {
                         _rseOnParrySuccess.Call(data);
-                        _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
+                        //_onPlayerGainConviction.Call(attackData.convictionParryGain);
                         _onCameraShake.Call(_cameraShake);
 
                         _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
                         _rseOnRumbleRequested.Call(_parryRumbleData.Value);
                         Debug.Log("Parried!");
+
+                        bool isLastAttack = attackData.lastAttack;
+
+                        if (!isLastAttack)
+                        {
+                            EventInstance _parryEventInstanceSFX;
+
+                            _currentPitchParrySFX += _pitchParryGainEachParry;
+                            _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
+                            _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
+                            _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
+                            _parryEventInstanceSFX.start();
+                        }
+                        else
+                        {
+                            EventInstance _parryReverbEventInstanceSFX;
+
+                            _currentPitchParrySFX += _pitchParryGainEachParry;
+                            _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
+                            _parryReverbEventInstanceSFX = RuntimeManager.CreateInstance(_parryReverbSoundEffect);
+                            _parryReverbEventInstanceSFX.start();
+                        }
+
+                        if (coroutineParry != null)
+                        {
+                            StopCoroutine(coroutineParry);
+                            coroutineParry = null;
+                        }
+
+                        coroutineParry = StartCoroutine(ResetParryAudio());
                     }
                     else
                     {
                         _rseOnPlayerHit.Call(data);
+
+                        _currentPitchParrySFX = _pitchParryMinSFX;
+
+                        if (coroutineParry != null)
+                        {
+                            StopCoroutine(coroutineParry);
+                            coroutineParry = null;
+                        }
                     }
             }, contact));
         }
@@ -96,23 +158,17 @@ public class S_PlayerHitResolver : MonoBehaviour
         {
             var canHit = _attackCanHitPlayer.Value.ContainsKey(attackData.goSourceId);
 
-            if (canHit == true)
-            {
-                _rseOnPlayerHit.Call(contact);
-            }
-            else
-            {
-                Debug.Log("Dont hit cause dodge perfect");
-            }
+            if (canHit) _rseOnPlayerHit.Call(contact);
+            else Debug.Log("Dont hit cause dodge perfect");
         }
         else if (attackData.attackType == S_EnumEnemyAttackType.Projectile)
         {
             StartCoroutine(IsWithinParryWindowCoroutine((canParry, data) =>
             {
-                if (canParry == true)
+                if (canParry)
                 {
                     _rseOnParrySuccess.Call(contact);
-                    _onPlayerGainConviction.Call(_playerConvictionData.Value.parrySuccesGain);
+                    //_onPlayerGainConviction.Call(attackData.convictionParryGain);
 
                     _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.Parry);
                     _onCameraShake.Call(_cameraShake);
@@ -121,6 +177,22 @@ public class S_PlayerHitResolver : MonoBehaviour
 
                     TryReflectProjectile(contact.source);
                     Debug.Log("Parried!");
+
+                    EventInstance _parryEventInstanceSFX;
+
+                    _currentPitchParrySFX += _pitchParryGainEachParry;
+                    _currentPitchParrySFX = Mathf.Clamp(_currentPitchParrySFX, _pitchParryMinSFX, _pitchParryMaxSFX);
+                    _parryEventInstanceSFX = RuntimeManager.CreateInstance(_parrySoundEffect);
+                    _parryEventInstanceSFX.setParameterByName("AttackParried", _currentPitchParrySFX);
+                    _parryEventInstanceSFX.start();
+
+                    if (coroutineParry != null)
+                    {
+                        StopCoroutine(coroutineParry);
+                        coroutineParry = null;
+                    }
+
+                    coroutineParry = StartCoroutine(ResetParryAudio());
                 }
                 else
                 {
@@ -128,10 +200,25 @@ public class S_PlayerHitResolver : MonoBehaviour
                     {
                         Destroy(contact.source.gameObject);
                         _rseOnPlayerHit.Call(contact);
+
+                        _currentPitchParrySFX = _pitchParryMinSFX;
+
+                        if (coroutineParry != null)
+                        {
+                            StopCoroutine(coroutineParry);
+                            coroutineParry = null;
+                        }
                     }
                 }
             }, contact));
         }
+    }
+
+    private IEnumerator ResetParryAudio()
+    {
+        yield return new WaitForSeconds(0.8f);
+
+        _currentPitchParrySFX = _pitchParryMinSFX;
     }
 
     private IEnumerator IsWithinParryWindowCoroutine(System.Action<bool, S_StructAttackContact> callback, S_StructAttackContact enemyAttackData)
@@ -159,10 +246,7 @@ public class S_PlayerHitResolver : MonoBehaviour
     {
         if (source == null) return;
 
-        if (source.TryGetComponent<I_ReflectableProjectile>(out var proj))
-        {
-            proj.Reflect(_playerMotorGO.transform);
-        }
+        if (source.TryGetComponent<I_ReflectableProjectile>(out var proj)) proj.Reflect(_playerMotorGO.transform);
         else
         {
             var p = source.GetComponentInParent<I_ReflectableProjectile>();

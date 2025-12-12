@@ -50,10 +50,7 @@ public class S_UISelectable : MonoBehaviour
     {
         colorBase = image.color;
 
-        if (image2 != null)
-        {
-            colorBase2 = image2.color;
-        }
+        if (image2 != null) colorBase2 = image2.color;
     }
 
     private void OnDisable()
@@ -62,10 +59,7 @@ public class S_UISelectable : MonoBehaviour
         colorTween2?.Kill();
         image.color = colorBase;
 
-        if (image2 != null)
-        {
-            image2.color = colorBase2;
-        }
+        if (image2 != null) image2.color = colorBase2;
 
         mouseOver = false;
         isPressed = false;
@@ -78,10 +72,7 @@ public class S_UISelectable : MonoBehaviour
         {
             RuntimeManager.PlayOneShot(uiHover);
 
-            if (!isPressed)
-            {
-                PlayColorTransition(colorMouseEnter, colorMouseEnter);
-            }
+            if (!isPressed) PlayColorTransition(colorMouseEnter, colorMouseEnter);
 
             mouseOver = true;
         }
@@ -93,10 +84,7 @@ public class S_UISelectable : MonoBehaviour
         {
             RuntimeManager.PlayOneShot(uiHover);
 
-            if (!isPressed)
-            {
-                PlayColorTransition(colorBase, colorBase2);
-            }
+            if (!isPressed) PlayColorTransition(colorBase, colorBase2);
 
             mouseOver = false;
         }
@@ -117,14 +105,8 @@ public class S_UISelectable : MonoBehaviour
     {
         if (uiElement.interactable)
         {
-            if (mouseOver)
-            {
-                PlayColorTransition(colorMouseEnter, colorMouseEnter);
-            }  
-            else
-            {
-                PlayColorTransition(colorBase, colorBase2);
-            }
+            if (mouseOver) PlayColorTransition(colorMouseEnter, colorMouseEnter);
+            else PlayColorTransition(colorBase, colorBase2);
 
             isPressed = false;
         }
@@ -145,10 +127,7 @@ public class S_UISelectable : MonoBehaviour
 
     public void Unselected(Selectable uiElement)
     {
-        if (uiElement.interactable && Gamepad.current != null)
-        {
-            PlayColorTransition(colorBase, colorBase2);
-        }
+        if (uiElement.interactable && Gamepad.current != null)  PlayColorTransition(colorBase, colorBase2);
         else if (isSelected)
         {
             PlayColorTransition(colorBase, colorBase2);
@@ -185,10 +164,7 @@ public class S_UISelectable : MonoBehaviour
 
     public void PlayAudio(Selectable uiElement)
     {
-        if (uiElement.interactable)
-        {
-            RuntimeManager.PlayOneShot(uiClick);
-        }
+        if (uiElement.interactable) RuntimeManager.PlayOneShot(uiClick);
     }
 
     public void ClickedWindow(Selectable uiElement)
@@ -203,9 +179,6 @@ public class S_UISelectable : MonoBehaviour
 
         colorTween = image.DOColor(targetColor, transition).SetEase(Ease.Linear).SetUpdate(true);
 
-        if (image2 != null)
-        {
-            colorTween2 = image2.DOColor(targetColor2, transition).SetEase(Ease.Linear).SetUpdate(true);
-        }
+        if (image2 != null) colorTween2 = image2.DOColor(targetColor2, transition).SetEase(Ease.Linear).SetUpdate(true);
     }
 }

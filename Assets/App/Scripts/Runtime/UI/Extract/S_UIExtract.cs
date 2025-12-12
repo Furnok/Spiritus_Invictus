@@ -86,10 +86,7 @@ public class S_UIExtract : MonoBehaviour
         rseOnDisplayExtract.action += DisplayTextContent;
         rseOnPlayerPause.action += CloseEscape;
 
-        if (Gamepad.current == null)
-        {
-            rseOnShowMouseCursor.Call();
-        }
+        if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
         scrollRect.verticalNormalizedPosition = 1;
     }
@@ -120,10 +117,7 @@ public class S_UIExtract : MonoBehaviour
             bool stickActive = Mathf.Abs(leftStick.y) > 0.5f;
             bool stick2Active = Mathf.Abs(rightStick.y) > 0.5f;
 
-            if (stickActive || stick2Active)
-            {
-                Sticks();
-            }
+            if (stickActive || stick2Active) isStick = true;
             else if (isStick)
             {
                 startMove = false;
@@ -133,26 +127,10 @@ public class S_UIExtract : MonoBehaviour
             {
                 bool dpadDown = dpad.y < 0;
                 bool dpadUp = dpad.y > 0;
-                DPad(dpadDown, dpadUp);
+                if (!dpadDown && !dpadUp && startMove) startMove = false;
             }
         }
-        else
-        {
-            isStick = false;
-        }
-    }
-
-    private void DPad(bool down, bool up)
-    {
-        if (!down && !up && startMove)
-        {
-            startMove = false;
-        }
-    }
-
-    private void Sticks()
-    {
-        isStick = true;
+        else isStick = false;
     }
 
     public void OnScrollChanged()
@@ -169,10 +147,7 @@ public class S_UIExtract : MonoBehaviour
     {
         if (!isClosing)
         {
-            if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
-            {
-                Close();
-            }
+            if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value) Close();
         }
     }
 
@@ -196,8 +171,7 @@ public class S_UIExtract : MonoBehaviour
     {
         if (Gamepad.current != null)
         {
-            if (lastSoundFrame == Time.frameCount)
-                return;
+            if (lastSoundFrame == Time.frameCount) return;
 
             AxisEventData axisData = eventData as AxisEventData;
             MoveDirection direction = axisData.moveDir;

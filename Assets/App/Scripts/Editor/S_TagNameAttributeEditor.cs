@@ -23,7 +23,7 @@ public class S_TagNameAttributeEditor : PropertyDrawer
         // String Field Check
         if (property.propertyType != SerializedPropertyType.String)
         {
-            EditorGUI.LabelField(position, label.text, "Use [TagName] with a string field.");
+            EditorGUI.LabelField(position, label.text, "Use [TagName] with a String Field.");
         }
         else
         {

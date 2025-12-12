@@ -55,6 +55,4 @@ namespace BT.ScriptablesObject
             action?.Invoke(a1, a2, a3);
         }
     }
-
-
 }

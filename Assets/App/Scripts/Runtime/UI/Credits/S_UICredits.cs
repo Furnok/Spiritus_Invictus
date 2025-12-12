@@ -37,10 +37,7 @@ public class S_UICredits : MonoBehaviour
     {
         rseOnPlayerPause.action += CloseEscape;
 
-        if (Gamepad.current != null)
-        {
-            rseOnShowMouseCursor.Call();
-        }
+        if (Gamepad.current != null) rseOnShowMouseCursor.Call();
 
         isClosing = false;
     }
@@ -56,10 +53,7 @@ public class S_UICredits : MonoBehaviour
     {
         if (!isClosing)
         {
-            if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
-            {
-                Close();
-            }
+            if (rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value) Close();
         }
     }
 

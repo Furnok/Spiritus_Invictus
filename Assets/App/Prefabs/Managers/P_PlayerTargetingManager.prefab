@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1202443814910871587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5298822327234922701}
+  - component: {fileID: 9042962056823339771}
+  - component: {fileID: 7025031120701374793}
+  - component: {fileID: 6616839959722766165}
+  m_Layer: 0
+  m_Name: P_PlayerTargetingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5298822327234922701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202443814910871587}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9042962056823339771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202443814910871587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 664d8c97572328f42a0561385b17b4c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4096
+  _previewIndicatorPrefab: {fileID: 1658990810607398336, guid: 194a6626112f2bd42ad533fc632559a9, type: 3}
+  _previewSwapIndicatorPrefab: {fileID: 1658990810607398336, guid: 3d682aaac8faeb74286dcbeef687cec7, type: 3}
+  _lockedIndicatorPrefab: {fileID: 5372745780476271744, guid: 1188b509fdf322c4b8350226a8e31788, type: 3}
+  _targetLockOnSound:
+    Guid:
+      Data1: -1463308652
+      Data2: 1127007918
+      Data3: 948039580
+      Data4: 1657030724
+    Path: event:/Player/Combat/Targeting/LockOn
+  _targetLockOffSound:
+    Guid:
+      Data1: 935628466
+      Data2: 1313059786
+      Data3: -874287744
+      Data4: 680655546
+    Path: event:/Player/Combat/Targeting/LockOff
+  rseOnTargetsInRangeChange: {fileID: 11400000, guid: 6660d5373f88799428a248d2c3615ece, type: 2}
+  rseOnPlayerTargeting: {fileID: 11400000, guid: b5715b3f29f85be4e87180aa0db11aab, type: 2}
+  rseOnPlayerTargetingCancel: {fileID: 11400000, guid: e7c8e675e790c2a44a00f20297f51dc8, type: 2}
+  rseOnCancelTargeting: {fileID: 11400000, guid: eb8598b903ee53643b0a3d76f3657c63, type: 2}
+  rseOnPlayerSwapTarget: {fileID: 11400000, guid: 4529ddf1715466a49afc2e355d08802f, type: 2}
+  rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
+  _rseOnPlayerCenter: {fileID: 11400000, guid: 0a40b7ab63540b84891bec3b379c9b89, type: 2}
+  _onPlayerDeathRse: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
+  rseOnStartTargeting: {fileID: 11400000, guid: 06dd5cb141e805f4886a0677d415d129, type: 2}
+  rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
+  rseOnPlayerCancelTargeting: {fileID: 11400000, guid: d8d0a24f7352ea84ba1f5614f16bb752, type: 2}
+  rseOnStopTargeting: {fileID: 11400000, guid: 608c9d5cdb53a9d40a4926c3ca41a1ff, type: 2}
+  rseOnAnimationBoolValueChange: {fileID: 11400000, guid: f3b68030aacb033438a094c87c0e44ca, type: 2}
+  rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
+  rsoPlayerPosition: {fileID: 11400000, guid: a3d33267cdb3a0a43bb8ab4811624f21, type: 2}
+  rsoSettingsSaved: {fileID: 11400000, guid: 782057adb6fb88f4db3ac2e35a786bc0, type: 2}
+  rsoTargetPosition: {fileID: 11400000, guid: 0ac75a93e6bb72c45bd266638c5655fb, type: 2}
+  ssoPlayerMaxDistanceTargeting: {fileID: 11400000, guid: 541adfab7eb5e28439bb20fb68f82377, type: 2}
+  ssoPlayerTargetRangeRadius: {fileID: 11400000, guid: 5be727c44da2ea945accbd91b94caaf1, type: 2}
+  ssoPargetObstacleBreakDelay: {fileID: 11400000, guid: 12b9fac0e12e2f94bbd815009f9dfa4c, type: 2}
+  ssoFrontConeAngle: {fileID: 11400000, guid: 1a334ea9ff9f95d45bd16bd34d05d126, type: 2}
+  ssoDisplay: {fileID: 11400000, guid: 67fbeef0288ea2244886151a8aa34e0b, type: 2}
+--- !u!114 &7025031120701374793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202443814910871587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52a975fafc36f2a4bad486bb9e275476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rseOnEnemyEnterTargetingRange: {fileID: 11400000, guid: 857c3a1874fe4f34b9a4e7de1355f9c0, type: 2}
+  rseOnEnemyExitTargetingRange: {fileID: 11400000, guid: 9464073673f74034da5e08cf174a885c, type: 2}
+  rseOnTargetsInRangeChange: {fileID: 11400000, guid: 6660d5373f88799428a248d2c3615ece, type: 2}
+--- !u!114 &6616839959722766165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202443814910871587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74df846ae39265c429806def2a117faf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rseOnEnemyEnterTargetingRange: {fileID: 11400000, guid: 857c3a1874fe4f34b9a4e7de1355f9c0, type: 2}
+  rseOnEnemyExitTargetingRange: {fileID: 11400000, guid: 9464073673f74034da5e08cf174a885c, type: 2}
+  rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
+  rseOnPlayerCancelTargeting: {fileID: 11400000, guid: d8d0a24f7352ea84ba1f5614f16bb752, type: 2}
+  _rseOnPlayerCenter: {fileID: 11400000, guid: 0a40b7ab63540b84891bec3b379c9b89, type: 2}
+  rsoPlayerIsTargeting: {fileID: 11400000, guid: 53017e014e6ba384988975c6a7762355, type: 2}
+  rsoPlayerPosition: {fileID: 11400000, guid: a3d33267cdb3a0a43bb8ab4811624f21, type: 2}
+  ssoFrontConeAngle: {fileID: 11400000, guid: 1a334ea9ff9f95d45bd16bd34d05d126, type: 2}
+  ssoTargetsDebug: {fileID: 11400000, guid: 64ca41c1d034d9549b0234f4b66eecc8, type: 2}

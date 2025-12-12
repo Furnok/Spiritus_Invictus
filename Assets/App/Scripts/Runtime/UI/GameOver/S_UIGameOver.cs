@@ -1,3 +1,4 @@
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class S_UIGameOver : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference uiSound;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnCloseAllWindows rseOnCloseAllWindows;
 
@@ -48,10 +53,7 @@ public class S_UIGameOver : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Gamepad.current == null)
-        {
-            rseOnShowMouseCursor.Call();
-        }
+        if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
         isTransit = false;
     }
@@ -66,6 +68,9 @@ public class S_UIGameOver : MonoBehaviour
         if (!isTransit)
         {
             isTransit = true;
+
+            RuntimeManager.PlayOneShot(uiSound);
+
             rseOnFadeOut.Call();
 
             rseOnHideMouseCursor.Call();

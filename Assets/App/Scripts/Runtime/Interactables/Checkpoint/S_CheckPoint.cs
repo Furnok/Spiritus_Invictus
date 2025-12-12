@@ -92,11 +92,17 @@ public class S_CheckPoint : MonoBehaviour
 
     private void Heal()
     {
-        rsoPlayerCurrentHealth.Value = ssoPlayerStats.Value.maxHealth;
-        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
+        if (rsoPlayerCurrentHealth.Value < ssoPlayerStats.Value.maxHealth)
+        {
+            rsoPlayerCurrentHealth.Value = ssoPlayerStats.Value.maxHealth;
+            rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
+        }
 
-        rsoPlayerCurrentConviction.Value = ssoPlayerAttackSteps.Value[1].ammountConvitionNeeded;
-        rseOnPlayerConvictionUpdate.Call(rsoPlayerCurrentConviction.Value);
+        if (rsoPlayerCurrentConviction.Value < ssoPlayerAttackSteps.Value[1].ammountConvitionNeeded)
+        {
+            rsoPlayerCurrentConviction.Value = ssoPlayerAttackSteps.Value[1].ammountConvitionNeeded;
+            rseOnPlayerConvictionUpdate.Call(rsoPlayerCurrentConviction.Value);
+        }
     }
 
     private void Save()

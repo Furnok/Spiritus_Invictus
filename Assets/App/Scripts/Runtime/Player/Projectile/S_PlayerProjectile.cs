@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class S_PlayerProjectile : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Filter")]
+    [TabGroup("References")]
+    [Title("Filters")]
     [SerializeField, S_TagName] private string tagHurt;
 
     [TabGroup("Inputs")]
@@ -42,13 +42,13 @@ public class S_PlayerProjectile : MonoBehaviour
     private float _arcRandomDirectionMax = 0;
     private float _travelTime = 0;
 
-    private int _attackStep = 0;
+    //private int _attackStep = 0;
 
     public void Initialize(float damage, Transform target = null, int attackStep = 0)
     {
         this._target = target;
         this._direction = transform.forward;
-        _attackStep = attackStep;
+        //_attackStep = attackStep;
         _speed = _playerAttackSteps.Value.Find(x => x.step == attackStep).speed;
         _damage = damage;
         _projectileData = _playerAttackSteps.Value.Find(x => x.step == attackStep).projectileData;
@@ -90,12 +90,8 @@ public class S_PlayerProjectile : MonoBehaviour
             {
                 side *= Random.Range(_arcRandomDirectionMin, _arcRandomDirectionMax);
                 arcDir = (Vector3.up + side).normalized;
-
             }
-            else
-            {
-                arcDir = (Vector3.up + side * _arcDirection).normalized;
-            }
+            else arcDir = (Vector3.up + side * _arcDirection).normalized;
         }
 
         float arcHeight = toTarget.magnitude * 0.25f * _arcHeightMultiplier;
@@ -176,9 +172,6 @@ public class S_PlayerProjectile : MonoBehaviour
 
     private void OnTargetDie(GameObject enemyDie)
     {
-        if (_target != null && enemyDie == _target.gameObject && enemyDie != null)
-        {
-            _target = null;
-        }
+        if (_target != null && enemyDie == _target.gameObject && enemyDie != null) _target = null;
     }
 }

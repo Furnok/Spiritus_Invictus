@@ -10,27 +10,6 @@ using UnityEngine.UI;
 public class S_UIGameManager : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Time")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float animationSlider;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFadeBoss;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFadeSkip;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFadeConsole;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFadeGameOver;
-
-    [TabGroup("Settings")]
     [Title("Game Over")]
     [SerializeField] private bool haveGameOver;
 
@@ -171,6 +150,18 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_CameraData ssoCameraData;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_Display ssoDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_UnDisplay ssoUnDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_AnimationSlider ssoAnimationSlider;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_GameOver ssoGameOver;
+
     private Tween healthTween = null;
     private Tween convictionTween = null;
     private Tween preconvictionTween = null;
@@ -229,11 +220,11 @@ public class S_UIGameManager : MonoBehaviour
         {
             sliderBossHealth.gameObject.SetActive(true);
 
-            cg.DOFade(1f, timeFadeBoss).SetEase(Ease.Linear);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
         }
         else if (!value)
         {
-            cg.DOFade(0f, timeFadeBoss).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
             {
                 sliderBossHealth.gameObject.SetActive(false);
             });
@@ -244,21 +235,21 @@ public class S_UIGameManager : MonoBehaviour
     {
         healthTween?.Kill();
 
-        healthTween = sliderHealth.DOValue(health, animationSlider).SetEase(Ease.OutCubic);
+        healthTween = sliderHealth.DOValue(health, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
     }
 
     private void SetConvictionSliderValue(float conviction)
     {
         convictionTween?.Kill();
 
-        convictionTween = sliderConviction.DOValue(conviction, animationSlider).SetEase(Ease.OutCubic);
+        convictionTween = sliderConviction.DOValue(conviction, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
     }
 
     private void SetPreconvictionSliderValue(float preconvition)
     {
         preconvictionTween?.Kill();
 
-        preconvictionTween = sliderPlayerAttackSteps.DOValue(preconvition, animationSlider).SetEase(Ease.OutCubic);
+        preconvictionTween = sliderPlayerAttackSteps.DOValue(preconvition, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
     }
 
     private IEnumerator BuildTicksNextFrame()
@@ -270,10 +261,7 @@ public class S_UIGameManager : MonoBehaviour
 
     private void CreateStepTicks()
     {
-        for (int i = ticksParent.childCount - 1; i >= 0; i--)
-        {
-            Destroy(ticksParent.GetChild(i).gameObject);
-        }
+        for (int i = ticksParent.childCount - 1; i >= 0; i--) Destroy(ticksParent.GetChild(i).gameObject);
 
         float maxConv = ssoPlayerConvictionData.Value.maxConviction;
 
@@ -315,19 +303,16 @@ public class S_UIGameManager : MonoBehaviour
         {
             skipWindow.SetActive(true);
 
-            cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
         }
-        else if (!value)
-        {
-            skipWindow.SetActive(false);
-        }
+        else if (!value) skipWindow.SetActive(false);
     }
 
     private void SetSkipHoldValue(float value)
     {
         skipTween?.Kill();
 
-        skipTween = imageSkip.DOFillAmount(value / ssoCameraData.Value.holdSkipTime, animationSlider).SetEase(Ease.OutCubic);
+        skipTween = imageSkip.DOFillAmount(value / ssoCameraData.Value.holdSkipTime, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
     }
     #endregion
 
@@ -351,10 +336,7 @@ public class S_UIGameManager : MonoBehaviour
             rsoNavigation.Value.selectableDefault = null;
             rseOnResetFocus.Call();
 
-            if (Gamepad.current == null)
-            {
-                rseOnShowMouseCursor.Call();
-            }
+            if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
             RuntimeManager.PlayOneShot(uiSound);
 
@@ -368,7 +350,7 @@ public class S_UIGameManager : MonoBehaviour
 
             consoleWindow.SetActive(true);
 
-            cg.DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
         }
         else
         {
@@ -380,15 +362,9 @@ public class S_UIGameManager : MonoBehaviour
 
                 rsoNavigation.Value.selectableDefault = buttonSend;
 
-                if (Gamepad.current != null)
-                {
-                    buttonSend?.Select();
-                }
+                if (Gamepad.current != null) buttonSend?.Select();
 
-                if (Gamepad.current == null)
-                {
-                    rseOnShowMouseCursor.Call();
-                }
+                if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
                 rsoInConsole.Value = true;
 
@@ -397,7 +373,7 @@ public class S_UIGameManager : MonoBehaviour
                 CanvasGroup cg = consoleBackgroundWindow.GetComponent<CanvasGroup>();
                 cg.DOKill();
 
-                cg.DOFade(1f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true);
+                cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
                 cg.blocksRaycasts = true;
             }
             else
@@ -429,7 +405,7 @@ public class S_UIGameManager : MonoBehaviour
                 CanvasGroup cg = consoleWindow.GetComponent<CanvasGroup>();
                 cg.DOKill();
 
-                cg.DOFade(0f, timeFadeConsole).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+                cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
                 {
                     rseOnHideMouseCursor.Call();
 
@@ -440,15 +416,9 @@ public class S_UIGameManager : MonoBehaviour
                     {
                         rseOnUIInputEnabled.Call();
 
-                        if (Gamepad.current == null)
-                        {
-                            rseOnShowMouseCursor.Call();
-                        }
+                        if (Gamepad.current == null) rseOnShowMouseCursor.Call();
                     }
-                    else
-                    {
-                        rseOnGameInputEnabled.Call();
-                    }
+                    else rseOnGameInputEnabled.Call();
 
                     consoleWindow.SetActive(false);
                 });
@@ -460,7 +430,7 @@ public class S_UIGameManager : MonoBehaviour
     #region Game Over
     private void GameOver()
     {
-        StartCoroutine(S_Utils.Delay(3f, () =>
+        StartCoroutine(S_Utils.Delay(ssoGameOver.Value, () =>
         {
             if (haveGameOver)
             {
@@ -472,12 +442,9 @@ public class S_UIGameManager : MonoBehaviour
 
                 gameOverWindow.SetActive(true);
 
-                cg.DOFade(1f, timeFadeGameOver).SetEase(Ease.Linear).SetUpdate(true);
+                cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
             }
-            else
-            {
-                rseOnPlayerRespawn.Call();
-            }
+            else rseOnPlayerRespawn.Call();
         }));
     }
     #endregion

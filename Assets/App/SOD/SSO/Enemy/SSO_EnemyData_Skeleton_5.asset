@@ -24,21 +24,25 @@ MonoBehaviour:
     detectionRange: 5
     detectionAggroRangeMax: 50
     attackCooldown: 3
-    chanceForEasterEgg: 1
+    waitStun: 0.6
+    rotationTime: 0.6
     patrolPointWaitMin: 1
     patrolPointWaitMax: 3
     startPatrolWaitMin: 1
     startPatrolWaitMax: 3
     timeBeforeChaseMin: 0.2
     timeBeforeChaseMax: 0.5
+    timeDisplay: 3
     controllerOverride: {fileID: 22100000, guid: cae966d33f19b4242ab9041cca2e1f84, type: 2}
     listCombos:
     - listAnimationsCombos:
       - animation: {fileID: 7400000, guid: 73f0a4f99c3191a4da6b4baa1477cc8c, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -48,13 +52,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: e3aad965c1bbdb446ab3160694891c7a, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -64,13 +72,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: e92f50902c6db0843b2cd2deb309f849, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -80,13 +92,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: ebe3ceceda982024d9acaa3062a07c5d, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -96,13 +112,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: e3aad965c1bbdb446ab3160694891c7a, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -112,13 +132,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: e92f50902c6db0843b2cd2deb309f849, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -128,13 +152,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 3db714165ef93ec409e7c8c76503093a, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -144,13 +172,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 7cf43363318563945bf17ec289351ba9, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -160,13 +192,17 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1d1885aa4cf4b2a459b110917509eeef, type: 2}
+        rootMotionMultiplier: 1
         attackData:
           attackId: 0
           goSourceId: 0
           attackType: 2
+          timeCast: 0
           damage: 20
           knockbackHitDuration: 0.1
           knockbackHitDistance: 2
@@ -176,7 +212,10 @@ MonoBehaviour:
           parryToleranceAfterHit: 0.06
           invicibilityDuration: 0.7
           convictionReduction: 20
+          convictionParryGain: 0
+          lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      distanceToChase: 1.2
-      distanceToLoseAttack: 8
+      distanceMin: 0
+      distanceToChase: 1.5
+      distanceToLoseAttack: 3

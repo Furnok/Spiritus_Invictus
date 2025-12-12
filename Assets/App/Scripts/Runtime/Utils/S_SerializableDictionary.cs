@@ -34,11 +34,9 @@ public class S_SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, 
         {
             var key = keys[i];
 
-            if (key == null)
-                continue;
+            if (key == null) continue;
 
-            if (!ContainsKey(key))
-                Add(key, values[i]);
+            if (!ContainsKey(key)) Add(key, values[i]);
         }
     }
 }

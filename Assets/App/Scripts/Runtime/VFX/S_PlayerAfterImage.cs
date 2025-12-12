@@ -57,19 +57,18 @@ public class S_PlayerAfterImage : MonoBehaviour
         for (int i = 0; i < _ghostCount; i++)
         {
             SpawnOneSnapshot();
+
             yield return new WaitForSeconds(_playerStats.Value.dodgeDuration / _ghostCount); //or use the _spawnInterval
         }
     }
 
     private void SpawnOneSnapshot()
     {
-        if (_skinnedMeshes == null || _skinnedMeshes.Length == 0 || _ghostMaterial == null)
-            return;
+        if (_skinnedMeshes == null || _skinnedMeshes.Length == 0 || _ghostMaterial == null) return;
 
         foreach (var smr in _skinnedMeshes)
         {
-            if (smr == null || !smr.gameObject.activeInHierarchy)
-                continue;
+            if (smr == null || !smr.gameObject.activeInHierarchy) continue;
 
             var go = new GameObject("AfterimageGhost");
             go.layer = gameObject.layer;
@@ -96,9 +95,7 @@ public class S_PlayerAfterImage : MonoBehaviour
     private IEnumerator Co_FadeAndDestroy(GameObject go, Material mat, float lifetime)
     {
         float t = 0f;
-        Color baseColor = mat.HasProperty("_BaseColor")
-            ? mat.GetColor("_BaseColor")
-            : mat.color;
+        Color baseColor = mat.HasProperty("_BaseColor") ? mat.GetColor("_BaseColor") : mat.color;
 
         float startAlpha = baseColor.a;
 
@@ -107,12 +104,12 @@ public class S_PlayerAfterImage : MonoBehaviour
             float k = 1f - (t / lifetime);
             var c = baseColor;
             c.a = startAlpha * k;
-            if (mat.HasProperty("_BaseColor"))
-                mat.SetColor("_BaseColor", c);
-            else
-                mat.color = c;
+
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", c);
+            else mat.color = c;
 
             t += Time.deltaTime;
+
             yield return null;
         }
 

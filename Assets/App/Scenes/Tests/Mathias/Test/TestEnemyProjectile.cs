@@ -1,7 +1,7 @@
 ﻿using DG.Tweening.Plugins.Core.PathCore;
 using UnityEngine;
 
-public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
+public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
     [Header("Settings")]
     [SerializeField] private float _speed = 5f;
@@ -90,6 +90,11 @@ public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_Reflectabl
         }
     }
 
+    public Transform GetEnemyTransform()
+    {
+        return _owner;
+    }
+
     public void Reflect(Transform reflectOwner)
     {
         _attackData.damage *= _reflectDmgMul;
@@ -112,6 +117,10 @@ public class TestEnemyProjectile : MonoBehaviour, I_AttackProvider, I_Reflectabl
         }
     }
 
+    public bool CanReflect()
+    {
+        return true;
+    }
     void CalculateControlPoint()
     {
         this._startPos = transform.position;

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class S_LoadUISettings : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Save")]
     [SerializeField, S_SaveName] private string saveSettingsName;
 
@@ -21,6 +21,9 @@ public class S_LoadUISettings : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private Toggle toggleHoldLockTarget;
+
+    [TabGroup("References")]
+    [SerializeField] private Toggle toggleControllerRumble;
 
     [TabGroup("References")]
     [SerializeField] private TMP_Dropdown dropDownResolutions;
@@ -59,6 +62,8 @@ public class S_LoadUISettings : MonoBehaviour
 
         LoadHoldLockTarget();
 
+        LoadControllerRumble();
+
         LoadResolutions();
 
         LoadFullScreen();
@@ -76,6 +81,11 @@ public class S_LoadUISettings : MonoBehaviour
     private void LoadHoldLockTarget()
     {
         toggleHoldLockTarget.isOn = rsoSettingsSaved.Value.holdLockTarget;
+    }
+
+    private void LoadControllerRumble()
+    {
+        toggleControllerRumble.isOn = rsoSettingsSaved.Value.controllerRumble;
     }
 
     private int GetResolutions(int index)
@@ -110,10 +120,7 @@ public class S_LoadUISettings : MonoBehaviour
                     currentResolutionIndex = i;
                 }
             }
-            else if (i == index)
-            {
-                currentResolutionIndex = i;
-            }
+            else if (i == index) currentResolutionIndex = i;
         }
 
         dropDownResolutions.GetComponent<TMP_Dropdown>().AddOptions(options);

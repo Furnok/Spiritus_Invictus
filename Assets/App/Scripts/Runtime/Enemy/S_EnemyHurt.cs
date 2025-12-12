@@ -1,12 +1,14 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 public class S_EnemyHurt : MonoBehaviour, I_Damageable
 {
-    [HideInInspector] public UnityEvent<float> onUpdateEnemyHealth = null;
+    [TabGroup("References")]
+    [Title("Scripts")]
+    [SerializeField] private S_Enemy enemy;
 
     public void TakeDamage(float damage)
     {
-        onUpdateEnemyHealth.Invoke(damage);
+        enemy.TakeDamage(damage);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class S_PlayerHeal : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Animation")]
     [SerializeField, S_AnimationName] private string _healParam;
 

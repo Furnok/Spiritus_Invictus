@@ -31,10 +31,7 @@ public class S_UISliderHorizontal : MonoBehaviour
             bool stickActive = Mathf.Abs(leftStick.x) > 0.5f;
             bool stick2Active = Mathf.Abs(rightStick.x) > 0.5f;
 
-            if (stickActive || stick2Active)
-            {
-                Sticks();
-            }
+            if (stickActive || stick2Active) isStick = true;
             else if (isStick)
             {
                 startMove = false;
@@ -44,34 +41,18 @@ public class S_UISliderHorizontal : MonoBehaviour
             {
                 bool dpadLeft = dpad.x < 0;
                 bool dpadRight = dpad.x > 0;
-                DPad(dpadLeft, dpadRight);
+
+                if (!dpadLeft && !dpadRight && startMove) startMove = false;
             }
         }
-        else
-        {
-            isStick = false;
-        }
-    }
-
-    private void DPad(bool left, bool right)
-    {
-        if (!left && !right && startMove)
-        {
-            startMove = false;
-        }
-    }
-
-    private void Sticks()
-    {
-        isStick = true;
+        else isStick = false;
     }
 
     public void SliderAudio(BaseEventData eventData)
     {
         if (Gamepad.current != null)
         {
-            if (lastSoundFrame == Time.frameCount)
-                return;
+            if (lastSoundFrame == Time.frameCount) return;
 
             AxisEventData axisData = eventData as AxisEventData;
             MoveDirection direction = axisData.moveDir;

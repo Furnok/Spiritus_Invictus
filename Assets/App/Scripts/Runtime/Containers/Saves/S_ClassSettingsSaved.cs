@@ -11,6 +11,9 @@ public class S_ClassSettingsSaved
     [Title("Target")]
     public bool holdLockTarget = false;
 
+    [Title("Target")]
+    public bool controllerRumble = true;
+
     [Title("Screen")]
     public bool fullScreen = true;
 

@@ -18,5 +18,5 @@ public class S_ClassBossAttack
     public float difficultyLevel = 0;
 
     [Title("Combo Settings")]
-    public List<S_StructEnemyAttackData> listComboData = new();
+    public List<S_ClassAnimation> listComboData = new();
 }

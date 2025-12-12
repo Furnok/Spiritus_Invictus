@@ -49,10 +49,7 @@ public class S_DropDownAutoScroll : MonoBehaviour
         for (int i = 0; i <= number; i++)
         {
             Transform item = content.GetChild(i + 1);
-            if (item.TryGetComponent(out Selectable selectable))
-            {
-                selectables[selectable] = i;
-            }
+            if (item.TryGetComponent(out Selectable selectable)) selectables[selectable] = i;
         }
     }
 
@@ -65,10 +62,7 @@ public class S_DropDownAutoScroll : MonoBehaviour
 
     private void Update()
     {
-        if (dropDown.IsExpanded && !init)
-        {
-            ScrollOpen();
-        }
+        if (dropDown.IsExpanded && !init) ScrollOpen();
     }
 
     private void ScrollOpen()

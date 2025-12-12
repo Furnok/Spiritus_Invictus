@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class S_Settings : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Save")]
     [SerializeField, S_SaveName] private string saveSettingsName;
 
@@ -37,6 +39,14 @@ public class S_Settings : MonoBehaviour
     private Bus audioSounds;
     private Bus audioUI;
 
+    private int step = 1;
+    private float stepFloat = 1f;
+    private bool startMove = false;
+    private float holdTime = 0f;
+    private bool isStick = false;
+    private float maxStep = 3f;
+    private float accelerationTime = 3f;
+
     private void Awake()
     {
         audioMaster = RuntimeManager.GetBus("bus:/");
@@ -54,28 +64,78 @@ public class S_Settings : MonoBehaviour
         isSave = false;
     }
 
+    private void Update()
+    {
+        if (isLoaded && (EventSystem.current.currentSelectedGameObject == listSlidersAudios[0].gameObject || EventSystem.current.currentSelectedGameObject == listSlidersAudios[1].gameObject || EventSystem.current.currentSelectedGameObject == listSlidersAudios[2].gameObject || EventSystem.current.currentSelectedGameObject == listSlidersAudios[3].gameObject) && Gamepad.current != null && startMove)
+        {
+            Vector2 dpad = Gamepad.current.dpad.ReadValue();
+            Vector2 leftStick = Gamepad.current.leftStick.ReadValue();
+            Vector2 rightStick = Gamepad.current.rightStick.ReadValue();
+
+            bool stickActive = Mathf.Abs(leftStick.x) > 0.5f;
+            bool stick2Active = Mathf.Abs(rightStick.x) > 0.5f;
+
+            if (stickActive || stick2Active)
+            {
+                if (!isStick)
+                {
+                    isStick = true;
+                    holdTime = 0f;
+                    step = 1;
+                    stepFloat = 1f;
+                }
+
+                holdTime += Time.unscaledDeltaTime;
+
+                float t = Mathf.Clamp01(holdTime / accelerationTime);
+                stepFloat = Mathf.Lerp(1f, maxStep, t);
+
+                step = (int)Mathf.Clamp(Mathf.FloorToInt(stepFloat), 1, maxStep);
+            }
+            else if (isStick)
+            {
+                startMove = false;
+                step = 1;
+                stepFloat = 1f;
+                holdTime = 0f;
+            }
+            else
+            {
+                step = 1;
+                stepFloat = 1f;
+                holdTime = 0f;
+            }
+        }
+        else
+        {
+            isStick = false;
+            step = 1;
+            stepFloat = 1f;
+            holdTime = 0f;
+        }
+    }
+
     public void Setup(List<Slider> listSlidersVolumes, List<TextMeshProUGUI> listTextVolumes)
     {
-        isLoaded = true;
-
         listSlidersAudios = listSlidersVolumes;
         listTextAudios = listTextVolumes;
+
+        isLoaded = true;
     }
 
     public void UpdateLanguages(int index)
     {
-        if (isLoaded && rsoSettingsSaved.Value.languageIndex != index)
-        {
-            rsoSettingsSaved.Value.languageIndex = index;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.languageIndex != index) rsoSettingsSaved.Value.languageIndex = index;
     }
 
     public void UpdateHoldLockTarget(bool value)
     {
-        if (isLoaded && rsoSettingsSaved.Value.holdLockTarget != value)
-        {
-            rsoSettingsSaved.Value.holdLockTarget = value;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.holdLockTarget != value) rsoSettingsSaved.Value.holdLockTarget = value;
+    }
+
+    public void UpdateControllerRumble(bool value)
+    {
+        if (isLoaded && rsoSettingsSaved.Value.controllerRumble != value) rsoSettingsSaved.Value.controllerRumble = value;
     }
 
     private Resolution GetResolutions(int index)
@@ -94,10 +154,7 @@ public class S_Settings : MonoBehaviour
         {
             Resolution res = resolutionsPC[i];
 
-            if (i == index)
-            {
-                resolution = res;
-            }
+            if (i == index) resolution = res;
         }
 
         return resolution;
@@ -105,27 +162,34 @@ public class S_Settings : MonoBehaviour
 
     public void UpdateResolutions(int index)
     {
-        if (isLoaded && rsoSettingsSaved.Value.resolutionIndex != index)
-        {
-            rsoSettingsSaved.Value.resolutionIndex = index;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.resolutionIndex != index) rsoSettingsSaved.Value.resolutionIndex = index;
     }
 
     public void UpdateFullscreen(bool value)
     {
-        if (isLoaded && rsoSettingsSaved.Value.fullScreen != value)
-        {
-            rsoSettingsSaved.Value.fullScreen = value;
-        }
+        if (isLoaded && rsoSettingsSaved.Value.fullScreen != value) rsoSettingsSaved.Value.fullScreen = value;
     }
 
     public void UpdateMainVolume(float value)
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[0].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[0].volume = value;
+            float newValue = 0;
 
-            listTextAudios[0].text = $"{value}%";
+            if (Gamepad.current != null)
+            {
+                startMove = true;
+
+                float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[0].volume);
+                newValue = Mathf.RoundToInt(diff * step);
+                newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[0].volume + newValue, listSlidersAudios[0].minValue, listSlidersAudios[0].maxValue);
+                listSlidersAudios[0].SetValueWithoutNotify(newValue);
+            }
+            else newValue = value;
+
+            rsoSettingsSaved.Value.listVolumes[0].volume = newValue;
+
+            listTextAudios[0].text = $"{newValue}%";
 
             audioMaster.setVolume(rsoSettingsSaved.Value.listVolumes[0].volume / 100);
         }
@@ -135,9 +199,22 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[1].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[1].volume = value;
+            float newValue = 0;
 
-            listTextAudios[1].text = $"{value}%";
+            if (Gamepad.current != null)
+            {
+                startMove = true;
+
+                float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[1].volume);
+                newValue = Mathf.RoundToInt(diff * step);
+                newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[1].volume + newValue, listSlidersAudios[1].minValue, listSlidersAudios[1].maxValue);
+                listSlidersAudios[1].SetValueWithoutNotify(newValue);
+            }
+            else newValue = value;
+
+            rsoSettingsSaved.Value.listVolumes[1].volume = newValue;
+
+            listTextAudios[1].text = $"{newValue}%";
 
             audioMusic.setVolume(rsoSettingsSaved.Value.listVolumes[1].volume / 100);
         }
@@ -147,9 +224,22 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[2].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[2].volume = value;
+            float newValue = 0;
 
-            listTextAudios[2].text = $"{value}%";
+            if (Gamepad.current != null)
+            {
+                startMove = true;
+
+                float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[2].volume);
+                newValue = Mathf.RoundToInt(diff * step);
+                newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[2].volume + newValue, listSlidersAudios[2].minValue, listSlidersAudios[2].maxValue);
+                listSlidersAudios[2].SetValueWithoutNotify(newValue);
+            }
+            else newValue = value;
+
+            rsoSettingsSaved.Value.listVolumes[2].volume = newValue;
+
+            listTextAudios[2].text = $"{newValue}%";
 
             audioSounds.setVolume(rsoSettingsSaved.Value.listVolumes[2].volume / 100);
         }
@@ -159,9 +249,22 @@ public class S_Settings : MonoBehaviour
     {
         if (isLoaded && rsoSettingsSaved.Value.listVolumes[3].volume != value)
         {
-            rsoSettingsSaved.Value.listVolumes[3].volume = value;
+            float newValue = 0;
 
-            listTextAudios[3].text = $"{value}%";
+            if (Gamepad.current != null)
+            {
+                startMove = true;
+
+                float diff = Mathf.Sign(value - rsoSettingsSaved.Value.listVolumes[3].volume);
+                newValue = Mathf.RoundToInt(diff * step);
+                newValue = Mathf.Clamp(rsoSettingsSaved.Value.listVolumes[3].volume + newValue, listSlidersAudios[3].minValue, listSlidersAudios[3].maxValue);
+                listSlidersAudios[3].SetValueWithoutNotify(newValue);
+            }
+            else newValue = value;
+
+            rsoSettingsSaved.Value.listVolumes[3].volume = newValue;
+
+            listTextAudios[3].text = $"{newValue}%";
 
             audioUI.setVolume(rsoSettingsSaved.Value.listVolumes[3].volume / 100);
         }
@@ -177,14 +280,8 @@ public class S_Settings : MonoBehaviour
 
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode, resolution.refreshRateRatio);
 
-        if (rsoSettingsSaved.Value.fullScreen)
-        {
-            Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-        }
-        else
-        {
-            Screen.fullScreenMode = FullScreenMode.Windowed;
-        }
+        if (rsoSettingsSaved.Value.fullScreen) Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
+        else Screen.fullScreenMode = FullScreenMode.Windowed;
 
         Screen.fullScreen = rsoSettingsSaved.Value.fullScreen;
 

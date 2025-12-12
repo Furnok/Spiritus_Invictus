@@ -36,9 +36,11 @@ public class S_ClassEnemyData
     [SuffixLabel("s", Overlay = true)]
     public float attackCooldown = 0;
 
-    [Title("Secret")]
-    [SuffixLabel("%", Overlay = true)]
-    public float chanceForEasterEgg = 0;
+    [SuffixLabel("s", Overlay = true)]
+    public float waitStun = 0;
+
+    [SuffixLabel("s", Overlay = true)]
+    public float rotationTime = 0;
 
     [Title("Delay")]
     [SuffixLabel("s", Overlay = true)]
@@ -58,6 +60,10 @@ public class S_ClassEnemyData
 
     [SuffixLabel("s", Overlay = true)]
     public float timeBeforeChaseMax = 0;
+
+    [Title("UI")]
+    [SuffixLabel("s", Overlay = true)]
+    public float timeDisplay = 0;
 
     [Title("Animations")]
     public AnimatorOverrideController controllerOverride = null;

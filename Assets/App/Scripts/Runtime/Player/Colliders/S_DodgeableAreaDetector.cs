@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class S_DodgeableAreaDetector : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Filter")]
     [SerializeField, S_TagName] private string tagHit;
 
@@ -15,10 +15,10 @@ public class S_DodgeableAreaDetector : MonoBehaviour
 
     private void Awake()
     {
-        _attackDataInDodgeableArea.Value = new System.Collections.Generic.Dictionary<int, S_StructEnemyAttackData>();
+        _attackDataInDodgeableArea.Value = new S_SerializableDictionary<int, S_StructEnemyAttackData>();
         _attackDataInDodgeableArea.Value.Clear();
 
-        _attackCanHitPlayer.Value = new System.Collections.Generic.Dictionary<int, S_StructEnemyAttackData>();
+        _attackCanHitPlayer.Value = new S_SerializableDictionary<int, S_StructEnemyAttackData>();
         _attackCanHitPlayer.Value.Clear();
     }
 

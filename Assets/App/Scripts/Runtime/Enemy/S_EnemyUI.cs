@@ -6,19 +6,6 @@ using UnityEngine.UI;
 
 public class S_EnemyUI : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Time")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFade;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeDisplayHealthBar;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float animationSlider;
-
     [TabGroup("References")]
     [Title("Content")]
     [SerializeField] private GameObject content;
@@ -26,22 +13,22 @@ public class S_EnemyUI : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private Slider sliderHealth;
 
-    [TabGroup("References")]
-    [Title("Script")]
-    [SerializeField] private S_Enemy enemy;
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_Display ssoDisplay;
 
-    private Coroutine displayHealthBar;
-    private Tween healthTween;
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_UnDisplay ssoUnDisplay;
 
-    private void OnEnable()
-    {
-        enemy.onUpdateEnemyHealth.AddListener(UpdateHealthBar);
-    }
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_AnimationSlider ssoAnimationSlider;
+
+    private Coroutine displayHealthBar = null;
+    private Tween healthTween = null;
+
+    private float timeDisplay = 0;
 
     private void OnDisable()
     {
-        enemy.onUpdateEnemyHealth.RemoveListener(UpdateHealthBar);
-
         healthTween?.Kill();
     }
 
@@ -54,27 +41,28 @@ public class S_EnemyUI : MonoBehaviour
     {
         sliderHealth.maxValue = ssoEnemyData.Value.health;
         sliderHealth.value = ssoEnemyData.Value.health;
+        timeDisplay = ssoEnemyData.Value.timeDisplay;
 
         if (content.activeInHierarchy)
         {
             CanvasGroup cg = content.GetComponent<CanvasGroup>();
             cg.DOKill();
 
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
             {
                 content.SetActive(false);
             });
         }
     }
 
-    private void UpdateHealthBar(float healthValue)
+    public void UpdateHealthBar(float healthValue)
     {
         CanvasGroup cg = content.GetComponent<CanvasGroup>();
         cg.DOKill();
 
         if (healthValue <= 0)
         {
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
             {
                 content.SetActive(false);
             });
@@ -83,12 +71,12 @@ public class S_EnemyUI : MonoBehaviour
         {
             content.gameObject.SetActive(true);
 
-            cg.DOFade(1f, timeFade).SetEase(Ease.Linear);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
         }
 
         healthTween?.Kill();
 
-        healthTween = sliderHealth.DOValue(healthValue, animationSlider).SetEase(Ease.OutCubic);
+        healthTween = sliderHealth.DOValue(healthValue, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
 
         if (displayHealthBar != null)
         {
@@ -101,12 +89,12 @@ public class S_EnemyUI : MonoBehaviour
 
     private IEnumerator DisplayHealthBar()
     {
-        yield return new WaitForSeconds(timeDisplayHealthBar);
+        yield return new WaitForSeconds(timeDisplay);
 
         CanvasGroup cg = content.GetComponent<CanvasGroup>();
         cg.DOKill();
 
-        cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+        cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
         {
             content.SetActive(false);
         });

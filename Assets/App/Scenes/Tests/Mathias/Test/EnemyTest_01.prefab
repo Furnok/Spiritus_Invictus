@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5156253937991736230}
   - component: {fileID: 3641827273886991316}
   - component: {fileID: 3584574160771116111}
+  - component: {fileID: 6531194811074773797}
   m_Layer: 15
   m_Name: Hurtbox
   m_TagString: Hurtbox
@@ -77,6 +78,19 @@ MonoBehaviour:
   _enemyColisionBox: {fileID: 8764129307306920422}
   _enemyMotor: {fileID: 3455161181706352484}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
+--- !u!114 &6531194811074773797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2676250077817439842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f547c771bbe9da4498e19b73fc9f51b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyTransform: {fileID: 8726200801495071237}
 --- !u!1 &3266860780896358633
 GameObject:
   m_ObjectHideFlags: 0

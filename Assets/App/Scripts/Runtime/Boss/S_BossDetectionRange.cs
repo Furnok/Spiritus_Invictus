@@ -4,21 +4,19 @@ using UnityEngine.Events;
 
 public class S_BossDetectionRange : MonoBehaviour
 {
-    [TabGroup("Settings")]
+    [TabGroup("References")]
     [Title("Filters")]
     [SerializeField][S_TagName] private string playerTag;
 
     [HideInInspector] public UnityEvent<GameObject> onTargetDetected;
-
-    private GameObject target = null;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(playerTag))
         {
             Debug.Log("Target");
-            target = other.gameObject;
-            onTargetDetected.Invoke(target);
+
+            onTargetDetected.Invoke(other.gameObject);
         }
     }
 }

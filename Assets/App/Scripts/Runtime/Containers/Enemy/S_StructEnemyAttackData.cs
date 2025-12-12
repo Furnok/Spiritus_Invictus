@@ -13,6 +13,11 @@ public struct S_StructEnemyAttackData
     public S_EnumEnemyAttackType attackType;
 
     [Title("Damage")]
+    [ShowIf("isProjectile")]
+    [SuffixLabel("s", Overlay = true)]
+    public float timeCast;
+
+    [Title("Damage")]
     [ShowIf("isTyped")]
     public float damage;
 
@@ -47,9 +52,17 @@ public struct S_StructEnemyAttackData
     [ShowIf("isTyped")]
     public float convictionReduction;
 
+    [ShowIf("isTyped")]
+    public float convictionParryGain;
+
+    [Title("Attack")]
+    [ShowIf("isTyped")]
+    public bool lastAttack;
+
     [HideInInspector] public Vector3 attackDirection;
 
     [HideInInspector] public Vector3 contactPoint;
 
     private bool isTyped => attackType != S_EnumEnemyAttackType.None;
+    private bool isProjectile => attackType == S_EnumEnemyAttackType.Projectile;
 }

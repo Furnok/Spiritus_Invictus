@@ -1,7 +1,6 @@
 ﻿using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class S_UIMenu : MonoBehaviour
@@ -80,10 +79,7 @@ public class S_UIMenu : MonoBehaviour
 
     private void CloseEscape()
     {
-        if (rsoCurrentWindows.Value.Count > 0 && rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value)
-        {
-            ResumeGame();
-        }
+        if (rsoCurrentWindows.Value.Count > 0 && rsoCurrentWindows.Value[^1] == gameObject && !rsoInConsole.Value) ResumeGame();
     }
 
     public void ResumeGame()

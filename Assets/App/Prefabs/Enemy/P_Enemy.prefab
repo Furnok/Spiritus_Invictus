@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 481751962266192794}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 1.5, z: -5}
+  m_LocalPosition: {x: -10, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -146,14 +146,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5276679289733621114}
-  - component: {fileID: 495233547217921218}
   - component: {fileID: 1431773725924121066}
   - component: {fileID: 5886562096679836169}
   - component: {fileID: 2819568101127906853}
   - component: {fileID: 445208566684554611}
   - component: {fileID: 9183690598147176708}
   - component: {fileID: 8400928163415866521}
-  - component: {fileID: 1882207588305552252}
+  - component: {fileID: 963565435278829898}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -183,62 +182,6 @@ Transform:
   - {fileID: 5653424367057378731}
   m_Father: {fileID: 7972417589024532759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &495233547217921218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1039572514723219672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Graph: {fileID: -5220076518644376077, guid: a566134b34cd5af4db6a0b36060ab9e4, type: 2}
-  m_BlackboardVariableOverridesList:
-  - rid: 1782279377370218675
-  - rid: 1782279384782340417
-  - rid: 1782279384782340418
-  - rid: 1782279384782340419
-  m_OriginalGraph: {fileID: -5220076518644376077, guid: a566134b34cd5af4db6a0b36060ab9e4, type: 2}
-  m_IsInitialised: 0
-  m_IsStarted: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: 1782279377370218675
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        m_Value: {fileID: 1039572514723219672}
-    - rid: 1782279384782340417
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 10709882196661903837
-          m_Value1: 4776474814362636866
-        Name: Animator
-        m_Value: {fileID: 5886562096679836169}
-    - rid: 1782279384782340418
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Collider, UnityEngine.PhysicsModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 13340731359774197594
-          m_Value1: 12469853372035151632
-        Name: BodyCollider
-        m_Value: {fileID: 6217138946037749130}
-    - rid: 1782279384782340419
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Collider, UnityEngine.PhysicsModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 1859283804656063814
-          m_Value1: 1069021853067057833
-        Name: DetectionRangeCollider
-        m_Value: {fileID: 1536210782470915829}
 --- !u!195 &1431773725924121066
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -248,7 +191,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1039572514723219672}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_Speed: 0
   m_Acceleration: 8
   avoidancePriority: 50
@@ -278,10 +221,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 1
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'Eyes'\n\tFrom animation clip 'A_EnemyLAttack3_D3'\n\tFrom
-    animation clip 'A_EnemyLAttack2_D3'\n\tFrom animation clip 'A_EnemyLAttack1_D3'"
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -325,6 +265,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05545dc5093041448b8d4d00c2b5f96e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
+  patrolPointsList:
+  - {fileID: 5199276408535089712}
+  - {fileID: 4238934561793798638}
+  - {fileID: 3932769474522726717}
+  - {fileID: 481751962266192794}
+  navMeshAgent: {fileID: 1431773725924121066}
+  rb: {fileID: 2819568101127906853}
+  bodyCollider: {fileID: 6217138946037749130}
+  detectionCollider: {fileID: 1536210782470915829}
+  hurtCollider: {fileID: 6177182004407894465}
+  animator: {fileID: 5886562096679836169}
   moveParam: IsMoving
   deathParam: IsDead
   idleAttack: IsIdleAttack
@@ -332,46 +284,24 @@ MonoBehaviour:
   comboParam: IsCombo
   stopAttackParam: IsStopAttack
   hitHeavyParam: IsHeavyHit
-  tBagParam: T-Bag
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4096
-  patrolPointsList:
-  - {fileID: 5199276408535089712}
-  - {fileID: 4238934561793798638}
-  - {fileID: 3932769474522726717}
-  - {fileID: 481751962266192794}
-  behaviorAgent: {fileID: 495233547217921218}
-  navMeshAgent: {fileID: 1431773725924121066}
-  rb: {fileID: 2819568101127906853}
-  bodyCollider: {fileID: 6217138946037749130}
-  detectionCollider: {fileID: 1536210782470915829}
-  hurtCollider: {fileID: 6177182004407894465}
-  animator: {fileID: 5886562096679836169}
   body: {fileID: 6905421159853868602}
   center: {fileID: 5421673960955687534}
   spawnProjectilePoint: {fileID: 1872526195975783811}
-  enemyProjectile: {fileID: 7501301468289437560, guid: 2ed9513c34b0abb4facaadc6e39513ea, type: 3}
   enemyAttackData: {fileID: 9183690598147176708}
   enemyDetectionRange: {fileID: 2811589338267356800}
   enemyHurt: {fileID: 2132075167513657250}
   enemyUI: {fileID: 4394752163360763578}
   enemyMaxTravelZone: {fileID: 5830951658339230131}
   enemyHeadLookAtIK: {fileID: 8400928163415866521}
+  rootMotionModifier: {fileID: 963565435278829898}
+  enemyProjectile: {fileID: 7501301468289437560, guid: 2ed9513c34b0abb4facaadc6e39513ea, type: 3}
   patrolPoints: {fileID: 2395496571129997540}
-  rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
   rseOnDataLoad: {fileID: 11400000, guid: d8401e7eeb710344ca47f8e9df92d71d, type: 2}
+  rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
   rseOnPlayerRespawn: {fileID: 11400000, guid: 3b09f2a06394f4642a88a2d57f0cec43, type: 2}
   rsoDataSaved: {fileID: 11400000, guid: db0edbbd21d7571419860daa092a7506, type: 2}
-  ssoEnemyData: {fileID: 11400000, guid: beacd9468b7bcba4981759fd6576733c, type: 2}
-  onUpdateEnemyHealth:
-    m_PersistentCalls:
-      m_Calls: []
-  onGetHit:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &9183690598147176708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,8 +316,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeDisplay: 0.2
   weaponCollider: {fileID: 0}
-  content: {fileID: 0}
-  warning: {fileID: 0}
+  particleDodgeType: {fileID: 0}
+  particleParryType: {fileID: 0}
+  particlesTrail: []
   enemy: {fileID: 445208566684554611}
   onChangeAttackData:
     m_PersistentCalls:
@@ -404,13 +335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce09c97a1fa629b469373ae096563d0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 1
-  bodyWeight: 0
-  headWeight: 1
-  eyesWeight: 0
-  clampWeight: 0.5
   animator: {fileID: 5886562096679836169}
---- !u!114 &1882207588305552252
+  ssoEnemyHead: {fileID: 11400000, guid: e9937c2ede5a94048bf95b7bb105728e, type: 2}
+--- !u!114 &963565435278829898
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -419,11 +346,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1039572514723219672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 419917398e6ee2943a97f7ac85b96aa6, type: 3}
+  m_Script: {fileID: 11500000, guid: c2328b772e9072e49adadad652aefd9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tagPlayer: Player
-  rootMotionMultiplier: 2
+  tagObstacle: Obstacle
   animator: {fileID: 5886562096679836169}
   rb: {fileID: 2819568101127906853}
   body: {fileID: 5421673960955687534}
@@ -635,7 +562,7 @@ Transform:
   m_GameObject: {fileID: 3932769474522726717}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 1.5, z: 5}
+  m_LocalPosition: {x: -10, y: 1, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -756,7 +683,7 @@ Transform:
   m_GameObject: {fileID: 4238934561793798638}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 1.5, z: 5}
+  m_LocalPosition: {x: 10, y: 1, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -831,9 +758,6 @@ MonoBehaviour:
   playerTag: Player
   detectionCollider: {fileID: 1536210782470915829}
   enemy: {fileID: 445208566684554611}
-  onTargetDetected:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5199276408535089712
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,7 +783,7 @@ Transform:
   m_GameObject: {fileID: 5199276408535089712}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 1.5, z: -5}
+  m_LocalPosition: {x: 10, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -933,9 +857,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f3e7e40379da74bb437b27a8eedd05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onUpdateEnemyHealth:
-    m_PersistentCalls:
-      m_Calls: []
+  enemy: {fileID: 445208566684554611}
 --- !u!1 &5421673960955687534
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1118,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5276679289733621114}
@@ -1394,12 +1316,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50ea4abc89a559048b3a6537ee91a02e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeFade: 0.4
-  timeDisplayHealthBar: 3
-  animationSlider: 0.4
   content: {fileID: 1861027275683421439}
   sliderHealth: {fileID: 7257551419699715195}
-  enemy: {fileID: 445208566684554611}
+  ssoDisplay: {fileID: 11400000, guid: 67fbeef0288ea2244886151a8aa34e0b, type: 2}
+  ssoUnDisplay: {fileID: 11400000, guid: 1d2d0d22aca811741860c3d7bcf11210, type: 2}
+  ssoAnimationSlider: {fileID: 11400000, guid: 8bee63bb03668e640aa5af912c9390fe, type: 2}
 --- !u!1 &8944502541329920824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,12 +1389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   box: {fileID: 7837490951314405229}
-  onTargetDetected:
-    m_PersistentCalls:
-      m_Calls: []
-  onTarget:
-    m_PersistentCalls:
-      m_Calls: []
+  enemy: {fileID: 445208566684554611}
 --- !u!1 &9149232510415803103
 GameObject:
   m_ObjectHideFlags: 0

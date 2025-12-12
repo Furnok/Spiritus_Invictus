@@ -6,30 +6,10 @@ using UnityEngine;
 public class S_PlayerMovement : MonoBehaviour
 {
     [TabGroup("Settings")]
-    [Title("Animations")]
-    [SerializeField, S_AnimationName] private string moveParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string speedParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string _strafXParam;
-
-    [TabGroup("Settings")]
-    [SerializeField, S_AnimationName] private string _strafYParam;
-
-    [TabGroup("Settings")]
-    [Title("Grounding")]
-    [SerializeField] private CapsuleCollider capsule;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask groundMask;
-
-    [TabGroup("Settings")]
-    [SerializeField] private LayerMask obstacleMask;
-
-    [TabGroup("Settings")]
     [SerializeField] private float groundCheckDist = 0.5f;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float stopFromWall = 0.03f;
 
     /*
     [TabGroup("Settings")]
@@ -61,6 +41,30 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField, Range(0f, 0.9f)] private float slopeSlowAtMax = 0.10f;
 
     [TabGroup("References")]
+    [Title("Animations")]
+    [SerializeField, S_AnimationName] private string moveParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string speedParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string _strafXParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName] private string _strafYParam;
+
+    [TabGroup("References")]
+    [Title("Layers")]
+    [SerializeField] private LayerMask groundMask;
+
+    [TabGroup("References")]
+    [SerializeField] private LayerMask obstacleMask;
+
+    [TabGroup("References")]
+    [Title("Grounding")]
+    [SerializeField] private CapsuleCollider capsule;
+
+    [TabGroup("References")]
     [Title("Rigidbody")]
     [SerializeField] private Rigidbody rigidbodyPlayer;
 
@@ -80,16 +84,19 @@ public class S_PlayerMovement : MonoBehaviour
     [SerializeField] private RSE_OnPlayerHit _rseOnPlayerHit;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSO_GameInPause _rsoGameInPause;
+    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
 
     [TabGroup("Inputs")]
-    [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
+    [SerializeField] private RSO_GameInPause _rsoGameInPause;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationBoolValueChange rseOnAnimationBoolValueChange;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnAnimationFloatValueChange rseOnAnimationFloatValueChange;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CameraRotation rsoCameraRotation;
@@ -99,9 +106,6 @@ public class S_PlayerMovement : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_CurrentInputActionMap rsoCurrentInputActionMap;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnPlayerAddState _onPlayerAddState;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging _playerIsDodging;
@@ -373,6 +377,14 @@ public class S_PlayerMovement : MonoBehaviour
     private IEnumerator KnockbackCoroutine(S_StructAttackContact contact, bool fromParry)
     {
         var data = contact.data;
+
+        contact.source.TryGetComponent(out I_EnemyTransformProvider transformProfider);
+
+        Transform enemyTransform = transformProfider != null ? transformProfider.GetEnemyTransform() : null;
+        //enemyTransform = null;
+
+        bool isNull = enemyTransform == null;
+
         float duration = fromParry ? data.knockbackOnParryDuration : data.knockbackHitDuration;
         float distance = fromParry ? data.knockbackOnParrryDistance : data.knockbackHitDistance;
 
@@ -381,13 +393,20 @@ public class S_PlayerMovement : MonoBehaviour
 
         Vector3 dir;
 
-        if (contact.data.attackDirection != Vector3.zero)
+        if(enemyTransform != null)
         {
-            dir = contact.data.attackDirection.normalized;
+            dir = (transform.position - enemyTransform.position).normalized;
         }
         else
         {
-            dir = (transform.position - contact.source.transform.position).normalized;
+            if (contact.data.attackDirection != Vector3.zero)
+            {
+                dir = contact.data.attackDirection.normalized;
+            }
+            else
+            {
+                dir = (transform.position - contact.source.transform.position).normalized;
+            }
         }
 
         dir = Vector3.ProjectOnPlane(dir, groundNormal).normalized;
@@ -574,10 +593,26 @@ public class S_PlayerMovement : MonoBehaviour
     {
         GetCapsuleWorldEnds(out var top, out var bottom, out var radius);
 
-        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, maxDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        bool overlapping = Physics.CheckCapsule(
+        bottom, top, radius,
+        obstacleMask, QueryTriggerInteraction.Ignore
+        );
+
+        if (overlapping)
         {
-            return Mathf.Max(0f, hit.distance - 0.03f);
+            return 0f;
         }
+
+        float castDist = maxDist + stopFromWall;
+
+        if (Physics.CapsuleCast(bottom, top, radius, dir, out var hit, castDist, obstacleMask, QueryTriggerInteraction.Ignore))
+        {
+            float allowed = hit.distance - stopFromWall;
+            if (allowed < 0f) allowed = 0f;
+
+            return Mathf.Min(maxDist, allowed);
+        }
+
         return maxDist;
     }
 

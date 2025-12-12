@@ -9,21 +9,12 @@ using UnityEngine;
 public class S_PlayerBasicAttack : MonoBehaviour
 {
     [TabGroup("References")]
-    [SerializeField] private EventReference _convictionAccumulationSound;
-
-    [TabGroup("References")]
-    [SerializeField] private SSO_RumbleData _chargeAttackRumbleData;
-
-    [TabGroup("References")]
-    [SerializeField] private SSO_RumbleData _chargeAttackBetweenStepRumbleData;
-
-    [TabGroup("Settings")]
-    [Title("Sounds")]
-    [SerializeField] private bool allowFadeoutSoundConvictionAccu = true;
-
-    [TabGroup("Settings")]
     [Title("Animation")]
     [SerializeField, S_AnimationName] private string _attackParam;
+
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference _convictionAccumulationSound;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
@@ -56,6 +47,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsTargeting rsoPlayerIsTargeting;
 
     [TabGroup("Outputs")]
@@ -66,6 +63,9 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PreconsumedConviction _preconsumedConviction;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSO_CurrentChargeStep _rsoCurrentChargeStep;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStateTransitions _playerStateTransitions;
@@ -83,13 +83,10 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [SerializeField] private SSO_AnimationTransitionDelays _animationTransitionDelays;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnRumbleRequested _rseOnRumbleRequested;
+    [SerializeField] private SSO_RumbleData _chargeAttackRumbleData;
 
     [TabGroup("Outputs")]
-    [SerializeField] private RSE_OnRumbleStopChannel _rseOnRumbleStopChannel;
-
-    [TabGroup("Outputs")]
-    [SerializeField] private RSO_CurrentChargeStep _rsoCurrentChargeStep;
+    [SerializeField] private SSO_RumbleData _chargeAttackBetweenStepRumbleData;
 
     private Coroutine _attackChargeCoroutine = null;
 
@@ -332,9 +329,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
 
         if (!_wasCanceled)
         {
+            _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
             rumbleData = _chargeAttackRumbleData.Value;
             rumbleData.Duration = 300f;
             _rseOnRumbleRequested.Call(rumbleData);
+
             while (_isHolding && !_wasCanceled)
                 yield return null;
 
@@ -347,7 +347,7 @@ public class S_PlayerBasicAttack : MonoBehaviour
     {
         if (_convictionAccumulationInstance.isValid())
         {
-            _convictionAccumulationInstance.stop(allowFadeoutSoundConvictionAccu ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE);
+            _convictionAccumulationInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             _convictionAccumulationInstance.release();
             _convictionAccumulationInstance = default;
         }
@@ -393,6 +393,13 @@ public class S_PlayerBasicAttack : MonoBehaviour
         rseOnAnimationBoolValueChange.Call(_attackParam, false);
 
         _reservedConviction = 0f;
+
+        if (_convictionAccumulationInstance.isValid())
+        {
+            _convictionAccumulationInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            _convictionAccumulationInstance.release();
+            _convictionAccumulationInstance = default;
+        }
 
         _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
 

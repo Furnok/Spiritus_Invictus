@@ -1,33 +1,18 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile
+public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableProjectile, I_EnemyTransformProvider
 {
-    [TabGroup("Settings")]
-    [Title("Filter")]
+    [TabGroup("References")]
+    [Title("Filters")]
     [SerializeField, S_TagName] private string tagHurt;
 
-    [TabGroup("Settings")]
-    [Title("Layer")]
-    [SerializeField] private string playerLayer;
-
-    [TabGroup("Settings")]
+    [TabGroup("References")]
+    [Title("Masks")]
     [SerializeField] private LayerMask blockLayer;
 
-    [TabGroup("Settings")]
-    [Title("Projectile")]
-    [SerializeField] private float speed;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float lifeTime;
-
-    [TabGroup("Settings")]
-    [Title("Reflect")]
-    [SerializeField] private float reflectSpeedMul;
-
-    [TabGroup("Settings")]
-    [SerializeField] private float reflectDmgMul;
+    [TabGroup("References")]
+    [SerializeField, S_LayerName] private int playerLayer;
 
     [TabGroup("References")]
     [Title("Rigidbody")]
@@ -84,6 +69,11 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
         CalculateControlPoint();
     }
 
+    public Transform GetEnemyTransform()
+    {
+        return owner;
+    }
+
     private void Update()
     {
         if (!isInitialized) return;
@@ -91,7 +81,7 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
         timeAlive += Time.deltaTime;
         float t = timeAlive / travelTime;
 
-        if (timeAlive >= lifeTime)
+        if (timeAlive >= ssoProjectileData.Value.lifeTime)
         {
             Destroy(gameObject);
             return;
@@ -136,11 +126,10 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
 
     public void Reflect(Transform reflectOwner)
     {
-        attackData.damage *= reflectDmgMul;
-        speed *= reflectSpeedMul;
+        attackData.damage *= ssoProjectileData.Value.reflectDmgMul;
         timeAlive = 0;
 
-        gameObject.layer = LayerMask.NameToLayer(playerLayer);
+        gameObject.layer = playerLayer;
         if (rendered && playerMat) rendered.material = playerMat;
 
         if (owner != null && owner.gameObject.activeInHierarchy)
@@ -156,6 +145,11 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
             direction = reflectOwner.forward;
             transform.forward = direction;
         }
+    }
+
+    public bool CanReflect()
+    {
+        return true;
     }
 
     private void CalculateControlPoint()
@@ -176,10 +170,7 @@ public class S_EnemyProjectile : MonoBehaviour, I_AttackProvider, I_ReflectableP
                 arcDir = (Vector3.up + side).normalized;
 
             }
-            else
-            {
-                arcDir = (Vector3.up + side * arcDirection).normalized;
-            }
+            else arcDir = (Vector3.up + side * arcDirection).normalized;
         }
 
         float arcHeight = toTarget.magnitude * 0.25f * arcHeightMultiplier;

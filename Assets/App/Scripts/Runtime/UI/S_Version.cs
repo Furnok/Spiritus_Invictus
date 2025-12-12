@@ -16,18 +16,12 @@ public class S_Version : MonoBehaviour
     #if UNITY_EDITOR
     private void OnEnable()
     {
-        if (!Application.isPlaying)
-        {
-            EditorApplication.update += UpdateVersionLabelEditor;
-        }
+        if (!Application.isPlaying) EditorApplication.update += UpdateVersionLabelEditor;
     }
 
     private void OnDisable()
     {
-        if (!Application.isPlaying)
-        {
-            EditorApplication.update -= UpdateVersionLabelEditor;
-        }
+        if (!Application.isPlaying) EditorApplication.update -= UpdateVersionLabelEditor;
     }
 
     private void UpdateVersionLabelEditor()
@@ -38,16 +32,12 @@ public class S_Version : MonoBehaviour
 
     private void Start()
     {
-        if (Application.isPlaying)
-        {
-            UpdateVersionLabel();
-        }
+        if (Application.isPlaying) UpdateVersionLabel();
     }
 
     private void UpdateVersionLabel()
     {
-        if (versionText == null)
-            return;
+        if (versionText == null) return;
 
         string rawVersion = !string.IsNullOrWhiteSpace(Application.version) ? Application.version : "0.0.0";
 
@@ -66,10 +56,7 @@ public class S_Version : MonoBehaviour
 
         string[] normalized = new string[3] { "0", "0", "0" };
 
-        for (int i = 0; i < Mathf.Min(parts.Length, 3); i++)
-        {
-            normalized[i] = parts[i];
-        }
+        for (int i = 0; i < Mathf.Min(parts.Length, 3); i++) normalized[i] = parts[i];
 
         return string.Join(".", normalized);
     }

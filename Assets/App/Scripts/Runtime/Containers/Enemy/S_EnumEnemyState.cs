@@ -1,11 +1,8 @@
-﻿using Unity.Behavior;
-
-[BlackboardEnum]
-public enum S_EnumEnemyState
+﻿public enum S_EnumEnemyState
 {
     Idle,
-	Patrol,
-	Chase,
+	Patroling,
+	Chasing,
 	Fighting,
 	HeavyHit,
 	Death,
