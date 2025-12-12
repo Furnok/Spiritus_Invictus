@@ -7,15 +7,6 @@ using UnityEngine.InputSystem;
 
 public class S_WindowManager : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Times")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFade;
-
-    [TabGroup("Settings")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeFadeSkip;
-
     [TabGroup("References")]
     [Title("Audio")]
     [SerializeField] private EventReference uiSound;
@@ -107,6 +98,12 @@ public class S_WindowManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_Display ssoDisplay;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_UnDisplay ssoUnDisplay;
+
     private void Awake()
     {
         rsoCurrentWindows.Value = new();
@@ -142,10 +139,7 @@ public class S_WindowManager : MonoBehaviour
 
         if (defaultWindow == menuWindow)
         {
-            if (Gamepad.current == null)
-            {
-                rseOnShowMouseCursor.Call();
-            }
+            if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
             rseOnUIInputEnabled.Call();
             rseOnOpenWindow.Call(menuWindow);
@@ -153,10 +147,7 @@ public class S_WindowManager : MonoBehaviour
         }
         else if (defaultWindow == mainMenuWindow)
         {
-            if (Gamepad.current == null)
-            {
-                rseOnShowMouseCursor.Call();
-            }
+            if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
             rseOnUIInputEnabled.Call();
             rsoInGame.Value = false;
@@ -168,7 +159,7 @@ public class S_WindowManager : MonoBehaviour
 
             StartCoroutine(S_Utils.DelayRealTime(ssoFadeTime.Value, () =>
             {
-                cg.DOFade(1f, timeFadeSkip).SetEase(Ease.Linear);
+                cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
             }));
         }
         else
@@ -189,11 +180,11 @@ public class S_WindowManager : MonoBehaviour
         {
             gameWindow.gameObject.SetActive(true);
 
-            cg.DOFade(1f, timeFade).SetEase(Ease.Linear);
+            cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
         }
         else if (!value)
         {
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
             {
                 gameWindow.SetActive(false);
             });
@@ -204,10 +195,7 @@ public class S_WindowManager : MonoBehaviour
     #region Pause Game
     private void PauseGame()
     {
-        if (inputField.isFocused)
-        {
-            return;
-        }
+        if (inputField.isFocused) return;
 
         if (rsoInConsole.Value)
         {
@@ -237,20 +225,14 @@ public class S_WindowManager : MonoBehaviour
             {
                 rseOnUIInputEnabled.Call();
 
-                if (Gamepad.current == null)
-                {
-                    rseOnShowMouseCursor.Call();
-                }
+                if (Gamepad.current == null) rseOnShowMouseCursor.Call();
             }
-            else
-            {
-                rseOnGameInputEnabled.Call();
-            }
+            else rseOnGameInputEnabled.Call();
 
             CanvasGroup cg = consoleBackgroundWindow.GetComponent<CanvasGroup>();
             cg.DOKill();
 
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 cg.blocksRaycasts = false;
             });
@@ -266,10 +248,7 @@ public class S_WindowManager : MonoBehaviour
             {
                 RuntimeManager.PlayOneShot(uiSound);
 
-                if (Gamepad.current == null)
-                {
-                    rseOnShowMouseCursor.Call();
-                }
+                if (Gamepad.current == null) rseOnShowMouseCursor.Call();
 
                 rseOnUIInputEnabled.Call();
                 OpenWindow(menuWindow);
@@ -284,14 +263,8 @@ public class S_WindowManager : MonoBehaviour
     {
         if (window != null)
         {
-            if (!window.activeInHierarchy)
-            {
-                OpenWindow(window);
-            }
-            else
-            {
-                CloseWindow(window);
-            }
+            if (!window.activeInHierarchy) OpenWindow(window);
+            else CloseWindow(window);
         }
     }
 
@@ -302,7 +275,7 @@ public class S_WindowManager : MonoBehaviour
 
         window.SetActive(true);
 
-        cg.DOFade(1f, timeFade).SetEase(Ease.Linear).SetUpdate(true);
+        cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear).SetUpdate(true);
 
         rsoCurrentWindows.Value.Add(window);
     }
@@ -314,7 +287,7 @@ public class S_WindowManager : MonoBehaviour
             CanvasGroup cg = window.GetComponent<CanvasGroup>();
             cg.DOKill();
 
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 window.SetActive(false);
             });
@@ -330,7 +303,7 @@ public class S_WindowManager : MonoBehaviour
             CanvasGroup cg = window.GetComponent<CanvasGroup>();
             cg.DOKill();
 
-            cg.DOFade(0f, timeFade).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
+            cg.DOFade(0f, ssoUnDisplay.Value).SetEase(Ease.Linear).SetUpdate(true).OnComplete(() =>
             {
                 window.SetActive(false);
             });

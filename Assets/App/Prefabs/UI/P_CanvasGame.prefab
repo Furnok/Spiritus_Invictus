@@ -1588,7 +1588,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3945734396967282996}
-  - component: {fileID: 1843591686484481252}
   m_Layer: 5
   m_Name: Console
   m_TagString: Untagged
@@ -1616,33 +1615,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1843591686484481252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 452441205508819991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a973b0ad01cf58b4c893a5d6979e7935, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiSound:
-    Guid:
-      Data1: 690468075
-      Data2: 1303567561
-      Data3: -2072532850
-      Data4: -1986356939
-    Path: event:/UI/UIButton
-  inputField: {fileID: 3350546282920948406}
-  consoleText: {fileID: 2639258578792523826}
-  scrollRect: {fileID: 5550413679288304393}
-  rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
-  rseOnResetFocus: {fileID: 11400000, guid: 49e933a059aabdf4ab8547deb65c6764, type: 2}
-  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
-  rsoConsoleCheats: {fileID: 11400000, guid: 687c0d8c74f9fdc41aa6ff08b1c72f77, type: 2}
-  ssoConsoleHelper: {fileID: 11400000, guid: 38b1436cd90f9c049b9029aa5c2e9ac3, type: 2}
 --- !u!1 &464415677368092328
 GameObject:
   m_ObjectHideFlags: 0
@@ -3034,7 +3006,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1843591686484481252}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: S_ConsoleManager, Assembly-CSharp
         m_MethodName: InputFieldSendInput
         m_Mode: 1
@@ -4971,7 +4943,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1843591686484481252}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: S_ConsoleManager, Assembly-CSharp
         m_MethodName: ButtonSendInput
         m_Mode: 1
@@ -12584,6 +12556,7 @@ GameObject:
   - component: {fileID: 5732924335234377155}
   - component: {fileID: 8056213273916310995}
   - component: {fileID: 6197051584241607373}
+  - component: {fileID: 6115397633325852408}
   m_Layer: 5
   m_Name: P_CanvasGame
   m_TagString: Untagged
@@ -12721,8 +12694,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b4aed73e3c6210499c8eab87ea9a1a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeFade: 0.2
-  timeFadeSkip: 0.2
   uiSound:
     Guid:
       Data1: 2128958607
@@ -12758,6 +12729,8 @@ MonoBehaviour:
   rsoInConsole: {fileID: 11400000, guid: e1beabb5f0d65584fb5f954d5250ed63, type: 2}
   rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
   ssoFadeTime: {fileID: 11400000, guid: 611e366585d4976458e7989ec5477367, type: 2}
+  ssoDisplay: {fileID: 11400000, guid: 67fbeef0288ea2244886151a8aa34e0b, type: 2}
+  ssoUnDisplay: {fileID: 11400000, guid: 1d2d0d22aca811741860c3d7bcf11210, type: 2}
 --- !u!114 &6197051584241607373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12770,11 +12743,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 021bd746fb409c849a4459252f98c99f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationSlider: 0.4
-  timeFadeBoss: 0.2
-  timeFadeSkip: 0.4
-  timeFadeConsole: 0.2
-  timeFadeGameOver: 0.4
   haveGameOver: 0
   uiSound:
     Guid:
@@ -12825,6 +12793,36 @@ MonoBehaviour:
   ssoPlayerAttackSteps: {fileID: 11400000, guid: ffc4fd5ee4fc81442b745bb06394e7be, type: 2}
   ssoExtractText: {fileID: 11400000, guid: 218199807a0f9ed45863f06fd66afa10, type: 2}
   ssoCameraData: {fileID: 11400000, guid: 8a8b9ed3ac9bcab418920e1de02ba0e2, type: 2}
+  ssoDisplay: {fileID: 11400000, guid: 67fbeef0288ea2244886151a8aa34e0b, type: 2}
+  ssoUnDisplay: {fileID: 11400000, guid: 1d2d0d22aca811741860c3d7bcf11210, type: 2}
+  ssoAnimationSlider: {fileID: 11400000, guid: 8bee63bb03668e640aa5af912c9390fe, type: 2}
+--- !u!114 &6115397633325852408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172068207793189745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a973b0ad01cf58b4c893a5d6979e7935, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiSound:
+    Guid:
+      Data1: 690468075
+      Data2: 1303567561
+      Data3: -2072532850
+      Data4: -1986356939
+    Path: event:/UI/UIButton
+  inputField: {fileID: 3350546282920948406}
+  consoleText: {fileID: 2639258578792523826}
+  scrollRect: {fileID: 5550413679288304393}
+  rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
+  rseOnResetFocus: {fileID: 11400000, guid: 49e933a059aabdf4ab8547deb65c6764, type: 2}
+  rsoNavigation: {fileID: 11400000, guid: 4bb6c77cda6f76648a50b1b9c79d421b, type: 2}
+  rsoConsoleCheats: {fileID: 11400000, guid: 687c0d8c74f9fdc41aa6ff08b1c72f77, type: 2}
+  ssoConsoleHelper: {fileID: 11400000, guid: 38b1436cd90f9c049b9029aa5c2e9ac3, type: 2}
 --- !u!1 &3209366103763089290
 GameObject:
   m_ObjectHideFlags: 0

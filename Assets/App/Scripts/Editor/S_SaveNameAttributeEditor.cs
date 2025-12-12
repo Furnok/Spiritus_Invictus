@@ -16,23 +16,14 @@ public class S_SaveNameAttributeEditor : PropertyDrawer
     {
         List<string> names = new List<string>(saveMax + 2) { "None" };
 
-        if (haveSettings)
-        {
-            names.Add("Settings");
-        }
+        if (haveSettings) names.Add("Settings");
 
         if (haveSaves)
         {
-            if (saveMax == 1)
-            {
-                names.Add($"Save");
-            }
+            if (saveMax == 1) names.Add($"Save");
             else
             {
-                for (int i = 1; i <= saveMax; i++)
-                {
-                    names.Add($"Save_{i}");
-                }
+                for (int i = 1; i <= saveMax; i++) names.Add($"Save_{i}");
             }
         }
 

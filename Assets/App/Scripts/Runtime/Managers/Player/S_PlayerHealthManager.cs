@@ -81,6 +81,7 @@ public class S_PlayerHealthManager : MonoBehaviour
         if (rsoPlayerCurrentHealth.Value <= 0)
         {
             if (_debugPlayer.Value.cantDie == true) return;
+
             rseOnPlayerDeath.Call();
             _onPlayerAddState.Call(S_EnumPlayerState.Dying);
         }

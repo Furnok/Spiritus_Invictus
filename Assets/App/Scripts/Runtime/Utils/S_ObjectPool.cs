@@ -16,10 +16,7 @@ public class S_ObjectPool<T> where T : MonoBehaviour
 
     public S_ObjectPool(T prefab, int initialSize, Transform parentTransform = null)
     {
-        if (prefab == null)
-        {
-            return;
-        }
+        if (prefab == null) return;
 
         this.prefab = prefab;
         this.parentTransform = parentTransform;
@@ -31,20 +28,19 @@ public class S_ObjectPool<T> where T : MonoBehaviour
     {
         T instance = Object.Instantiate(prefab, parentTransform);
         instance.gameObject.SetActive(active);
+
         return instance;
     }
 
     public T Get()
     {
-        if (prefab == null)
-            return null;
+        if (prefab == null) return null;
 
         T instance;
 
         if (pool.Count == 0)
         {
-            if (!AllowExpand)
-                return null;
+            if (!AllowExpand) return null;
 
             instance = CreateInstance(true);
         }
@@ -53,23 +49,21 @@ public class S_ObjectPool<T> where T : MonoBehaviour
             instance = pool.Dequeue();
             poolSet.Remove(instance);
 
-            if (instance == null)
-                instance = CreateInstance(true);
-            else
-                instance.gameObject.SetActive(true);
+            if (instance == null) instance = CreateInstance(true);
+            else instance.gameObject.SetActive(true);
         }
 
         if (instance.transform.parent != parentTransform)
             instance.transform.SetParent(parentTransform);
 
         OnGet?.Invoke(instance);
+
         return instance;
     }
 
     public void ReturnToPool(T instance)
     {
-        if (instance == null || poolSet.Contains(instance))
-            return;
+        if (instance == null || poolSet.Contains(instance)) return;
 
         OnRelease?.Invoke(instance);
 
@@ -96,10 +90,7 @@ public class S_ObjectPool<T> where T : MonoBehaviour
     {
         foreach (var item in pool)
         {
-            if (item != null)
-            {
-                Object.Destroy(item.gameObject);
-            }
+            if (item != null) Object.Destroy(item.gameObject);
         }
 
         pool.Clear();

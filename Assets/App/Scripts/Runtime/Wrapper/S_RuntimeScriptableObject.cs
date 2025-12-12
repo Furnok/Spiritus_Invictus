@@ -27,8 +27,7 @@ namespace BT.ScriptablesObject
         #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!Application.isPlaying)
-                _initialValue = _value;
+            if (!Application.isPlaying) _initialValue = _value;
         }
 
         private void OnEnable()
@@ -43,10 +42,7 @@ namespace BT.ScriptablesObject
 
         private void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.ExitingPlayMode)
-            {
-                ResetValue();
-            }
+            if (state == PlayModeStateChange.ExitingPlayMode) ResetValue();
         }
 
         private void ResetValue()

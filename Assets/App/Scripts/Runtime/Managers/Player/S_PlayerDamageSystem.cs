@@ -64,10 +64,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
         {
             var attackData = attackContact.data;
 
-            if (_hitReactCoroutine != null)
-            {
-                StopCoroutine(_hitReactCoroutine);
-            }
+            if (_hitReactCoroutine != null) StopCoroutine(_hitReactCoroutine);
 
             RuntimeManager.PlayOneShot(_damageSound);
             rseOnAnimationTriggerValueChange.Call("isHit");
@@ -79,7 +76,7 @@ public class S_PlayerDamageSystem : MonoBehaviour
 
             _hitReactCoroutine = StartCoroutine(S_Utils.Delay(attackData.knockbackHitDuration, () =>
             {
-                if(_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.None) == true)
+                if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.None) == true)
                 {
                     _onPlayerAddState.Call(S_EnumPlayerState.None);
                 }

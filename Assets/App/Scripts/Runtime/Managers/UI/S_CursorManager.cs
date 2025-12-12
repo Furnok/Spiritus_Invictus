@@ -46,14 +46,8 @@ public class S_CursorManager : MonoBehaviour
 
         HideMouseCursor();
 
-        if (Gamepad.current != null)
-        {
-            Device(Gamepad.current);
-        }
-        else
-        {
-            rsoDevice.Value = S_EnumDevice.KeyboardMouse;
-        }
+        if (Gamepad.current != null) Device(Gamepad.current);
+        else rsoDevice.Value = S_EnumDevice.KeyboardMouse;
     }
 
     private void OnEnable()
@@ -96,10 +90,7 @@ public class S_CursorManager : MonoBehaviour
         {
             rsoDevice.Value = S_EnumDevice.XboxController;
         }
-        else
-        {
-            rsoDevice.Value = S_EnumDevice.None;
-        }
+        else rsoDevice.Value = S_EnumDevice.None;
     }
 
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
@@ -112,10 +103,7 @@ public class S_CursorManager : MonoBehaviour
 
                 Device(device);
 
-                if (rsoNavigation.Value.selectableDefault != null)
-                {
-                    SetFocus(rsoNavigation.Value.selectableDefault);
-                }
+                if (rsoNavigation.Value.selectableDefault != null) SetFocus(rsoNavigation.Value.selectableDefault);
             }
             else if (change == InputDeviceChange.Removed)
             {
@@ -145,18 +133,12 @@ public class S_CursorManager : MonoBehaviour
 
     private void MouseEnter(Selectable uiElement)
     {
-        if (uiElement.interactable)
-        {
-            Cursor.SetCursor(SelectableCursor, Vector2.zero, CursorMode.Auto);
-        }
+        if (uiElement.interactable) Cursor.SetCursor(SelectableCursor, Vector2.zero, CursorMode.Auto);
     }
 
     private void MouseLeave(Selectable uiElement)
     {
-        if (uiElement.interactable)
-        {
-            Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
-        }
+        if (uiElement.interactable) Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
     }
 
     private void SetFocus(Selectable uiElement)

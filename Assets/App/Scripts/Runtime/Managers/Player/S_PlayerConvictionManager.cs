@@ -218,7 +218,7 @@ public class S_PlayerConvictionManager : MonoBehaviour
     private void DelayWhenConvictionGain()
     {
         StopComsuptioncoroutine();
-        if(_convictionGainOrLossCoroutine != null) StopCoroutine(_convictionGainOrLossCoroutine);
+        if (_convictionGainOrLossCoroutine != null) StopCoroutine(_convictionGainOrLossCoroutine);
 
         _convictionGainOrLossCoroutine = StartCoroutine(S_Utils.Delay(_playerConvictionData.Value.pauseIntervalAfterGained, () =>
         {

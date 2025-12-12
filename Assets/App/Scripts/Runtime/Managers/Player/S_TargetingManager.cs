@@ -169,14 +169,8 @@ public class S_TargetingManager : MonoBehaviour
         {
             if (currentTarget == null)
             {
-                if (selection.TryGetComponent(out I_Targetable targetable))
-                {
-                    _previewTargetTransform = targetable.GetTargetLockOnAnchorTransform();
-                }
-                else
-                {
-                    _previewTargetTransform = selection.transform;
-                }
+                if (selection.TryGetComponent(out I_Targetable targetable)) _previewTargetTransform = targetable.GetTargetLockOnAnchorTransform();
+                else _previewTargetTransform = selection.transform;
 
                 DisplayPreviewArrow(_previewGO);
                 UnDisplayLockedArrow(_lockedGO);
@@ -188,14 +182,8 @@ public class S_TargetingManager : MonoBehaviour
             }
             else if (currentTarget != null)
             {
-                if (currentTarget.TryGetComponent(out I_Targetable targetable))
-                {
-                    _lockedTargetTransfrom = targetable.GetTargetLockOnAnchorTransform();
-                }
-                else
-                {
-                    _lockedTargetTransfrom = currentTarget.transform;
-                }
+                if (currentTarget.TryGetComponent(out I_Targetable targetable)) _lockedTargetTransfrom = targetable.GetTargetLockOnAnchorTransform();
+                else _lockedTargetTransfrom = currentTarget.transform;
 
                 UnDisplayPreviewArrow(_previewGO);
                 DisplayLockedArrow(_lockedGO);
@@ -212,10 +200,8 @@ public class S_TargetingManager : MonoBehaviour
                 {
                     UnDisplayLeftArrow(_swapLeftGO);
 
-                    if (rightTarget.TryGetComponent(out I_Targetable t))
-                        _swapRightTargetTransform = t.GetTargetLockOnAnchorTransform();
-                    else
-                        _swapRightTargetTransform = rightTarget.transform;
+                    if (rightTarget.TryGetComponent(out I_Targetable t)) _swapRightTargetTransform = t.GetTargetLockOnAnchorTransform();
+                    else _swapRightTargetTransform = rightTarget.transform;
 
                     DisplayRightArrow(_swapRightGO);
                     _swapRightGO.transform.position = _swapRightTargetTransform.position;
@@ -225,10 +211,8 @@ public class S_TargetingManager : MonoBehaviour
                 // Left
                 if (leftTarget != null && leftTarget != currentTarget)
                 {
-                    if (leftTarget.TryGetComponent(out I_Targetable leftTargetable))
-                        _swapLeftTargetTransform = leftTargetable.GetTargetLockOnAnchorTransform();
-                    else
-                        _swapLeftTargetTransform = leftTarget.transform;
+                    if (leftTarget.TryGetComponent(out I_Targetable leftTargetable)) _swapLeftTargetTransform = leftTargetable.GetTargetLockOnAnchorTransform();
+                    else _swapLeftTargetTransform = leftTarget.transform;
 
                     DisplayLeftArrow(_swapLeftGO);
                     _swapLeftGO.transform.position = _swapLeftTargetTransform.position;
@@ -241,18 +225,13 @@ public class S_TargetingManager : MonoBehaviour
                 // Right
                 if (rightTarget != null && rightTarget != currentTarget)
                 {
-                    if (rightTarget.TryGetComponent(out I_Targetable rightTargetable))
-                        _swapRightTargetTransform = rightTargetable.GetTargetLockOnAnchorTransform();
-                    else
-                        _swapRightTargetTransform = rightTarget.transform;
+                    if (rightTarget.TryGetComponent(out I_Targetable rightTargetable)) _swapRightTargetTransform = rightTargetable.GetTargetLockOnAnchorTransform();
+                    else _swapRightTargetTransform = rightTarget.transform;
 
                     DisplayRightArrow(_swapRightGO);
                     _swapRightGO.transform.position = _swapRightTargetTransform.position;
                 }
-                else
-                {
-                    UnDisplayRightArrow(_swapRightGO);
-                }
+                else UnDisplayRightArrow(_swapRightGO);
             }
         }
         else
@@ -270,21 +249,12 @@ public class S_TargetingManager : MonoBehaviour
         {
             S_LookAt lookAt = currentTarget.GetComponent<S_LookAt>();
 
-            if (lookAt != null && lookAt.GetAimPoint() != null)
-            {
-                rsoTargetPosition.Value = lookAt.GetAimPoint();
-            }
-            else
-            {
-                rsoTargetPosition.Value = currentTarget.transform.position;
-            }
+            if (lookAt != null && lookAt.GetAimPoint() != null) rsoTargetPosition.Value = lookAt.GetAimPoint();
+            else rsoTargetPosition.Value = currentTarget.transform.position;
 
             float distance = Vector3.Distance(rsoPlayerPosition.Value, currentTarget.transform.position);
 
-            if (distance > ssoPlayerMaxDistanceTargeting.Value && currentTarget != null)
-            {
-                CancelTargeting();
-            }
+            if (distance > ssoPlayerMaxDistanceTargeting.Value && currentTarget != null) CancelTargeting();
 
             var playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
 
@@ -297,20 +267,11 @@ public class S_TargetingManager : MonoBehaviour
                 if (hit.collider.gameObject != currentTarget)
                 {
                     obstacleTimer += Time.fixedDeltaTime;
-                    if (obstacleTimer >= ssoPargetObstacleBreakDelay.Value)
-                    {
-                        CancelTargeting();
-                    }
+                    if (obstacleTimer >= ssoPargetObstacleBreakDelay.Value) CancelTargeting();
                 }
-                else
-                {
-                    obstacleTimer = 0f;
-                }
+                else obstacleTimer = 0f;
             }
-            else
-            {
-                obstacleTimer = 0f;
-            }
+            else obstacleTimer = 0f;
         }
     }
 
@@ -436,14 +397,8 @@ public class S_TargetingManager : MonoBehaviour
 
             S_LookAt lookAt = currentTarget.GetComponent<S_LookAt>();
 
-            if (lookAt != null && lookAt.GetAimPoint() != null)
-            {
-                rsoTargetPosition.Value = lookAt.GetAimPoint();
-            }
-            else
-            {
-                rsoTargetPosition.Value = currentTarget.transform.position;
-            }
+            if (lookAt != null && lookAt.GetAimPoint() != null) rsoTargetPosition.Value = lookAt.GetAimPoint();
+            else rsoTargetPosition.Value = currentTarget.transform.position;
 
             rseOnStartTargeting.Call();
             RuntimeManager.PlayOneShot(_targetLockOnSound);
@@ -452,7 +407,7 @@ public class S_TargetingManager : MonoBehaviour
 
     private void OnPlayerCancelTargetingInput()
     {
-        if(rsoSettingsSaved.Value.holdLockTarget == false) return;
+        if (rsoSettingsSaved.Value.holdLockTarget == false) return;
         
         CancelTargeting();
     }
@@ -497,14 +452,8 @@ public class S_TargetingManager : MonoBehaviour
 
                     S_LookAt lookAt = currentTarget.GetComponent<S_LookAt>();
 
-                    if (lookAt != null && lookAt.GetAimPoint() != null)
-                    {
-                        rsoTargetPosition.Value = lookAt.GetAimPoint();
-                    }
-                    else
-                    {
-                        rsoTargetPosition.Value = currentTarget.transform.position;
-                    }
+                    if (lookAt != null && lookAt.GetAimPoint() != null) rsoTargetPosition.Value = lookAt.GetAimPoint();
+                    else rsoTargetPosition.Value = currentTarget.transform.position;
 
                     RuntimeManager.PlayOneShot(_targetLockOnSound);
                 }
@@ -533,15 +482,13 @@ public class S_TargetingManager : MonoBehaviour
             Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value).normalized;
 
             if (_playerCenterTransform == null) return;
+
             float signedAngle = Vector3.SignedAngle(_playerCenterTransform.forward, toTarget, Vector3.up);
 
             float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
 
             Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
-            if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
-            {
-                continue;
-            }
+            if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask)) continue;
 
             candidates.Add((target, signedAngle));
         }
@@ -560,14 +507,8 @@ public class S_TargetingManager : MonoBehaviour
             float delta = angle - currentAngle;
 
             // Normalise in [-180, 180]
-            if (delta > 180)
-            {
-                delta -= 360;
-            }
-            if (delta < -180)
-            {
-                delta += 360;
-            }
+            if (delta > 180) delta -= 360;
+            if (delta < -180) delta += 360;
 
             // If axis > 0 ? right ? look for the smallest positive delta
             // If axis < 0 ? left ? look for the largest negative delta (the closest to 0)
@@ -586,14 +527,8 @@ public class S_TargetingManager : MonoBehaviour
         // If nothing found
         if (bestTarget == null)
         {
-            if (axis > 0)
-            {
-                bestTarget = candidates.OrderBy(c => c.angle).First().go; // further left
-            }
-            else
-            {
-                bestTarget = candidates.OrderByDescending(c => c.angle).First().go; // further right
-            }
+            if (axis > 0)  bestTarget = candidates.OrderBy(c => c.angle).First().go; // further left
+            else bestTarget = candidates.OrderByDescending(c => c.angle).First().go; // further right
         }
 
         if (bestTarget != null && bestTarget != currentTarget)
@@ -619,7 +554,8 @@ public class S_TargetingManager : MonoBehaviour
             Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value);
             float distance = toTarget.magnitude;
 
-            if(_playerCenterTransform == null) return null;
+            if (_playerCenterTransform == null) return null;
+
             float angle = Vector3.Angle(_playerCenterTransform.forward, toTarget);
 
             bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
@@ -632,10 +568,7 @@ public class S_TargetingManager : MonoBehaviour
                 float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
 
                 Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
-                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
-                {
-                    continue;
-                }
+                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask)) continue;
                 else
                 {
                     bestScore = score;
@@ -644,10 +577,7 @@ public class S_TargetingManager : MonoBehaviour
             }
         }
 
-        if (selectedTarget != null)
-        {
-            rseOnAnimationBoolValueChange.Call("TargetLock", true);
-        }
+        if (selectedTarget != null)  rseOnAnimationBoolValueChange.Call("TargetLock", true);
 
         return selectedTarget;
     }
@@ -666,6 +596,7 @@ public class S_TargetingManager : MonoBehaviour
             float distance = toTarget.magnitude;
 
             if (_playerCenterTransform == null) return null;
+
             float angle = Vector3.Angle(_playerCenterTransform.forward, toTarget);
 
             bool inFrontCone = angle <= ssoFrontConeAngle.Value * 0.5f;
@@ -678,10 +609,7 @@ public class S_TargetingManager : MonoBehaviour
                 float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
 
                 Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
-                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
-                {
-                    continue;
-                }
+                if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask)) continue;
                 else
                 {
                     bestScore = score;
@@ -700,6 +628,7 @@ public class S_TargetingManager : MonoBehaviour
         foreach (var target in targetsPossible)
         {
             if (target == null) continue;
+
             if (_playerCenterTransform == null) return candidates;
 
             Vector3 toTarget = (target.transform.position - rsoPlayerPosition.Value).normalized;
@@ -708,8 +637,7 @@ public class S_TargetingManager : MonoBehaviour
             float distanceMax = Vector3.Distance(_playerCenterTransform.position, target.transform.position);
             Vector3 dir = (target.transform.position - _playerCenterTransform.position).normalized;
 
-            if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask))
-                continue;
+            if (Physics.Raycast(_playerCenterTransform.position, dir, out RaycastHit hit, distanceMax, obstacleMask)) continue;
 
             candidates.Add((target, signedAngle));
         }
@@ -725,14 +653,8 @@ public class S_TargetingManager : MonoBehaviour
 
         float currentAngle;
 
-        if (index >= 0)
-        {
-            currentAngle = candidates[index].angle;
-        }
-        else
-        {
-            currentAngle = 0f;
-        }
+        if (index >= 0) currentAngle = candidates[index].angle;
+        else currentAngle = 0f;
 
         GameObject bestTarget = null;
         float bestDelta = float.MaxValue;
@@ -766,10 +688,8 @@ public class S_TargetingManager : MonoBehaviour
 
         if (bestTarget == null && candidates.Count > 1)
         {
-            if (axis > 0f)
-                bestTarget = candidates.OrderBy(c => c.angle).First().go;
-            else if (axis < 0f)
-                bestTarget = candidates.OrderByDescending(c => c.angle).First().go;
+            if (axis > 0f) bestTarget = candidates.OrderBy(c => c.angle).First().go;
+            else if (axis < 0f) bestTarget = candidates.OrderByDescending(c => c.angle).First().go;
         }
 
         return bestTarget;
@@ -799,6 +719,7 @@ public class S_TargetingManager : MonoBehaviour
         }
 
         playerPos = new Vector3(rsoPlayerPosition.Value.x, rsoPlayerPosition.Value.y + 1.0f, rsoPlayerPosition.Value.z);
+
         if (rsoPlayerPosition == null || ssoPlayerTargetRangeRadius == null) return;
 
         Vector3 origin = playerPos;
@@ -810,6 +731,7 @@ public class S_TargetingManager : MonoBehaviour
         Quaternion rightRot = Quaternion.AngleAxis(halfAngle, Vector3.up);
 
         if (_playerCenterTransform == null) return;
+
         Vector3 leftDir = leftRot * _playerCenterTransform.forward;
         Vector3 rightDir = rightRot * _playerCenterTransform.forward;
 

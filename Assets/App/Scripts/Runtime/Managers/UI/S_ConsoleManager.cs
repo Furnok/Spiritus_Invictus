@@ -185,23 +185,15 @@ public class S_ConsoleManager : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            UpdateUI(message, true);
-        }
+        else UpdateUI(message, true);
     }
 
     private void UpdateUI(string message, bool resetInputField)
     {
-        if (string.IsNullOrEmpty(consoleText.text))
-            consoleText.text = message;
-        else
-            consoleText.text = consoleText.text + "\n" + message;
+        if (string.IsNullOrEmpty(consoleText.text)) consoleText.text = message;
+        else consoleText.text = consoleText.text + "\n" + message;
 
-        if (resetInputField)
-        {
-            inputField.text = "";
-        }
+        if (resetInputField) inputField.text = "";
 
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;

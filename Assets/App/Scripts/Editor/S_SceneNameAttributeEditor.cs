@@ -29,10 +29,7 @@ public class S_SceneNameAttributeEditor : PropertyDrawer
             RefreshScenes();
 
             var inspectors = Resources.FindObjectsOfTypeAll<Editor>().OfType<Editor>();
-            foreach (var inspector in inspectors)
-            {
-                inspector.Repaint();
-            }
+            foreach (var inspector in inspectors) inspector.Repaint();
         }
     }
 
@@ -52,10 +49,7 @@ public class S_SceneNameAttributeEditor : PropertyDrawer
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        if (sceneAssets == null || sceneNames == null)
-        {
-            RefreshScenes();
-        }
+        if (sceneAssets == null || sceneNames == null) RefreshScenes();
 
         // Get Properties
         SerializedProperty nameProp = property.FindPropertyRelative("sceneName");

@@ -59,10 +59,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
         string[] options = new string[count + 1];
         options[0] = "None";
 
-        for (int i = 0; i < count; i++)
-        {
-            options[i + 1] = parameters[i].name;
-        }
+        for (int i = 0; i < count; i++) options[i + 1] = parameters[i].name;
 
 
         // Find Current Index
@@ -104,6 +101,7 @@ public class S_AnimationNameAttributeEditor : PropertyDrawer
     private AnimatorController GetAnimatorController(Animator animator)
     {
         var rac = animator.runtimeAnimatorController;
+
         if (!rac) return null;
 
         if (rac is AnimatorOverrideController overrideCtrl)
