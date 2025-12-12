@@ -127,7 +127,6 @@ public class S_ConsoleManager : MonoBehaviour
     private void CheckCommand(string message)
     {
         string messageCapital = CapitalizeSecond(message);
-        Debug.Log(messageCapital);
 
         var cmd = ssoConsoleHelper.Value.FirstOrDefault(x => x.command == messageCapital);
 
