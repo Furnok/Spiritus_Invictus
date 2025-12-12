@@ -159,6 +159,9 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_AnimationSlider ssoAnimationSlider;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_GameOver ssoGameOver;
+
     private Tween healthTween = null;
     private Tween convictionTween = null;
     private Tween preconvictionTween = null;
@@ -427,7 +430,7 @@ public class S_UIGameManager : MonoBehaviour
     #region Game Over
     private void GameOver()
     {
-        StartCoroutine(S_Utils.Delay(3f, () =>
+        StartCoroutine(S_Utils.Delay(ssoGameOver.Value, () =>
         {
             if (haveGameOver)
             {
