@@ -1,55 +1,40 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_ParticlesAttract : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
+    [Title("Settings")]
+    [SuffixLabel("s", Overlay = true)]
     [SerializeField, Range(0f, 1f)] private float attractStartLife = 0.1f;           // at 70% of lifetime atrtract to the target transform
+
+    [TabGroup("Settings")]
     [SerializeField] private float attractionStrength = 8f;
+
+    [TabGroup("Settings")]
     [SerializeField] private float attractionLerp = 10f;
+
+    [TabGroup("Settings")]
     [SerializeField] private float killRadius = 0.1f;
 
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Target")]
     [SerializeField] private Transform target;
+
+    [TabGroup("References")]
+    [Title("Particle")]
     [SerializeField] private ParticleSystem _ps;
 
-    //[Header("Inputs")]
-
-    [Header("Outputs")]
+    [TabGroup("Outputs")]
     [SerializeField] private RSE_OnPlayerGainConviction _onPlayerGainConviction;
 
     private ParticleSystem.Particle[] _particles;
     private float _ammountTotalConvictionGain = 0f;
     private int _totalParticles = 0;
+
     private float _convictionPerParticle => _totalParticles > 0 ? _ammountTotalConvictionGain / _totalParticles : 0;
 
-    public void InitializeTransform(Transform transformToAttract, float ammountConvictionGain)
-    {
-        _ps.Play();
-        _ammountTotalConvictionGain = ammountConvictionGain;
-
-        var emission = _ps.emission;
-
-        if (emission.burstCount == 0) { _totalParticles = 0; }
-
-        var bursts = new ParticleSystem.Burst[emission.burstCount];
-        emission.GetBursts(bursts);
-
-        int total = 0;
-
-        foreach (var b in bursts)
-        {
-            int cycles = Mathf.Max(1, b.cycleCount);
-            total += (int)b.count.constant * cycles;
-        }
-
-        _totalParticles = total;
-
-        //Debug.Log("Total Particles Emitted: " + _totalParticles);
-
-        target = transformToAttract;
-    }
-
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (target == null) return;
 
@@ -76,9 +61,7 @@ public class S_ParticlesAttract : MonoBehaviour
                 continue;
             }
 
-            Vector3 worldPos = worldSim
-                ? p.position
-                : transform.TransformPoint(p.position);
+            Vector3 worldPos = worldSim ? p.position : transform.TransformPoint(p.position);
 
             Vector3 toTarget = target.position - worldPos;
             float dist = toTarget.magnitude;
@@ -108,9 +91,33 @@ public class S_ParticlesAttract : MonoBehaviour
 
         _ps.SetParticles(_particles, count);
 
-        if (count == 0)
+        if (count == 0) Destroy(gameObject);
+    }
+
+    public void InitializeTransform(Transform transformToAttract, float ammountConvictionGain)
+    {
+        _ps.Play();
+        _ammountTotalConvictionGain = ammountConvictionGain;
+
+        var emission = _ps.emission;
+
+        if (emission.burstCount == 0) _totalParticles = 0;
+
+        var bursts = new ParticleSystem.Burst[emission.burstCount];
+        emission.GetBursts(bursts);
+
+        int total = 0;
+
+        foreach (var b in bursts)
         {
-            Destroy(gameObject);
+            int cycles = Mathf.Max(1, b.cycleCount);
+            total += (int)b.count.constant * cycles;
         }
+
+        _totalParticles = total;
+
+        //Debug.Log("Total Particles Emitted: " + _totalParticles);
+
+        target = transformToAttract;
     }
 }

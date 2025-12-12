@@ -3,40 +3,56 @@ using UnityEngine;
 
 public class S_PlayerParticleEffectManager : MonoBehaviour
 {
-    [Header("Settings")]
+    [TabGroup("Settings")]
     [Title("Offsets")]
     [SerializeField] private float _forwardOffsetParry = 0.5f;
 
-    [Header("Settings")]
+    [TabGroup("Settings")]
     [SerializeField] private float _upwardOffsetParry = 0.2f;
 
-    [Header("References")]
-    [Title("Parent")]
+    [TabGroup("References")]
+    [Title("Parents")]
     [SerializeField] private Transform _particleEffectParent;
+
+    [TabGroup("References")]
     [SerializeField] private Transform _chargingEffectParent;
+
+    [TabGroup("References")]
     [SerializeField] private Transform _targetAttract;
+
+    [TabGroup("References")]
     [SerializeField] private Transform _convictionDodgeEffectParent;
 
-
-    [Header("References")]
-    [Title("Stats")]
-    [SerializeField] private SSO_PlayerStats _playerStats;
-    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
-
-    [Header("References")]
+    [TabGroup("References")]
     [Title("Prefab")]
     [SerializeField] private GameObject _prefabParryEffect;
-    [SerializeField] private S_ParticlesAttract _prefabParticlesAttractParryGain;
-    [SerializeField] private S_ParticlesAttract _prefabParticlesAttractDodgeGain;
-    //[SerializeField] private GameObject _prefabChargingEffect;
 
-    [Header("Inputs")]
+    [TabGroup("References")]
+    [SerializeField] private S_ParticlesAttract _prefabParticlesAttractParryGain;
+
+    [TabGroup("References")]
+    [SerializeField] private S_ParticlesAttract _prefabParticlesAttractDodgeGain;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnParrySuccess _onParrySuccess;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnAttackStartPerformed _onAttackStartPerformed;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit _rseOnPlayerGettingHit;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnSpawnProjectile rseOnSpawnProjectile;
+
+    [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
 
     private void Awake()
     {
@@ -84,17 +100,17 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         attract.InitializeTransform(_targetAttract, _playerConvictionData.Value.dodgeSuccessGain);
     }
 
-    void ActiveChargeEffect()
+    private void ActiveChargeEffect()
     {
         _chargingEffectParent.gameObject.SetActive(true);
     }
 
-    void DeactiveChargeEffect()
+    private void DeactiveChargeEffect()
     {
         _chargingEffectParent.gameObject.SetActive(false);
     }
 
-    void DeactiveChargeEffect(float value)
+    private void DeactiveChargeEffect(float value)
     {
         _chargingEffectParent.gameObject.SetActive(false);
     }

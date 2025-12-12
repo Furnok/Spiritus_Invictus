@@ -1,8 +1,7 @@
-using NUnit.Framework;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class S_SphereCharging : MonoBehaviour
 {
@@ -12,53 +11,78 @@ public class S_SphereCharging : MonoBehaviour
     //[SerializeField] private float _pulseSpeed = 15f;
     //[SerializeField] private float _pulseAmplitude = 0.1f;
 
-    [Header("Particle parameters")]
-    [SerializeField] private List<ParticleSettingsData> _listParticleSettingsData = new List<ParticleSettingsData>();
+    [TabGroup("Settings")]
+    [Title("Particle Parameters")]
+    [SerializeField] private List<S_StructParticleSettingsData> _listParticleSettingsData = new();
     
-
-
-    [Header("References")]
+    [TabGroup("References")]
+    [Title("Transform")]
     [SerializeField] private Transform _energySphere;
-    [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
-    [SerializeField] private SSO_PlayerStats _playerStats;
+
+    [TabGroup("References")]
+    [Title("Particle")]
     [SerializeField] private ParticleSystem _particleSfxChargeAttack;
+
+    [TabGroup("References")]
+    [Title("MeshRenderer")]
     [SerializeField] private MeshRenderer _meshRendererEnergySphere;
+
+    [TabGroup("Ouputs")]
     [SerializeField] private RSO_CurrentChargeStep _rsoCurrentChargeStep;
 
-    [System.Serializable]
-    public struct ParticleSettingsData
-    {
-        public int Step;
-        public float SpeedModifier;
-        public float ParticlesEmission;
-        public float ParticlesOrbitalMinEmission;
-        public float ParticlesOrbitalMaxEmission;
-        public Color ParticleColor;
-        public Color SphereColor;
-        public float ScaleEnergySphere;
-    }
-    //[Header("Inputs")]
+    [TabGroup("Ouputs")]
+    [SerializeField] private SSO_PlayerAttackSteps _playerAttackSteps;
 
-    //[Header("Outputs")]
+    [TabGroup("Ouputs")]
+    [SerializeField] private SSO_PlayerStats _playerStats;
 
     //private float charge = 0f; // 0  1
-    private bool isCharging = true;
-    private float _chargeDuration => GetMaxHoldTime();
+    //private bool isCharging = true;
 
-    ParticleSettingsData _currentSettings;
+    S_StructParticleSettingsData _currentSettings;
 
-    private Material _sphereMat;
+    private Material _sphereMat = null;
 
-    private Color _currentSphereColor;
-    private Color _targetSphereColor;
-    private float _currentSphereScale;
-    private float _targetSphereScale;
+    private Color _currentSphereColor = Color.white;
+    private Color _targetSphereColor = Color.white;
+    private float _currentSphereScale = 0;
+    private float _targetSphereScale = 0;
     private float _colorLerpElapsed = 0f;
     private float _colorLerpDuration = 0f;
 
-    void Update()
+    //private float _chargeDuration => GetMaxHoldTime();
+
+    private void OnEnable()
     {
-        if (isCharging)
+        //charge = 0f;
+        //isCharging = true;
+
+        _sphereMat = _meshRendererEnergySphere.material;
+
+        _currentSettings = _listParticleSettingsData.FirstOrDefault(s => s.Step == 0);
+        _currentSphereColor = _currentSettings.SphereColor;
+        _targetSphereColor = _currentSettings.SphereColor;
+        _colorLerpElapsed = 0f;
+        _colorLerpDuration = 0f;
+        _currentSphereScale = _currentSettings.ScaleEnergySphere;
+        _targetSphereScale = _currentSettings.ScaleEnergySphere;
+
+        _sphereMat.color = _currentSphereColor;
+
+        _rsoCurrentChargeStep.onValueChanged += SetupParticleSettings;
+    }
+
+    private void OnDisable()
+    {
+        //isCharging = false;
+        //_energySphere.localScale = _minScale * Vector3.one;
+
+        _rsoCurrentChargeStep.onValueChanged -= SetupParticleSettings;
+    }
+
+    private void Update()
+    {
+        //if (isCharging)
         //    charge = Mathf.Clamp01(charge + Time.deltaTime / _chargeDuration);
 
         //float baseScale = Mathf.Lerp(_minScale, _maxScale, charge);
@@ -90,42 +114,13 @@ public class S_SphereCharging : MonoBehaviour
         }
     }
 
-    void OnEnable()
-    {
-        //charge = 0f;
-        isCharging = true;
-
-        _sphereMat = _meshRendererEnergySphere.material;
-
-        _currentSettings = _listParticleSettingsData.FirstOrDefault(s => s.Step == 0);
-        _currentSphereColor = _currentSettings.SphereColor;
-        _targetSphereColor = _currentSettings.SphereColor;
-        _colorLerpElapsed = 0f;
-        _colorLerpDuration = 0f;
-        _currentSphereScale = _currentSettings.ScaleEnergySphere;
-        _targetSphereScale = _currentSettings.ScaleEnergySphere;
-
-    _sphereMat.color = _currentSphereColor;
-
-        _rsoCurrentChargeStep.onValueChanged += SetupParticleSettings;
-    }
-
-    void OnDisable()
-    {
-        isCharging = false;
-        //_energySphere.localScale = _minScale * Vector3.one;
-
-        _rsoCurrentChargeStep.onValueChanged -= SetupParticleSettings;
-    }
-
     private float GetMaxHoldTime()
     {
         float max = 0f;
 
         foreach (var step in _playerAttackSteps.Value)
         {
-            if (step.timeHoldingInput > max)
-                max = step.timeHoldingInput;
+            if (step.timeHoldingInput > max) max = step.timeHoldingInput;
         }
 
         max += _playerStats.Value.timeWaitBetweenSteps * _playerAttackSteps.Value.Count - 1;
@@ -133,17 +128,17 @@ public class S_SphereCharging : MonoBehaviour
         return max;
     }
 
-    void SetupParticleSettings(int step)
+    private void SetupParticleSettings(int step)
     {
-        ParticleSettingsData settings  = _listParticleSettingsData.FirstOrDefault(s => s.Step == step);
+        S_StructParticleSettingsData settings  = _listParticleSettingsData.FirstOrDefault(s => s.Step == step);
         _currentSettings = settings;
 
         var stepData = _playerAttackSteps.Value.FirstOrDefault(a => a.step == step);
         var lastStepData = _playerAttackSteps.Value.FirstOrDefault(a => a.step == step - 1);
 
         var durationTransition = lastStepData.step != 0 ? stepData.timeHoldingInput - lastStepData.timeHoldingInput : stepData.timeHoldingInput;
-        if (durationTransition > 0f)
-            durationTransition += _playerStats.Value.timeWaitBetweenSteps;
+        if (durationTransition > 0f) durationTransition += _playerStats.Value.timeWaitBetweenSteps;
+
         _colorLerpDuration = Mathf.Max(0.01f, durationTransition);
         _colorLerpElapsed = 0f;
         _currentSphereScale = _energySphere.localScale.x;
@@ -168,14 +163,12 @@ public class S_SphereCharging : MonoBehaviour
     public void SetMidColor(ParticleSystem ps, Color newColor)
     {
         var col = ps.colorOverLifetime;
-        if (!col.enabled)
-            return;
+        if (!col.enabled) return;
 
         Gradient grad = col.color.gradient;
         var colorKeys = grad.colorKeys;
 
-        if (colorKeys == null || colorKeys.Length == 0)
-            return;
+        if (colorKeys == null || colorKeys.Length == 0) return;
 
         int bestIndex = 0;
         float bestDist = Mathf.Abs(colorKeys[0].time - 0.5f);
@@ -192,10 +185,7 @@ public class S_SphereCharging : MonoBehaviour
 
         const float epsilon = 0.01f;
 
-        if (bestDist <= epsilon)
-        {
-            colorKeys[bestIndex].color = newColor;
-        }
+        if (bestDist <= epsilon) colorKeys[bestIndex].color = newColor;
         else
         {
             var list = new List<GradientColorKey>(colorKeys);
