@@ -3277,6 +3277,7 @@ GameObject:
   - component: {fileID: 1128583823}
   - component: {fileID: 1128583822}
   - component: {fileID: 1128583821}
+  - component: {fileID: 1128583826}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -3346,14 +3347,19 @@ MonoBehaviour:
   bossDetectionRange: {fileID: 785394359}
   animator: {fileID: 1128583824}
   moveParam: isMoving
-  deathParam: 
-  idleAttack: 
+  deathParam: isDead
+  idleAttack: isIdleAttack
   attackParam: isAttacking
-  stunParam: 
+  comboParam: isCombo
+  stopAttackParam: isStopAttacking
+  stunParam: isStun
+  bossHurt: {fileID: 1351031395}
+  rootMotionModifier: {fileID: 1128583821}
+  bossAttackData: {fileID: 1128583826}
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
-  onExecuteAttack: {fileID: 0}
-  rseOnEnemyTargetDied: {fileID: 0}
+  onExecuteAttack: {fileID: 11400000, guid: 3da07f09686258c4f84c0ab1889d9bcd, type: 2}
+  rseOnEnemyTargetDied: {fileID: 11400000, guid: a6d4a41f4054c224a832b2ce84286687, type: 2}
 --- !u!54 &1128583823
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3425,6 +3431,22 @@ NavMeshAgent:
   m_BaseOffset: -0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1128583826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128583819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fb17964eca9dbf47a336ba996f7d7f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeDisplay: 0
+  weaponCollider: {fileID: 0}
+  boss: {fileID: 1128583822}
+  enemyWeapon: {fileID: 0}
 --- !u!1 &1165396268
 GameObject:
   m_ObjectHideFlags: 0
