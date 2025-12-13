@@ -63,7 +63,23 @@ public class S_Boss : MonoBehaviour
     [SerializeField, S_AnimationName("animator")] private string attackParam;
 
     [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string comboParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string stopAttackParam;
+
+    [TabGroup("References")]
     [SerializeField, S_AnimationName("animator")] private string stunParam;
+
+    [TabGroup("References")]
+    [Title("Scripts")]
+    [SerializeField] private S_BossHurt bossHurt;
+
+    [TabGroup("References")]
+    [SerializeField] private S_BossRootMotionModifier rootMotionModifier;
+
+    [TabGroup("References")]
+    [SerializeField] private S_EnemyAttackData enemyAttackData;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
@@ -490,10 +506,10 @@ public class S_Boss : MonoBehaviour
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
             overrideController[overrideKey] = currentAttack.bossAttack.listComboData[i].animation;
 
-            //rootMotionModifier.Setup(currentAttack.bossAttack.listComboData[i].rootMotionMultiplier, combo.distanceMin);
+            rootMotionModifier.Setup(currentAttack.bossAttack.listComboData[i].rootMotionMultiplier);
 
-            //enemyAttackData.SetAttackMode(currentAttack.bossAttack.listComboData[i].attackData);
-            //animator.SetTrigger(i == 0 ? attackParam : comboParam);
+            enemyAttackData.SetAttackMode(currentAttack.bossAttack.listComboData[i].attackData);
+            animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
             yield return new WaitForSeconds(currentAttack.bossAttack.listComboData[i].animation.length);
 
@@ -511,7 +527,7 @@ public class S_Boss : MonoBehaviour
             yield return null;
         }
 
-        //rootMotionModifier.Setup(1, 0);
+        rootMotionModifier.Setup(1);
         animator.SetBool(idleAttack, true);
 
         isPerformingCombo = false;
