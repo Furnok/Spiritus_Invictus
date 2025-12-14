@@ -49,7 +49,7 @@ MonoBehaviour:
           knockbackOnParryDuration: 0.2
           knockbackOnParrryDistance: 1
           parryToleranceBeforeHit: 0.05
-          parryToleranceAfterHit: 0.05
+          parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 20
           convictionParryGain: 10
@@ -69,7 +69,7 @@ MonoBehaviour:
           knockbackOnParryDuration: 0.2
           knockbackOnParrryDistance: 1
           parryToleranceBeforeHit: 0.05
-          parryToleranceAfterHit: 0.05
+          parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 20
           convictionParryGain: 10
@@ -89,13 +89,13 @@ MonoBehaviour:
           knockbackOnParryDuration: 0.2
           knockbackOnParrryDistance: 5
           parryToleranceBeforeHit: 0.05
-          parryToleranceAfterHit: 0.05
+          parryToleranceAfterHit: 0.1
           invicibilityDuration: 0.7
           convictionReduction: 20
           convictionParryGain: 10
           lastAttack: 0
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      distanceMin: 1
-      distanceToChase: 1.5
-      distanceToLoseAttack: 3
+      distanceMin: 0
+      distanceToChase: 3
+      distanceToLoseAttack: 4
