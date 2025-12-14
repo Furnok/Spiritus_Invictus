@@ -63,7 +63,23 @@ public class S_Boss : MonoBehaviour
     [SerializeField, S_AnimationName("animator")] private string attackParam;
 
     [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string comboParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string stopAttackParam;
+
+    [TabGroup("References")]
     [SerializeField, S_AnimationName("animator")] private string stunParam;
+
+    [TabGroup("References")]
+    [Title("Scripts")]
+    [SerializeField] private S_BossHurt bossHurt;
+
+    [TabGroup("References")]
+    [SerializeField] private S_BossRootMotionModifier rootMotionModifier;
+
+    [TabGroup("References")]
+    [SerializeField] private S_BossAttackData bossAttackData;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
@@ -183,7 +199,7 @@ public class S_Boss : MonoBehaviour
 
         if (isChasing) Chase();
 
-        //if (isFighting) Fight();
+        if (isFighting) Fight();
     }
     private void FixedUpdate()
     {
@@ -226,6 +242,7 @@ public class S_Boss : MonoBehaviour
                 Chasing();
                 break;
             case S_EnumBossState.Combat:
+                Fighting();
                 break;
             case S_EnumBossState.Stun:
                 Stun();
@@ -320,7 +337,6 @@ public class S_Boss : MonoBehaviour
                         navMeshAgent.velocity = Vector3.zero;
                         isChasing = false;
                         UpdateState(S_EnumBossState.Combat);
-                        //ExecuteAttack(currentAttack);
                     }
                     else
                     {
@@ -336,7 +352,6 @@ public class S_Boss : MonoBehaviour
             navMeshAgent.velocity = Vector3.zero;
             isChasing = false;
             UpdateState(S_EnumBossState.Combat);
-            //ExecuteAttack(currentAttack);
         }
     }
     #endregion
@@ -464,15 +479,40 @@ public class S_Boss : MonoBehaviour
 
         foreach (var attack in listAttackOwnedPossibilities) attack.score = 0;
     }
-    private void ExecuteAttack(S_ClassAttackOwned attack)
+
+    private void Fighting()
     {
-        lastAttack = attack;
-        attack.frequency++;
+        isFighting = true;
+        animator.SetBool(idleAttack, true);
+    }
+    private void Fight()
+    {
+        if(canAttack && !isStrafe)
+        {
+            canAttack = false;
 
-        navMeshAgent.ResetPath();
-        navMeshAgent.velocity = Vector3.zero;
+            lastAttack = currentAttack;
+            currentAttack.frequency++;
 
-        onExecuteAttack.Call(attack.bossAttack);
+            if (comboCoroutine != null)
+            {
+                StopCoroutine(comboCoroutine);
+                comboCoroutine = null;
+            }
+
+            comboCoroutine = StartCoroutine(PlayComboSequence());
+
+            return;
+        }
+
+        if (!isPerformingCombo)
+        {
+            if (!isStrafe)
+            {
+                isStrafe = true;
+                Strafing();
+            }
+        }
     }
     private IEnumerator PlayComboSequence()
     {
@@ -490,10 +530,10 @@ public class S_Boss : MonoBehaviour
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
             overrideController[overrideKey] = currentAttack.bossAttack.listComboData[i].animation;
 
-            //rootMotionModifier.Setup(currentAttack.bossAttack.listComboData[i].rootMotionMultiplier, combo.distanceMin);
+            rootMotionModifier.Setup(currentAttack.bossAttack.listComboData[i].rootMotionMultiplier);
 
-            //enemyAttackData.SetAttackMode(currentAttack.bossAttack.listComboData[i].attackData);
-            //animator.SetTrigger(i == 0 ? attackParam : comboParam);
+            bossAttackData.SetAttackMode(currentAttack.bossAttack.listComboData[i].attackData);
+            animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
             yield return new WaitForSeconds(currentAttack.bossAttack.listComboData[i].animation.length);
 
@@ -511,7 +551,7 @@ public class S_Boss : MonoBehaviour
             yield return null;
         }
 
-        //rootMotionModifier.Setup(1, 0);
+        rootMotionModifier.Setup(1);
         animator.SetBool(idleAttack, true);
 
         isPerformingCombo = false;
@@ -538,7 +578,7 @@ public class S_Boss : MonoBehaviour
             target = null;
         }
 
-        //SetCombo();
+        ChooseAttack();
 
     }
     private IEnumerator TimeForChooseAttack()
@@ -549,7 +589,7 @@ public class S_Boss : MonoBehaviour
 
         ChooseAttack();
 
-        //ExecuteAttack(currentAttack);
+        UpdateState(S_EnumBossState.Combat);
     }
 
     private void Strafing()
