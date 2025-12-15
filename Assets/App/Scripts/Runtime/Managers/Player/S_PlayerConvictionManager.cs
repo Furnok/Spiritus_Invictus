@@ -6,6 +6,9 @@ using UnityEngine;
 public class S_PlayerConvictionManager : MonoBehaviour
 {
     [TabGroup("References")]
+    [SerializeField] private float _soundDelayToMakeConvictionGain;
+
+    [TabGroup("References")]
     [Title("Audio")]
     [SerializeField] private EventReference _convictionGainSoundEffect;
 
@@ -57,6 +60,9 @@ public class S_PlayerConvictionManager : MonoBehaviour
     private Coroutine _convictionConsumptionCoroutine = null;
     private Coroutine _convictionGainOrLossCoroutine = null;
 
+    private float _timerConvictionGainSound = 0f;
+    private bool _canPlayConvictionGainSound => _timerConvictionGainSound <= 0f;
+
     private void Awake()
     {
         _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
@@ -106,6 +112,11 @@ public class S_PlayerConvictionManager : MonoBehaviour
             }));
 
             return;
+        }
+
+        if (_timerConvictionGainSound > 0f)
+        {
+            _timerConvictionGainSound -= Time.deltaTime;
         }
     }
 
@@ -167,9 +178,14 @@ public class S_PlayerConvictionManager : MonoBehaviour
         _playerCurrentConviction.Value = ammount;
         rseOnPlayerConvictionUpdate.Call(ammount);
 
-        EventInstance eventInstance = RuntimeManager.CreateInstance(_convictionGainSoundEffect);
-        eventInstance.setParameterByName("CurrentConviction", _playerCurrentConviction.Value);
-        eventInstance.start();
+        if(_canPlayConvictionGainSound == true)
+        {
+            EventInstance eventInstance = RuntimeManager.CreateInstance(_convictionGainSoundEffect);
+            eventInstance.setParameterByName("CurrentConviction", _playerCurrentConviction.Value);
+            eventInstance.start();
+        }
+
+        _timerConvictionGainSound = _soundDelayToMakeConvictionGain;
 
         DelayWhenConvictionGain();
     }
