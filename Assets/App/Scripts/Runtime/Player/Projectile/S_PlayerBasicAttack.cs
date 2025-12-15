@@ -16,6 +16,9 @@ public class S_PlayerBasicAttack : MonoBehaviour
     [Title("Audio")]
     [SerializeField] private EventReference _convictionAccumulationSound;
 
+    [TabGroup("References")]
+    [SerializeField] private EventReference _attackPerformedSound;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerAttackInput rseOnPlayerAttack;
 
@@ -355,6 +358,12 @@ public class S_PlayerBasicAttack : MonoBehaviour
         _attackChargeCoroutine = StartCoroutine(S_Utils.Delay(_playerStats.Value.delayBeforeCastAttack, () =>
         {
             _rseOnRumbleStopChannel.Call(S_EnumRumbleChannel.ChargeAttack);
+
+            if(_attackPerformedSound.IsNull == false)
+            {
+                EventInstance instance = RuntimeManager.CreateInstance(_attackPerformedSound);
+                instance.start();
+            }
 
             rseOnAnimationBoolValueChange.Call(_attackParam, false);
             var value = Mathf.FloorToInt(_reservedConviction);
