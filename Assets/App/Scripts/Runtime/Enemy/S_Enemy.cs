@@ -2,6 +2,7 @@
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -601,6 +602,15 @@ public class S_Enemy : MonoBehaviour
 
                 return;
             }
+            else if (distance < combo.distanceMin)
+            {
+                Vector3 awayDir = (transform.position - target.transform.position).normalized;
+                Vector3 desiredPos = transform.position + awayDir * combo.distanceToChase;
+
+                navMeshAgent.SetDestination(desiredPos);
+
+                return;
+            }
             else
             {
                 canAttack = false;
@@ -632,7 +642,12 @@ public class S_Enemy : MonoBehaviour
             }
             else if (distance < combo.distanceMin)
             {
-                // TO CLOSE
+                Vector3 awayDir = (transform.position - target.transform.position).normalized;
+                Vector3 desiredPos = transform.position + awayDir * combo.distanceToChase;
+
+                navMeshAgent.SetDestination(desiredPos);
+
+                return;
             }
             else
             {
@@ -646,6 +661,8 @@ public class S_Enemy : MonoBehaviour
                 }
 
                 strafeCoroutine = StartCoroutine(Strafing());
+
+                return;
             }
         }
     }
