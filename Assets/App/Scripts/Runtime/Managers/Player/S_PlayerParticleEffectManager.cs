@@ -33,6 +33,9 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_ParticlesAttract _prefabParticlesAttractDodgeGain;
 
+    [TabGroup("References")]
+    [SerializeField] private ParticleSystem _healPaticleSystem;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnParrySuccess _onParrySuccess;
 
@@ -47,6 +50,9 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDodgePerfect _rseOnDodgePerfect;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnPlayerHealPerformed _rseOnPlayerHealPerfomed;
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerStats _playerStats;
@@ -67,6 +73,8 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         _rseOnPlayerGettingHit.action += DeactiveChargeEffect;
         rseOnSpawnProjectile.action += DeactiveChargeEffect;
         _rseOnDodgePerfect.action += ActiveDodgeEffect;
+
+        _rseOnPlayerHealPerfomed.action += PlayHealEffect;
     }
 
     private void OnDisable()
@@ -77,6 +85,8 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
         _rseOnPlayerGettingHit.action -= DeactiveChargeEffect;
         rseOnSpawnProjectile.action -= DeactiveChargeEffect;
         _rseOnDodgePerfect.action -= ActiveDodgeEffect;
+
+        _rseOnPlayerHealPerfomed.action -= PlayHealEffect;
     }
 
     private void ActiveParryEffect(S_StructAttackContact contact)
@@ -113,5 +123,10 @@ public class S_PlayerParticleEffectManager : MonoBehaviour
     private void DeactiveChargeEffect(float value)
     {
         _chargingEffectParent.gameObject.SetActive(false);
+    }
+
+    private void PlayHealEffect()
+    {
+        _healPaticleSystem.Play();
     }
 }
