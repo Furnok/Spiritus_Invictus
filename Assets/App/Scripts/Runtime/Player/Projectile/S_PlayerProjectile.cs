@@ -10,6 +10,9 @@ public class S_PlayerProjectile : MonoBehaviour
     [SerializeField] private MeshRenderer _meshRendererProjectile;
 
     [TabGroup("References")]
+    [SerializeField] ParticleSystem _trailParticle;
+
+    [TabGroup("References")]
     [Title("Filters")]
     [SerializeField, S_TagName] private string tagHurt;
 
@@ -114,6 +117,14 @@ public class S_PlayerProjectile : MonoBehaviour
         _controlPoint = midPoint + arcDir * arcHeight;
 
         _isInitialized = true;
+
+        var mainModule = _trailParticle.main;
+        mainModule.startColor = visualsData.ColorProjectile;
+
+        var shapeModule = _trailParticle.shape;
+        shapeModule.scale = _playerProjectile.localScale;
+
+        _trailParticle.Play();
     }
 
     private void OnEnable()

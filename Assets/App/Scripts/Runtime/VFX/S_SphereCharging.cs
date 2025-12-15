@@ -117,8 +117,8 @@ public class S_SphereCharging : MonoBehaviour
                 _energySphere.localScale = Vector3.one * _targetSphereScale;
             }
 
-            _currentVisualProjectileData.ScaleProjectile = _currentSphereScale;
-            _currentVisualProjectileData.ColorProjectile = _currentSphereColor;
+            _currentVisualProjectileData.ScaleProjectile = _energySphere.localScale.x;
+            _currentVisualProjectileData.ColorProjectile = _sphereMat.color;
 
             _playerCurrentVisualProjectile.Value = _currentVisualProjectileData;
         }
