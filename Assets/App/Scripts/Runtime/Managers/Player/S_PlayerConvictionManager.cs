@@ -54,6 +54,7 @@ public class S_PlayerConvictionManager : MonoBehaviour
     private void Awake()
     {
         _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
+        rseOnPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
     }
 
     private void OnEnable()

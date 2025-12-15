@@ -170,10 +170,8 @@ public class S_UIGameManager : MonoBehaviour
     private void Awake()
     {
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
-        sliderHealth.value = sliderHealth.maxValue;
 
         sliderConviction.maxValue = ssoPlayerConvictionData.Value.maxConviction;
-        sliderConviction.value = sliderConviction.maxValue;
 
         sliderPlayerAttackSteps.maxValue = ssoPlayerConvictionData.Value.maxConviction;
 
