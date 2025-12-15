@@ -687,6 +687,9 @@ public class S_Enemy : MonoBehaviour
             rootMotionModifier.Setup(combo.listAnimationsCombos[i].rootMotionMultiplier, combo.distanceMin);
 
             enemyAttackData.SetAttackMode(combo.listAnimationsCombos[i].attackData);
+
+            if (combo.listAnimationsCombos[i].showVFXAttackType) enemyAttackData.VFXAttackType();
+            
             animator.SetTrigger(i == 0 ? attackParam : comboParam);
 
             yield return new WaitForSeconds(combo.listAnimationsCombos[i].animation.length);
