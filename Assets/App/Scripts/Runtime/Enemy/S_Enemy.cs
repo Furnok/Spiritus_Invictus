@@ -604,12 +604,12 @@ public class S_Enemy : MonoBehaviour
             }
             else if (distance < combo.distanceMin)
             {
-                Vector3 awayDir = (transform.position - target.transform.position).normalized;
+                /*Vector3 awayDir = (transform.position - target.transform.position).normalized;
                 Vector3 desiredPos = transform.position + awayDir * combo.distanceToChase;
 
                 navMeshAgent.SetDestination(desiredPos);
 
-                return;
+                return;*/
             }
             else
             {
@@ -642,16 +642,16 @@ public class S_Enemy : MonoBehaviour
             }
             else if (distance < combo.distanceMin)
             {
-                Vector3 awayDir = (transform.position - target.transform.position).normalized;
+                /*Vector3 awayDir = (transform.position - target.transform.position).normalized;
                 Vector3 desiredPos = transform.position + awayDir * combo.distanceToChase;
 
                 navMeshAgent.SetDestination(desiredPos);
 
-                return;
+                return;*/
             }
             else
             {
-                isStrafe = true;
+                /*isStrafe = true;
                 navMeshAgent.speed = ssoEnemyData.Value.speedStrafe;
 
                 if (strafeCoroutine != null)
@@ -662,7 +662,7 @@ public class S_Enemy : MonoBehaviour
 
                 strafeCoroutine = StartCoroutine(Strafing());
 
-                return;
+                return;*/
             }
         }
     }
