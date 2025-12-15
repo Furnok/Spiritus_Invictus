@@ -1,8 +1,14 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMOD.Studio;
+using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerConvictionManager : MonoBehaviour
 {
+    [TabGroup("References")]
+    [Title("Audio")]
+    [SerializeField] private EventReference _convictionGainSoundEffect;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDataLoad rseOnDataLoad;
 
@@ -156,6 +162,10 @@ public class S_PlayerConvictionManager : MonoBehaviour
         var ammount = Mathf.Clamp(ammountGain + _playerCurrentConviction.Value, 0, _playerConvictionData.Value.maxConviction);
         _playerCurrentConviction.Value = ammount;
         rseOnPlayerConvictionUpdate.Call(ammount);
+
+        EventInstance eventInstance = RuntimeManager.CreateInstance(_convictionGainSoundEffect);
+        eventInstance.setParameterByName("CurrentConviction", _playerCurrentConviction.Value);
+        eventInstance.start();
 
         DelayWhenConvictionGain();
     }
