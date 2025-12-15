@@ -38,7 +38,6 @@ public class S_PlayerHealthManager : MonoBehaviour
     private void Awake()
     {
         rsoPlayerCurrentHealth.Value = ssoPlayerStats.Value.maxHealth;
-        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
     }
 
     private void OnEnable()
@@ -55,6 +54,11 @@ public class S_PlayerHealthManager : MonoBehaviour
         rseOnPlayerHealthReduced.action -= ReducePlayerHealth;
 
         rseOnDataLoad.action -= SetValueFromData;
+    }
+
+    private void Start()
+    {
+        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
     }
 
     void SetValueFromData()

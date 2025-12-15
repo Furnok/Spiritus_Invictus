@@ -60,7 +60,6 @@ public class S_PlayerConvictionManager : MonoBehaviour
     private void Awake()
     {
         _playerCurrentConviction.Value = _playerConvictionData.Value.startConviction;
-        rseOnPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
     }
 
     private void OnEnable()
@@ -89,6 +88,11 @@ public class S_PlayerConvictionManager : MonoBehaviour
         rseOnDataLoad.action -= SetValueFromData;
 
         _rseOnPlayerHit.action -= ReductionConviction;
+    }
+
+    private void Start()
+    {
+        rseOnPlayerConvictionUpdate.Call(_playerCurrentConviction.Value);
     }
 
     private void Update()
