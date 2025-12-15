@@ -2,15 +2,9 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class S_EnemyAttackData : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Times")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeDisplay;
-
     [TabGroup("References")]
     [Title("Colliders")]
     [SerializeField] private Collider weaponCollider;
