@@ -59,7 +59,7 @@ public class S_EnemyAttackData : MonoBehaviour
         }
         else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
         {
-            if (particleDodgeType == null) particleDodgeType.Play();
+            if (particleDodgeType != null) particleDodgeType.Play();
         }
     }
 
