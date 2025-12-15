@@ -45,6 +45,8 @@ public class S_LanternDynamic : MonoBehaviour
     private void OnDisable()
     {
         _currentPlayerConviction.onValueChanged -= UpdateLanternGlowAndLigh;
+
+        HDMaterial.SetEmissiveIntensity(lanternMaterial, minEmissiveIntensityIntensity, EmissiveIntensityUnit.EV100);
     }
 
     private void UpdateLanternGlowAndLigh(float value)
