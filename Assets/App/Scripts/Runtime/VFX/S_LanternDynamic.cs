@@ -22,8 +22,8 @@ public class S_LanternDynamic : MonoBehaviour
     [SerializeField] private Light lanternLight;
 
     [TabGroup("References")]
-    [Title("Mesh Renderer")]
-    [SerializeField] private MeshRenderer lanternMeshRenderer;
+    [Title("Material")]
+    [SerializeField] private Material lanternMaterial;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSO_PlayerCurrentConviction _currentPlayerConviction;
@@ -31,12 +31,10 @@ public class S_LanternDynamic : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
 
-    private Material _lanternMaterialInstance = null;
-
     private void Awake()
     {
         lanternLight.intensity = 0f;
-        _lanternMaterialInstance = lanternMeshRenderer.material;
+        UpdateLanternGlowAndLigh(0);
     }
 
     private void OnEnable()
@@ -59,6 +57,6 @@ public class S_LanternDynamic : MonoBehaviour
 
         lanternLight.intensity = tLightIntensity;
 
-        HDMaterial.SetEmissiveIntensity(_lanternMaterialInstance, tEmissiveIntensity, EmissiveIntensityUnit.EV100);
+        HDMaterial.SetEmissiveIntensity(lanternMaterial, tEmissiveIntensity, EmissiveIntensityUnit.EV100);
     }
 }
