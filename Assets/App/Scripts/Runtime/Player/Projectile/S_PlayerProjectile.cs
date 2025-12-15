@@ -4,6 +4,12 @@ using UnityEngine;
 public class S_PlayerProjectile : MonoBehaviour
 {
     [TabGroup("References")]
+    [SerializeField] private Transform _playerProjectile;
+
+    [TabGroup("References")]
+    [SerializeField] private MeshRenderer _meshRendererProjectile;
+
+    [TabGroup("References")]
     [Title("Filters")]
     [SerializeField, S_TagName] private string tagHurt;
 
@@ -43,8 +49,14 @@ public class S_PlayerProjectile : MonoBehaviour
     private float _travelTime = 0;
 
     //private int _attackStep = 0;
+    private Material _projectileMat = null;
 
-    public void Initialize(float damage, Transform target = null, int attackStep = 0)
+    private void Awake()
+    {
+        _projectileMat = _meshRendererProjectile.material;
+    }
+
+    public void Initialize(float damage, S_StructDataProjectileVisuals visualsData, Transform target = null, int attackStep = 0)
     {
         this._target = target;
         this._direction = transform.forward;
@@ -54,6 +66,10 @@ public class S_PlayerProjectile : MonoBehaviour
         _projectileData = _playerAttackSteps.Value.Find(x => x.step == attackStep).projectileData;
         _arcRandomDirectionMin = _projectileData.arcRandomDirectionMin;
         _arcRandomDirectionMax = _projectileData.arcRandomDirectionMax;
+
+        // Apply visuals
+        _playerProjectile.localScale = Vector3.one * visualsData.ScaleProjectile;
+        _projectileMat.color = visualsData.ColorProjectile;
 
         if (_randomizeArc)
         {
@@ -174,4 +190,10 @@ public class S_PlayerProjectile : MonoBehaviour
     {
         if (_target != null && enemyDie == _target.gameObject && enemyDie != null) _target = null;
     }
+}
+
+public struct S_StructDataProjectileVisuals
+{
+    public float ScaleProjectile;
+    public Color ColorProjectile;
 }

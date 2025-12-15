@@ -27,6 +27,9 @@ public class S_SphereCharging : MonoBehaviour
     [Title("MeshRenderer")]
     [SerializeField] private MeshRenderer _meshRendererEnergySphere;
 
+    [TabGroup("Data")]
+    [SerializeField] RSO_PlayerCurrentVisualProjectile _playerCurrentVisualProjectile;
+
     [TabGroup("Ouputs")]
     [SerializeField] private RSO_CurrentChargeStep _rsoCurrentChargeStep;
 
@@ -49,6 +52,8 @@ public class S_SphereCharging : MonoBehaviour
     private float _targetSphereScale = 0;
     private float _colorLerpElapsed = 0f;
     private float _colorLerpDuration = 0f;
+
+    private S_StructDataProjectileVisuals _currentVisualProjectileData;
 
     //private float _chargeDuration => GetMaxHoldTime();
 
@@ -111,6 +116,11 @@ public class S_SphereCharging : MonoBehaviour
 
                 _energySphere.localScale = Vector3.one * _targetSphereScale;
             }
+
+            _currentVisualProjectileData.ScaleProjectile = _currentSphereScale;
+            _currentVisualProjectileData.ColorProjectile = _currentSphereColor;
+
+            _playerCurrentVisualProjectile.Value = _currentVisualProjectileData;
         }
     }
 

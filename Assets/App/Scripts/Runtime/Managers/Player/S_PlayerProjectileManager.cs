@@ -16,6 +16,10 @@ public class S_PlayerProjectileManager : MonoBehaviour
     [Title("Prefab")]
     [SerializeField] private S_PlayerProjectile projectilePrefab;
 
+    [TabGroup("References")]
+    [Title("Data")]
+    [SerializeField] RSO_PlayerCurrentVisualProjectile _playerCurrentVisualProjectile;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnNewTargeting rseOnNewTargeting;
 
@@ -93,7 +97,7 @@ public class S_PlayerProjectileManager : MonoBehaviour
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : target;
         }
 
-        projectile.Initialize(attackconviction * currentStepAttack.multipliers, aimPoint, currentStepAttack.step);
+        projectile.Initialize(attackconviction * currentStepAttack.multipliers, _playerCurrentVisualProjectile.Value, aimPoint, currentStepAttack.step);
     }
 
     private void ReturnProjectileToPool(S_PlayerProjectile projectile)
