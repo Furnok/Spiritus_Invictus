@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 481751962266192794}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 1, z: -5}
+  m_LocalPosition: {x: -5, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -314,15 +314,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8c5f9195c9f834191542017619bd51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeDisplay: 0.2
   weaponCollider: {fileID: 0}
   particleDodgeType: {fileID: 0}
   particleParryType: {fileID: 0}
   particlesTrail: []
   enemy: {fileID: 445208566684554611}
-  onChangeAttackData:
-    m_PersistentCalls:
-      m_Calls: []
+  enemyWeapon: {fileID: 0}
 --- !u!114 &8400928163415866521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,7 +559,7 @@ Transform:
   m_GameObject: {fileID: 3932769474522726717}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 1, z: 5}
+  m_LocalPosition: {x: -5, y: 1, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -683,7 +680,7 @@ Transform:
   m_GameObject: {fileID: 4238934561793798638}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 1, z: 5}
+  m_LocalPosition: {x: 5, y: 1, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -783,7 +780,7 @@ Transform:
   m_GameObject: {fileID: 5199276408535089712}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 1, z: -5}
+  m_LocalPosition: {x: 5, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
