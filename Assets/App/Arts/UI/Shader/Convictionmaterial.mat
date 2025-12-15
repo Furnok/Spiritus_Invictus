@@ -189,6 +189,7 @@ Material:
     - _EnableFogOnTransparent: 1
     - _EnableGeometricSpecularAA: 0
     - _EnergyConservingSpecularColor: 1
+    - _FillAmount: 0
     - _HeightAmplitude: 0.02
     - _HeightCenter: 0.5
     - _HeightMapParametrization: 0
@@ -210,8 +211,10 @@ Material:
     - _MetallicRemapMin: 0
     - _MovementOffsetSpeed: 3
     - _MovementSpeed: 1
+    - _MovementSpeedMax: 10
+    - _MovementSpeedMin: 0
     - _NoiseScale: 500
-    - _NoiseStrenght: 1
+    - _NoiseStrenght: 0.2
     - _NormalMapSpace: 0
     - _NormalScale: 1
     - _ObjectSpaceUVMapping: 0
@@ -275,7 +278,9 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.8894458, b: 0.41037738, a: 1}
+    - _BaseColor: {r: 0.4198113, g: 0.15592991, b: 0, a: 1}
+    - _BaseColorMax: {r: 1, g: 0.9376578, b: 0.4858491, a: 0}
+    - _BaseColorMin: {r: 1, g: 0.35529852, b: 0, a: 0}
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
@@ -283,10 +288,14 @@ Material:
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
-    - _HiglightsColor: {r: 2.828427, g: 0.00000026973984, b: 0, a: 0}
+    - _HiglightsColor: {r: 1.4980392, g: 0.7302647, b: 0, a: 0}
+    - _HiglightsColorMax: {r: 1, g: 0.9834711, b: 0, a: 0}
+    - _HiglightsColorMin: {r: 1, g: 0.40315866, b: 0, a: 0}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
-    - _MovementOffsetSpeed: {r: 3, g: 0, b: 0, a: 0}
+    - _MovementOffsetSpeed: {r: 0.5, g: 0, b: 0, a: 0}
+    - _MovementOffsetSpeedMax: {r: 1, g: 0, b: 0, a: 0}
+    - _MovementOffsetSpeedMin: {r: 0, g: 0, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
