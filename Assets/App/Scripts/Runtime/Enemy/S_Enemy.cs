@@ -636,8 +636,8 @@ public class S_Enemy : MonoBehaviour
             }
             else
             {
-                //isStrafe = true;
-                //navMeshAgent.speed = ssoEnemyData.Value.speedStrafe;
+                isStrafe = true;
+                navMeshAgent.speed = ssoEnemyData.Value.speedStrafe;
 
                 if (strafeCoroutine != null)
                 { 
@@ -645,7 +645,7 @@ public class S_Enemy : MonoBehaviour
                     strafeCoroutine = null;
                 }
 
-                //strafeCoroutine = StartCoroutine(Strafing());
+                strafeCoroutine = StartCoroutine(Strafing());
             }
         }
     }
@@ -653,9 +653,6 @@ public class S_Enemy : MonoBehaviour
     private IEnumerator Strafing()
     {
         strafeDirection = Random.value > 0.5f ? 1 : -1;
-
-        float strafeWaitTime = Random.Range(ssoEnemyData.Value.strafeWaitTimeMin, ssoEnemyData.Value.strafeWaitTimeMax);
-        nextChangeTime = Time.time + strafeWaitTime;
 
         Vector3 offsetPlayer = transform.position - target.transform.position;
         offsetPlayer.y = 0;
@@ -671,6 +668,8 @@ public class S_Enemy : MonoBehaviour
         navMeshAgent.SetDestination(finalPos);
 
         yield return new WaitUntil(() => !navMeshAgent.pathPending && navMeshAgent.remainingDistance <= 0.01f);
+
+        float strafeWaitTime = Random.Range(ssoEnemyData.Value.strafeWaitTimeMin, ssoEnemyData.Value.strafeWaitTimeMax);
 
         yield return new WaitForSeconds(strafeWaitTime);
 
