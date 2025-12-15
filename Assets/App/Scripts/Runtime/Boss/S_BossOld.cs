@@ -140,7 +140,7 @@
 //    private bool isStrafe = false;
 //    private bool lastMoveState = false;
 //    private bool canChooseAttack = false;
-    
+
 //    private S_ClassAttackOwned lastAttack = null;
 //    private S_ClassAttackOwned currentAttack = null;
 
@@ -172,7 +172,7 @@
 //        behaviorAgent.SetVariableValue<string>("StunParam", stunParam);
 //        behaviorAgent.SetVariableValue<string>("AttackParam", attackParam);
 
-//        foreach ( var bossAttack in ssoBossData.Value.listAttackPhase1)
+//        foreach (var bossAttack in ssoBossData.Value.listAttackPhase1)
 //        {
 //            var attackData = new S_ClassAttackOwned
 //            {
@@ -381,43 +381,43 @@
 //        if (canChooseAttack)
 //        {
 //            canChooseAttack = false;
-//            if(timeChooseAttackCoroutine != null)
+//            if (timeChooseAttackCoroutine != null)
 //            {
 //                StopCoroutine(timeChooseAttackCoroutine);
 //                timeChooseAttackCoroutine = null;
 //            }
 //            timeChooseAttackCoroutine = StartCoroutine(TimeForChooseAttack());
 //        }
-        
+
 //        if (Time.time >= nextChangeTime)
 //        {
 //            strafeDirection *= -1;
 //            nextChangeTime = Time.time + strafeChangeInterval;
 //        }
 
-        
+
 //        Vector3 offsetPlayer = transform.position - target.transform.position;
 //        offsetPlayer.y = 0;
 
-        
+
 //        if (offsetPlayer.sqrMagnitude < 0.01f)
 //            offsetPlayer = transform.right * 1f;
 
-        
+
 //        Vector3 offsetAtRadius = offsetPlayer.normalized * strafeRadius;
 
-        
+
 //        Vector3 dir = Vector3.Cross(offsetAtRadius, Vector3.up).normalized * strafeDirection;
 
-        
+
 //        Vector3 finalPos = target.transform.position + offsetAtRadius + dir * strafeDistance;
 
-        
+
 //        navMeshAgent.isStopped = false;
 //        navMeshAgent.speed = ssoBossData.Value.walkSpeed;
 //        navMeshAgent.SetDestination(finalPos);
 
-        
+
 //        Vector3 lookPos = target.transform.position - transform.position;
 //        lookPos.y = 0;
 //        if (lookPos.sqrMagnitude > 0.01f)
@@ -532,7 +532,7 @@
 //    private void LoseDifficultyLevel()
 //    {
 //        bossDifficultyLevel -= difficultyLoseWhenPlayerHit;
-//        bossDifficultyLevel = Mathf.Clamp(bossDifficultyLevel, 0,maxDifficultyLevel);
+//        bossDifficultyLevel = Mathf.Clamp(bossDifficultyLevel, 0, maxDifficultyLevel);
 //    }
 
 //    private IEnumerator GainDifficultyLevel()
@@ -572,13 +572,13 @@
 
 //        foreach (var attack in listAttackOwnedPossibilities)
 //        {
-//            if (attack.bossAttack.difficultyLevel == roundDifficulty)  attack.score+= difficultyScore;
+//            if (attack.bossAttack.difficultyLevel == roundDifficulty) attack.score += difficultyScore;
 
 //            if (attack.frequency == minAttackFrequency) attack.score += frequencyScore;
 
 //            if (lastAttack == null) continue;
 
-//            if (attack.bossAttack.listComboData[0].attackData.attackType != lastAttack.bossAttack.listComboData[^1].attackData.attackType) attack.score+= synergieScore;
+//            if (attack.bossAttack.listComboData[0].attackData.attackType != lastAttack.bossAttack.listComboData[^1].attackData.attackType) attack.score += synergieScore;
 //        }
 
 //        var maxScore = listAttackOwnedPossibilities.Max(a => a.score);

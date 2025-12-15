@@ -1,5 +1,6 @@
 using FMODUnity;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class S_BossAttackData : MonoBehaviour
@@ -14,11 +15,21 @@ public class S_BossAttackData : MonoBehaviour
     [SerializeField] private Collider weaponCollider;
 
     [TabGroup("References")]
+    [Title("VFX")]
+    [SerializeField] private ParticleSystem particleDodgeType;
+
+    [TabGroup("References")]
+    [SerializeField] private ParticleSystem particleParryType;
+
+    [TabGroup("References")]
+    [SerializeField] private List<ParticleSystem> particlesTrail;
+
+    [TabGroup("References")]
     [Title("Scripts")]
     [SerializeField] private S_Boss boss;
 
     [TabGroup("References")]
-    [SerializeField] private S_EnemyWeapon enemyWeapon;
+    [SerializeField] private S_BossWeapon bossWeapon;
 
     private S_StructEnemyAttackData attackData;
 
@@ -26,7 +37,7 @@ public class S_BossAttackData : MonoBehaviour
     {
         attackData = bossAttackData;
 
-        if (enemyWeapon != null) enemyWeapon.ChangeAttackData(attackData);
+        if (bossWeapon != null) bossWeapon.ChangeAttackData(attackData);
     }
 
     public void EnableWeaponCollider()
@@ -52,5 +63,31 @@ public class S_BossAttackData : MonoBehaviour
     public void PlayFmod(string eventName)
     {
         RuntimeManager.PlayOneShot(eventName, transform.position);
+    }
+
+    public void VFXAttackType()
+    {
+        if (attackData.attackType == S_EnumEnemyAttackType.Parryable || attackData.attackType == S_EnumEnemyAttackType.Projectile)
+        {
+            if (particleParryType != null) particleParryType.Play();
+        }
+        else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
+        {
+            if (particleDodgeType != null) particleDodgeType.Play();
+        }
+    }
+
+    public void VFXStartTrail()
+    {
+        if (particlesTrail == null || particlesTrail.Count == 0) return;
+
+        foreach (ParticleSystem particle in particlesTrail) particle.Play();
+    }
+
+    public void VFXStopTrail()
+    {
+        if (particlesTrail == null || particlesTrail.Count == 0) return;
+
+        foreach (ParticleSystem particle in particlesTrail) particle.Stop();
     }
 }
