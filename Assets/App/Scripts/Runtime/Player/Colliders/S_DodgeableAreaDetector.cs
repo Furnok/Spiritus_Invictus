@@ -30,13 +30,26 @@ public class S_DodgeableAreaDetector : MonoBehaviour
             ref var attackData = ref attack.GetAttackData();
             attackData.goSourceId = goId;
 
-            if (_attackDataInDodgeableArea.Value == null || _attackDataInDodgeableArea.Value.ContainsKey(goId) || attackData.attackType != S_EnumEnemyAttackType.Dodgeable) return;
-            
-            _attackDataInDodgeableArea.Value.Add(goId, attack.GetAttackData());
 
-            if (_attackCanHitPlayer.Value == null || _attackCanHitPlayer.Value.ContainsKey(goId) || attackData.attackType != S_EnumEnemyAttackType.Dodgeable) return;
+            if (_attackDataInDodgeableArea.Value == null || _attackDataInDodgeableArea.Value.ContainsKey(goId) || attackData.attackType != S_EnumEnemyAttackType.Dodgeable)
+            {
 
-            _attackCanHitPlayer.Value.Add(goId, attack.GetAttackData());
+            }
+            else
+            {
+                _attackDataInDodgeableArea.Value.Add(goId, attack.GetAttackData());
+            }
+
+
+            if (_attackCanHitPlayer.Value == null || _attackCanHitPlayer.Value.ContainsKey(goId) || attackData.attackType != S_EnumEnemyAttackType.Dodgeable)
+            {
+
+            }
+            else
+            {
+                _attackCanHitPlayer.Value.Add(goId, attack.GetAttackData());
+
+            }
         }
     }
 
@@ -45,13 +58,15 @@ public class S_DodgeableAreaDetector : MonoBehaviour
         if (other.CompareTag(tagHit) && other.TryGetComponent(out I_AttackProvider attack))
         {
             var goId = other.gameObject.GetInstanceID();
-            if (_attackDataInDodgeableArea.Value.ContainsKey(goId) == false) return;
+            if (_attackDataInDodgeableArea.Value.ContainsKey(goId) == true)
+            {
+                _attackDataInDodgeableArea.Value.Remove(goId);
+            }
 
-            _attackDataInDodgeableArea.Value.Remove(goId);
-
-            if (_attackCanHitPlayer.Value.ContainsKey(goId) == false) return;
-
-            _attackCanHitPlayer.Value.Remove(goId);
+            if (_attackCanHitPlayer.Value.ContainsKey(goId) == true)
+            {
+                _attackCanHitPlayer.Value.Remove(goId);
+            }
         }
     }
 }
