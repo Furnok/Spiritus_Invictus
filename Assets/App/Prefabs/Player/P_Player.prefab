@@ -231,6 +231,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4305507460654289795}
+  - component: {fileID: 8422419449602722265}
   m_Layer: 10
   m_Name: Visual
   m_TagString: Untagged
@@ -255,6 +256,28 @@ Transform:
   - {fileID: 3093736241161900781}
   m_Father: {fileID: 3473314807466382836}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8422419449602722265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447424327842527477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 718c7716ec843a046b7114ef88bc2906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMeshRenderer:
+  - {fileID: 6430445807995450084}
+  - {fileID: 7049873711441932034}
+  - {fileID: 3324747778774233305}
+  - {fileID: 2346731289412070161}
+  - {fileID: 4689879409019215598}
+  - {fileID: 8067045387821493456}
+  lanternMeshRenderer: {fileID: 7480568998992607705}
+  rseOnUpdateVisibility: {fileID: 11400000, guid: 95c4268b9852b3445980a33df03106c1, type: 2}
+  rseOnUpdateEmissiveIntensity: {fileID: 11400000, guid: f53d31b69965b3847bc22590ed9bafcf, type: 2}
 --- !u!1 &1904901089202922587
 GameObject:
   m_ObjectHideFlags: 0
@@ -1107,8 +1130,8 @@ MonoBehaviour:
   minEmissiveIntensityIntensity: 18
   maxEmissiveIntensityIntensity: 25
   lanternLight: {fileID: 4639738580571710216}
-  lanternMaterial: {fileID: 2100000, guid: ccafcc69c94846b4cb9c52a2149ce234, type: 2}
   _currentPlayerConviction: {fileID: 11400000, guid: e9e6e673e8d688d4b96f8309938dbfdc, type: 2}
+  rseOnUpdateEmissiveIntensity: {fileID: 11400000, guid: f53d31b69965b3847bc22590ed9bafcf, type: 2}
   _playerConvictionData: {fileID: 11400000, guid: 69f9f2a36a1381440a990e3461550cb3, type: 2}
 --- !u!1 &3630292079689624107
 GameObject:
