@@ -69,6 +69,13 @@ public class S_UIGameManager : MonoBehaviour
     [Title("Game Over")]
     [SerializeField] private GameObject gameOverWindow;
 
+    [TabGroup("References")]
+    [Title("Dialogue")]
+    [SerializeField] private GameObject dialogueWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private TextMeshProUGUI textDialogue;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
@@ -86,6 +93,9 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDialogueDisplay rseOnDialogueDisplay;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
@@ -167,6 +177,8 @@ public class S_UIGameManager : MonoBehaviour
     private Tween preconvictionTween = null;
     private Tween skipTween = null;
 
+    private Coroutine resetCoroutine = null;
+
     private void Awake()
     {
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
@@ -189,6 +201,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnOpenExtractWindow.action += DiplayExtract;
         rseOnConsole.action += Console;
         rseOnPlayerDeath.action += GameOver;
+        rseOnDialogueDisplay.action += DisplayDialogue;
     }
 
     private void OnDisable()
@@ -202,6 +215,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnOpenExtractWindow.action -= DiplayExtract;
         rseOnConsole.action -= Console;
         rseOnPlayerDeath.action -= GameOver;
+        rseOnDialogueDisplay.action -= DisplayDialogue;
 
         healthTween?.Kill();
         convictionTween?.Kill();
@@ -444,6 +458,47 @@ public class S_UIGameManager : MonoBehaviour
             }
             else rseOnPlayerRespawn.Call();
         }));
+    }
+    #endregion
+
+    #region Dialogue
+    private void DisplayDialogue(S_ClassDialogue dialogue)
+    {
+        CanvasGroup cg = dialogueWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        if (dialogueWindow.activeInHierarchy)
+        {
+            cg.DOFade(0f, 0).SetEase(Ease.Linear);
+            dialogueWindow.gameObject.SetActive(false);
+        }
+
+        dialogueWindow.gameObject.SetActive(true);
+
+        cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
+
+        textDialogue.text = dialogue.text;
+
+        if (resetCoroutine != null)
+        {
+            StopCoroutine(resetCoroutine);
+            resetCoroutine = null;
+        }
+
+        resetCoroutine = StartCoroutine(ResetDiplay(dialogue.duration));
+    }
+
+    private IEnumerator ResetDiplay(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        CanvasGroup cg = dialogueWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        cg.DOFade(0f, ssoDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            dialogueWindow.gameObject.SetActive(false);
+        });
     }
     #endregion
 }
