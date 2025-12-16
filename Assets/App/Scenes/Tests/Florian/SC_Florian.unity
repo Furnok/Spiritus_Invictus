@@ -342,7 +342,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2818859625446955190, guid: b40847abdb388e54794a37b68e5bf3ac, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3442850564495643166, guid: b40847abdb388e54794a37b68e5bf3ac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -694,7 +694,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 109688469303074083, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.62
+      value: -4.8
       objectReference: {fileID: 0}
     - target: {fileID: 3056695303604649081, guid: d63a12b3e37c6234cb40b92f31212e41, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3484,6 +3484,7 @@ GameObject:
   - component: {fileID: 1128583822}
   - component: {fileID: 1128583821}
   - component: {fileID: 1128583826}
+  - component: {fileID: 1128583827}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -3562,6 +3563,7 @@ MonoBehaviour:
   bossHurt: {fileID: 1351031395}
   rootMotionModifier: {fileID: 1128583821}
   bossAttackData: {fileID: 1128583826}
+  bossAttack: {fileID: 1128583827}
   rseOnPlayerGettingHit: {fileID: 11400000, guid: 0bde5f6bad322664c9a88a5237c9d868, type: 2}
   rseOnPlayerDeath: {fileID: 11400000, guid: 05b30ffda8ad63c4d82da9ab419e36e1, type: 2}
   onExecuteAttack: {fileID: 11400000, guid: 3da07f09686258c4f84c0ab1889d9bcd, type: 2}
@@ -3659,6 +3661,25 @@ MonoBehaviour:
   - {fileID: 651683530}
   boss: {fileID: 1128583822}
   bossWeapon: {fileID: 1564147764}
+--- !u!114 &1128583827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128583819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c976a15a48ad544fa1149705621f53f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyCollider: {fileID: 790399056}
+  bossProjectile: {fileID: 8140121101017001052, guid: f1fb51f3df4ed10408671800bfdcfdc4, type: 3}
+  projectilePingPongSpawn: {fileID: 1273248903}
+  aimPointBoss: {fileID: 1900646543}
+  boss: {fileID: 1128583819}
+  onExecuteAttack: {fileID: 11400000, guid: 3da07f09686258c4f84c0ab1889d9bcd, type: 2}
+  aimPointPlayer: {fileID: 0}
 --- !u!1 &1165396268
 GameObject:
   m_ObjectHideFlags: 0

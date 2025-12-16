@@ -81,6 +81,9 @@ public class S_Boss : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_BossAttackData bossAttackData;
 
+    [TabGroup("References")]
+    [SerializeField] private S_BossAttack bossAttack;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
 
@@ -313,7 +316,7 @@ public class S_Boss : MonoBehaviour
         {
             newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
-
+            bossAttack.aimPointPlayer = aimPoint;
             UpdateState(S_EnumBossState.Chase);
             StartCoroutine(GainDifficultyLevel());
         }
@@ -551,13 +554,20 @@ public class S_Boss : MonoBehaviour
             lastAttack = currentAttack;
             currentAttack.frequency++;
 
-            if (comboCoroutine != null)
+            if(currentAttack.bossAttack.isSpecialAttack)
             {
-                StopCoroutine(comboCoroutine);
-                comboCoroutine = null;
+                onExecuteAttack.Call(currentAttack.bossAttack);
             }
+            else
+            {
+                if (comboCoroutine != null)
+                {
+                    StopCoroutine(comboCoroutine);
+                    comboCoroutine = null;
+                }
 
-            comboCoroutine = StartCoroutine(PlayComboSequence());
+                comboCoroutine = StartCoroutine(PlayComboSequence());
+            }
 
             return;
         }
@@ -644,7 +654,7 @@ public class S_Boss : MonoBehaviour
             resetAttack = null;
         }
 
-        resetAttack = StartCoroutine(S_Utils.Delay(currentAttack.bossAttack.attackTime, () => canAttack = true));
+        resetAttack = StartCoroutine(S_Utils.Delay(lastAttack.bossAttack.timeAfterAttack, () => canAttack = true));
 
     }
 

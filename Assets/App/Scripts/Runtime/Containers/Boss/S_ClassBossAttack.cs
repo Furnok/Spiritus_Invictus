@@ -8,8 +8,10 @@ public class S_ClassBossAttack
     [Title("Attack Settings")]
     public string attackName = "";
 
+    public bool isSpecialAttack = false;
+
     [SuffixLabel("s", Overlay = true)]
-    public float attackTime = 0;
+    public float timeAfterAttack = 0;
 
     public bool isAttackDistance = false;
 

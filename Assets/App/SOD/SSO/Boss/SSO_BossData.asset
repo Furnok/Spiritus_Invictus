@@ -33,9 +33,10 @@ MonoBehaviour:
     rotationTime: 0.6
     controllerOverride: {fileID: 22100000, guid: aba806f790b329a418f1c420ffacdb92, type: 2}
     listAttack:
-    - attackName: Ichimanji
-      attackTime: 3
-      isAttackDistance: 0
+    - attackName: PingPong
+      isSpecialAttack: 1
+      timeAfterAttack: 0
+      isAttackDistance: 1
       pvBossUnlock: 100
       difficultyLevel: 50
       listComboData:
@@ -166,9 +167,10 @@ MonoBehaviour:
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
     - attackName: Makashi
-      attackTime: 5
+      isSpecialAttack: 0
+      timeAfterAttack: 0
       isAttackDistance: 0
-      pvBossUnlock: 100
+      pvBossUnlock: 50
       difficultyLevel: 5
       listComboData:
       - animation: {fileID: 7400000, guid: 522cadce2a766b9488f3d7df802d82cc, type: 2}
