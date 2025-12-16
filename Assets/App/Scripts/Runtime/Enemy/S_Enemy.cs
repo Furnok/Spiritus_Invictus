@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class S_Enemy : MonoBehaviour
 {
@@ -59,6 +60,18 @@ public class S_Enemy : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField, S_AnimationName("animator")] private string hitHeavyParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string isStrafeParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string strafXParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string strafYParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string moveSpeedParam;
 
     [TabGroup("References")]
     [Title("Body")]
@@ -344,6 +357,11 @@ public class S_Enemy : MonoBehaviour
         isStrafe = false;
         isAttacking = false;
         unlockRotate = false;
+
+        animator.SetBool(isStrafeParam, false);
+        animator.SetFloat(strafXParam, 0);
+        animator.SetFloat(strafYParam, 0);
+        animator.SetFloat(moveSpeedParam, 0);
 
         navMeshAgent.ResetPath();
         navMeshAgent.velocity = Vector3.zero;
@@ -652,7 +670,9 @@ public class S_Enemy : MonoBehaviour
             else
             {
                 /*isStrafe = true;
+                animator.SetBool(isStrafeParam, true);
                 navMeshAgent.speed = ssoEnemyData.Value.speedStrafe;
+                animator.SetFloat(moveSpeedParam, navMeshAgent.speed);
 
                 if (strafeCoroutine != null)
                 { 
@@ -684,7 +704,21 @@ public class S_Enemy : MonoBehaviour
         Vector3 finalPos = target.transform.position + rotatedOffset;
         navMeshAgent.SetDestination(finalPos);
 
+        Vector3 moveDir = (finalPos - transform.position);
+        moveDir.y = 0f;
+        moveDir.Normalize();
+
+        Vector3 localDir = transform.InverseTransformDirection(moveDir);
+
+        animator.SetFloat(strafXParam, localDir.x);
+        animator.SetFloat(strafYParam, localDir.z);
+
         yield return new WaitUntil(() => !navMeshAgent.pathPending && navMeshAgent.remainingDistance <= 0.01f);
+
+        animator.SetBool(isStrafeParam, false);
+        animator.SetFloat(strafXParam, 0);
+        animator.SetFloat(strafYParam, 0);
+        animator.SetFloat(moveSpeedParam, 0);
 
         float strafeWaitTime = Random.Range(ssoEnemyData.Value.strafeWaitTimeMin, ssoEnemyData.Value.strafeWaitTimeMax);
 
