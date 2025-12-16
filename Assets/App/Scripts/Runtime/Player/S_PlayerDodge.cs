@@ -115,6 +115,7 @@ public class S_PlayerDodge : MonoBehaviour
     private float maxDownStepAngle => _playerStats.Value.maxSlopeAngle;
 
     private Vector2 _moveInput = Vector2.zero;
+    private Vector2 _moveInputWhenPressingDodge = Vector2.zero;
 
     private Transform _target = null;
 
@@ -228,6 +229,7 @@ public class S_PlayerDodge : MonoBehaviour
         _rb.angularVelocity = Vector3.zero;
         _playerIsDodging.Value = true;
         _canRunAfterDodge = true;
+        _moveInputWhenPressingDodge = _moveInput;
 
         float dur = _playerStats.Value.dodgeDuration;
         float wantedDist = _playerStats.Value.dodgeDistance;
@@ -254,8 +256,30 @@ public class S_PlayerDodge : MonoBehaviour
             if (remaining <= 0f) break;
             if (frameDist > remaining) frameDist = remaining;
 
+            Vector3 desiredDir;
+            if (_target != null)
+            {
+                Vector3 toTarget = _target.position - transform.position;
+                toTarget.y = 0f;
+                Vector3 forward = toTarget.normalized;
+                Vector3 right = Vector3.Cross(Vector3.up, forward).normalized;
+
+                if (_moveInputWhenPressingDodge == Vector2.zero)
+                {
+                    desiredDir = -forward;
+                }
+                else
+                {
+                    desiredDir = (right * _moveInputWhenPressingDodge.x + forward * _moveInputWhenPressingDodge.y);
+                }
+            }
+            else
+            {
+                desiredDir = dodgeDir;
+            }
+
             onGround = CheckGround(out groundNormal);
-            Vector3 stepDir = dodgeDir;
+            Vector3 stepDir = desiredDir;
             if (onGround) stepDir = Vector3.ProjectOnPlane(stepDir, groundNormal).normalized;
 
             float allowed = ProbeObstacle(stepDir, frameDist);
