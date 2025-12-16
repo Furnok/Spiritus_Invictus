@@ -733,12 +733,15 @@ public class S_Enemy : MonoBehaviour
             isAttacking = false;
             RotateEnemy();
 
-            float distance = Vector3.Distance(center.transform.position, target.transform.position);
-            if (distance > combo.distanceToLoseAttack)
+            if (target != null)
             {
-                enemyAttackData.DisableWeaponCollider();
-                enemyAttackData.VFXStopTrail();
-                break;
+                float distance = Vector3.Distance(center.transform.position, target.transform.position);
+                if (distance > combo.distanceToLoseAttack)
+                {
+                    enemyAttackData.DisableWeaponCollider();
+                    enemyAttackData.VFXStopTrail();
+                    break;
+                }
             }
 
             yield return null;
