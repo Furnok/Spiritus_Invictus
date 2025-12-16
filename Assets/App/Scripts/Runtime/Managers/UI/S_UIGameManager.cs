@@ -25,7 +25,7 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private Slider sliderHealth;
 
     [TabGroup("References")]
-    [SerializeField] private Slider sliderConviction;
+    [SerializeField] private Image sliderConviction;
 
     [TabGroup("References")]
     [SerializeField] private Slider sliderPlayerAttackSteps;
@@ -179,11 +179,16 @@ public class S_UIGameManager : MonoBehaviour
 
     private Coroutine resetCoroutine = null;
 
+    private Material materialConviction = null;
+
     private void Awake()
     {
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
 
-        sliderConviction.maxValue = ssoPlayerConvictionData.Value.maxConviction;
+        materialConviction = new Material(sliderConviction.material);
+        sliderConviction.material = materialConviction;
+
+        materialConviction.SetFloat("_FillAmount", ssoPlayerConvictionData.Value.maxConviction / ssoPlayerConvictionData.Value.maxConviction);
 
         sliderPlayerAttackSteps.maxValue = ssoPlayerConvictionData.Value.maxConviction;
 
@@ -254,7 +259,7 @@ public class S_UIGameManager : MonoBehaviour
     {
         convictionTween?.Kill();
 
-        convictionTween = sliderConviction.DOValue(conviction, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
+        materialConviction.SetFloat("_FillAmount", conviction / ssoPlayerConvictionData.Value.maxConviction);
     }
 
     private void SetPreconvictionSliderValue(float preconvition)
