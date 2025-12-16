@@ -557,6 +557,15 @@ public class S_Boss : MonoBehaviour
             if(currentAttack.bossAttack.isSpecialAttack)
             {
                 onExecuteAttack.Call(currentAttack.bossAttack);
+                isPerformingCombo = true;
+                navMeshAgent.velocity = Vector3.zero;
+                if (resetAttack != null)
+                {
+                    StopCoroutine(resetAttack);
+                    resetAttack = null;
+                }
+
+                resetAttack = StartCoroutine(S_Utils.Delay(lastAttack.bossAttack.timeAfterAttack, () => canAttack = true));
             }
             else
             {
