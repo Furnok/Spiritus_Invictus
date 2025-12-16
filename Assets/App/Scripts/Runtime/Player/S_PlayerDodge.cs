@@ -279,7 +279,7 @@ public class S_PlayerDodge : MonoBehaviour
             }
 
             onGround = CheckGround(out groundNormal);
-            Vector3 stepDir = desiredDir;
+            Vector3 stepDir = dodgeDir;  //put in there desiredDir to make dodge direction depend on the target
             if (onGround) stepDir = Vector3.ProjectOnPlane(stepDir, groundNormal).normalized;
 
             float allowed = ProbeObstacle(stepDir, frameDist);
