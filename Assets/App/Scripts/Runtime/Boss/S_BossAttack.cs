@@ -18,6 +18,13 @@ public class S_BossAttack : MonoBehaviour
     [SerializeField] private GameObject projectilePingPongSpawn;
 
     [TabGroup("References")]
+    [Title("Scripts")]
+    [SerializeField] private S_BossRootMotionModifier rootMotionModifier;
+
+    [TabGroup("References")]
+    [SerializeField] private S_BossAttackData bossAttackData;
+
+    [TabGroup("References")]
     [Title("Center")]
     [SerializeField] private Transform aimPointBoss;
 
@@ -25,13 +32,25 @@ public class S_BossAttack : MonoBehaviour
     [Title("Boss")]
     [SerializeField] private GameObject boss;
 
+    [TabGroup("References")]
+    [Title("Animator")]
+    [SerializeField] private Animator animator;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string attackParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string comboParam;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
     [HideInInspector] public Transform aimPointPlayer = null;
 
     private S_ClassBossAttack currentAttack = null;
-
+    private AnimatorOverrideController overrideController = null;
+    private Coroutine pingPongCoroutine = null;
+    private bool isAttacking = false;
     private void OnEnable()
     {
         onExecuteAttack.action += DoAttackChoose;
@@ -80,10 +99,39 @@ public class S_BossAttack : MonoBehaviour
 
     private void PingPong()
     {
-        S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
-        projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[0].attackData);
+        StartCoroutine(PingPongCoroutine());  
     }
 
+    private IEnumerator PingPongCoroutine()
+    {
+        yield return new WaitForSeconds(1);
+        isAttacking = false;
+        for (int i = 0; i < currentAttack.listComboData.Count; i++)
+        {
+            isAttacking = true;
+            string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+            overrideController[overrideKey] = currentAttack.listComboData[i].animation;
+
+            rootMotionModifier.Setup(currentAttack.listComboData[i].rootMotionMultiplier);
+
+            bossAttackData.SetAttackMode(currentAttack.listComboData[i].attackData);
+
+            if (currentAttack.listComboData[i].showVFXAttackType) bossAttackData.VFXAttackType();
+
+            animator.SetTrigger(i == 0 ? attackParam : comboParam);
+
+            yield return new WaitForSeconds(currentAttack.listComboData[i].animation.length);
+
+            if(currentAttack.listComboData[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            {
+                S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
+                projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[i].attackData);
+            }
+            isAttacking = false;
+            yield return null;
+        }
+        isAttacking = false;
+    }
     private void Balls()
     {
     }

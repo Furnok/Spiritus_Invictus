@@ -35,6 +35,9 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
     [TabGroup("Outputs")]
     [SerializeField] private SSO_ProjectileData ssoProjectileData;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnEndAttack rseOnEndAttack;
+
     private Transform owner = null;
     private Transform player = null;
 
@@ -223,6 +226,7 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
             if (damageable != null)
             {
                 damageable.TakeDamage(attackData.damage);
+                rseOnEndAttack.Call();
                 Destroy(gameObject);
             }
         }

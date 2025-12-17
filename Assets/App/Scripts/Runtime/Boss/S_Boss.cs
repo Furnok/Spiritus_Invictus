@@ -90,6 +90,9 @@ public class S_Boss : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnEndAttack rseOnEndAttack;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
@@ -184,6 +187,7 @@ public class S_Boss : MonoBehaviour
         rseOnPlayerGettingHit.action += LoseDifficultyLevel;
         rseOnPlayerDeath.action += PlayerDeath;
         rseOnPlayerRespawn.action += PlayerRespawn;
+        rseOnEndAttack.action += SpecialAttackEnd;
     }
     private void OnDisable()
     {
@@ -191,6 +195,7 @@ public class S_Boss : MonoBehaviour
         rseOnPlayerGettingHit.action -= LoseDifficultyLevel;
         rseOnPlayerDeath.action -= PlayerDeath;
         rseOnPlayerRespawn.action -= PlayerRespawn;
+        rseOnEndAttack.action -= SpecialAttackEnd;
     }
     private void Start()
     {
@@ -544,6 +549,25 @@ public class S_Boss : MonoBehaviour
         isFighting = true;
         animator.SetBool(idleAttack, true);
     }
+    private void SpecialAttackEnd()
+    {
+        rootMotionModifier.Setup(1);
+        animator.SetTrigger(stopAttackParam);
+        animator.SetBool(idleAttack, true);
+
+        isPerformingCombo = false;
+        isAttacking = false;
+        unlockRotate = false;
+
+        ChooseAttack();
+        if (resetAttack != null)
+        {
+            StopCoroutine(resetAttack);
+            resetAttack = null;
+        }
+
+        resetAttack = StartCoroutine(S_Utils.Delay(lastAttack.bossAttack.timeAfterAttack, () => canAttack = true));
+    }
     private void Fight()
     {
         Debug.Log("Fighting...");
@@ -558,14 +582,6 @@ public class S_Boss : MonoBehaviour
             {
                 onExecuteAttack.Call(currentAttack.bossAttack);
                 isPerformingCombo = true;
-                navMeshAgent.velocity = Vector3.zero;
-                if (resetAttack != null)
-                {
-                    StopCoroutine(resetAttack);
-                    resetAttack = null;
-                }
-
-                resetAttack = StartCoroutine(S_Utils.Delay(lastAttack.bossAttack.timeAfterAttack, () => canAttack = true));
             }
             else
             {
