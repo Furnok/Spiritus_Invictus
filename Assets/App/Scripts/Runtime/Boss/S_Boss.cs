@@ -151,6 +151,7 @@ public class S_Boss : MonoBehaviour
 
         Animator anim = animator;
         AnimatorOverrideController instance = new AnimatorOverrideController(ssoBossData.Value.controllerOverride);
+        bossAttack.overrideController = instance;
 
         var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
         ssoBossData.Value.controllerOverride.GetOverrides(overrides);
@@ -551,6 +552,7 @@ public class S_Boss : MonoBehaviour
     }
     private void SpecialAttackEnd()
     {
+        Debug.Log("Special Attack End");
         rootMotionModifier.Setup(1);
         animator.SetTrigger(stopAttackParam);
         animator.SetBool(idleAttack, true);

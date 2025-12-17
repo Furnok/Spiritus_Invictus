@@ -48,9 +48,8 @@ public class S_BossAttack : MonoBehaviour
     [HideInInspector] public Transform aimPointPlayer = null;
 
     private S_ClassBossAttack currentAttack = null;
-    private AnimatorOverrideController overrideController = null;
+    [HideInInspector] public AnimatorOverrideController overrideController = null;
     private Coroutine pingPongCoroutine = null;
-    private bool isAttacking = false;
     private void OnEnable()
     {
         onExecuteAttack.action += DoAttackChoose;
@@ -99,16 +98,20 @@ public class S_BossAttack : MonoBehaviour
 
     private void PingPong()
     {
-        StartCoroutine(PingPongCoroutine());  
+        if(pingPongCoroutine  != null)
+        {
+            StopCoroutine(pingPongCoroutine);
+            pingPongCoroutine = null;
+        }
+        pingPongCoroutine = StartCoroutine(PingPongCoroutine());  
     }
 
     private IEnumerator PingPongCoroutine()
     {
-        yield return new WaitForSeconds(1);
-        isAttacking = false;
+        yield return null;
+
         for (int i = 0; i < currentAttack.listComboData.Count; i++)
         {
-            isAttacking = true;
             string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
             overrideController[overrideKey] = currentAttack.listComboData[i].animation;
 
@@ -127,10 +130,8 @@ public class S_BossAttack : MonoBehaviour
                 S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
                 projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[i].attackData);
             }
-            isAttacking = false;
             yield return null;
         }
-        isAttacking = false;
     }
     private void Balls()
     {

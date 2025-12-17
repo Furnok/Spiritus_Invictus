@@ -226,12 +226,15 @@ public class S_BossProjectile : MonoBehaviour, I_AttackProvider, I_ReflectablePr
             if (damageable != null)
             {
                 damageable.TakeDamage(attackData.damage);
-                rseOnEndAttack.Call();
+                
                 Destroy(gameObject);
             }
         }
     }
-
+    private void OnDestroy()
+    {
+        rseOnEndAttack.Call();
+    }
     public ref S_StructEnemyAttackData GetAttackData()
     {
         return ref attackData;
