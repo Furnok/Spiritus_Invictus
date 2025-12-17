@@ -1,6 +1,7 @@
 ﻿using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class S_PlayerDodge : MonoBehaviour
@@ -196,7 +197,13 @@ public class S_PlayerDodge : MonoBehaviour
             //_onPlayerGainConviction.Call(_playerConvictionData.Value.dodgeSuccessGain);
             _rseOnDodgePerfect.Call();
 
-            foreach (var attackData in _attackDataInDodgeableArea.Value) _attackCanHitPlayer.Value.Remove(attackData.Key);
+            foreach (var attackData in _attackDataInDodgeableArea.Value)
+            {
+                if (_attackCanHitPlayer.Value.ContainsKey(attackData.Key) == true)
+                {
+                    _attackCanHitPlayer.Value.Remove(attackData.Key);
+                }
+            }
         }
 
         Vector3 dodgeDirection = Vector3.zero;
