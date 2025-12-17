@@ -147,10 +147,6 @@ public class S_Enemy : MonoBehaviour
     private S_EnumEnemyState currentState = S_EnumEnemyState.Idle;
     private S_ClassAnimationsCombos combo = null;
 
-    private float nextChangeTime = 0f;
-    private float nextWaitEndTime = 0f;
-    private int strafeDirection = 1;
-
     private Coroutine idleCoroutine = null;
     private Coroutine comboCoroutine = null;
     private Coroutine stunCoroutine = null;
@@ -689,7 +685,7 @@ public class S_Enemy : MonoBehaviour
 
     private IEnumerator Strafing()
     {
-        strafeDirection = Random.value > 0.5f ? 1 : -1;
+        int strafeDirection = Random.value > 0.5f ? 1 : -1;
 
         Vector3 offsetPlayer = transform.position - target.transform.position;
         offsetPlayer.y = 0;
