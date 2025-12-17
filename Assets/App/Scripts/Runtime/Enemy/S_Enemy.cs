@@ -2,10 +2,8 @@
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Services.Analytics;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class S_Enemy : MonoBehaviour
 {
@@ -169,6 +167,8 @@ public class S_Enemy : MonoBehaviour
     private bool isAttacking = false;
     private bool isStrafe = false;
     private bool unlockRotate = false;
+
+    private Vector3 posBeforeChase = Vector3.zero;
 
     private void Awake()
     {
@@ -406,8 +406,21 @@ public class S_Enemy : MonoBehaviour
 
             animator.SetBool(idleAttack, false);
 
-            UpdateState(S_EnumEnemyState.Patroling);
+            ResetEnemy();
+
+            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
+
+            StartCoroutine(ReturnBack());
         }
+    }
+
+    private IEnumerator ReturnBack()
+    {
+        navMeshAgent.SetDestination(posBeforeChase);
+
+        yield return new WaitUntil(() => !navMeshAgent.pathPending && navMeshAgent.remainingDistance <= 0.01f);
+
+        UpdateState(S_EnumEnemyState.Patroling);
     }
     #endregion
 
@@ -566,6 +579,8 @@ public class S_Enemy : MonoBehaviour
     private void Chasing()
     {
         isChasing = true;
+
+        posBeforeChase = transform.position;
 
         SetCombo();
 
