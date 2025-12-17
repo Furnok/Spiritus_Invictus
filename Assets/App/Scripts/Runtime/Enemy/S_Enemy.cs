@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor.TypeSearch;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -151,10 +152,9 @@ public class S_Enemy : MonoBehaviour
     private Coroutine resetAttack = null;
     private Coroutine patrolingCoroutine = null;
     private Coroutine strafeCoroutine = null;
+    private Coroutine returnBackCoroutine = null;
 
     private bool isPerformingCombo = false;
-    private S_EnumEnemyState? pendingState = null;
-    private GameObject pendingTarget = null;
 
     private bool isPatroling = false;
     private bool isChasing = false;
@@ -379,12 +379,7 @@ public class S_Enemy : MonoBehaviour
 
         target = newTarget;
 
-        if (isPerformingCombo || isHeavyHit)
-        {
-            pendingTarget = target;
-            pendingState = (target == null) ? S_EnumEnemyState.Patroling : S_EnumEnemyState.Chasing;
-            return;
-        }
+        if (isPerformingCombo || isHeavyHit) return;
 
         if (target != null)
         {
@@ -406,19 +401,27 @@ public class S_Enemy : MonoBehaviour
 
             animator.SetBool(idleAttack, false);
 
-            ResetEnemy();
+            if (returnBackCoroutine != null)
+            {
+                StopCoroutine(returnBackCoroutine);
+                returnBackCoroutine = null;
+            }
 
-            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
-
-            StartCoroutine(ReturnBack());
+            returnBackCoroutine = StartCoroutine(ReturnBack());
         }
     }
 
     private IEnumerator ReturnBack()
     {
+        UpdateState(S_EnumEnemyState.ReturnBack);
+
+        navMeshAgent.speed = ssoEnemyData.Value.speedChase;
+
         navMeshAgent.SetDestination(posBeforeChase);
 
         yield return new WaitUntil(() => !navMeshAgent.pathPending && navMeshAgent.remainingDistance <= 0.01f);
+
+        posBeforeChase = Vector3.zero;
 
         UpdateState(S_EnumEnemyState.Patroling);
     }
@@ -492,14 +495,7 @@ public class S_Enemy : MonoBehaviour
         detectionCollider.enabled = false;
         isPlayerDeath = true;
 
-        if (isPerformingCombo) pendingState = S_EnumEnemyState.Patroling;
-        else
-        {
-            target = null;
-            targetInZone = null;
-
-            UpdateState(S_EnumEnemyState.Patroling);
-        }
+        targetInZone = null;
     }
 
     private void PlayerRespawn()
@@ -507,16 +503,22 @@ public class S_Enemy : MonoBehaviour
         if (isPlayerDeath)
         {
             isPlayerDeath = false;
+            detectionCollider.enabled = false;
 
             target = null;
             targetInZone = null;
 
-            if (currentState != S_EnumEnemyState.Patroling)
+            if (currentState != S_EnumEnemyState.ReturnBack)
             {
-                animator.SetTrigger(stopAttackParam);
                 animator.SetBool(idleAttack, false);
 
-                UpdateState(S_EnumEnemyState.Patroling);
+                if (returnBackCoroutine != null)
+                {
+                    StopCoroutine(returnBackCoroutine);
+                    returnBackCoroutine = null;
+                }
+
+                returnBackCoroutine = StartCoroutine(ReturnBack());
 
                 if (resetAttack != null)
                 {
@@ -543,7 +545,7 @@ public class S_Enemy : MonoBehaviour
     private void Patroling()
     {
         isPatroling = true;
-        target = null;
+        detectionCollider.enabled = true;
 
         if (patrolPointsList == null || patrolPointsList.Count == 0) return;
 
@@ -564,8 +566,6 @@ public class S_Enemy : MonoBehaviour
 
             while (navMeshAgent.pathPending || navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance) yield return null;
 
-            detectionCollider.enabled = true;
-
             float waitTime = Random.Range(ssoEnemyData.Value.patrolPointWaitMin, ssoEnemyData.Value.patrolPointWaitMax);
 
             yield return new WaitForSeconds(waitTime);
@@ -580,7 +580,7 @@ public class S_Enemy : MonoBehaviour
     {
         isChasing = true;
 
-        posBeforeChase = transform.position;
+        if (posBeforeChase == Vector3.zero) posBeforeChase = transform.position;
 
         SetCombo();
 
@@ -800,30 +800,42 @@ public class S_Enemy : MonoBehaviour
         isAttacking = false;
         unlockRotate = false;
 
-        if (pendingState.HasValue)
-        {
-            animator.SetBool(idleAttack, false);
-
-            UpdateState(pendingState.Value);
-
-            pendingState = null;
-        }
-
-        if (pendingTarget != null)
-        {
-            animator.SetBool(idleAttack, false);
-
-            SetTarget(pendingTarget);
-            pendingTarget = null;
-        }
-
         if (isPlayerDeath)
         {
-            target = null;
-            targetInZone = null;
+            SetTarget(null);
+
+            if (resetAttack != null)
+            {
+                StopCoroutine(resetAttack);
+                resetAttack = null;
+            }
+
+            resetAttack = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.attackCooldown, () => canAttack = true));
+
+            yield break;
         }
 
-        SetCombo();
+        if (target != null)
+        {
+            SetCombo();
+        }
+        else
+        {
+            animator.SetBool(idleAttack, false);
+            detectionCollider.enabled = false;
+
+            ResetEnemy();
+
+            navMeshAgent.speed = ssoEnemyData.Value.speedChase;
+
+            if (returnBackCoroutine != null)
+            {
+                StopCoroutine(returnBackCoroutine);
+                returnBackCoroutine = null;
+            }
+
+            returnBackCoroutine = StartCoroutine(ReturnBack());
+        }
 
         if (resetAttack != null)
         {
@@ -856,7 +868,7 @@ public class S_Enemy : MonoBehaviour
 
         stunCoroutine = StartCoroutine(S_Utils.Delay(ssoEnemyData.Value.waitStun, () =>
         {
-            if (pendingState.HasValue)
+            /*if (pendingState.HasValue)
             {
                 UpdateState(pendingState.Value);
 
@@ -868,7 +880,7 @@ public class S_Enemy : MonoBehaviour
                     pendingTarget = null;
                 }
             }
-            else UpdateState(S_EnumEnemyState.Chasing);
+            else UpdateState(S_EnumEnemyState.Chasing);*/
         }));
     }
     #endregion
