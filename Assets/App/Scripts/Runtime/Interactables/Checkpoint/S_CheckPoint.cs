@@ -38,6 +38,9 @@ public class S_CheckPoint : MonoBehaviour
     [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSaveDisplay rseOnSaveDisplay;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerRespawnPosition rsoplayerRespawnPosition;
 
     [TabGroup("Outputs")]
@@ -114,5 +117,6 @@ public class S_CheckPoint : MonoBehaviour
         rsoDataSaved.Value.conviction = rsoPlayerCurrentConviction.Value;
 
         rseOnSaveData.Call(saveName, false);
+        rseOnSaveDisplay.Call();
     }
 }

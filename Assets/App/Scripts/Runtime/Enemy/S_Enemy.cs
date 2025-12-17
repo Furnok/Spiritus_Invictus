@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor.TypeSearch;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -105,7 +104,6 @@ public class S_Enemy : MonoBehaviour
 
     [TabGroup("References")]
     [SerializeField] private S_EnemyRootMotionModifier rootMotionModifier;
-
 
     [TabGroup("References")]
     [SerializeField] private S_EnemyProjectile enemyProjectile;

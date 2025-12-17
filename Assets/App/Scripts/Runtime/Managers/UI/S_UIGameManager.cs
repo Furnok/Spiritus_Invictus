@@ -3,6 +3,7 @@ using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using TMPro;
+using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -76,6 +77,10 @@ public class S_UIGameManager : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private TextMeshProUGUI textDialogue;
 
+    [TabGroup("References")]
+    [Title("Save")]
+    [SerializeField] private GameObject saveWindow;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
@@ -96,6 +101,9 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDialogueDisplay rseOnDialogueDisplay;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnSaveDisplay rseOnSaveDisplay;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
@@ -178,6 +186,7 @@ public class S_UIGameManager : MonoBehaviour
     private Tween skipTween = null;
 
     private Coroutine resetCoroutine = null;
+    private Coroutine resetSaveCoroutine = null;
 
     private Material materialConviction = null;
 
@@ -207,6 +216,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnConsole.action += Console;
         rseOnPlayerDeath.action += GameOver;
         rseOnDialogueDisplay.action += DisplayDialogue;
+        rseOnSaveDisplay.action += DisplaySave;
     }
 
     private void OnDisable()
@@ -221,6 +231,7 @@ public class S_UIGameManager : MonoBehaviour
         rseOnConsole.action -= Console;
         rseOnPlayerDeath.action -= GameOver;
         rseOnDialogueDisplay.action -= DisplayDialogue;
+        rseOnSaveDisplay.action -= DisplaySave;
 
         healthTween?.Kill();
         convictionTween?.Kill();
@@ -503,6 +514,45 @@ public class S_UIGameManager : MonoBehaviour
         cg.DOFade(0f, ssoDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
         {
             dialogueWindow.gameObject.SetActive(false);
+        });
+    }
+    #endregion
+
+    #region Save
+    private void DisplaySave()
+    {
+        CanvasGroup cg = saveWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        if (saveWindow.activeInHierarchy)
+        {
+            cg.DOFade(0f, 0).SetEase(Ease.Linear);
+            saveWindow.gameObject.SetActive(false);
+        }
+
+        saveWindow.gameObject.SetActive(true);
+
+        cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
+
+        if (resetSaveCoroutine != null)
+        {
+            StopCoroutine(resetSaveCoroutine);
+            resetSaveCoroutine = null;
+        }
+
+        resetSaveCoroutine = StartCoroutine(ResetDisplaySave());
+    }
+
+    private IEnumerator ResetDisplaySave()
+    {
+        yield return new WaitForSeconds(2);
+
+        CanvasGroup cg = saveWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        cg.DOFade(0f, ssoDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            saveWindow.gameObject.SetActive(false);
         });
     }
     #endregion
