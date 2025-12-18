@@ -493,26 +493,37 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""ce7d79a2-328c-493b-8ca4-c5df6f0fdf98"",
+                    ""name"": ""One Modifier"",
+                    ""id"": ""1d780eee-fa53-41e3-a2dc-d3644a26e923"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Console"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""fa07c527-1e2a-4e2f-8c9d-ad7992fa736b"",
                     ""path"": ""<Gamepad>/leftStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Controller"",
                     ""action"": ""Console"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""6e39b78b-7994-4740-8b73-09eec6656210"",
+                    ""name"": ""binding"",
+                    ""id"": ""5b9b7d4c-8163-45c3-ade3-8bd782d96786"",
                     ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Controller"",
                     ""action"": ""Console"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""One Modifier"",
@@ -607,26 +618,37 @@ public partial class @IA_PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""ad7d3599-fb09-48ef-a9a9-1dbe5880e130"",
+                    ""name"": ""One Modifier"",
+                    ""id"": ""2f79704f-b0a4-4ba9-aa55-eca602be7051"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Console"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""10718338-e0c7-4bbd-9415-22d04c2e6049"",
                     ""path"": ""<Gamepad>/leftStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Controller"",
                     ""action"": ""Console"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""2a06bf8c-ed87-4a3d-aaf9-2cdb00f78c44"",
+                    ""name"": ""binding"",
+                    ""id"": ""d8080de2-67bc-43c1-996a-2fcf74717693"",
                     ""path"": ""<Gamepad>/rightStickPress"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Controller"",
                     ""action"": ""Console"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""One Modifier"",
