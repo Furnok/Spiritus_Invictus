@@ -11,6 +11,13 @@ public class S_CheckPoint : MonoBehaviour
     [Title("Saves")]
     [SerializeField, S_SaveName] private string saveName;
 
+    [TabGroup("Settings")]
+    [Title("ColorVFX")]
+    [SerializeField] private Color colorBeforeInteract;
+
+    [TabGroup("Settings")]
+    [SerializeField] private Color colorAfterInteract;
+
     [TabGroup("References")]
     [Title("Content")]
     [SerializeField] private GameObject content;
@@ -18,6 +25,9 @@ public class S_CheckPoint : MonoBehaviour
     [TabGroup("References")]
     [Title("Spawn")]
     [SerializeField] private GameObject newSpawnPositionAndRotation;
+
+    [TabGroup("References")]
+    [SerializeField] private ParticleSystem psInteract;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
@@ -58,6 +68,13 @@ public class S_CheckPoint : MonoBehaviour
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerAttackSteps ssoPlayerAttackSteps;
 
+    private void Awake()
+    {
+        var main = psInteract.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(colorBeforeInteract);
+
+    }
+
     private void OnDisable()
     {
         rseOnPlayerInteract.action -= Checkpoint;
@@ -87,6 +104,8 @@ public class S_CheckPoint : MonoBehaviour
         rsoplayerRespawnPosition.Value.rotation = newSpawnPositionAndRotation.transform.rotation;
         rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnSendConsoleMessage.Call("Checkpoint activated, new pose respawn: " + newSpawnPositionAndRotation.transform.position + "!");
+        var main =  psInteract.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(colorAfterInteract);
 
         Heal();
 

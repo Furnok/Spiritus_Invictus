@@ -73,8 +73,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tagPlayer: Player
   saveName: Save
+  colorBeforeInteract: {r: 0, g: 0, b: 0, a: 1}
+  colorAfterInteract: {r: 1, g: 1, b: 1, a: 1}
   content: {fileID: 2577906768355654953}
   newSpawnPositionAndRotation: {fileID: 7539763509000634657}
+  psInteract: {fileID: 8399562994392905546}
   rseOnPlayerInteract: {fileID: 11400000, guid: 7dddd8b752c27d34f9be002f7e6f2343, type: 2}
   rseOnOpenExtractWindow: {fileID: 11400000, guid: 35cf34216d315aa4c862e26e5a6884c7, type: 2}
   rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
@@ -909,5 +912,10 @@ PrefabInstance:
 --- !u!4 &1359981117567524035 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3993756777020649874, guid: cf2550a911f3d9f45ac5adea2f96c151, type: 3}
+  m_PrefabInstance: {fileID: 2716571341754346833}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8399562994392905546 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5846249785099033115, guid: cf2550a911f3d9f45ac5adea2f96c151, type: 3}
   m_PrefabInstance: {fileID: 2716571341754346833}
   m_PrefabAsset: {fileID: 0}
