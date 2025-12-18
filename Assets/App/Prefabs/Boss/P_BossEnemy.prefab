@@ -1107,18 +1107,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c976a15a48ad544fa1149705621f53f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backDistance: 15
+  jumpPower: 3
+  duration: 1
   bodyCollider: {fileID: 2172925691496945250}
+  rbBody: {fileID: 6290640343244561212}
   bossProjectile: {fileID: 8140121101017001052, guid: f1fb51f3df4ed10408671800bfdcfdc4, type: 3}
   projectilePingPongSpawn: {fileID: 3886568817711710598}
   rootMotionModifier: {fileID: 3231315390003761703}
   bossAttackData: {fileID: 461593203997373390}
   aimPointBoss: {fileID: 1991927486943782219}
   boss: {fileID: 2728780361816490054}
+  bossNavMeshAgent: {fileID: 338046699455560462}
   animator: {fileID: 3048319605574608049}
   attackParam: isAttacking
   comboParam: isCombo
   onExecuteAttack: {fileID: 11400000, guid: 3da07f09686258c4f84c0ab1889d9bcd, type: 2}
+  rseOnPlayParticle: {fileID: 11400000, guid: 96e637a3924deff4685a645b52dfc7c2, type: 2}
+  rseOnStopParticle: {fileID: 11400000, guid: 4188360d207886043ab568bf24778487, type: 2}
+  rseOnEndAttack: {fileID: 11400000, guid: df61dd20dc38205418f8426747ea5149, type: 2}
   aimPointPlayer: {fileID: 0}
+  overrideController: {fileID: 0}
 --- !u!1 &2812144962020388730
 GameObject:
   m_ObjectHideFlags: 0
