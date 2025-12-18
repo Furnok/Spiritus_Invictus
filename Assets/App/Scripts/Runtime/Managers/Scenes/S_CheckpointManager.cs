@@ -20,6 +20,8 @@ public class S_CheckpointManager : MonoBehaviour
     private void OnDisable()
     {
         rseOnDataLoad.action -= LoadCheckpoint;
+
+        rsoPlayerRespawnPosition.Value = new();
     }
 
     private void LoadCheckpoint()

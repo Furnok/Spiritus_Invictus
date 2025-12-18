@@ -81,11 +81,17 @@ public class S_Boss : MonoBehaviour
     [TabGroup("References")]
     [SerializeField] private S_BossAttackData bossAttackData;
 
+    [TabGroup("References")]
+    [SerializeField] private S_BossAttack bossAttack;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerGettingHit rseOnPlayerGettingHit;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerDeath rseOnPlayerDeath;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnEndAttack rseOnEndAttack;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
@@ -145,6 +151,7 @@ public class S_Boss : MonoBehaviour
 
         Animator anim = animator;
         AnimatorOverrideController instance = new AnimatorOverrideController(ssoBossData.Value.controllerOverride);
+        bossAttack.overrideController = instance;
 
         var overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();
         ssoBossData.Value.controllerOverride.GetOverrides(overrides);
@@ -181,6 +188,7 @@ public class S_Boss : MonoBehaviour
         rseOnPlayerGettingHit.action += LoseDifficultyLevel;
         rseOnPlayerDeath.action += PlayerDeath;
         rseOnPlayerRespawn.action += PlayerRespawn;
+        rseOnEndAttack.action += SpecialAttackEnd;
     }
     private void OnDisable()
     {
@@ -188,6 +196,7 @@ public class S_Boss : MonoBehaviour
         rseOnPlayerGettingHit.action -= LoseDifficultyLevel;
         rseOnPlayerDeath.action -= PlayerDeath;
         rseOnPlayerRespawn.action -= PlayerRespawn;
+        rseOnEndAttack.action -= SpecialAttackEnd;
     }
     private void Start()
     {
@@ -313,7 +322,7 @@ public class S_Boss : MonoBehaviour
         {
             newTarget.TryGetComponent<I_AimPointProvider>(out I_AimPointProvider aimPointProvider);
             aimPoint = aimPointProvider != null ? aimPointProvider.GetAimPoint() : newTarget.transform;
-
+            bossAttack.aimPointPlayer = aimPoint;
             UpdateState(S_EnumBossState.Chase);
             StartCoroutine(GainDifficultyLevel());
         }
@@ -541,6 +550,26 @@ public class S_Boss : MonoBehaviour
         isFighting = true;
         animator.SetBool(idleAttack, true);
     }
+    private void SpecialAttackEnd()
+    {
+        Debug.Log("Special Attack End");
+        rootMotionModifier.Setup(1);
+        animator.SetTrigger(stopAttackParam);
+        animator.SetBool(idleAttack, true);
+
+        isPerformingCombo = false;
+        isAttacking = false;
+        unlockRotate = false;
+
+        ChooseAttack();
+        if (resetAttack != null)
+        {
+            StopCoroutine(resetAttack);
+            resetAttack = null;
+        }
+
+        resetAttack = StartCoroutine(S_Utils.Delay(lastAttack.bossAttack.timeAfterAttack, () => canAttack = true));
+    }
     private void Fight()
     {
         Debug.Log("Fighting...");
@@ -551,13 +580,21 @@ public class S_Boss : MonoBehaviour
             lastAttack = currentAttack;
             currentAttack.frequency++;
 
-            if (comboCoroutine != null)
+            if(currentAttack.bossAttack.isSpecialAttack)
             {
-                StopCoroutine(comboCoroutine);
-                comboCoroutine = null;
+                onExecuteAttack.Call(currentAttack.bossAttack);
+                isPerformingCombo = true;
             }
+            else
+            {
+                if (comboCoroutine != null)
+                {
+                    StopCoroutine(comboCoroutine);
+                    comboCoroutine = null;
+                }
 
-            comboCoroutine = StartCoroutine(PlayComboSequence());
+                comboCoroutine = StartCoroutine(PlayComboSequence());
+            }
 
             return;
         }
@@ -644,7 +681,7 @@ public class S_Boss : MonoBehaviour
             resetAttack = null;
         }
 
-        resetAttack = StartCoroutine(S_Utils.Delay(currentAttack.bossAttack.attackTime, () => canAttack = true));
+        resetAttack = StartCoroutine(S_Utils.Delay(lastAttack.bossAttack.timeAfterAttack, () => canAttack = true));
 
     }
 

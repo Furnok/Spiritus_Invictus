@@ -1,8 +1,11 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMOD.Studio;
+using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerProjectile : MonoBehaviour
 {
+
     [TabGroup("References")]
     [SerializeField] private Transform _playerProjectile;
 
@@ -15,6 +18,13 @@ public class S_PlayerProjectile : MonoBehaviour
     [TabGroup("References")]
     [Title("Filters")]
     [SerializeField, S_TagName] private string tagHurt;
+
+    [TabGroup("References")]
+    [Title("Sounds")]
+    [SerializeField] private EventReference _projectileTravelSound;
+
+    [TabGroup("References")]
+    [SerializeField] private EventReference _projectileImpactSound;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied _onEnemyTargetDied;
@@ -53,6 +63,7 @@ public class S_PlayerProjectile : MonoBehaviour
 
     //private int _attackStep = 0;
     private Material _projectileMat = null;
+    EventInstance _travelSoundInstance;
 
     private void Awake()
     {
@@ -125,6 +136,14 @@ public class S_PlayerProjectile : MonoBehaviour
         shapeModule.scale = _playerProjectile.localScale;
 
         _trailParticle.Play();
+
+        // Play travel sound
+        if (!_projectileTravelSound.IsNull)
+        {
+            _travelSoundInstance = RuntimeManager.CreateInstance(_projectileTravelSound);
+            _travelSoundInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+            _travelSoundInstance.start();
+        }
     }
 
     private void OnEnable()
@@ -140,6 +159,8 @@ public class S_PlayerProjectile : MonoBehaviour
         _direction = Vector3.zero;
 
         _onEnemyTargetDied.action -= OnTargetDie;
+
+        StopTravelSound();
     }
 
     private void Update()
@@ -153,6 +174,8 @@ public class S_PlayerProjectile : MonoBehaviour
         if (_timeAlive >= _lifeTime)
         {
             rseOnDespawnProjectile.Call(this);
+
+            StopTravelSound();
             return;
         }
 
@@ -188,11 +211,22 @@ public class S_PlayerProjectile : MonoBehaviour
                 damageable.TakeDamage(_damage);
                 rseOnDespawnProjectile.Call(this);
 
+                StopTravelSound();
+
+                if (!_projectileImpactSound.IsNull)
+                {
+                    EventInstance impactSound = RuntimeManager.CreateInstance(_projectileImpactSound);
+                    impactSound.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+                    impactSound.start();
+                }
+
                 Debug.Log($"Hit enemy for {_damage} damage.");
             }
         }
         else
         {
+            StopTravelSound();
+
             rseOnDespawnProjectile.Call(this);
         }
     }
@@ -200,6 +234,15 @@ public class S_PlayerProjectile : MonoBehaviour
     private void OnTargetDie(GameObject enemyDie)
     {
         if (_target != null && enemyDie == _target.gameObject && enemyDie != null) _target = null;
+    }
+
+    void StopTravelSound()
+    {
+        if (!_projectileTravelSound.IsNull && _travelSoundInstance.isValid())
+        {
+            _travelSoundInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            _travelSoundInstance.release();
+        }
     }
 }
 

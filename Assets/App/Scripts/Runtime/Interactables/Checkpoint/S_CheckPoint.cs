@@ -11,6 +11,13 @@ public class S_CheckPoint : MonoBehaviour
     [Title("Saves")]
     [SerializeField, S_SaveName] private string saveName;
 
+    [TabGroup("Settings")]
+    [Title("ColorVFX")]
+    [SerializeField] private Color colorBeforeInteract;
+
+    [TabGroup("Settings")]
+    [SerializeField] private Color colorAfterInteract;
+
     [TabGroup("References")]
     [Title("Content")]
     [SerializeField] private GameObject content;
@@ -18,6 +25,9 @@ public class S_CheckPoint : MonoBehaviour
     [TabGroup("References")]
     [Title("Spawn")]
     [SerializeField] private GameObject newSpawnPositionAndRotation;
+
+    [TabGroup("References")]
+    [SerializeField] private ParticleSystem psInteract;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerInteractInput rseOnPlayerInteract;
@@ -38,6 +48,9 @@ public class S_CheckPoint : MonoBehaviour
     [SerializeField] private RSE_OnPlayerConvictionUpdate rseOnPlayerConvictionUpdate;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnSaveDisplay rseOnSaveDisplay;
+
+    [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerRespawnPosition rsoplayerRespawnPosition;
 
     [TabGroup("Outputs")]
@@ -54,6 +67,13 @@ public class S_CheckPoint : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private SSO_PlayerAttackSteps ssoPlayerAttackSteps;
+
+    private void Awake()
+    {
+        var main = psInteract.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(colorBeforeInteract);
+
+    }
 
     private void OnDisable()
     {
@@ -84,6 +104,8 @@ public class S_CheckPoint : MonoBehaviour
         rsoplayerRespawnPosition.Value.rotation = newSpawnPositionAndRotation.transform.rotation;
         rseOnSendConsoleMessage.Call("Player Interact with " + gameObject.name + "!");
         rseOnSendConsoleMessage.Call("Checkpoint activated, new pose respawn: " + newSpawnPositionAndRotation.transform.position + "!");
+        var main =  psInteract.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(colorAfterInteract);
 
         Heal();
 
@@ -114,5 +136,6 @@ public class S_CheckPoint : MonoBehaviour
         rsoDataSaved.Value.conviction = rsoPlayerCurrentConviction.Value;
 
         rseOnSaveData.Call(saveName, false);
+        rseOnSaveDisplay.Call();
     }
 }

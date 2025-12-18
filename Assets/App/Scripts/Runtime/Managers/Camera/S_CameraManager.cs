@@ -39,13 +39,6 @@ public class S_CameraManager : MonoBehaviour
     [Title("Target")]
     [SerializeField] private Transform playerPoint;
 
-    [TabGroup("References")]
-    [Title("Player")]
-    [SerializeField] private Material materialPlayer;
-
-    [TabGroup("References")]
-    [SerializeField] private Material materialLantern;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnPlayerMove rseOnPlayerMove;
 
@@ -102,6 +95,9 @@ public class S_CameraManager : MonoBehaviour
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnSendConsoleMessage rseOnSendConsoleMessage;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnUpdateVisibility rseUpdateVisibility;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSO_PlayerIsDodging rsoPlayerIsDodging;
@@ -176,14 +172,6 @@ public class S_CameraManager : MonoBehaviour
         rseOnCinematicFinish.action -= FinishCinematic;
         rseOnSkipInput.action -= StartSkip;
         rseOnSkipCancelInput.action -= StopSkip;
-
-        Color color = materialPlayer.color;
-        color.a = 1;
-        materialPlayer.color = color;
-
-        color = materialLantern.color;
-        color.a = 1;
-        materialLantern.color = color;
     }
 
     private void Update()
@@ -513,13 +501,7 @@ public class S_CameraManager : MonoBehaviour
         float targetAlpha = hide ? 0f : 1f;
         currentAlpha = Mathf.MoveTowards(currentAlpha, targetAlpha, ssoCameraData.Value.fadeSpeedPlayer * Time.deltaTime);
 
-        var color = materialPlayer.color;
-        color.a = currentAlpha;
-        materialPlayer.color = color;
-
-        color = materialLantern.color;
-        color.a = currentAlpha;
-        materialLantern.color = color;
+        rseUpdateVisibility.Call(currentAlpha);
     }
 
     private void HandleSkipHold()

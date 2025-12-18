@@ -77,6 +77,9 @@ public class S_UIMainMenu : MonoBehaviour
     [SerializeField] private RSO_DataTempSaved rsoDataTempSaved;
 
     [TabGroup("Outputs")]
+    [SerializeField] private RSO_PlayerRespawnPosition rsoPlayerRespawnPosition;
+
+    [TabGroup("Outputs")]
     [SerializeField] private SSO_FadeTime ssoFadeTime;
 
     [TabGroup("Outputs")]
@@ -89,6 +92,7 @@ public class S_UIMainMenu : MonoBehaviour
         rseOnDataTemp.action += SetupMenu;
 
         isTransit = false;
+        rsoPlayerRespawnPosition.Value = new();
     }
 
     private void OnDisable()

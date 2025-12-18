@@ -6,67 +6,9 @@ using UnityEngine;
 
 public class S_BossAttack : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Waves")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeBetweenWaves;
-
     [TabGroup("References")]
     [Title("Colliders")]
     [SerializeField] private Collider bodyCollider;
-
-    [TabGroup("References")]
-    [Title("Animator")]
-    [SerializeField] private Animator animator;
-
-    [TabGroup("References")]
-    [Title("Animation Parameters")]
-    [SerializeField, S_AnimationName("animator")] private string ichimanji;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string makashi;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string margit;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string valkyrie;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string makashiSpe;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string ataru;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string vaapad;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string genichiro;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string simon;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string dualliste;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string pingPong;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string waves;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string balls;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string genion;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string gathering;
-
-    [TabGroup("References")]
-    [SerializeField, S_AnimationName("animator")] private string wingsOfHell;
 
     [TabGroup("References")]
     [Title("Projectile")]
@@ -76,14 +18,11 @@ public class S_BossAttack : MonoBehaviour
     [SerializeField] private GameObject projectilePingPongSpawn;
 
     [TabGroup("References")]
-    [Title("Waves")]
-    [SerializeField] private GameObject wavesPrefabs;
+    [Title("Scripts")]
+    [SerializeField] private S_BossRootMotionModifier rootMotionModifier;
 
     [TabGroup("References")]
-    [SerializeField] private GameObject middle;
-
-    [TabGroup("References")]
-    [SerializeField] private List<GameObject> wavesSpawn = new List<GameObject>();
+    [SerializeField] private S_BossAttackData bossAttackData;
 
     [TabGroup("References")]
     [Title("Center")]
@@ -93,15 +32,24 @@ public class S_BossAttack : MonoBehaviour
     [Title("Boss")]
     [SerializeField] private GameObject boss;
 
+    [TabGroup("References")]
+    [Title("Animator")]
+    [SerializeField] private Animator animator;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string attackParam;
+
+    [TabGroup("References")]
+    [SerializeField, S_AnimationName("animator")] private string comboParam;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
     [HideInInspector] public Transform aimPointPlayer = null;
 
     private S_ClassBossAttack currentAttack = null;
-
-    private Coroutine rotateWavesCoroutine = null;
-
+    [HideInInspector] public AnimatorOverrideController overrideController = null;
+    private Coroutine pingPongCoroutine = null;
     private void OnEnable()
     {
         onExecuteAttack.action += DoAttackChoose;
@@ -118,30 +66,6 @@ public class S_BossAttack : MonoBehaviour
 
         switch (currentAttack.attackName)
         {
-            case "Ichimanji":
-                Ichimanji();
-                break;
-            case "Makashi":
-                Makashi();
-                break;
-            case "Margit":
-                Margit();
-                break;
-            case "Valkyrie":
-                Valkyrie();
-                break;
-            case "MakashiSpe":
-                MakashiSpe();
-                break;
-            case "Ataru":
-                Ataru();
-                break;
-            case "Vaapad":
-                Vaapad();
-                break;
-            case "Genichiro":
-                Genichiro();
-                break;
             case "Simon":
                 Simon();
                 break;
@@ -151,14 +75,8 @@ public class S_BossAttack : MonoBehaviour
             case "PingPong":
                 PingPong();
                 break;
-            case "Waves":
-                Waves();
-                break;
             case "Balls":
                 Balls();
-                break;
-            case "Genion":
-                Genion();
                 break;
             case "Gathering":
                 Gathering();
@@ -169,138 +87,62 @@ public class S_BossAttack : MonoBehaviour
         }
     }
 
-    #region Attack Phase 1
-    private void Ichimanji()
-    {
-        animator.SetTrigger(ichimanji);
-    }
-
-    private void Makashi()
-    {
-        animator.SetTrigger(makashi);
-    }
-
-    private void Margit()
-    {
-        animator.SetTrigger(margit);
-    }
-
-    private void Valkyrie()
-    {
-        animator.SetTrigger(valkyrie);
-    }
-
-    private void MakashiSpe()
-    {
-        animator.SetTrigger(makashiSpe);
-    }
-
-    private void Ataru()
-    {
-        animator.SetTrigger(ataru);
-    }
-    #endregion
-
     #region Attack Phase 2
-    private void Vaapad()
-    {
-        animator.SetTrigger(vaapad);
-    }
-
-    private void Genichiro()
-    {
-        animator.SetTrigger(genichiro);
-    }
-
     private void Simon()
     {
-        animator.SetTrigger(simon);
     }
 
     private void Dualliste()
     {
-        animator.SetTrigger(dualliste);
     }
 
     private void PingPong()
     {
-        animator.SetTrigger(pingPong);
-
-        S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
-        projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[0].attackData);
-    }
-
-    private void Waves()
-    {
-        StartCoroutine(StopWaves(currentAttack.attackTime));
-
-        boss.transform.DOMove(middle.transform.position, 0.5f).OnComplete(() =>
+        if(pingPongCoroutine  != null)
         {
-            animator.SetTrigger(waves);
-
-            if (rotateWavesCoroutine != null)
-            {
-                StopCoroutine(rotateWavesCoroutine);
-                rotateWavesCoroutine = null;
-            }
-
-            rotateWavesCoroutine = StartCoroutine(RotateWavesSpawn());
-        });  
-    }
-
-    private IEnumerator RotateWavesSpawn()
-    {
-        middle.transform.rotation = Quaternion.Euler(0, 0, 0);
-        SpawnWaves();
-
-        yield return new WaitForSeconds(timeBetweenWaves);
-
-        middle.transform.rotation = Quaternion.Euler(0, 45, 0);
-        SpawnWaves();
-
-        yield return new WaitForSeconds(timeBetweenWaves);
-
-        if (rotateWavesCoroutine != null)
-        {
-            StopCoroutine(rotateWavesCoroutine);
-            rotateWavesCoroutine = null;
+            StopCoroutine(pingPongCoroutine);
+            pingPongCoroutine = null;
         }
-
-        rotateWavesCoroutine = StartCoroutine(RotateWavesSpawn());
+        pingPongCoroutine = StartCoroutine(PingPongCoroutine());  
     }
 
-    private IEnumerator StopWaves(float delay)
+    private IEnumerator PingPongCoroutine()
     {
-        yield return new WaitForSeconds(delay);
+        yield return null;
 
-        StopCoroutine(rotateWavesCoroutine);
-        rotateWavesCoroutine = null;
+        for (int i = 0; i < currentAttack.listComboData.Count; i++)
+        {
+            string overrideKey = (i % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+            overrideController[overrideKey] = currentAttack.listComboData[i].animation;
 
+            rootMotionModifier.Setup(currentAttack.listComboData[i].rootMotionMultiplier);
+
+            bossAttackData.SetAttackMode(currentAttack.listComboData[i].attackData);
+
+            if (currentAttack.listComboData[i].showVFXAttackType) bossAttackData.VFXAttackType();
+
+            animator.SetTrigger(i == 0 ? attackParam : comboParam);
+
+            yield return new WaitForSeconds(currentAttack.listComboData[i].animation.length);
+
+            if(currentAttack.listComboData[i].attackData.attackType == S_EnumEnemyAttackType.Projectile)
+            {
+                S_BossProjectile projectileInstance = Instantiate(bossProjectile, projectilePingPongSpawn.transform.position, Quaternion.identity);
+                projectileInstance.Initialize(aimPointBoss, aimPointPlayer, currentAttack.listComboData[i].attackData);
+            }
+            yield return null;
+        }
     }
-
-    private void SpawnWaves()
-    {
-        foreach (GameObject wavesSpawn in wavesSpawn) Instantiate(wavesPrefabs, wavesSpawn.transform.position, Quaternion.identity);
-    }
-
     private void Balls()
     {
-        animator.SetTrigger(balls);
-    }
-
-    private void Genion()
-    {
-        animator.SetTrigger(genion);
     }
 
     private void Gathering()
     {
-        animator.SetTrigger(gathering);
     }
 
     private void WingsOfHell()
     {
-        animator.SetTrigger(wingsOfHell);
     }
     #endregion
 }
