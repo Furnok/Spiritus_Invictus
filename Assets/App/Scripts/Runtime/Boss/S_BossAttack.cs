@@ -3,12 +3,28 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.WSA;
 
 public class S_BossAttack : MonoBehaviour
 {
+    [TabGroup("Settings")]
+    [Title("Gethering Settings")]
+    [SerializeField] private float backDistance;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float jumpPower;
+
+    [TabGroup("Settings")]
+    [SerializeField] private float duration;
+
     [TabGroup("References")]
     [Title("Colliders")]
     [SerializeField] private Collider bodyCollider;
+
+    [TabGroup("References")]
+    [Title("RigidBody")]
+    [SerializeField] private Rigidbody rbBody;
 
     [TabGroup("References")]
     [Title("Projectile")]
@@ -33,6 +49,9 @@ public class S_BossAttack : MonoBehaviour
     [SerializeField] private GameObject boss;
 
     [TabGroup("References")]
+    [SerializeField] private NavMeshAgent bossNavMeshAgent;
+
+    [TabGroup("References")]
     [Title("Animator")]
     [SerializeField] private Animator animator;
 
@@ -45,11 +64,22 @@ public class S_BossAttack : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnPlayParticle rseOnPlayParticle;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnStopParticle rseOnStopParticle;
+
+    [TabGroup("Outputs")]
+    [SerializeField] private RSE_OnEndAttack rseOnEndAttack;
+
     [HideInInspector] public Transform aimPointPlayer = null;
 
     private S_ClassBossAttack currentAttack = null;
     [HideInInspector] public AnimatorOverrideController overrideController = null;
     private Coroutine pingPongCoroutine = null;
+    private Coroutine launch = null;
+
     private void OnEnable()
     {
         onExecuteAttack.action += DoAttackChoose;
@@ -139,8 +169,122 @@ public class S_BossAttack : MonoBehaviour
 
     private void Gathering()
     {
+
+        Debug.Log("Gathering Jump");
+        StartCoroutine(GatheringCoroutine(rbBody, aimPointPlayer.position, backDistance, jumpPower, duration, 1));
+
     }
 
+    private void DoJumpAwayFrom(Rigidbody rb, Vector3 originPoint, float distance, float jumpPower, float duration, int numJumps = 1, bool keepY = true)
+    {
+        if (rb == null) return;
+        bossNavMeshAgent.enabled = false;
+
+        Vector3 dir = rb.position - originPoint;
+        if (dir.sqrMagnitude <= 1e-6f) dir = rb.transform.forward;
+        dir.Normalize();
+
+        Vector3 target = rb.position + dir * distance;
+        if (keepY) target.y = rb.position.y;
+
+        Sequence seq = rb.DOJump(target, jumpPower, numJumps, duration)
+            .SetEase(Ease.OutQuad).OnStart(() =>
+            {
+                Debug.Log("Play Jump Animation");
+            })
+            .OnComplete(() =>
+            {
+                Debug.Log("Stop Particle");
+                bossNavMeshAgent.enabled = true;
+                rseOnStopParticle.Call();
+                if (launch != null)
+                {
+                    StopCoroutine(launch);
+                    launch = null;
+                }
+
+                launch = StartCoroutine(S_Utils.Delay(3f, () => { 
+                    rseOnPlayParticle.Call();
+                    rseOnEndAttack.Call();
+                }));
+            });
+    }
+
+    private IEnumerator GatheringCoroutine(Rigidbody rb, Vector3 playerPos, float distance, float jumpPower, float duration, int numJumps, bool keepY = true)
+    {
+        int animNumb = 0;
+        bossNavMeshAgent.enabled = false;
+
+        Vector3 dir = rb.position - playerPos;
+        if (dir.sqrMagnitude <= 1e-6f) dir = rb.transform.forward;
+        dir.Normalize();
+
+        Vector3 target = rb.position + dir * distance;
+        if (keepY) target.y = rb.position.y;
+
+        string overrideKey = (animNumb % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+        overrideController[overrideKey] = currentAttack.listComboData[animNumb].animation;
+
+        Debug.Log("Play Jump Prepa Animation");
+        animator.SetTrigger(animNumb == 0 ? attackParam : comboParam);
+        animNumb++;
+        yield return new WaitForSeconds(currentAttack.listComboData[animNumb].animation.length);
+
+        Sequence seq = rb.DOJump(target, jumpPower, numJumps, duration)
+            .SetEase(Ease.OutQuad).OnStart(() =>
+            {
+                overrideKey = (animNumb % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+                overrideController[overrideKey] = currentAttack.listComboData[animNumb].animation;
+
+                Debug.Log("Play Jump Animation");
+                animator.SetTrigger(animNumb == 0 ? attackParam : comboParam);
+                animNumb++;
+            })
+            .OnComplete(() =>
+            {
+                StartCoroutine(GatheringAttack(animNumb));
+            });
+        yield return null;
+
+    }
+    private IEnumerator GatheringAttack(int value)
+    {
+        int animNumb = value;
+
+        string overrideKey = (animNumb % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+        overrideController[overrideKey] = currentAttack.listComboData[animNumb].animation;
+
+        Debug.Log("Play JumpFall Animation");
+        animator.SetTrigger(animNumb == 0 ? attackParam : comboParam);
+        animNumb++;
+
+        yield return new WaitForSeconds(currentAttack.listComboData[animNumb].animation.length);
+
+        overrideKey = (animNumb % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+        overrideController[overrideKey] = currentAttack.listComboData[animNumb].animation;
+
+        Debug.Log("Stop Particle + Animation");
+        animator.SetTrigger(animNumb == 0 ? attackParam : comboParam);
+        animNumb++;
+
+        rseOnStopParticle.Call();
+
+        yield return new WaitForSeconds(currentAttack.listComboData[animNumb].animation.length);
+
+        overrideKey = (animNumb % 2 == 0) ? "AttackAnimation" : "AttackAnimation2";
+        overrideController[overrideKey] = currentAttack.listComboData[animNumb].animation;
+
+        bossAttackData.SetAttackMode(currentAttack.listComboData[animNumb].attackData);
+
+        if (currentAttack.listComboData[animNumb].showVFXAttackType) bossAttackData.VFXAttackType();
+
+        Debug.Log("Play Particle + Animation + Set AttackMode");
+        animator.SetTrigger(animNumb == 0 ? attackParam : comboParam);
+        rseOnPlayParticle.Call();
+        bossNavMeshAgent.enabled = true;
+        rseOnEndAttack.Call();
+        
+    }
     private void WingsOfHell()
     {
     }
