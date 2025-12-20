@@ -210,6 +210,22 @@ public class S_PlayerMovement : MonoBehaviour
             }
         }
 
+        if(_playerCurrentState.Value == S_EnumPlayerState.Dodging)
+        {
+            if (rsoPlayerIsTargeting.Value && target != null)
+            {
+                Vector3 toTarget = target.position - transform.position;
+                toTarget.y = 0f;
+                if (toTarget.sqrMagnitude > 1e-4f)
+                {
+                    Quaternion face = Quaternion.LookRotation(toTarget.normalized, Vector3.up);
+                    rigidbodyPlayer.MoveRotation(
+                        Quaternion.Slerp(rigidbodyPlayer.rotation, face, _playerStats.Value.turnSpeedTargeting * Time.fixedDeltaTime)
+                    );
+                }
+            }
+        }
+
         if (rsoCurrentInputActionMap.Value == S_EnumPlayerInputActionMap.Game)
         {
             if (_playerStateTransitions.Value.CanTransition(_playerCurrentState.Value, S_EnumPlayerState.Moving) == true ||

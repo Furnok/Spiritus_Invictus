@@ -56,6 +56,11 @@ public class S_PlayerHealthManager : MonoBehaviour
         rseOnDataLoad.action -= SetValueFromData;
     }
 
+    private void Start()
+    {
+        rseOnPlayerHealthUpdate.Call(rsoPlayerCurrentHealth.Value);
+    }
+
     void SetValueFromData()
     {
         rsoPlayerCurrentHealth.Value = rsoDataSaved.Value.health;

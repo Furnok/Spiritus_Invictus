@@ -73,6 +73,7 @@ namespace SingularityGroup.HotReload.Editor {
         private const string LoggedInlinedMethodsDialogueKey = "HotReloadWindow.LoggedInlinedMethodsDialogue";
         private const string OpenedWindowAtLeastOnceKey = "HotReloadWindow.OpenedWindowAtLeastOnce";
         private const string DeactivateHotReloadKey = "HotReloadWindow.DeactivateHotReload";
+        private const string ActiveLocaleKey = "HotReloadWindow.ActiveLocale";
 
         public const string DontShowPromptForDownloadKey = "ServerDownloader.DontShowPromptForDownload";
 
@@ -491,6 +492,11 @@ namespace SingularityGroup.HotReload.Editor {
         public static bool AutoDisableHotReloadWithDebugger {
             get { return EditorPrefs.GetBool(DebuggerCompatibilityEnabledKey, true); }
             set { EditorPrefs.SetBool(DebuggerCompatibilityEnabledKey, value); }
+        }
+        
+        public static string ActiveLocale {
+            get { return EditorPrefs.GetString(ActiveLocaleKey, PackageConst.DefaultLocale); }
+            set { EditorPrefs.SetString(ActiveLocaleKey, value); }
         }
     }
 }

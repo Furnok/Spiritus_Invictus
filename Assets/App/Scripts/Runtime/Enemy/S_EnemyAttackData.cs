@@ -2,15 +2,9 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class S_EnemyAttackData : MonoBehaviour
 {
-    [TabGroup("Settings")]
-    [Title("Times")]
-    [SuffixLabel("s", Overlay = true)]
-    [SerializeField] private float timeDisplay;
-
     [TabGroup("References")]
     [Title("Colliders")]
     [SerializeField] private Collider weaponCollider;
@@ -59,7 +53,7 @@ public class S_EnemyAttackData : MonoBehaviour
         }
         else if (attackData.attackType == S_EnumEnemyAttackType.Dodgeable)
         {
-            if (particleDodgeType == null) particleDodgeType.Play();
+            if (particleDodgeType != null) particleDodgeType.Play();
         }
     }
 

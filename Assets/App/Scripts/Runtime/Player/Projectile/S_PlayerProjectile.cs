@@ -1,11 +1,30 @@
-﻿using Sirenix.OdinInspector;
+﻿using FMOD.Studio;
+using FMODUnity;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class S_PlayerProjectile : MonoBehaviour
 {
+
+    [TabGroup("References")]
+    [SerializeField] private Transform _playerProjectile;
+
+    [TabGroup("References")]
+    [SerializeField] private MeshRenderer _meshRendererProjectile;
+
+    [TabGroup("References")]
+    [SerializeField] ParticleSystem _trailParticle;
+
     [TabGroup("References")]
     [Title("Filters")]
     [SerializeField, S_TagName] private string tagHurt;
+
+    [TabGroup("References")]
+    [Title("Sounds")]
+    [SerializeField] private EventReference _projectileTravelSound;
+
+    [TabGroup("References")]
+    [SerializeField] private EventReference _projectileImpactSound;
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEnemyTargetDied _onEnemyTargetDied;
@@ -43,8 +62,15 @@ public class S_PlayerProjectile : MonoBehaviour
     private float _travelTime = 0;
 
     //private int _attackStep = 0;
+    private Material _projectileMat = null;
+    EventInstance _travelSoundInstance;
 
-    public void Initialize(float damage, Transform target = null, int attackStep = 0)
+    private void Awake()
+    {
+        _projectileMat = _meshRendererProjectile.material;
+    }
+
+    public void Initialize(float damage, S_StructDataProjectileVisuals visualsData, Transform target = null, int attackStep = 0)
     {
         this._target = target;
         this._direction = transform.forward;
@@ -54,6 +80,10 @@ public class S_PlayerProjectile : MonoBehaviour
         _projectileData = _playerAttackSteps.Value.Find(x => x.step == attackStep).projectileData;
         _arcRandomDirectionMin = _projectileData.arcRandomDirectionMin;
         _arcRandomDirectionMax = _projectileData.arcRandomDirectionMax;
+
+        // Apply visuals
+        _playerProjectile.localScale = Vector3.one * visualsData.ScaleProjectile;
+        _projectileMat.color = visualsData.ColorProjectile;
 
         if (_randomizeArc)
         {
@@ -98,6 +128,22 @@ public class S_PlayerProjectile : MonoBehaviour
         _controlPoint = midPoint + arcDir * arcHeight;
 
         _isInitialized = true;
+
+        var mainModule = _trailParticle.main;
+        mainModule.startColor = visualsData.ColorProjectile;
+
+        var shapeModule = _trailParticle.shape;
+        shapeModule.scale = _playerProjectile.localScale;
+
+        _trailParticle.Play();
+
+        // Play travel sound
+        if (!_projectileTravelSound.IsNull)
+        {
+            _travelSoundInstance = RuntimeManager.CreateInstance(_projectileTravelSound);
+            _travelSoundInstance.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+            _travelSoundInstance.start();
+        }
     }
 
     private void OnEnable()
@@ -113,6 +159,8 @@ public class S_PlayerProjectile : MonoBehaviour
         _direction = Vector3.zero;
 
         _onEnemyTargetDied.action -= OnTargetDie;
+
+        StopTravelSound();
     }
 
     private void Update()
@@ -126,6 +174,8 @@ public class S_PlayerProjectile : MonoBehaviour
         if (_timeAlive >= _lifeTime)
         {
             rseOnDespawnProjectile.Call(this);
+
+            StopTravelSound();
             return;
         }
 
@@ -161,11 +211,22 @@ public class S_PlayerProjectile : MonoBehaviour
                 damageable.TakeDamage(_damage);
                 rseOnDespawnProjectile.Call(this);
 
+                StopTravelSound();
+
+                if (!_projectileImpactSound.IsNull)
+                {
+                    EventInstance impactSound = RuntimeManager.CreateInstance(_projectileImpactSound);
+                    impactSound.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject));
+                    impactSound.start();
+                }
+
                 Debug.Log($"Hit enemy for {_damage} damage.");
             }
         }
         else
         {
+            StopTravelSound();
+
             rseOnDespawnProjectile.Call(this);
         }
     }
@@ -174,4 +235,19 @@ public class S_PlayerProjectile : MonoBehaviour
     {
         if (_target != null && enemyDie == _target.gameObject && enemyDie != null) _target = null;
     }
+
+    void StopTravelSound()
+    {
+        if (!_projectileTravelSound.IsNull && _travelSoundInstance.isValid())
+        {
+            _travelSoundInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            _travelSoundInstance.release();
+        }
+    }
+}
+
+public struct S_StructDataProjectileVisuals
+{
+    public float ScaleProjectile;
+    public Color ColorProjectile;
 }

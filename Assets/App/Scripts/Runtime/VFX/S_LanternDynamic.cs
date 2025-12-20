@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 
 public class S_LanternDynamic : MonoBehaviour
 {
@@ -21,22 +20,19 @@ public class S_LanternDynamic : MonoBehaviour
     [Title("Light")]
     [SerializeField] private Light lanternLight;
 
-    [TabGroup("References")]
-    [Title("Mesh Renderer")]
-    [SerializeField] private MeshRenderer lanternMeshRenderer;
-
     [TabGroup("Inputs")]
     [SerializeField] private RSO_PlayerCurrentConviction _currentPlayerConviction;
 
     [TabGroup("Outputs")]
-    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
+    [SerializeField] private RSE_OnUpdateEmissiveIntensity rseOnUpdateEmissiveIntensity;
 
-    private Material _lanternMaterialInstance = null;
+    [TabGroup("Outputs")]
+    [SerializeField] private SSO_PlayerConvictionData _playerConvictionData;
 
     private void Awake()
     {
         lanternLight.intensity = 0f;
-        _lanternMaterialInstance = lanternMeshRenderer.material;
+        UpdateLanternGlowAndLigh(0);
     }
 
     private void OnEnable()
@@ -58,7 +54,6 @@ public class S_LanternDynamic : MonoBehaviour
         var tEmissiveIntensity = minEmissiveIntensityIntensity + (t / 100 * (maxEmissiveIntensityIntensity - minEmissiveIntensityIntensity));
 
         lanternLight.intensity = tLightIntensity;
-
-        HDMaterial.SetEmissiveIntensity(_lanternMaterialInstance, tEmissiveIntensity, EmissiveIntensityUnit.EV100);
+        rseOnUpdateEmissiveIntensity.Call(tEmissiveIntensity);
     }
 }

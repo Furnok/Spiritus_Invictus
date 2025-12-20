@@ -38,6 +38,7 @@ MonoBehaviour:
     - listAnimationsCombos:
       - animation: {fileID: 7400000, guid: ec30b70bb3289964fa6f7fe196c358de, type: 2}
         rootMotionMultiplier: 1
+        showVFXAttackType: 1
         attackData:
           attackId: 0
           goSourceId: 0
@@ -58,6 +59,7 @@ MonoBehaviour:
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
         rootMotionMultiplier: 1
+        showVFXAttackType: 0
         attackData:
           attackId: 0
           goSourceId: 0
@@ -78,6 +80,7 @@ MonoBehaviour:
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
         rootMotionMultiplier: 1
+        showVFXAttackType: 0
         attackData:
           attackId: 0
           goSourceId: 0
@@ -98,6 +101,7 @@ MonoBehaviour:
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
         rootMotionMultiplier: 1
+        showVFXAttackType: 0
         attackData:
           attackId: 0
           goSourceId: 0
@@ -118,6 +122,7 @@ MonoBehaviour:
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
         rootMotionMultiplier: 1
+        showVFXAttackType: 0
         attackData:
           attackId: 0
           goSourceId: 0
@@ -138,6 +143,7 @@ MonoBehaviour:
           contactPoint: {x: 0, y: 0, z: 0}
       - animation: {fileID: 7400000, guid: 1788b43c4c953604fb309f93346efd37, type: 2}
         rootMotionMultiplier: 1
+        showVFXAttackType: 0
         attackData:
           attackId: 0
           goSourceId: 0
@@ -153,9 +159,9 @@ MonoBehaviour:
           invicibilityDuration: 0.7
           convictionReduction: 20
           convictionParryGain: 0
-          lastAttack: 0
+          lastAttack: 1
           attackDirection: {x: 0, y: 0, z: 0}
           contactPoint: {x: 0, y: 0, z: 0}
-      distanceMin: 0
-      distanceToChase: 1.5
-      distanceToLoseAttack: 3
+      distanceMin: 1
+      distanceToChase: 3
+      distanceToLoseAttack: 3.5

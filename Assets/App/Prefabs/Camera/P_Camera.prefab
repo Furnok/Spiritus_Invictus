@@ -105,7 +105,7 @@ Transform:
   m_GameObject: {fileID: 1141386902013969523}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.32, y: 2.49, z: -4.62}
+  m_LocalPosition: {x: 1, y: 2.5, z: -4.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0, y: 0, z: 0}
-  ShoulderOffset: {x: 1.32, y: -0.21, z: 0.38}
+  ShoulderOffset: {x: 1, y: -0.2, z: 0.2}
   VerticalArmLength: 1.2
   CameraSide: 1
   CameraDistance: 5
@@ -930,8 +930,6 @@ MonoBehaviour:
   cinemachineCameraCinematic:
   - {fileID: 8040167007817381413}
   playerPoint: {fileID: 1972066895076540595}
-  materialPlayer: {fileID: 2100000, guid: 42c0b883ac939404b9fa5af6f04a6761, type: 2}
-  materialLantern: {fileID: 2100000, guid: ccafcc69c94846b4cb9c52a2149ce234, type: 2}
   rseOnPlayerMove: {fileID: 11400000, guid: 881d0608fef60064c9e33701b880054c, type: 2}
   rseOnStartTargeting: {fileID: 11400000, guid: 06dd5cb141e805f4886a0677d415d129, type: 2}
   rseOnNewTargeting: {fileID: 11400000, guid: c5f673ce9067f6241b1df96e6d83520f, type: 2}
@@ -951,6 +949,7 @@ MonoBehaviour:
   rseOnSkipHold: {fileID: 11400000, guid: 7709a15568edb4947a9d8f2767f9d16e, type: 2}
   rseOnCancelTargeting: {fileID: 11400000, guid: eb8598b903ee53643b0a3d76f3657c63, type: 2}
   rseOnSendConsoleMessage: {fileID: 11400000, guid: e2e3ecd3153d9a14d9d9e380efc21861, type: 2}
+  rseUpdateVisibility: {fileID: 11400000, guid: 95c4268b9852b3445980a33df03106c1, type: 2}
   rsoPlayerIsDodging: {fileID: 11400000, guid: f932dda1749effc4aac91cb2aeeff6d5, type: 2}
   ssoCameraData: {fileID: 11400000, guid: 8a8b9ed3ac9bcab418920e1de02ba0e2, type: 2}
 --- !u!1 &3839073689257792411

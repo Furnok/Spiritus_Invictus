@@ -14,6 +14,7 @@ public class S_SphereCharging : MonoBehaviour
     [TabGroup("Settings")]
     [Title("Particle Parameters")]
     [SerializeField] private List<S_StructParticleSettingsData> _listParticleSettingsData = new();
+    [SerializeField] private float _hdrIntensity = 3f;
     
     [TabGroup("References")]
     [Title("Transform")]
@@ -26,6 +27,9 @@ public class S_SphereCharging : MonoBehaviour
     [TabGroup("References")]
     [Title("MeshRenderer")]
     [SerializeField] private MeshRenderer _meshRendererEnergySphere;
+
+    [TabGroup("Data")]
+    [SerializeField] RSO_PlayerCurrentVisualProjectile _playerCurrentVisualProjectile;
 
     [TabGroup("Ouputs")]
     [SerializeField] private RSO_CurrentChargeStep _rsoCurrentChargeStep;
@@ -50,6 +54,8 @@ public class S_SphereCharging : MonoBehaviour
     private float _colorLerpElapsed = 0f;
     private float _colorLerpDuration = 0f;
 
+    private S_StructDataProjectileVisuals _currentVisualProjectileData;
+
     //private float _chargeDuration => GetMaxHoldTime();
 
     private void OnEnable()
@@ -67,7 +73,8 @@ public class S_SphereCharging : MonoBehaviour
         _currentSphereScale = _currentSettings.ScaleEnergySphere;
         _targetSphereScale = _currentSettings.ScaleEnergySphere;
 
-        _sphereMat.color = _currentSphereColor;
+        //_sphereMat.color = _currentSphereColor;
+        _sphereMat.SetColor("_Color", _currentSphereColor * _hdrIntensity);
 
         _rsoCurrentChargeStep.onValueChanged += SetupParticleSettings;
     }
@@ -103,14 +110,22 @@ public class S_SphereCharging : MonoBehaviour
 
                 _energySphere.localScale = Vector3.one * scale;
 
-                _sphereMat.color = c;
+                //_sphereMat.color = c;
+                _sphereMat.SetColor("_Color", c * _hdrIntensity);
+
             }
             else
             {
-                _sphereMat.color = _targetSphereColor;
+                //_sphereMat.color = _targetSphereColor;
+                _sphereMat.SetColor("_Color", _targetSphereColor * _hdrIntensity);
 
                 _energySphere.localScale = Vector3.one * _targetSphereScale;
             }
+
+            _currentVisualProjectileData.ScaleProjectile = _energySphere.localScale.x;
+            _currentVisualProjectileData.ColorProjectile = _sphereMat.color;
+
+            _playerCurrentVisualProjectile.Value = _currentVisualProjectileData;
         }
     }
 

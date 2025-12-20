@@ -45,7 +45,11 @@ public class S_ParticlesAttract : MonoBehaviour
         }
 
         int count = _ps.GetParticles(_particles);
-        if (count == 0) return;
+        if (count == 0)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         bool worldSim = _ps.main.simulationSpace == ParticleSystemSimulationSpace.World;
 
@@ -90,8 +94,6 @@ public class S_ParticlesAttract : MonoBehaviour
         }
 
         _ps.SetParticles(_particles, count);
-
-        if (count == 0) Destroy(gameObject);
     }
 
     public void InitializeTransform(Transform transformToAttract, float ammountConvictionGain)

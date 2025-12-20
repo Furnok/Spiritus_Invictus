@@ -22,13 +22,9 @@ public class S_ClassBossData
     public float distanceToRun = 0;
 
     [Title("Strafe")]
-    public float strafeChangeInterval = 1.5f;
+    public float strafeRotationMin = 0;
 
-    public float strafeRadius = 5f;
-
-    public float strafeDistance = 2f;
-
-    public float rotationSpeed = 6f;
+    public float strafeRotationMax = 0;
 
     [Title("Combat")]
     public float initialBossDifficultyLevel;

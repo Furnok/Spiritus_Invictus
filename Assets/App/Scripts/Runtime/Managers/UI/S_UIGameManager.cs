@@ -3,6 +3,7 @@ using FMODUnity;
 using Sirenix.OdinInspector;
 using System.Collections;
 using TMPro;
+using Unity.AppUI.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -25,7 +26,7 @@ public class S_UIGameManager : MonoBehaviour
     [SerializeField] private Slider sliderHealth;
 
     [TabGroup("References")]
-    [SerializeField] private Slider sliderConviction;
+    [SerializeField] private Image sliderConviction;
 
     [TabGroup("References")]
     [SerializeField] private Slider sliderPlayerAttackSteps;
@@ -69,6 +70,17 @@ public class S_UIGameManager : MonoBehaviour
     [Title("Game Over")]
     [SerializeField] private GameObject gameOverWindow;
 
+    [TabGroup("References")]
+    [Title("Dialogue")]
+    [SerializeField] private GameObject dialogueWindow;
+
+    [TabGroup("References")]
+    [SerializeField] private TextMeshProUGUI textDialogue;
+
+    [TabGroup("References")]
+    [Title("Save")]
+    [SerializeField] private GameObject saveWindow;
+
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnDisplayBossHealth rseOnDisplayBossHealth;
 
@@ -86,6 +98,12 @@ public class S_UIGameManager : MonoBehaviour
 
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnOpenExtractWindow rseOnOpenExtractWindow;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnDialogueDisplay rseOnDialogueDisplay;
+
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnSaveDisplay rseOnSaveDisplay;
 
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnUIInputEnabled rseOnUIInputEnabled;
@@ -167,13 +185,19 @@ public class S_UIGameManager : MonoBehaviour
     private Tween preconvictionTween = null;
     private Tween skipTween = null;
 
+    private Coroutine resetCoroutine = null;
+    private Coroutine resetSaveCoroutine = null;
+
+    private Material materialConviction = null;
+
     private void Awake()
     {
         sliderHealth.maxValue = ssoPlayerStats.Value.maxHealth;
-        sliderHealth.value = sliderHealth.maxValue;
 
-        sliderConviction.maxValue = ssoPlayerConvictionData.Value.maxConviction;
-        sliderConviction.value = sliderConviction.maxValue;
+        materialConviction = new Material(sliderConviction.material);
+        sliderConviction.material = materialConviction;
+
+        materialConviction.SetFloat("_FillAmount", ssoPlayerConvictionData.Value.maxConviction / ssoPlayerConvictionData.Value.maxConviction);
 
         sliderPlayerAttackSteps.maxValue = ssoPlayerConvictionData.Value.maxConviction;
 
@@ -191,6 +215,8 @@ public class S_UIGameManager : MonoBehaviour
         rseOnOpenExtractWindow.action += DiplayExtract;
         rseOnConsole.action += Console;
         rseOnPlayerDeath.action += GameOver;
+        rseOnDialogueDisplay.action += DisplayDialogue;
+        rseOnSaveDisplay.action += DisplaySave;
     }
 
     private void OnDisable()
@@ -204,6 +230,8 @@ public class S_UIGameManager : MonoBehaviour
         rseOnOpenExtractWindow.action -= DiplayExtract;
         rseOnConsole.action -= Console;
         rseOnPlayerDeath.action -= GameOver;
+        rseOnDialogueDisplay.action -= DisplayDialogue;
+        rseOnSaveDisplay.action -= DisplaySave;
 
         healthTween?.Kill();
         convictionTween?.Kill();
@@ -242,7 +270,7 @@ public class S_UIGameManager : MonoBehaviour
     {
         convictionTween?.Kill();
 
-        convictionTween = sliderConviction.DOValue(conviction, ssoAnimationSlider.Value).SetEase(Ease.OutCubic);
+        materialConviction.SetFloat("_FillAmount", conviction / ssoPlayerConvictionData.Value.maxConviction);
     }
 
     private void SetPreconvictionSliderValue(float preconvition)
@@ -446,6 +474,86 @@ public class S_UIGameManager : MonoBehaviour
             }
             else rseOnPlayerRespawn.Call();
         }));
+    }
+    #endregion
+
+    #region Dialogue
+    private void DisplayDialogue(S_ClassDialogue dialogue)
+    {
+        CanvasGroup cg = dialogueWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        if (dialogueWindow.activeInHierarchy)
+        {
+            cg.DOFade(0f, 0).SetEase(Ease.Linear);
+            dialogueWindow.gameObject.SetActive(false);
+        }
+
+        dialogueWindow.gameObject.SetActive(true);
+
+        cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
+
+        textDialogue.text = dialogue.text;
+
+        if (resetCoroutine != null)
+        {
+            StopCoroutine(resetCoroutine);
+            resetCoroutine = null;
+        }
+
+        resetCoroutine = StartCoroutine(ResetDiplay(dialogue.duration));
+    }
+
+    private IEnumerator ResetDiplay(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        CanvasGroup cg = dialogueWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        cg.DOFade(0f, ssoDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            dialogueWindow.gameObject.SetActive(false);
+        });
+    }
+    #endregion
+
+    #region Save
+    private void DisplaySave()
+    {
+        CanvasGroup cg = saveWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        if (saveWindow.activeInHierarchy)
+        {
+            cg.DOFade(0f, 0).SetEase(Ease.Linear);
+            saveWindow.gameObject.SetActive(false);
+        }
+
+        saveWindow.gameObject.SetActive(true);
+
+        cg.DOFade(1f, ssoDisplay.Value).SetEase(Ease.Linear);
+
+        if (resetSaveCoroutine != null)
+        {
+            StopCoroutine(resetSaveCoroutine);
+            resetSaveCoroutine = null;
+        }
+
+        resetSaveCoroutine = StartCoroutine(ResetDisplaySave());
+    }
+
+    private IEnumerator ResetDisplaySave()
+    {
+        yield return new WaitForSeconds(2);
+
+        CanvasGroup cg = saveWindow.GetComponent<CanvasGroup>();
+        cg.DOKill();
+
+        cg.DOFade(0f, ssoDisplay.Value).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            saveWindow.gameObject.SetActive(false);
+        });
     }
     #endregion
 }
