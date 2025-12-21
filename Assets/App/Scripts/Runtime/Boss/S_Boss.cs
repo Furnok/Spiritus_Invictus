@@ -93,6 +93,9 @@ public class S_Boss : MonoBehaviour
     [TabGroup("Inputs")]
     [SerializeField] private RSE_OnEndAttack rseOnEndAttack;
 
+    [TabGroup("Inputs")]
+    [SerializeField] private RSE_OnBossStun onBossStun;
+
     [TabGroup("Outputs")]
     [SerializeField] private RSE_OnExecuteAttack onExecuteAttack;
 
@@ -189,6 +192,7 @@ public class S_Boss : MonoBehaviour
         rseOnPlayerDeath.action += PlayerDeath;
         rseOnPlayerRespawn.action += PlayerRespawn;
         rseOnEndAttack.action += SpecialAttackEnd;
+        onBossStun.action += UpdateState;
     }
     private void OnDisable()
     {
@@ -197,6 +201,7 @@ public class S_Boss : MonoBehaviour
         rseOnPlayerDeath.action -= PlayerDeath;
         rseOnPlayerRespawn.action -= PlayerRespawn;
         rseOnEndAttack.action -= SpecialAttackEnd;
+        onBossStun.action -= UpdateState;
     }
     private void Start()
     {
@@ -271,6 +276,7 @@ public class S_Boss : MonoBehaviour
         Debug.Log("Resetting Boss State...");
         bossAttackData.DisableWeaponCollider();
         bossAttackData.VFXStopTrail();
+        navMeshAgent.enabled = true;
 
         if (comboCoroutine != null)
         {

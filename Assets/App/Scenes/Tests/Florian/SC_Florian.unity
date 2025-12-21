@@ -924,16 +924,6 @@ Transform:
   - {fileID: 126592914}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &362462185 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 6290640343244561212, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-  m_PrefabInstance: {fileID: 1815731847605223698}
-  m_PrefabAsset: {fileID: 0}
---- !u!195 &362462186 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 338046699455560462, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-  m_PrefabInstance: {fileID: 1815731847605223698}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &395755729
 GameObject:
   m_ObjectHideFlags: 0
@@ -2631,38 +2621,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_BossEnemy
       objectReference: {fileID: 0}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: rbBody
-      value: 
-      objectReference: {fileID: 362462185}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: duration
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: jumpPower
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: backDistance
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: rseOnEndAttack
-      value: 
-      objectReference: {fileID: 11400000, guid: df61dd20dc38205418f8426747ea5149, type: 2}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: bossNavMeshAgent
-      value: 
-      objectReference: {fileID: 362462186}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: rseOnPlayParticle
-      value: 
-      objectReference: {fileID: 11400000, guid: 96e637a3924deff4685a645b52dfc7c2, type: 2}
-    - target: {fileID: 6465511601208726001, guid: bacd2fd4c8113604ab1b047c1347c7dd, type: 3}
-      propertyPath: rseOnStopParticle
-      value: 
-      objectReference: {fileID: 11400000, guid: 4188360d207886043ab568bf24778487, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
