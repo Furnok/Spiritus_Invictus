@@ -398,7 +398,30 @@ public class S_Boss : MonoBehaviour
     private void Stun()
     {
         Debug.Log("Boss Stun!");
-    } 
+        if (stunCoroutine != null)
+        {
+            StopCoroutine(stunCoroutine);
+            stunCoroutine = null;
+        }
+
+        stunCoroutine = StartCoroutine(StunDuration(ssoBossData.Value.stunDuration));
+    }
+
+    private IEnumerator StunDuration(float duration)
+    {
+        isStunned = true;
+        animator.SetTrigger(stunParam);
+        yield return new WaitForSeconds(duration);
+        isStunned = false;
+        if (target != null)
+        {
+            UpdateState(S_EnumBossState.Chase);
+        }
+        else
+        {
+            UpdateState(S_EnumBossState.Idle);
+        }
+    }
     #endregion
 
     #region Health/Death
